@@ -1,0 +1,7 @@
+name: NpcPlugin
+main: de.oliver.NpcPlugin
+version: 1.0
+api-version: 1.19
+commands:
+  Test:
+

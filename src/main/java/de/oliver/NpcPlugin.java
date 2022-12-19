@@ -20,9 +20,17 @@ public class NpcPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
+        if(!getServer().getMinecraftVersion().equals("1.19.3")){
+            getLogger().warning("Unsupported minecraft server version.");
+            getLogger().warning("Disabling plugin.");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
         getCommand("test").setExecutor(new TestCMD());
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 

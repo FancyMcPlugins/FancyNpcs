@@ -1,7 +1,8 @@
-package de.oliver.events;
+package de.oliver.listeners;
 
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
+import de.oliver.events.PacketReceivedEvent;
 import de.oliver.utils.ReflectionUtils;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import org.bukkit.event.EventHandler;

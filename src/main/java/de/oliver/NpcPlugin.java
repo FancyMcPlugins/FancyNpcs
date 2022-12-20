@@ -1,7 +1,7 @@
 package de.oliver;
 
-import de.oliver.commands.TestCMD;
-import de.oliver.events.PacketReceivedListener;
+import de.oliver.commands.NpcCMD;
+import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,7 +29,7 @@ public class NpcPlugin extends JavaPlugin {
             return;
         }
 
-        getCommand("test").setExecutor(new TestCMD());
+        getCommand("npc").setExecutor(new NpcCMD());
 
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);

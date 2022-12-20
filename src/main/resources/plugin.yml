@@ -3,5 +3,6 @@ main: de.oliver.NpcPlugin
 version: 1.0
 api-version: 1.19
 commands:
-  Test:
-
+  Npc:
+    permission: NpcPlugin.npc
+    description: Main command for the Npc plugin

@@ -1,5 +1,6 @@
 package de.oliver;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 public class NpcManager {
@@ -24,6 +25,20 @@ public class NpcManager {
         }
 
         return null;
+    }
+
+    public Npc getNpc(String name){
+        for (Npc npc : npcs.values()) {
+            if(npc.getName().equalsIgnoreCase(name)){
+                return npc;
+            }
+        }
+
+        return null;
+    }
+
+    public Collection<Npc> getAllNpcs(){
+        return npcs.values();
     }
 
 }

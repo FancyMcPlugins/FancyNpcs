@@ -1,11 +1,8 @@
 package de.oliver;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.network.protocol.game.ClientboundAddPlayerPacket;
-import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
-import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
+import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -47,9 +44,9 @@ public class Npc {
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 
         // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-        String textureValue = "ewogICJ0aW1lc3RhbXAiIDogMTY3MTQ3MDEyMDYyMiwKICAicHJvZmlsZUlkIiA6ICI5YjYwNWQwNDVhNTk0MzUzYmJhMzJkZGY1NzBlYjM4YSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbGl2ZXJIRCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9iOWVhOGY1NjE3NjkwZWYyNzBkZjkwNWQ1M2RjOThiYWZhOWE1YmE0ODcxYWJhYWZjNTQ2ZDk0MTg3MmUzOWEiCiAgICB9CiAgfQp9";
-        String signature = "TlUD1fzHlHhS2GPK7qs3In798MU6HsOI+1Th7iFZ5ZAcDZtm4h1Eoce2Dh6pah9T8eSx7lQ9GsY0yw6zP9lCeeGZYIJ3BaGuhXWWUOOqH4CNGOKQ4MsANyCvIIArKOll0Uh4Es7+yI/AyXo3qNG2aNznP/vLACkUSz4/Bm5PdXkzlx8HjlH+NNWKiED52PqRXmqAS0NuCmDe/XhlI/r3oOanbkKLD8OhNBTXPNQ+lt8LZp1jumjpoBbpv28BYKK9lNCX5MQCItIeYEQZcmMJ8X23SHPteVZ/QtAx0lMkotwXDuQjbSi92aTyykc/5Z3oqUvoLG3Y4aC1UxNv1UtZNivM5Sk0qXmQCiv0xCzsFpLRT6zYSKGvFZwhSvVJ1uQ046Oy+zzGXi3zJ6GBM30KYH6Q6YYob7COUBe+KM3uLYBrTfHr4tOUV/W5T3cumsFCBJ/QS5K5XmjnlUX4A+XI6EYzvYsOewaKmL7rx7GKbwY3mS6RDgN82FJcTslZ/Jf85yVaLIRpDpX1nA/L1WQfVVWrghKG4h6Qs8zdhf2ftmvaXuozxKjxJUc6U2ExMvGDB9qiGAdm5sEGe+eVH7moIHrXH8gO7lwkJjhfTd4hn0jpp7gg6o4yNzWpRWDQ9M7FwItrfRC0209vAfwqTqLbqQD/6kn27ZskNada20gLYaY=";
-        gameProfile.getProperties().put("textures", new Property("textures", textureValue, signature));
+//        String textureValue = "ewogICJ0aW1lc3RhbXAiIDogMTY3MTQ3MDEyMDYyMiwKICAicHJvZmlsZUlkIiA6ICI5YjYwNWQwNDVhNTk0MzUzYmJhMzJkZGY1NzBlYjM4YSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbGl2ZXJIRCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9iOWVhOGY1NjE3NjkwZWYyNzBkZjkwNWQ1M2RjOThiYWZhOWE1YmE0ODcxYWJhYWZjNTQ2ZDk0MTg3MmUzOWEiCiAgICB9CiAgfQp9";
+//        String signature = "TlUD1fzHlHhS2GPK7qs3In798MU6HsOI+1Th7iFZ5ZAcDZtm4h1Eoce2Dh6pah9T8eSx7lQ9GsY0yw6zP9lCeeGZYIJ3BaGuhXWWUOOqH4CNGOKQ4MsANyCvIIArKOll0Uh4Es7+yI/AyXo3qNG2aNznP/vLACkUSz4/Bm5PdXkzlx8HjlH+NNWKiED52PqRXmqAS0NuCmDe/XhlI/r3oOanbkKLD8OhNBTXPNQ+lt8LZp1jumjpoBbpv28BYKK9lNCX5MQCItIeYEQZcmMJ8X23SHPteVZ/QtAx0lMkotwXDuQjbSi92aTyykc/5Z3oqUvoLG3Y4aC1UxNv1UtZNivM5Sk0qXmQCiv0xCzsFpLRT6zYSKGvFZwhSvVJ1uQ046Oy+zzGXi3zJ6GBM30KYH6Q6YYob7COUBe+KM3uLYBrTfHr4tOUV/W5T3cumsFCBJ/QS5K5XmjnlUX4A+XI6EYzvYsOewaKmL7rx7GKbwY3mS6RDgN82FJcTslZ/Jf85yVaLIRpDpX1nA/L1WQfVVWrghKG4h6Qs8zdhf2ftmvaXuozxKjxJUc6U2ExMvGDB9qiGAdm5sEGe+eVH7moIHrXH8gO7lwkJjhfTd4hn0jpp7gg6o4yNzWpRWDQ9M7FwItrfRC0209vAfwqTqLbqQD/6kn27ZskNada20gLYaY=";
+//        gameProfile.getProperties().put("textures", new Property("textures", textureValue, signature));
 
         npc = new ServerPlayer(minecraftServer, serverLevel, gameProfile);
         npc.displayName = name;
@@ -68,6 +65,8 @@ public class Npc {
         if(spawnEntity) {
             ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npc);
             serverPlayer.connection.send(spawnPlayerPacket);
+
+            move(serverPlayer, location);
         }
 
         if(equipment.size() > 0) {
@@ -82,6 +81,17 @@ public class Npc {
         }
 
         NpcPlugin.getInstance().getNpcManager().registerNpc(this);
+    }
+
+    public void move(ServerPlayer serverPlayer, Location location){
+        this.location = location;
+
+        float angelMultiplier = 256f / 360f;
+        ClientboundMoveEntityPacket moveEntityPacket = new ClientboundMoveEntityPacket.Rot(npc.getId(), (byte) (location.getYaw()*angelMultiplier), (byte)(location.getPitch()*angelMultiplier), false);
+        serverPlayer.connection.send(moveEntityPacket);
+
+        ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte)(location.getYaw()*angelMultiplier));
+        serverPlayer.connection.send(rotateHeadPacket);
     }
 
     public String getName() {

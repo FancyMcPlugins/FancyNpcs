@@ -55,6 +55,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         switch (subcommand.toLowerCase()){
             case "create" -> {
                 Npc npc = new Npc(name, p.getLocation());
+                npc.create();
                 npc.spawnForAll();
                 NpcPlugin.getInstance().getNpcManager().registerNpc(npc);
             }

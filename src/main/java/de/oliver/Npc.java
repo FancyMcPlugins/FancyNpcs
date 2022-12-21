@@ -10,6 +10,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_19_R2.CraftWorld;
 import org.bukkit.craftbukkit.v1_19_R2.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -46,12 +48,13 @@ public class Npc {
         this.onClick = p -> {};
     }
 
-    public void spawn(Player target){
-        CraftPlayer craftPlayer = (CraftPlayer) target;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+    public void create(){
+        if(NpcPlugin.getInstance().getNpcManager().getNpc(name) != null){
+            NpcPlugin.getInstance().getNpcManager().removeNpc(this);
+        }
 
-        MinecraftServer minecraftServer = serverPlayer.getServer();
-        ServerLevel serverLevel = serverPlayer.getLevel();
+        MinecraftServer minecraftServer = ((CraftServer)Bukkit.getServer()).getServer();
+        ServerLevel serverLevel = ((CraftWorld)location.getWorld()).getHandle();
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 
         if(skin != null && skin.length() > 0) {
@@ -63,6 +66,13 @@ public class Npc {
 
         npc = new ServerPlayer(minecraftServer, serverLevel, gameProfile);
         npc.displayName = displayName;
+
+        NpcPlugin.getInstance().getNpcManager().registerNpc(this);
+    }
+
+    public void spawn(Player target){
+        CraftPlayer craftPlayer = (CraftPlayer) target;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
 
         EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
         actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
@@ -94,8 +104,6 @@ public class Npc {
             ClientboundSetEquipmentPacket setEquipmentPacket = new ClientboundSetEquipmentPacket(npc.getId(), equipmentList);
             serverPlayer.connection.send(setEquipmentPacket);
         }
-
-        NpcPlugin.getInstance().getNpcManager().registerNpc(this);
     }
 
     public void spawnForAll(){

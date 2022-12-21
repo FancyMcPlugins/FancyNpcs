@@ -37,6 +37,8 @@ public class NpcPlugin extends JavaPlugin {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             PacketReader packetReader = new PacketReader(onlinePlayer);
             packetReader.inject();
+
+            npcManager.getAllNpcs().forEach(npc -> npc.spawn(onlinePlayer));
         }
     }
 

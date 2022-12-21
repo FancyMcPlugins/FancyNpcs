@@ -57,7 +57,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = new Npc(name, p.getLocation());
                 npc.create();
                 npc.spawnForAll();
-                NpcPlugin.getInstance().getNpcManager().registerNpc(npc);
+
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Created new npc</green>"));
+            }
+
+            case "movehere" -> {
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                npc.moveForAll(p.getLocation());
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Moved npc to your location</green>"));
             }
 
             default -> {

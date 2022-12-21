@@ -21,4 +21,22 @@ public class ReflectionUtils {
         return result;
     }
 
+    public static void setValue(Object instance, String name, Object value) {
+        try {
+//            System.out.println("---------------------");
+//            for (Field declaredField : instance.getClass().getDeclaredFields()) {
+//                System.out.println(declaredField.getName());
+//            }
+//            System.out.println("---------------------");
+            Field field = instance.getClass().getDeclaredField(name);
+
+            field.setAccessible(true);
+            field.set(instance, value);
+            field.setAccessible(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

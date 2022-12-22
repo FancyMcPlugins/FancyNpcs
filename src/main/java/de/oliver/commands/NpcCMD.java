@@ -20,7 +20,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("create", "delete", "skin", "movehere");
+            return Arrays.asList("create", "remove", "skin", "movehere");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         }
@@ -38,7 +38,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         /*
             /npc create <name>
-            /npc delete <name>
+            /npc remove <name>
             /npc skin <name> <skin>
             /npc movehere <name>
 
@@ -59,6 +59,17 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npc.spawnForAll();
 
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Created new npc</green>"));
+            }
+
+            case "remove" -> {
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                npc.removeForAll();
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Removed npc</green>"));
             }
 
             case "movehere" -> {

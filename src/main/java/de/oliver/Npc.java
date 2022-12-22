@@ -143,6 +143,25 @@ public class Npc {
         }
     }
 
+    public void remove(ServerPlayer serverPlayer){
+        NpcPlugin.getInstance().getNpcManager().removeNpc(this);
+
+        ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
+        serverPlayer.connection.send(removeEntitiesPacket);
+    }
+
+    public void remove(Player player){
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        remove(serverPlayer);
+    }
+
+    public void removeForAll(){
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            remove(onlinePlayer);
+        }
+    }
+
     public String getName() {
         return name;
     }

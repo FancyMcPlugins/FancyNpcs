@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -58,7 +59,7 @@ public class Npc {
 
         MinecraftServer minecraftServer = ((CraftServer)Bukkit.getServer()).getServer();
         ServerLevel serverLevel = ((CraftWorld)location.getWorld()).getHandle();
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), displayName);
 
         if(skin != null && skin.isLoaded()) {
             // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
@@ -111,6 +112,15 @@ public class Npc {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             spawn(onlinePlayer);
         }
+    }
+
+    public void updateDisplayName(String displayName){
+        this.displayName = displayName;
+        npc.listName = Component.literal(displayName);
+
+        removeForAll();
+        create();
+        spawnForAll();
     }
 
     public void updateSkin(SkinFetcher skin){

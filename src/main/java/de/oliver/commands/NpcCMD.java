@@ -22,7 +22,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("create", "remove", "skin", "movehere");
+            return Arrays.asList("create", "remove", "skin", "movehere", "displayName");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         }
@@ -43,6 +43,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             /npc remove <name>
             /npc skin <name> <skin>
             /npc movehere <name>
+            /npc displayName <name> <displayName>
 
          */
 
@@ -101,6 +102,35 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
                 npc.updateSkin(skinFetcher);
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated skin of npc</green>"));
+            }
+
+            case "displayname" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                String displayName = "";
+                for (int i = 2; i < args.length; i++) {
+                    displayName += args[i] + " ";
+                }
+                displayName = displayName.substring(0, displayName.length() - 1);
+
+                if(displayName.length() > 16){
+                    displayName = displayName.substring(0, 16);
+                }
+
+                displayName = displayName.replace("&", "§");
+
+                npc.updateDisplayName(displayName);
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
             }
 
             default -> {

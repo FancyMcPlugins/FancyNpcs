@@ -38,15 +38,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             return false;
         }
 
-        /*
-            /npc create <name>
-            /npc remove <name>
-            /npc skin <name> <skin>
-            /npc movehere <name>
-            /npc displayName <name> <displayName>
-
-         */
-
         if (args.length < 2){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
             return false;

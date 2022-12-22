@@ -116,12 +116,8 @@ public class Npc {
     public void move(ServerPlayer serverPlayer, Location location){
         this.location = location;
 
-        float angelMultiplier = 256f / 360f;
-
-        ClientboundMoveEntityPacket moveEntityPacket = new ClientboundMoveEntityPacket.Rot(npc.getId(), (byte) (location.getYaw()*angelMultiplier), (byte)(location.getPitch()*angelMultiplier), false);
-        serverPlayer.connection.send(moveEntityPacket);
-
         npc.setPosRaw(location.x(), location.y(), location.z());
+        npc.setRot(location.getYaw(), location.getPitch());
         npc.setYHeadRot(location.getYaw());
 
         ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
@@ -130,6 +126,7 @@ public class Npc {
         ReflectionUtils.setValue(teleportEntityPacket, "d", location.z());
         serverPlayer.connection.send(teleportEntityPacket);
 
+        float angelMultiplier = 256f / 360f;
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte)(location.getYaw()*angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
     }

@@ -2,6 +2,8 @@ package de.oliver.commands;
 
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
+import de.oliver.utils.SkinFetcher;
+import de.oliver.utils.UUIDFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -81,6 +83,24 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 npc.moveForAll(p.getLocation());
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Moved npc to your location</green>"));
+            }
+
+            case "skin" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                String skinName = args[2];
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
+                npc.updateSkin(skinFetcher);
             }
 
             default -> {

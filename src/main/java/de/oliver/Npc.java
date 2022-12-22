@@ -1,8 +1,10 @@
 package de.oliver;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import de.oliver.utils.ReflectionUtils;
+import de.oliver.utils.SkinFetcher;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -23,7 +25,7 @@ public class Npc {
 
     private String name;
     private String displayName;
-    private String skin;
+    private SkinFetcher skin;
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
@@ -31,7 +33,7 @@ public class Npc {
     private Consumer<Player> onClick;
     private ServerPlayer npc;
 
-    public Npc(String name, String displayName, String skin, Location location, boolean showInTab, boolean spawnEntity, HashMap<EquipmentSlot, ItemStack> equipment) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, HashMap<EquipmentSlot, ItemStack> equipment) {
         this.name = name;
         this.skin = skin;
         this.location = location;
@@ -58,11 +60,9 @@ public class Npc {
         ServerLevel serverLevel = ((CraftWorld)location.getWorld()).getHandle();
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), name);
 
-        if(skin != null && skin.length() > 0) {
+        if(skin != null && skin.isLoaded()) {
             // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-//        String textureValue = "ewogICJ0aW1lc3RhbXAiIDogMTY3MTQ3MDEyMDYyMiwKICAicHJvZmlsZUlkIiA6ICI5YjYwNWQwNDVhNTk0MzUzYmJhMzJkZGY1NzBlYjM4YSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbGl2ZXJIRCIsCiAgInNpZ25hdHVyZVJlcXVpcmVkIiA6IHRydWUsCiAgInRleHR1cmVzIiA6IHsKICAgICJTS0lOIiA6IHsKICAgICAgInVybCIgOiAiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9iOWVhOGY1NjE3NjkwZWYyNzBkZjkwNWQ1M2RjOThiYWZhOWE1YmE0ODcxYWJhYWZjNTQ2ZDk0MTg3MmUzOWEiCiAgICB9CiAgfQp9";
-//        String signature = "TlUD1fzHlHhS2GPK7qs3In798MU6HsOI+1Th7iFZ5ZAcDZtm4h1Eoce2Dh6pah9T8eSx7lQ9GsY0yw6zP9lCeeGZYIJ3BaGuhXWWUOOqH4CNGOKQ4MsANyCvIIArKOll0Uh4Es7+yI/AyXo3qNG2aNznP/vLACkUSz4/Bm5PdXkzlx8HjlH+NNWKiED52PqRXmqAS0NuCmDe/XhlI/r3oOanbkKLD8OhNBTXPNQ+lt8LZp1jumjpoBbpv28BYKK9lNCX5MQCItIeYEQZcmMJ8X23SHPteVZ/QtAx0lMkotwXDuQjbSi92aTyykc/5Z3oqUvoLG3Y4aC1UxNv1UtZNivM5Sk0qXmQCiv0xCzsFpLRT6zYSKGvFZwhSvVJ1uQ046Oy+zzGXi3zJ6GBM30KYH6Q6YYob7COUBe+KM3uLYBrTfHr4tOUV/W5T3cumsFCBJ/QS5K5XmjnlUX4A+XI6EYzvYsOewaKmL7rx7GKbwY3mS6RDgN82FJcTslZ/Jf85yVaLIRpDpX1nA/L1WQfVVWrghKG4h6Qs8zdhf2ftmvaXuozxKjxJUc6U2ExMvGDB9qiGAdm5sEGe+eVH7moIHrXH8gO7lwkJjhfTd4hn0jpp7gg6o4yNzWpRWDQ9M7FwItrfRC0209vAfwqTqLbqQD/6kn27ZskNada20gLYaY=";
-//        gameProfile.getProperties().put("textures", new Property("textures", textureValue, signature));
+            gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         }
 
         npc = new ServerPlayer(minecraftServer, serverLevel, gameProfile);
@@ -111,6 +111,18 @@ public class Npc {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             spawn(onlinePlayer);
         }
+    }
+
+    public void updateSkin(SkinFetcher skin){
+        if(!skin.isLoaded()){
+            return;
+        }
+
+        this.skin = skin;
+
+        removeForAll();
+        create();
+        spawnForAll();
     }
 
     public void move(ServerPlayer serverPlayer, Location location){
@@ -180,11 +192,11 @@ public class Npc {
         return this;
     }
 
-    public String getSkin() {
+    public SkinFetcher getSkin() {
         return skin;
     }
 
-    public Npc setSkin(String skin) {
+    public Npc setSkin(SkinFetcher skin) {
         this.skin = skin;
         return this;
     }

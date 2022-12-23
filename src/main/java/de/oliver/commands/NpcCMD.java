@@ -5,11 +5,14 @@ import de.oliver.NpcPlugin;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.craftbukkit.v1_19_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,9 +25,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("create", "remove", "skin", "movehere", "displayName");
+            return Arrays.asList("create", "remove", "skin", "movehere", "displayName", "equipment");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
+        } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
+            return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).toList();
         }
 
         return null;
@@ -122,6 +127,42 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 npc.updateDisplayName(displayName);
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
+            }
+
+            case "equipment" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                String slot = args[2];
+
+                EquipmentSlot equipmentSlot = null;
+                try {
+                    equipmentSlot = EquipmentSlot.byName(slot);
+                } catch (IllegalArgumentException e){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid equipment slot</red>"));
+                    return false;
+                }
+
+//                if(p.getInventory().getItemInMainHand().getType() == Material.AIR){
+//                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must hold an item in hand</red>"));
+//                    return false;
+//                }
+
+                ItemStack item = p.getInventory().getItemInMainHand();
+
+                npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated equipment of npc</green>"));
             }
 
             default -> {

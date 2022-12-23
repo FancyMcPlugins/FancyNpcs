@@ -2,6 +2,7 @@ name: NpcPlugin
 main: de.oliver.NpcPlugin
 version: 1.0
 api-version: 1.19
+load: POSTWORLD
 commands:
   Npc:
     permission: NpcPlugin.npc

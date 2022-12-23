@@ -30,17 +30,19 @@ public class Npc {
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
-    private HashMap<EquipmentSlot, ItemStack> equipment;
+    private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
     private ServerPlayer npc;
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, HashMap<EquipmentSlot, ItemStack> equipment) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick) {
         this.name = name;
+        this.displayName = displayName;
         this.skin = skin;
         this.location = location;
         this.showInTab = showInTab;
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
+        this.onClick = onClick;
     }
 
     public Npc(String name, Location location){
@@ -238,8 +240,16 @@ public class Npc {
     }
 
     public Npc addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
+        if(equipment == null){
+            equipment = new HashMap<>();
+        }
+
         equipment.put(equipmentSlot, itemStack);
         return this;
+    }
+
+    public Map<EquipmentSlot, ItemStack> getEquipment() {
+        return equipment;
     }
 
     public Npc setOnClick(Consumer<Player> consumer){

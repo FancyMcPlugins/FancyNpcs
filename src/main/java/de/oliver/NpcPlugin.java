@@ -34,12 +34,19 @@ public class NpcPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 
+        npcManager.loadNpcs();
+
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             PacketReader packetReader = new PacketReader(onlinePlayer);
             packetReader.inject();
 
             npcManager.getAllNpcs().forEach(npc -> npc.spawn(onlinePlayer));
         }
+    }
+
+    @Override
+    public void onDisable() {
+        npcManager.saveNpcs();
     }
 
     public NpcManager getNpcManager() {

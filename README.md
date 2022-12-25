@@ -1,7 +1,7 @@
 # NPC Plugin
-_A simple NPC plugin for minecraft servers_
+_A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)_
 
-**Only works for 1.19.3**
+**Only for minecraft server version 1.19.3**
 
 ## Commands
 
@@ -14,3 +14,7 @@ _A simple NPC plugin for minecraft servers_
 /npc movehere (name) - _Teleports an npc to your location_
 
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_
+
+/npc equipment (name) (slot) - _Equips the npc with the item you are holding_
+
+/npc command (name) (command ...) - _The command will be executed when someone interacts with the npc_

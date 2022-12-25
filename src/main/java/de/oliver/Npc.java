@@ -32,9 +32,10 @@ public class Npc {
     private boolean spawnEntity;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
+    private String command;
     private ServerPlayer npc;
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
         this.name = name;
         this.displayName = displayName;
         this.skin = skin;
@@ -43,6 +44,7 @@ public class Npc {
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
         this.onClick = onClick;
+        this.command = command;
     }
 
     public Npc(String name, Location location){
@@ -259,6 +261,15 @@ public class Npc {
 
     public Consumer<Player> getOnClick() {
         return onClick;
+    }
+
+    public String getCommand() {
+        return command;
+    }
+
+    public Npc setCommand(String command) {
+        this.command = command;
+        return this;
     }
 
     public ServerPlayer getNpc() {

@@ -74,6 +74,10 @@ public class NpcManager {
                 }
             }
 
+            if(npc.getCommand() != null){
+                config.set("npcs." + npc.getName() + ".command", npc.getCommand());
+            }
+
         }
 
         NpcPlugin.getInstance().saveConfig();
@@ -96,6 +100,7 @@ public class NpcManager {
             SkinFetcher skin = new SkinFetcher(skinUuid, skinValue, skinSignature);
             boolean showInTab = config.getBoolean("npcs." + name + ".showInTab");
             boolean spawnEntity = config.getBoolean("npcs." + name + ".spawnEntity");
+            String command = config.getString("npcs." + name + ".command");
 
             Npc npc = new Npc(name, location);
             if(config.isConfigurationSection("npcs." + name + ".equipment")){
@@ -111,6 +116,10 @@ public class NpcManager {
 
             if(displayName != null && displayName.length() > 0) {
                 npc.setDisplayName(displayName);
+            }
+
+            if(command != null && command.length() > 0){
+                npc.setCommand(command);
             }
 
             if(config.isConfigurationSection("npcs." + name + ".skin")){

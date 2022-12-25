@@ -5,6 +5,7 @@ import de.oliver.NpcPlugin;
 import de.oliver.events.PacketReceivedEvent;
 import de.oliver.utils.ReflectionUtils;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -31,6 +32,9 @@ public class PacketReceivedListener implements Listener {
                 }
 
                 npc.getOnClick().accept(event.getPlayer());
+                if(npc.getCommand() != null && npc.getCommand().length() > 0){
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getCommand().replace("{player}", event.getPlayer().getName()));
+                }
             }
         }
 

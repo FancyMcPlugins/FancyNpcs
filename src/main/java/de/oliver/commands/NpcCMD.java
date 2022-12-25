@@ -25,7 +25,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("create", "remove", "skin", "movehere", "displayName", "equipment");
+            return Arrays.asList("create", "remove", "skin", "movehere", "displayName", "equipment", "command");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
@@ -163,6 +163,29 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npc.create();
                 npc.spawnForAll();
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated equipment of npc</green>"));
+            }
+
+            case "command" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                String cmd = "";
+                for (int i = 2; i < args.length; i++) {
+                    cmd += args[i] + " ";
+                }
+                cmd = cmd.substring(0, cmd.length() - 1);
+
+                npc.setCommand(cmd);
+
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated command to be executed</green>"));
             }
 
             default -> {

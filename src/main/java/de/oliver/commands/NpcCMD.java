@@ -25,7 +25,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("create", "remove", "skin", "movehere", "displayName", "equipment", "command");
+            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "command");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
@@ -41,6 +41,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         if(!(sender instanceof Player p)){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Only players can execute this command</red>"));
             return false;
+        }
+
+        if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>NPC Plugin help:"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc create (name) <dark_gray>- <white>Creates a new npc at your location"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc remove (name) <dark_gray>- <white>Removes an npc"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc skin (name) (skin) <dark_gray>- <white>Sets the skin for an npc"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc movehere (name) <dark_gray>- <white>Teleports an npc to your location"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc command (name) (command ...) <dark_gray>- <white>The command will be executed when someone interacts with the npc"));
+
+            return true;
         }
 
         if (args.length < 2){

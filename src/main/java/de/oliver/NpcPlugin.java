@@ -2,6 +2,7 @@ package de.oliver;
 
 import de.oliver.commands.NpcCMD;
 import de.oliver.listeners.PacketReceivedListener;
+import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -32,6 +33,7 @@ public class NpcPlugin extends JavaPlugin {
         getCommand("npc").setExecutor(new NpcCMD());
 
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
+        pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 
         Bukkit.getScheduler().runTaskLater(instance, () -> {

@@ -77,6 +77,10 @@ public class Npc {
     }
 
     public void spawn(Player target){
+        if(!location.getWorld().getName().equalsIgnoreCase(target.getWorld().getName())){
+            return;
+        }
+
         CraftPlayer craftPlayer = (CraftPlayer) target;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 

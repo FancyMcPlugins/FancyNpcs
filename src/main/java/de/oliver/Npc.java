@@ -104,6 +104,12 @@ public class Npc {
             }
         }
 
+        // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
+        npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
+
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
+        serverPlayer.connection.send(setEntityDataPacket);
+
         if(equipment != null && equipment.size() > 0) {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
 

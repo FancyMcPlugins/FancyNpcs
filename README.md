@@ -18,3 +18,22 @@ _A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Proto
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_
 
 /npc command (name) (command ...) - _The command will be executed when someone interacts with the npc_
+
+## Used packets
+
+_(Just a note for me when updating this plugin to a new version)_
+
+- ClientboundPlayerInfoUpdatePacket
+- ClientboundAddPlayerPacket
+- ClientboundSetEntityDataPacket
+- ClientboundSetEquipmentPacket
+- ClientboundTeleportEntityPacket
+- ClientboundRotateHeadPacket
+- ClientboundRemoveEntitiesPacket
+
+### Mappings
+
+- Npc#move
+  - ClientboundTeleportEntityPacket.b
+  - ClientboundTeleportEntityPacket.c
+  - ClientboundTeleportEntityPacket.d

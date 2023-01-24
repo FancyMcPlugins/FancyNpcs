@@ -42,3 +42,5 @@ _(Just a note for me when updating this plugin to a new version)_
 
 - 23w03a
   - no relevant changes for this plugin
+- 23w04a
+  - no relevant changes for this plugin

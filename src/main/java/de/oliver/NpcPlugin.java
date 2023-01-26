@@ -4,6 +4,7 @@ import de.oliver.commands.NpcCMD;
 import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
+import de.oliver.utils.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -29,6 +30,9 @@ public class NpcPlugin extends JavaPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
+
+        // register bStats
+        Metrics metrics = new Metrics(this, 17543);
 
         getCommand("npc").setExecutor(new NpcCMD());
 

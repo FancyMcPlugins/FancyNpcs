@@ -25,7 +25,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "command");
+            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "command", "showInTab");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
@@ -52,6 +52,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc command (name) (command ...) <dark_gray>- <white>The command will be executed when someone interacts with the npc"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"));
 
             return true;
         }
@@ -199,6 +200,49 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npc.setCommand(cmd);
 
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated command to be executed</green>"));
+            }
+
+            case "showintab" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                boolean showInTab;
+                switch (args[2].toLowerCase()) {
+                    case "true" -> showInTab = true;
+                    case "false" -> showInTab = false;
+                    default -> {
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid argument (use 'true' or 'false')</red>"));
+                        return false;
+                    }
+                }
+
+                if(showInTab == npc.isShowInTab()){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Nothing has changed</red>"));
+                    return false;
+                }
+
+                npc.setShowInTab(showInTab);
+                if(!showInTab){
+                    npc.removeFromTabForAll();
+                } else {
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                }
+
+                if(showInTab){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now be shown in tab</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer be shown in tab</green>"));
+                }
             }
 
             default -> {

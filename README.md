@@ -37,3 +37,6 @@ _(Just a note for me when updating this plugin to a new version)_
   - ClientboundTeleportEntityPacket.b
   - ClientboundTeleportEntityPacket.c
   - ClientboundTeleportEntityPacket.d
+
+- Npc#removeFromTab
+  - ClientboundPlayerInfoUpdatePacket.b

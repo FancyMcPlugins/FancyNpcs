@@ -182,6 +182,10 @@ public class Npc {
     public void remove(ServerPlayer serverPlayer){
         NpcPlugin.getInstance().getNpcManager().removeNpc(this);
 
+        if(showInTab){
+            removeFromTab(serverPlayer);
+        }
+
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
     }
@@ -195,6 +199,38 @@ public class Npc {
     public void removeForAll(){
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             remove(onlinePlayer);
+        }
+    }
+
+    public void removeFromTab(ServerPlayer serverPlayer){
+        ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, npc);
+
+        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
+        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
+                entry.profileId(),
+                entry.profile(),
+                false,
+                entry.latency(),
+                entry.gameMode(),
+                entry.displayName(),
+                entry.chatSession()
+        );
+
+        // replace the old entry with the new entry
+        ReflectionUtils.setValue(playerInfoUpdatePacket, "b", List.of(newEntry));
+
+        serverPlayer.connection.send(playerInfoUpdatePacket);
+    }
+
+    public void removeFromTab(Player player){
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        removeFromTab(serverPlayer);
+    }
+
+    public void removeFromTabForAll(){
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            removeFromTab(onlinePlayer);
         }
     }
 

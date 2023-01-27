@@ -19,6 +19,8 @@ _A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Proto
 
 /npc command (name) (command ...) - _The command will be executed when someone interacts with the npc_
 
+/npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_
+
 ## Used packets
 
 _(Just a note for me when updating this plugin to a new version)_
@@ -38,7 +40,10 @@ _(Just a note for me when updating this plugin to a new version)_
   - ClientboundTeleportEntityPacket.c
   - ClientboundTeleportEntityPacket.d
 
-### Changes
+- Npc#removeFromTab
+  - ClientboundPlayerInfoUpdatePacket.b
+
+### Version changes
 
 - 23w03a
   - no relevant changes for this plugin

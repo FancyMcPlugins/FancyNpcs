@@ -30,6 +30,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
             return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).toList();
+        } else if(args.length == 3 && args[0].equalsIgnoreCase("showInTab")){
+            return Arrays.asList("true", "false");
         }
 
         return null;

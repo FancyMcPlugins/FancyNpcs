@@ -21,6 +21,23 @@ public class ReflectionUtils {
         return result;
     }
 
+    public static Object getStaticValue(Class clazz, String name) {
+        Object result = null;
+
+        try {
+            Field field = clazz.getDeclaredField(name);
+
+            field.setAccessible(true);
+            result = field.get(clazz);
+            field.setAccessible(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
     public static void setValue(Object instance, String name, Object value) {
         try {
 //            System.out.println("---------------------");

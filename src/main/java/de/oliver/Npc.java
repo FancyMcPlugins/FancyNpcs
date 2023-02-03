@@ -3,6 +3,7 @@ package de.oliver;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
+import de.oliver.utils.RandomUtils;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
 import net.minecraft.network.chat.Component;
@@ -12,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.scores.PlayerTeam;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
@@ -34,6 +36,8 @@ public class Npc {
     private Consumer<Player> onClick;
     private String command;
     private ServerPlayer npc;
+    private String localName;
+    private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
     public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
         this.name = name;
@@ -45,6 +49,7 @@ public class Npc {
         this.equipment = equipment;
         this.onClick = onClick;
         this.command = command;
+        generateLocalName();
     }
 
     public Npc(String name, Location location){
@@ -54,6 +59,14 @@ public class Npc {
         this.showInTab = false;
         this.spawnEntity = true;
         this.onClick = p -> {};
+        generateLocalName();
+    }
+
+    private void generateLocalName(){
+        localName = "";
+        for (int i = 0; i < 8; i++) {
+            localName += "§" + localNameChars[(int) RandomUtils.randomInRange(0, localNameChars.length)];
+        }
     }
 
     public void create(){
@@ -63,7 +76,7 @@ public class Npc {
 
         MinecraftServer minecraftServer = ((CraftServer)Bukkit.getServer()).getServer();
         ServerLevel serverLevel = ((CraftWorld)location.getWorld()).getHandle();
-        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), displayName);
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), localName);
 
         if(skin != null && skin.isLoaded()) {
             // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
@@ -84,11 +97,14 @@ public class Npc {
         CraftPlayer craftPlayer = (CraftPlayer) target;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
+        npc.displayName = displayName;
+        npc.listName = Component.literal(displayName);
+
         EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
         actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
+        actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
         if(showInTab){
             actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
-            actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
         }
 
         ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npc));
@@ -103,6 +119,18 @@ public class Npc {
                 move(serverPlayer, location);
             }
         }
+
+        // set custom name
+        String teamName = "npc-" + localName;
+
+        PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
+        team.getPlayers().clear();
+        team.getPlayers().add(npc.getGameProfile().getName());
+        team.setPlayerPrefix(Component.literal(displayName));
+
+        ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true);
+        serverPlayer.connection.send(setPlayerTeamPacket);
+
 
         // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
         npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
@@ -131,6 +159,7 @@ public class Npc {
     public void updateDisplayName(String displayName){
         this.displayName = displayName;
         npc.listName = Component.literal(displayName);
+        npc.displayName = displayName;
 
         removeForAll();
         create();

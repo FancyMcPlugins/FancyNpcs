@@ -69,6 +69,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         switch (subcommand.toLowerCase()){
             case "create" -> {
+                if(NpcPlugin.getInstance().getNpcManager().getNpc(name) != null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>An npc with that name already exists</red>"));
+                    return false;
+                }
+
                 Npc npc = new Npc(name, p.getLocation());
                 npc.create();
                 npc.spawnForAll();

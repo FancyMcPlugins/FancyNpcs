@@ -1,6 +1,7 @@
 package de.oliver;
 
 import de.oliver.utils.SkinFetcher;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Location;
@@ -61,6 +62,8 @@ public class NpcManager {
             config.set("npcs." + npc.getName() + ".location", npc.getLocation());
             config.set("npcs." + npc.getName() + ".showInTab", npc.isShowInTab());
             config.set("npcs." + npc.getName() + ".spawnEntity", npc.isSpawnEntity());
+            config.set("npcs." + npc.getName() + ".glowing", npc.isGlowing());
+            config.set("npcs." + npc.getName() + ".glowingColor", npc.getGlowingColor().getName());
 
             if(npc.getSkin() != null) {
                 config.set("npcs." + npc.getName() + ".skin.uuid", npc.getSkin().getUuid());
@@ -100,6 +103,8 @@ public class NpcManager {
             SkinFetcher skin = new SkinFetcher(skinUuid, skinValue, skinSignature);
             boolean showInTab = config.getBoolean("npcs." + name + ".showInTab");
             boolean spawnEntity = config.getBoolean("npcs." + name + ".spawnEntity");
+            boolean glowing = config.getBoolean("npcs." + name + ".glowing");
+            ChatFormatting glowingColor = ChatFormatting.getByName(config.getString("npcs." + name + ".glowingColor"));
             String command = config.getString("npcs." + name + ".command");
 
             Npc npc = new Npc(name, location);
@@ -113,6 +118,9 @@ public class NpcManager {
 
             npc.setShowInTab(showInTab);
             npc.setSpawnEntity(spawnEntity);
+
+            npc.setGlowing(glowing);
+            npc.setGlowingColor(glowingColor);
 
             if(displayName != null && displayName.length() > 0) {
                 npc.setDisplayName(displayName);

@@ -5,6 +5,7 @@ import de.oliver.NpcPlugin;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,13 +26,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "command", "showInTab");
+            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "command", "showInTab", "glowing", "glowingColor");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
             return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).toList();
-        } else if(args.length == 3 && args[0].equalsIgnoreCase("showInTab")){
+        } else if(args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing"))){
             return Arrays.asList("true", "false");
+        } else if(args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")){
+            return Arrays.stream(ChatFormatting.values()).map(ChatFormatting::getName).toList();
         }
 
         return null;
@@ -55,6 +58,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc command (name) (command ...) <dark_gray>- <white>The command will be executed when someone interacts with the npc"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect"));
 
             return true;
         }
@@ -246,6 +251,64 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 } else {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer be shown in tab</green>"));
                 }
+            }
+
+            case "glowing" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                boolean glowing;
+                try{
+                    glowing = Boolean.parseBoolean(args[2]);
+                }catch (Exception e){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                npc.setGlowing(glowing);
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+
+                if(glowing){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now glow</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no glow</green>"));
+                }
+            }
+
+            case "glowingcolor" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                ChatFormatting color = ChatFormatting.getByName(args[2]);
+                if(color == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                npc.setGlowingColor(color);
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
             }
 
             default -> {

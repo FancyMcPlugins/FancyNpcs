@@ -6,6 +6,7 @@ import com.mojang.datafixers.util.Pair;
 import de.oliver.utils.RandomUtils;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
@@ -32,19 +33,23 @@ public class Npc {
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
+    private boolean glowing;
+    private ChatFormatting glowingColor;
+    private ServerPlayer npc;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
     private String command;
-    private ServerPlayer npc;
     private String localName;
     private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
         this.name = name;
         this.displayName = displayName;
         this.skin = skin;
         this.location = location;
         this.showInTab = showInTab;
+        this.glowing = glow;
+        this.glowingColor = glowColor;
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
         this.onClick = onClick;
@@ -58,6 +63,8 @@ public class Npc {
         this.location = location;
         this.showInTab = false;
         this.spawnEntity = true;
+        this.glowing = false;
+        this.glowingColor = ChatFormatting.WHITE;
         this.onClick = p -> {};
         generateLocalName();
     }
@@ -124,6 +131,7 @@ public class Npc {
         String teamName = "npc-" + localName;
 
         PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
+        team.setColor(glowingColor);
         team.getPlayers().clear();
         team.getPlayers().add(npc.getGameProfile().getName());
         team.setPlayerPrefix(Component.literal(displayName));
@@ -134,6 +142,7 @@ public class Npc {
 
         // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
         npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
+        npc.setGlowingTag(glowing);
 
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
         serverPlayer.connection.send(setEntityDataPacket);
@@ -314,6 +323,22 @@ public class Npc {
     public Npc setSpawnEntity(boolean spawnEntity) {
         this.spawnEntity = spawnEntity;
         return this;
+    }
+
+    public boolean isGlowing() {
+        return glowing;
+    }
+
+    public void setGlowing(boolean glowing) {
+        this.glowing = glowing;
+    }
+
+    public ChatFormatting getGlowingColor() {
+        return glowingColor;
+    }
+
+    public void setGlowingColor(ChatFormatting glowingColor) {
+        this.glowingColor = glowingColor;
     }
 
     public Npc addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){

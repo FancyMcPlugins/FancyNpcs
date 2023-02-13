@@ -12,6 +12,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NpcPlugin extends JavaPlugin {
 
+    public static final String SUPPORTED_VERSION = "1.19.3";
+
     private static NpcPlugin instance;
     private final NpcManager npcManager;
 
@@ -24,9 +26,12 @@ public class NpcPlugin extends JavaPlugin {
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if(!getServer().getMinecraftVersion().equals("1.19.3")){
+        if(!getServer().getMinecraftVersion().equals(SUPPORTED_VERSION)){
+            getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Disabling plugin.");
+            getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
+            getLogger().warning("Disabling NPC plugin.");
+            getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
             return;
         }

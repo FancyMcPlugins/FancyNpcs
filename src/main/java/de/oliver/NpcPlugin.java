@@ -6,6 +6,7 @@ import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
 import de.oliver.utils.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,7 +27,9 @@ public class NpcPlugin extends JavaPlugin {
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if(!getServer().getMinecraftVersion().equals(SUPPORTED_VERSION)){
+
+        String serverVersion = ((CraftServer) Bukkit.getServer()).getServer().getServerVersion();
+        if(!serverVersion.equals(SUPPORTED_VERSION)){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
@@ -34,6 +37,16 @@ public class NpcPlugin extends JavaPlugin {
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
             return;
+        }
+
+        String serverSoftware = Bukkit.getServer().getName();
+
+        if(!serverSoftware.equals("Paper")){
+            getLogger().warning("--------------------------------------------------");
+            getLogger().warning("It is recommended to use Paper as server software.");
+            getLogger().warning("Because you are not using paper, the plugin");
+            getLogger().warning("might not work correctly.");
+            getLogger().warning("--------------------------------------------------");
         }
 
         // register bStats

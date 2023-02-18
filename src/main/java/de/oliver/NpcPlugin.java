@@ -5,6 +5,7 @@ import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
 import de.oliver.utils.Metrics;
+import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
 import org.bukkit.entity.Player;
@@ -27,8 +28,9 @@ public class NpcPlugin extends JavaPlugin {
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
+        DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
-        String serverVersion = ((CraftServer) Bukkit.getServer()).getServer().getServerVersion();
+        String serverVersion = nmsServer.getServerVersion();
         if(!serverVersion.equals(SUPPORTED_VERSION)){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
@@ -39,8 +41,7 @@ public class NpcPlugin extends JavaPlugin {
             return;
         }
 
-        String serverSoftware = Bukkit.getServer().getName();
-
+        String serverSoftware = nmsServer.getServerModName();
         if(!serverSoftware.equals("Paper")){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
@@ -52,12 +53,15 @@ public class NpcPlugin extends JavaPlugin {
         // register bStats
         Metrics metrics = new Metrics(this, 17543);
 
+        // register commands
         getCommand("npc").setExecutor(new NpcCMD());
 
+        // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 
+        // load and spawn npcs
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             npcManager.loadNpcs();
 

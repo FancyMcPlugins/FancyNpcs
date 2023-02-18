@@ -6,8 +6,9 @@ import com.mojang.datafixers.util.Pair;
 import de.oliver.utils.RandomUtils;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
+import io.papermc.paper.adventure.PaperAdventure;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -105,7 +106,7 @@ public class Npc {
         ServerPlayer serverPlayer = craftPlayer.getHandle();
 
         npc.displayName = displayName;
-        npc.listName = Component.literal(displayName);
+        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
 
         EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
         actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
@@ -134,7 +135,7 @@ public class Npc {
         team.setColor(glowingColor);
         team.getPlayers().clear();
         team.getPlayers().add(npc.getGameProfile().getName());
-        team.setPlayerPrefix(Component.literal(displayName));
+        team.setPlayerPrefix(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName)));
 
         ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true);
         serverPlayer.connection.send(setPlayerTeamPacket);
@@ -167,7 +168,7 @@ public class Npc {
 
     public void updateDisplayName(String displayName){
         this.displayName = displayName;
-        npc.listName = Component.literal(displayName);
+        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
         npc.displayName = displayName;
 
         removeForAll();

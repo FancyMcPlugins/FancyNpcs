@@ -145,8 +145,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 displayName = displayName.substring(0, displayName.length() - 1);
 
-                displayName = displayName.replace("&", "§");
-
                 npc.updateDisplayName(displayName);
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
             }

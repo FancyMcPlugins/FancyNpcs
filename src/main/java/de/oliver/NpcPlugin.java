@@ -5,6 +5,7 @@ import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
 import de.oliver.utils.Metrics;
+import de.oliver.utils.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
@@ -27,6 +28,15 @@ public class NpcPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
+
+        String newestVersion = VersionFetcher.getNewestVersion();
+        if(!newestVersion.equals(getDescription().getVersion())){
+            getLogger().warning("-------------------------------------------------------");
+            getLogger().warning("You are not using the latest version the NPC plugin.");
+            getLogger().warning("Please update to the newest version (" + newestVersion + ").");
+            getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+            getLogger().warning("-------------------------------------------------------");
+        }
 
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 

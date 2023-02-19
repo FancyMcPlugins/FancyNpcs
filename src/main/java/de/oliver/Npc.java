@@ -97,13 +97,10 @@ public class Npc {
         NpcPlugin.getInstance().getNpcManager().registerNpc(this);
     }
 
-    public void spawn(Player target){
-        if(!location.getWorld().getName().equalsIgnoreCase(target.getWorld().getName())){
+    private void spawn(ServerPlayer serverPlayer){
+        if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
             return;
         }
-
-        CraftPlayer craftPlayer = (CraftPlayer) target;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
 
         npc.displayName = displayName;
         npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
@@ -160,6 +157,12 @@ public class Npc {
         }
     }
 
+    public void spawn(Player player){
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        spawn(serverPlayer);
+    }
+
     public void spawnForAll(){
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             spawn(onlinePlayer);
@@ -188,7 +191,35 @@ public class Npc {
         spawnForAll();
     }
 
-    public void move(ServerPlayer serverPlayer, Location location){
+    public void updateGlowing(boolean glowing){
+        this.glowing = glowing;
+
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
+    public void updateGlowingColor(ChatFormatting glowingColor){
+        this.glowingColor = glowingColor;
+
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
+    public void updateShowInTab(boolean showInTab){
+        this.showInTab = showInTab;
+
+        if(!showInTab){
+            removeFromTabForAll();
+        } else {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    private void move(ServerPlayer serverPlayer, Location location){
         this.location = location;
 
         npc.setPosRaw(location.x(), location.y(), location.z());
@@ -218,7 +249,7 @@ public class Npc {
         }
     }
 
-    public void remove(ServerPlayer serverPlayer){
+    private void remove(ServerPlayer serverPlayer){
         NpcPlugin.getInstance().getNpcManager().removeNpc(this);
 
         if(showInTab){
@@ -241,7 +272,7 @@ public class Npc {
         }
     }
 
-    public void removeFromTab(ServerPlayer serverPlayer){
+    private void removeFromTab(ServerPlayer serverPlayer){
         ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, npc);
 
         ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
@@ -261,13 +292,13 @@ public class Npc {
         serverPlayer.connection.send(playerInfoUpdatePacket);
     }
 
-    public void removeFromTab(Player player){
+    private void removeFromTab(Player player){
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
         removeFromTab(serverPlayer);
     }
 
-    public void removeFromTabForAll(){
+    private void removeFromTabForAll(){
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             removeFromTab(onlinePlayer);
         }
@@ -275,11 +306,6 @@ public class Npc {
 
     public String getName() {
         return name;
-    }
-
-    public Npc setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public String getDisplayName() {

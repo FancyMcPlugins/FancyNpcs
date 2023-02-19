@@ -171,11 +171,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-//                if(p.getInventory().getItemInMainHand().getType() == Material.AIR){
-//                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You must hold an item in hand</red>"));
-//                    return false;
-//                }
-
                 ItemStack item = p.getInventory().getItemInMainHand();
 
                 npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
@@ -235,14 +230,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.setShowInTab(showInTab);
-                if(!showInTab){
-                    npc.removeFromTabForAll();
-                } else {
-                    npc.removeForAll();
-                    npc.create();
-                    npc.spawnForAll();
-                }
+                npc.updateShowInTab(showInTab);
 
                 if(showInTab){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now be shown in tab</green>"));
@@ -271,10 +259,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.setGlowing(glowing);
-                npc.removeForAll();
-                npc.create();
-                npc.spawnForAll();
+                npc.updateGlowing(glowing);
 
                 if(glowing){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now glow</green>"));
@@ -301,10 +286,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.setGlowingColor(color);
-                npc.removeForAll();
-                npc.create();
-                npc.spawnForAll();
+                npc.updateGlowingColor(color);
 
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
             }

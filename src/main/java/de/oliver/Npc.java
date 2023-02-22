@@ -6,8 +6,9 @@ import com.mojang.datafixers.util.Pair;
 import de.oliver.utils.RandomUtils;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
+import io.papermc.paper.adventure.PaperAdventure;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -38,11 +39,12 @@ public class Npc {
     private ServerPlayer npc;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
-    private String command;
+    private String serverCommand;
+    private String playerCommand;
     private String localName;
     private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String serverCommand, String playerCommand) {
         this.name = name;
         this.displayName = displayName;
         this.skin = skin;
@@ -53,7 +55,8 @@ public class Npc {
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
         this.onClick = onClick;
-        this.command = command;
+        this.serverCommand = serverCommand;
+        this.playerCommand = playerCommand;
         generateLocalName();
     }
 
@@ -96,16 +99,13 @@ public class Npc {
         NpcPlugin.getInstance().getNpcManager().registerNpc(this);
     }
 
-    public void spawn(Player target){
-        if(!location.getWorld().getName().equalsIgnoreCase(target.getWorld().getName())){
+    private void spawn(ServerPlayer serverPlayer){
+        if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
             return;
         }
 
-        CraftPlayer craftPlayer = (CraftPlayer) target;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
-
         npc.displayName = displayName;
-        npc.listName = Component.literal(displayName);
+        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
 
         EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
         actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
@@ -134,7 +134,7 @@ public class Npc {
         team.setColor(glowingColor);
         team.getPlayers().clear();
         team.getPlayers().add(npc.getGameProfile().getName());
-        team.setPlayerPrefix(Component.literal(displayName));
+        team.setPlayerPrefix(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName)));
 
         ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true);
         serverPlayer.connection.send(setPlayerTeamPacket);
@@ -159,6 +159,12 @@ public class Npc {
         }
     }
 
+    public void spawn(Player player){
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        spawn(serverPlayer);
+    }
+
     public void spawnForAll(){
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             spawn(onlinePlayer);
@@ -167,7 +173,7 @@ public class Npc {
 
     public void updateDisplayName(String displayName){
         this.displayName = displayName;
-        npc.listName = Component.literal(displayName);
+        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
         npc.displayName = displayName;
 
         removeForAll();
@@ -187,7 +193,35 @@ public class Npc {
         spawnForAll();
     }
 
-    public void move(ServerPlayer serverPlayer, Location location){
+    public void updateGlowing(boolean glowing){
+        this.glowing = glowing;
+
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
+    public void updateGlowingColor(ChatFormatting glowingColor){
+        this.glowingColor = glowingColor;
+
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
+    public void updateShowInTab(boolean showInTab){
+        this.showInTab = showInTab;
+
+        if(!showInTab){
+            removeFromTabForAll();
+        } else {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    private void move(ServerPlayer serverPlayer, Location location){
         this.location = location;
 
         npc.setPosRaw(location.x(), location.y(), location.z());
@@ -217,7 +251,7 @@ public class Npc {
         }
     }
 
-    public void remove(ServerPlayer serverPlayer){
+    private void remove(ServerPlayer serverPlayer){
         NpcPlugin.getInstance().getNpcManager().removeNpc(this);
 
         if(showInTab){
@@ -240,7 +274,7 @@ public class Npc {
         }
     }
 
-    public void removeFromTab(ServerPlayer serverPlayer){
+    private void removeFromTab(ServerPlayer serverPlayer){
         ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, npc);
 
         ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
@@ -260,13 +294,13 @@ public class Npc {
         serverPlayer.connection.send(playerInfoUpdatePacket);
     }
 
-    public void removeFromTab(Player player){
+    private void removeFromTab(Player player){
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
         removeFromTab(serverPlayer);
     }
 
-    public void removeFromTabForAll(){
+    private void removeFromTabForAll(){
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             removeFromTab(onlinePlayer);
         }
@@ -274,11 +308,6 @@ public class Npc {
 
     public String getName() {
         return name;
-    }
-
-    public Npc setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public String getDisplayName() {
@@ -312,8 +341,9 @@ public class Npc {
         return showInTab;
     }
 
-    public void setShowInTab(boolean showInTab) {
+    public Npc setShowInTab(boolean showInTab) {
         this.showInTab = showInTab;
+        return this;
     }
 
     public boolean isSpawnEntity() {
@@ -329,16 +359,18 @@ public class Npc {
         return glowing;
     }
 
-    public void setGlowing(boolean glowing) {
+    public Npc setGlowing(boolean glowing) {
         this.glowing = glowing;
+        return this;
     }
 
     public ChatFormatting getGlowingColor() {
         return glowingColor;
     }
 
-    public void setGlowingColor(ChatFormatting glowingColor) {
+    public Npc setGlowingColor(ChatFormatting glowingColor) {
         this.glowingColor = glowingColor;
+        return this;
     }
 
     public Npc addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
@@ -363,12 +395,21 @@ public class Npc {
         return onClick;
     }
 
-    public String getCommand() {
-        return command;
+    public String getServerCommand() {
+        return serverCommand;
     }
 
-    public Npc setCommand(String command) {
-        this.command = command;
+    public Npc setServerCommand(String serverCommand) {
+        this.serverCommand = serverCommand;
+        return this;
+    }
+
+    public String getPlayerCommand() {
+        return playerCommand;
+    }
+
+    public Npc setPlayerCommand(String playerCommand) {
+        this.playerCommand = playerCommand;
         return this;
     }
 

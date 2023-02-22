@@ -1,5 +1,7 @@
 package de.oliver.listeners;
 
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
 import de.oliver.events.PacketReceivedEvent;
@@ -32,8 +34,27 @@ public class PacketReceivedListener implements Listener {
                 }
 
                 npc.getOnClick().accept(event.getPlayer());
-                if(npc.getCommand() != null && npc.getCommand().length() > 0){
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getCommand().replace("{player}", event.getPlayer().getName()));
+                if(npc.getServerCommand() != null && npc.getServerCommand().length() > 0){
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", event.getPlayer().getName()));
+                }
+
+                if(npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0){
+
+                    if(npc.getPlayerCommand().toLowerCase().startsWith("server")){
+                        String[] args = npc.getPlayerCommand().split(" ");
+                        if(args.length < 2){
+                            return;
+                        }
+                        String server = args[1];
+
+                        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                        out.writeUTF("Connect");
+                        out.writeUTF(server);
+                        event.getPlayer().sendPluginMessage(NpcPlugin.getInstance(), "BungeeCord", out.toByteArray());
+                        return;
+                    }
+
+                    event.getPlayer().performCommand(npc.getPlayerCommand());
                 }
             }
         }

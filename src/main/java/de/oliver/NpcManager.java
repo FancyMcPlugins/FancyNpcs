@@ -77,8 +77,12 @@ public class NpcManager {
                 }
             }
 
-            if(npc.getCommand() != null){
-                config.set("npcs." + npc.getName() + ".command", npc.getCommand());
+            if(npc.getServerCommand() != null){
+                config.set("npcs." + npc.getName() + ".serverCommand", npc.getServerCommand());
+            }
+
+            if(npc.getPlayerCommand() != null){
+                config.set("npcs." + npc.getName() + ".playerCommand", npc.getPlayerCommand());
             }
 
         }
@@ -105,7 +109,8 @@ public class NpcManager {
             boolean spawnEntity = config.getBoolean("npcs." + name + ".spawnEntity");
             boolean glowing = config.getBoolean("npcs." + name + ".glowing");
             ChatFormatting glowingColor = ChatFormatting.getByName(config.getString("npcs." + name + ".glowingColor"));
-            String command = config.getString("npcs." + name + ".command");
+            String serverCommand = config.getString("npcs." + name + ".serverCommand");
+            String playerCommand = config.getString("npcs." + name + ".playerCommand");
 
             Npc npc = new Npc(name, location);
             if(config.isConfigurationSection("npcs." + name + ".equipment")){
@@ -126,8 +131,12 @@ public class NpcManager {
                 npc.setDisplayName(displayName);
             }
 
-            if(command != null && command.length() > 0){
-                npc.setCommand(command);
+            if(serverCommand != null && serverCommand.length() > 0){
+                npc.setServerCommand(serverCommand);
+            }
+
+            if(playerCommand != null && playerCommand.length() > 0){
+                npc.setPlayerCommand(playerCommand);
             }
 
             if(config.isConfigurationSection("npcs." + name + ".skin")){

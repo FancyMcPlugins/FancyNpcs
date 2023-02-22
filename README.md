@@ -11,8 +11,11 @@ _Using paper is recommended_
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
-/npc command (name) (command ...) - _The command will be executed when someone interacts with the npc_<br>
+/npc serverCommand (name) (command ...) - _The command will be executed by the console when someone interacts with the npc_<br>
+/npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
+
+For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who interacted with the npc.
 
 ## Permissions
 For the /npc command - ``NpcPlugin.admin``

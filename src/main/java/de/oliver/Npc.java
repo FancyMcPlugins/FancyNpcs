@@ -341,8 +341,9 @@ public class Npc {
         return showInTab;
     }
 
-    public void setShowInTab(boolean showInTab) {
+    public Npc setShowInTab(boolean showInTab) {
         this.showInTab = showInTab;
+        return this;
     }
 
     public boolean isSpawnEntity() {
@@ -358,16 +359,18 @@ public class Npc {
         return glowing;
     }
 
-    public void setGlowing(boolean glowing) {
+    public Npc setGlowing(boolean glowing) {
         this.glowing = glowing;
+        return this;
     }
 
     public ChatFormatting getGlowingColor() {
         return glowingColor;
     }
 
-    public void setGlowingColor(ChatFormatting glowingColor) {
+    public Npc setGlowingColor(ChatFormatting glowingColor) {
         this.glowingColor = glowingColor;
+        return this;
     }
 
     public Npc addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
@@ -405,8 +408,9 @@ public class Npc {
         return playerCommand;
     }
 
-    public void setPlayerCommand(String playerCommand) {
+    public Npc setPlayerCommand(String playerCommand) {
         this.playerCommand = playerCommand;
+        return this;
     }
 
     public ServerPlayer getNpc() {

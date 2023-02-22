@@ -32,8 +32,12 @@ public class PacketReceivedListener implements Listener {
                 }
 
                 npc.getOnClick().accept(event.getPlayer());
-                if(npc.getCommand() != null && npc.getCommand().length() > 0){
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getCommand().replace("{player}", event.getPlayer().getName()));
+                if(npc.getServerCommand() != null && npc.getServerCommand().length() > 0){
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", event.getPlayer().getName()));
+                }
+
+                if(npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0){
+                    event.getPlayer().performCommand(npc.getPlayerCommand());
                 }
             }
         }

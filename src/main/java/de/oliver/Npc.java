@@ -39,11 +39,12 @@ public class Npc {
     private ServerPlayer npc;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
-    private String command;
+    private String serverCommand;
+    private String playerCommand;
     private String localName;
     private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String command) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String serverCommand, String playerCommand) {
         this.name = name;
         this.displayName = displayName;
         this.skin = skin;
@@ -54,7 +55,8 @@ public class Npc {
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
         this.onClick = onClick;
-        this.command = command;
+        this.serverCommand = serverCommand;
+        this.playerCommand = playerCommand;
         generateLocalName();
     }
 
@@ -390,13 +392,21 @@ public class Npc {
         return onClick;
     }
 
-    public String getCommand() {
-        return command;
+    public String getServerCommand() {
+        return serverCommand;
     }
 
-    public Npc setCommand(String command) {
-        this.command = command;
+    public Npc setServerCommand(String serverCommand) {
+        this.serverCommand = serverCommand;
         return this;
+    }
+
+    public String getPlayerCommand() {
+        return playerCommand;
+    }
+
+    public void setPlayerCommand(String playerCommand) {
+        this.playerCommand = playerCommand;
     }
 
     public ServerPlayer getNpc() {

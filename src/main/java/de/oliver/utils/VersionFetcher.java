@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class VersionFetcher {
 
-    public static final String DOWNLOAD_URL = "https://www.spigotmc.org/resources/npc-plugin-1-19-3.107306/";
+    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/npc-plugin/versions";
     private static final String API_URL = "https://api.modrinth.com/v2/project/npc-plugin/version";
     private static String newestVersion = "";
 

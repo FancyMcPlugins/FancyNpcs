@@ -71,6 +71,9 @@ public class NpcPlugin extends JavaPlugin {
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 
+        // using bungee plugin channel
+        getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
         // load and spawn npcs
         Bukkit.getScheduler().runTaskLater(instance, () -> {
             npcManager.loadNpcs();
@@ -86,6 +89,8 @@ public class NpcPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        getServer().getMessenger().unregisterOutgoingPluginChannel(this);
+
         npcManager.saveNpcs();
     }
 

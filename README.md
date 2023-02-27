@@ -56,3 +56,5 @@ _(Just a note for me when updating this plugin to a new version)_
   - no relevant changes for this plugin
 - 1.19.4-pre1
   - no relevant changes for this plugin
+- 1.19.4-pre2
+  - no relevant changes for this plugin

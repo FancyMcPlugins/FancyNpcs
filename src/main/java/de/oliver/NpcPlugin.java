@@ -29,14 +29,16 @@ public class NpcPlugin extends JavaPlugin {
     public void onEnable() {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        String newestVersion = VersionFetcher.getNewestVersion();
-        if(!newestVersion.equals(getDescription().getVersion())){
-            getLogger().warning("-------------------------------------------------------");
-            getLogger().warning("You are not using the latest version the NPC plugin.");
-            getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-            getLogger().warning(VersionFetcher.DOWNLOAD_URL);
-            getLogger().warning("-------------------------------------------------------");
-        }
+        new Thread(() -> {
+            String newestVersion = VersionFetcher.getNewestVersion();
+            if(!newestVersion.equals(getDescription().getVersion())){
+                getLogger().warning("-------------------------------------------------------");
+                getLogger().warning("You are not using the latest version the NPC plugin.");
+                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
+                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                getLogger().warning("-------------------------------------------------------");
+            }
+        }).start();
 
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 

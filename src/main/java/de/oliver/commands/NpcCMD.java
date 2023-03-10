@@ -17,7 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
@@ -26,7 +28,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor");
+            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
@@ -52,6 +54,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>NPC Plugin help:"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc create (name) <dark_gray>- <white>Creates a new npc at your location"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc remove (name) <dark_gray>- <white>Removes an npc"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc list <dark_gray>- <white>Summary of all npcs"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc skin (name) (skin) <dark_gray>- <white>Sets the skin for an npc"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc movehere (name) <dark_gray>- <white>Teleports an npc to your location"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc"));
@@ -61,6 +64,29 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect"));
+
+            return true;
+        }
+
+        if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>All NPCs:</b></green>"));
+
+            Collection<Npc> allNpcs = NpcPlugin.getInstance().getNpcManager().getAllNpcs();
+
+            if(allNpcs.isEmpty()){
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>There are no NPCs. Use '/npc create' to create one</yellow>"));
+            } else {
+                final DecimalFormat df = new DecimalFormat("#########.##");
+                for (Npc npc : allNpcs) {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><hover:show_text:'<gray><i>Click to teleport'><click:run_command:'{tp_cmd}'>- {name} ({x}/{y}/{z})</click></hover></green>"
+                            .replace("{name}", npc.getName())
+                            .replace("{x}", df.format(npc.getLocation().x()))
+                            .replace("{y}", df.format(npc.getLocation().y()))
+                            .replace("{z}", df.format(npc.getLocation().z()))
+                            .replace("{tp_cmd}", "/tp " + npc.getLocation().x() + " " + npc.getLocation().y() + " " + npc.getLocation().z())
+                    ));
+                }
+            }
 
             return true;
         }

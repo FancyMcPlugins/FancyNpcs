@@ -28,7 +28,7 @@ import java.util.function.Consumer;
 
 public class Npc {
 
-    private String name;
+    private final String name;
     private String displayName;
     private SkinFetcher skin;
     private Location location;
@@ -39,12 +39,13 @@ public class Npc {
     private ServerPlayer npc;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
+    private boolean turnToPlayer;
     private String serverCommand;
     private String playerCommand;
     private String localName;
     private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, String serverCommand, String playerCommand) {
+    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
         this.name = name;
         this.displayName = displayName;
         this.skin = skin;
@@ -55,6 +56,7 @@ public class Npc {
         this.spawnEntity = spawnEntity;
         this.equipment = equipment;
         this.onClick = onClick;
+        this.turnToPlayer = turnToPlayer;
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         generateLocalName();
@@ -69,6 +71,7 @@ public class Npc {
         this.glowing = false;
         this.glowingColor = ChatFormatting.WHITE;
         this.onClick = p -> {};
+        this.turnToPlayer = false;
         generateLocalName();
     }
 
@@ -93,8 +96,8 @@ public class Npc {
             gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         }
 
-        npc = new ServerPlayer(minecraftServer, serverLevel, gameProfile);
-        npc.displayName = displayName;
+        npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
+        npc.gameProfile = gameProfile;
 
         NpcPlugin.getInstance().getNpcManager().registerNpc(this);
     }
@@ -221,12 +224,28 @@ public class Npc {
         }
     }
 
+    public void lookAt(ServerPlayer serverPlayer, Location location){
+        npc.setRot(location.getYaw(), location.getPitch());
+        npc.setYHeadRot(location.getYaw());
+        npc.setXRot(location.getPitch());
+        npc.setYRot(location.getYaw());
+
+        ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
+        serverPlayer.connection.send(teleportEntityPacket);
+
+        float angelMultiplier = 256f / 360f;
+        ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte)(location.getYaw()*angelMultiplier));
+        serverPlayer.connection.send(rotateHeadPacket);
+    }
+
     private void move(ServerPlayer serverPlayer, Location location){
         this.location = location;
 
         npc.setPosRaw(location.x(), location.y(), location.z());
         npc.setRot(location.getYaw(), location.getPitch());
         npc.setYHeadRot(location.getYaw());
+        npc.setXRot(location.getPitch());
+        npc.setYRot(location.getYaw());
 
         ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
         ReflectionUtils.setValue(teleportEntityPacket, "b", location.x());
@@ -393,6 +412,14 @@ public class Npc {
 
     public Consumer<Player> getOnClick() {
         return onClick;
+    }
+
+    public boolean isTurnToPlayer() {
+        return turnToPlayer;
+    }
+
+    public void setTurnToPlayer(boolean turnToPlayer) {
+        this.turnToPlayer = turnToPlayer;
     }
 
     public String getServerCommand() {

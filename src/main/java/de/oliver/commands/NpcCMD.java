@@ -28,12 +28,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list");
+            return Arrays.asList("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
             return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
             return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).toList();
-        } else if(args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing"))){
+        } else if(args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))){
             return Arrays.asList("true", "false");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")){
             return Arrays.stream(ChatFormatting.values()).map(ChatFormatting::getName).toList();
@@ -64,6 +64,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not"));
 
             return true;
         }
@@ -339,6 +340,37 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npc.updateGlowingColor(color);
 
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
+            }
+
+            case "turntoplayer" -> {
+                if(args.length < 3){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    return false;
+                }
+
+                boolean turnToPlayer;
+                try{
+                    turnToPlayer = Boolean.parseBoolean(args[2]);
+                }catch (Exception e){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    return false;
+                }
+
+                npc.setTurnToPlayer(turnToPlayer);
+
+                if(turnToPlayer){
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will turn to the players</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer turn to the players</green>"));
+
+                    npc.moveForAll(npc.getLocation()); // move to default pos
+                }
             }
 
             default -> {

@@ -4,6 +4,7 @@ import de.oliver.commands.NpcCMD;
 import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
 import de.oliver.listeners.PlayerJoinListener;
+import de.oliver.listeners.PlayerMoveListener;
 import de.oliver.utils.Metrics;
 import de.oliver.utils.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
@@ -70,6 +71,7 @@ public class NpcPlugin extends JavaPlugin {
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
+        pluginManager.registerEvents(new PlayerMoveListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         pluginManager.registerEvents(new PacketReceivedListener(), instance);
 

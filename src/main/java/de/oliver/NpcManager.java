@@ -64,6 +64,7 @@ public class NpcManager {
             config.set("npcs." + npc.getName() + ".spawnEntity", npc.isSpawnEntity());
             config.set("npcs." + npc.getName() + ".glowing", npc.isGlowing());
             config.set("npcs." + npc.getName() + ".glowingColor", npc.getGlowingColor().getName());
+            config.set("npcs." + npc.getName() + ".turnToPlayer", npc.isTurnToPlayer());
 
             if(npc.getSkin() != null) {
                 config.set("npcs." + npc.getName() + ".skin.uuid", npc.getSkin().getUuid());
@@ -109,6 +110,7 @@ public class NpcManager {
             boolean spawnEntity = config.getBoolean("npcs." + name + ".spawnEntity");
             boolean glowing = config.getBoolean("npcs." + name + ".glowing");
             ChatFormatting glowingColor = ChatFormatting.getByName(config.getString("npcs." + name + ".glowingColor"));
+            boolean turnToPlayer = config.getBoolean("npcs." + name + ".turnToPlayer");
             String serverCommand = config.getString("npcs." + name + ".serverCommand");
             String playerCommand = config.getString("npcs." + name + ".playerCommand");
 
@@ -126,6 +128,8 @@ public class NpcManager {
 
             npc.setGlowing(glowing);
             npc.setGlowingColor(glowingColor);
+
+            npc.setTurnToPlayer(turnToPlayer);
 
             if(displayName != null && displayName.length() > 0) {
                 npc.setDisplayName(displayName);

@@ -1,7 +1,7 @@
 # NPC Plugin
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.19.3**<br>
+**Only for minecraft server version 1.19.4**<br>
 _Using paper is recommended_
 
 ## Commands
@@ -43,24 +43,3 @@ _(Just a note for me when updating this plugin to a new version)_
 
 - Npc#removeFromTab
   - ClientboundPlayerInfoUpdatePacket.b
-
-### Version changes
-
-- 23w03a
-  - no relevant changes for this plugin
-- 23w04a
-  - no relevant changes for this plugin
-- 23w05a
-  - no relevant changes for this plugin
-- 23w06a
-  - no relevant changes for this plugin
-- 23w07a
-  - no relevant changes for this plugin
-- 1.19.4-pre1
-  - no relevant changes for this plugin
-- 1.19.4-pre2
-  - no relevant changes for this plugin
-- 1.19.4-pre3
-  - no relevant changes for this plugin
-- 1.19.4-pre4
-  - no relevant changes for this plugin

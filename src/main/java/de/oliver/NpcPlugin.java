@@ -16,7 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NpcPlugin extends JavaPlugin {
 
-    public static final String SUPPORTED_VERSION = "1.19.3";
+    public static final String SUPPORTED_VERSION = "1.19.";
 
     private static NpcPlugin instance;
     private final NpcManager npcManager;

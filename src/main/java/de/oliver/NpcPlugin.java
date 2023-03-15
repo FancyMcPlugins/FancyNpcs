@@ -8,6 +8,7 @@ import de.oliver.listeners.PlayerMoveListener;
 import de.oliver.utils.Metrics;
 import de.oliver.utils.VersionFetcher;
 import net.minecraft.server.dedicated.DedicatedServer;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.entity.Player;
@@ -31,8 +32,9 @@ public class NpcPlugin extends JavaPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         new Thread(() -> {
-            String newestVersion = VersionFetcher.getNewestVersion();
-            if(!newestVersion.equals(getDescription().getVersion())){
+            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
+            if(newestVersion.compareTo(currentVersion) > 0){
                 getLogger().warning("-------------------------------------------------------");
                 getLogger().warning("You are not using the latest version the NPC plugin.");
                 getLogger().warning("Please update to the newest version (" + newestVersion + ").");

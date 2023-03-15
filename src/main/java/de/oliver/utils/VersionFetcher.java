@@ -1,6 +1,7 @@
 package de.oliver.utils;
 
 import com.google.gson.Gson;
+import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import java.io.IOException;
 import java.net.URL;
@@ -10,16 +11,16 @@ public class VersionFetcher {
 
     public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/npc-plugin/versions";
     private static final String API_URL = "https://api.modrinth.com/v2/project/npc-plugin/version";
-    private static String newestVersion = "";
+    private static ComparableVersion newestVersion = null;
 
-    public static String getNewestVersion(){
-        return newestVersion.length() > 0 ? newestVersion : fetch(API_URL);
+    public static ComparableVersion getNewestVersion(){
+        return newestVersion != null ? newestVersion : fetch(API_URL);
     }
 
     /**
      * @return the newest version string
      */
-    private static String fetch(String url){
+    private static ComparableVersion fetch(String url){
         String jsonString = null;
         try {
             jsonString = getDataFromUrl(url);
@@ -35,9 +36,10 @@ public class VersionFetcher {
         Map<String, Object> firstVersion = versions[0];
         String versionNumber = (String) firstVersion.get("version_number");
 
-        newestVersion = versionNumber;
+        ComparableVersion ver = new ComparableVersion(versionNumber);
 
-        return versionNumber;
+        newestVersion = ver;
+        return ver;
     }
 
     private static String getDataFromUrl(String urlString) throws IOException {
@@ -46,5 +48,4 @@ public class VersionFetcher {
             return scanner.hasNext() ? scanner.next() : "";
         }
     }
-
 }

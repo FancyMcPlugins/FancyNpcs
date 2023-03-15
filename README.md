@@ -36,6 +36,7 @@ _(Just a note for me when updating this plugin to a new version)_
 
 - ClientboundPlayerInfoUpdatePacket
 - ClientboundAddPlayerPacket
+- ClientboundSetPlayerTeamPacket
 - ClientboundSetEntityDataPacket
 - ClientboundSetEquipmentPacket
 - ClientboundTeleportEntityPacket

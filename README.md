@@ -2,7 +2,15 @@
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
 
 **Only for minecraft server version 1.19.3**<br>
-_Using paper is recommended_
+_Using [paper](https://papermc.io/downloads) is highly recommended_
+
+## Get the plugin
+You can download the latest versions at the following places:
+
+- https://www.spigotmc.org/resources/npc-plugin-1-19-3.107306/
+- https://modrinth.com/plugin/npc-plugin/
+- https://github.com/OliverSchlueter/NpcPlugin/releases
+- Build from source (``gradlew reobfJar``)
 
 ## Commands
 /npc create (name) - _Creates a new npc at your location_<br>
@@ -28,6 +36,7 @@ _(Just a note for me when updating this plugin to a new version)_
 
 - ClientboundPlayerInfoUpdatePacket
 - ClientboundAddPlayerPacket
+- ClientboundSetPlayerTeamPacket
 - ClientboundSetEntityDataPacket
 - ClientboundSetEquipmentPacket
 - ClientboundTeleportEntityPacket

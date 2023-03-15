@@ -248,9 +248,9 @@ public class Npc {
         npc.setYRot(location.getYaw());
 
         ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
-        ReflectionUtils.setValue(teleportEntityPacket, "b", location.x());
-        ReflectionUtils.setValue(teleportEntityPacket, "c", location.y());
-        ReflectionUtils.setValue(teleportEntityPacket, "d", location.z());
+        ReflectionUtils.setValue(teleportEntityPacket, "b", location.x()); // 'x'
+        ReflectionUtils.setValue(teleportEntityPacket, "c", location.y()); // 'y'
+        ReflectionUtils.setValue(teleportEntityPacket, "d", location.z()); // 'z'
         serverPlayer.connection.send(teleportEntityPacket);
 
         float angelMultiplier = 256f / 360f;
@@ -308,7 +308,7 @@ public class Npc {
         );
 
         // replace the old entry with the new entry
-        ReflectionUtils.setValue(playerInfoUpdatePacket, "b", List.of(newEntry));
+        ReflectionUtils.setValue(playerInfoUpdatePacket, "b", List.of(newEntry)); // 'entries'
 
         serverPlayer.connection.send(playerInfoUpdatePacket);
     }

@@ -46,9 +46,9 @@ _(Just a note for me when updating this plugin to a new version)_
 ### Mappings
 
 - Npc#move
-  - ClientboundTeleportEntityPacket.b
-  - ClientboundTeleportEntityPacket.c
-  - ClientboundTeleportEntityPacket.d
+  - ClientboundTeleportEntityPacket.b ('x')
+  - ClientboundTeleportEntityPacket.c ('y')
+  - ClientboundTeleportEntityPacket.d ('z')
 
 - Npc#removeFromTab
-  - ClientboundPlayerInfoUpdatePacket.b
+  - ClientboundPlayerInfoUpdatePacket.b ('entries')

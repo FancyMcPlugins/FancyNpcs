@@ -16,9 +16,9 @@ public class PlayerJoinListener implements Listener {
         PacketReader packetReader = new PacketReader(event.getPlayer());
         packetReader.inject();
 
-        Npc.isTeamCreated.put(event.getPlayer().getUniqueId(), false);
 
         for (Npc npc : NpcPlugin.getInstance().getNpcManager().getAllNpcs()) {
+            npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             npc.spawn(event.getPlayer());
         }
 

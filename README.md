@@ -24,6 +24,9 @@ You can download the latest versions at the following places:
 /npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
 /npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
+<br>
+<br>
+Using `<empty>` as displayName will make the whole name tag invisible.
 
 For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who interacted with the npc.
 

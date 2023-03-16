@@ -28,6 +28,9 @@ import java.util.function.Consumer;
 
 public class Npc {
 
+    public static final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
+    private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
+
     private final String name;
     private String displayName;
     private SkinFetcher skin;
@@ -43,7 +46,6 @@ public class Npc {
     private String serverCommand;
     private String playerCommand;
     private String localName;
-    private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
     public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
         this.name = name;
@@ -139,8 +141,14 @@ public class Npc {
         team.getPlayers().add(npc.getGameProfile().getName());
         team.setPlayerPrefix(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName)));
 
-        ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true);
+        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
+
+        ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer);
         serverPlayer.connection.send(setPlayerTeamPacket);
+
+        if(!isTeamCreatedForPlayer){
+            isTeamCreated.put(serverPlayer.getUUID(), true);
+        }
 
 
         // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)

@@ -32,13 +32,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         if(args.length == 1){
             return Arrays.asList("help", "version", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer");
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
-            return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).toList();
+            return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase())).toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
-            return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).toList();
+            return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         } else if(args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))){
             return Arrays.asList("true", "false");
         } else if(args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")){
-            return Arrays.stream(ChatFormatting.values()).map(ChatFormatting::getName).toList();
+            return Arrays.stream(ChatFormatting.values()).map(ChatFormatting::getName).filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
         }
 
         return null;

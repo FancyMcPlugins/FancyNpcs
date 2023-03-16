@@ -16,6 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R2.CraftServer;
@@ -137,6 +138,11 @@ public class Npc {
 
         PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
         team.setColor(glowingColor);
+        if(displayName.equalsIgnoreCase("<empty>")){
+            team.setNameTagVisibility(Team.Visibility.NEVER);
+        } else {
+            team.setNameTagVisibility(Team.Visibility.ALWAYS);
+        }
         team.getPlayers().clear();
         team.getPlayers().add(npc.getGameProfile().getName());
         team.setPlayerPrefix(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName)));

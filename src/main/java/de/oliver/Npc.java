@@ -28,7 +28,6 @@ import java.util.function.Consumer;
 
 public class Npc {
 
-    public static final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
     private static final char[] localNameChars = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r' };
 
     private final String name;
@@ -46,6 +45,7 @@ public class Npc {
     private String serverCommand;
     private String playerCommand;
     private String localName;
+    private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
 
     public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
         this.name = name;
@@ -450,5 +450,9 @@ public class Npc {
 
     public ServerPlayer getNpc() {
         return npc;
+    }
+
+    public Map<UUID, Boolean> getIsTeamCreated() {
+        return isTeamCreated;
     }
 }

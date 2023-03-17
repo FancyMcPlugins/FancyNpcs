@@ -50,7 +50,7 @@ public class NpcManager {
         return npcs.values();
     }
 
-    public void saveNpcs(){
+    public void saveNpcs(boolean force){
         FileConfiguration config = NpcPlugin.getInstance().getConfig();
 
         if(config.isConfigurationSection("npcs")) {
@@ -58,6 +58,10 @@ public class NpcManager {
         }
 
         for (Npc npc : npcs.values()) {
+            if(force || !npc.isDirty()){
+                continue;
+            }
+
             config.set("npcs." + npc.getName() + ".displayName", npc.getDisplayName());
             config.set("npcs." + npc.getName() + ".location", npc.getLocation());
             config.set("npcs." + npc.getName() + ".showInTab", npc.isShowInTab());
@@ -86,6 +90,7 @@ public class NpcManager {
                 config.set("npcs." + npc.getName() + ".playerCommand", npc.getPlayerCommand());
             }
 
+            npc.setDirty(false);
         }
 
         NpcPlugin.getInstance().saveConfig();

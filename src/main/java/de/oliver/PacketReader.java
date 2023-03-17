@@ -38,8 +38,6 @@ public class PacketReader {
             }
         });
 
-        NpcPlugin.getInstance().getLogger().info("Injected player " + player.getName());
-
         return true;
     }
 

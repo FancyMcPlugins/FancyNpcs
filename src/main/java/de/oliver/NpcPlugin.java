@@ -91,13 +91,15 @@ public class NpcPlugin extends JavaPlugin {
                 npcManager.getAllNpcs().forEach(npc -> npc.spawn(onlinePlayer));
             }
         }, 20L*5);
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> npcManager.saveNpcs(false), 20L*60*5, 20L*60*15);
     }
 
     @Override
     public void onDisable() {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
 
-        npcManager.saveNpcs();
+        npcManager.saveNpcs(true);
     }
 
     public NpcManager getNpcManager() {

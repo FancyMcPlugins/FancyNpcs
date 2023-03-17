@@ -46,6 +46,7 @@ public class Npc {
     private String serverCommand;
     private String playerCommand;
     private String localName;
+    private boolean isDirty;
     private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
 
     public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
@@ -62,6 +63,7 @@ public class Npc {
         this.turnToPlayer = turnToPlayer;
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
+        this.isDirty = false;
         generateLocalName();
     }
 
@@ -75,6 +77,7 @@ public class Npc {
         this.glowingColor = ChatFormatting.WHITE;
         this.onClick = p -> {};
         this.turnToPlayer = false;
+        this.isDirty = false;
         generateLocalName();
     }
 
@@ -190,12 +193,14 @@ public class Npc {
 
     public void updateDisplayName(String displayName){
         this.displayName = displayName;
+        isDirty = true;
         npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
         npc.displayName = displayName;
 
         removeForAll();
         create();
         spawnForAll();
+        
     }
 
     public void updateSkin(SkinFetcher skin){
@@ -204,6 +209,7 @@ public class Npc {
         }
 
         this.skin = skin;
+        isDirty = true;
 
         removeForAll();
         create();
@@ -212,7 +218,8 @@ public class Npc {
 
     public void updateGlowing(boolean glowing){
         this.glowing = glowing;
-
+        isDirty = true;
+        
         removeForAll();
         create();
         spawnForAll();
@@ -220,7 +227,8 @@ public class Npc {
 
     public void updateGlowingColor(ChatFormatting glowingColor){
         this.glowingColor = glowingColor;
-
+        isDirty = true;
+        
         removeForAll();
         create();
         spawnForAll();
@@ -228,6 +236,7 @@ public class Npc {
 
     public void updateShowInTab(boolean showInTab){
         this.showInTab = showInTab;
+        isDirty = true;
 
         if(!showInTab){
             removeFromTabForAll();
@@ -254,6 +263,7 @@ public class Npc {
 
     private void move(ServerPlayer serverPlayer, Location location){
         this.location = location;
+        isDirty = true;
 
         npc.setPosRaw(location.x(), location.y(), location.z());
         npc.setRot(location.getYaw(), location.getPitch());
@@ -349,6 +359,7 @@ public class Npc {
 
     public Npc setDisplayName(String displayName) {
         this.displayName = displayName;
+        isDirty = true;
         return this;
     }
 
@@ -358,6 +369,7 @@ public class Npc {
 
     public Npc setSkin(SkinFetcher skin) {
         this.skin = skin;
+        isDirty = true;
         return this;
     }
 
@@ -367,6 +379,7 @@ public class Npc {
 
     public Npc setLocation(Location location) {
         this.location = location;
+        isDirty = true;
         return this;
     }
 
@@ -376,6 +389,7 @@ public class Npc {
 
     public Npc setShowInTab(boolean showInTab) {
         this.showInTab = showInTab;
+        isDirty = true;
         return this;
     }
 
@@ -385,6 +399,7 @@ public class Npc {
 
     public Npc setSpawnEntity(boolean spawnEntity) {
         this.spawnEntity = spawnEntity;
+        isDirty = true;
         return this;
     }
 
@@ -394,6 +409,7 @@ public class Npc {
 
     public Npc setGlowing(boolean glowing) {
         this.glowing = glowing;
+        isDirty = true;
         return this;
     }
 
@@ -403,6 +419,7 @@ public class Npc {
 
     public Npc setGlowingColor(ChatFormatting glowingColor) {
         this.glowingColor = glowingColor;
+        isDirty = true;
         return this;
     }
 
@@ -412,6 +429,7 @@ public class Npc {
         }
 
         equipment.put(equipmentSlot, itemStack);
+        isDirty = true;
         return this;
     }
 
@@ -434,6 +452,7 @@ public class Npc {
 
     public void setTurnToPlayer(boolean turnToPlayer) {
         this.turnToPlayer = turnToPlayer;
+        isDirty = true;
     }
 
     public String getServerCommand() {
@@ -442,6 +461,7 @@ public class Npc {
 
     public Npc setServerCommand(String serverCommand) {
         this.serverCommand = serverCommand;
+        isDirty = true;
         return this;
     }
 
@@ -451,11 +471,20 @@ public class Npc {
 
     public Npc setPlayerCommand(String playerCommand) {
         this.playerCommand = playerCommand;
+        isDirty = true;
         return this;
     }
 
     public ServerPlayer getNpc() {
         return npc;
+    }
+
+    public boolean isDirty() {
+        return isDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        isDirty = dirty;
     }
 
     public Map<UUID, Boolean> getIsTeamCreated() {

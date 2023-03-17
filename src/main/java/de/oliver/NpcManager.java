@@ -58,7 +58,7 @@ public class NpcManager {
         }
 
         for (Npc npc : npcs.values()) {
-            if(force || !npc.isDirty()){
+            if(!force || !npc.isDirty()){
                 continue;
             }
 

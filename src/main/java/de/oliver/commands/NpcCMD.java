@@ -23,6 +23,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
 
@@ -30,15 +31,29 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Arrays.asList("help", "version", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer");
+            return Stream.of("help", "version", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer")
+                    .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
+                    .toList();
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
-            return NpcPlugin.getInstance().getNpcManager().getAllNpcs().stream().map(Npc::getName).filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase())).toList();
+            return NpcPlugin.getInstance().getNpcManager().getAllNpcs()
+                    .stream()
+                    .map(Npc::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
+                    .toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("equipment")){
-            return Arrays.stream(EquipmentSlot.values()).map(EquipmentSlot::getName).filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Arrays.stream(EquipmentSlot.values())
+                    .map(EquipmentSlot::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
         } else if(args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))){
-            return Arrays.asList("true", "false");
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")){
-            return Arrays.stream(ChatFormatting.values()).map(ChatFormatting::getName).filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase())).toList();
+            return Arrays.stream(ChatFormatting.values())
+                    .map(ChatFormatting::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
         }
 
         return null;

@@ -21,6 +21,7 @@ public class NpcPlugin extends JavaPlugin {
 
     private static NpcPlugin instance;
     private final NpcManager npcManager;
+    private boolean muteVersionNotification;
 
     public NpcPlugin() {
         instance = this;
@@ -29,19 +30,28 @@ public class NpcPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(!getConfig().isBoolean("mute_version_notification")){
+            getConfig().set("mute_version_notification", false);
+            saveConfig();
+        }
+
+        muteVersionNotification = getConfig().getBoolean("mute_version_notification");
+
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        new Thread(() -> {
-            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
-            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-            if(newestVersion.compareTo(currentVersion) > 0){
-                getLogger().warning("-------------------------------------------------------");
-                getLogger().warning("You are not using the latest version the NPC plugin.");
-                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
-                getLogger().warning("-------------------------------------------------------");
-            }
-        }).start();
+        if(!muteVersionNotification) {
+            new Thread(() -> {
+                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+                ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
+                if (newestVersion.compareTo(currentVersion) > 0) {
+                    getLogger().warning("-------------------------------------------------------");
+                    getLogger().warning("You are not using the latest version the NPC plugin.");
+                    getLogger().warning("Please update to the newest version (" + newestVersion + ").");
+                    getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                    getLogger().warning("-------------------------------------------------------");
+                }
+            }).start();
+        }
 
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
@@ -104,6 +114,10 @@ public class NpcPlugin extends JavaPlugin {
 
     public NpcManager getNpcManager() {
         return npcManager;
+    }
+
+    public boolean isMuteVersionNotification() {
+        return muteVersionNotification;
     }
 
     public static NpcPlugin getInstance() {

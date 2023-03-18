@@ -23,7 +23,7 @@ public class PlayerJoinListener implements Listener {
             npc.spawn(event.getPlayer());
         }
 
-        if(event.getPlayer().hasPermission("NpcPlugin.admin")){
+        if(!NpcPlugin.getInstance().isMuteVersionNotification() && event.getPlayer().hasPermission("NpcPlugin.admin")){
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(NpcPlugin.getInstance().getDescription().getVersion());

@@ -9,6 +9,7 @@ import de.oliver.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -113,6 +114,8 @@ public class Npc {
             return;
         }
 
+        List<Packet<ClientGamePacketListener>> packets = new ArrayList<>();
+
         npc.displayName = displayName;
         npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
 
@@ -124,12 +127,12 @@ public class Npc {
         }
 
         ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npc));
-        serverPlayer.connection.send(playerInfoPacket);
+        packets.add(playerInfoPacket);
 
         if(spawnEntity) {
             npc.setPos(location.x(), location.y(), location.z());
             ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npc);
-            serverPlayer.connection.send(spawnPlayerPacket);
+            packets.add(spawnPlayerPacket);
 
             if(location != null) {
                 move(serverPlayer, location);
@@ -153,7 +156,7 @@ public class Npc {
         boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
 
         ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer);
-        serverPlayer.connection.send(setPlayerTeamPacket);
+        packets.add(setPlayerTeamPacket);
 
         if(!isTeamCreatedForPlayer){
             isTeamCreated.put(serverPlayer.getUUID(), true);
@@ -165,7 +168,7 @@ public class Npc {
         npc.setGlowingTag(glowing);
 
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
-        serverPlayer.connection.send(setEntityDataPacket);
+        packets.add(setEntityDataPacket);
 
         if(equipment != null && equipment.size() > 0) {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
@@ -175,8 +178,11 @@ public class Npc {
             }
 
             ClientboundSetEquipmentPacket setEquipmentPacket = new ClientboundSetEquipmentPacket(npc.getId(), equipmentList);
-            serverPlayer.connection.send(setEquipmentPacket);
+            packets.add(setEquipmentPacket);
         }
+
+        ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
+        serverPlayer.connection.send(bundlePacket);
     }
 
     public void spawn(Player player){

@@ -7,7 +7,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 ## Get the plugin
 You can download the latest versions at the following places:
 
-- https://www.spigotmc.org/resources/npc-plugin-1-19-3.107306/
+- https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/
 - https://modrinth.com/plugin/npc-plugin/
 - https://github.com/OliverSchlueter/NpcPlugin/releases
 - Build from source (``gradlew reobfJar``)

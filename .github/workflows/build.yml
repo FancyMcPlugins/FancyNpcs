@@ -14,7 +14,7 @@ jobs:
       - name: Run build with Gradle Wrapper
         run: gradle reobfJar
       - name: Archive artifacts
-      - uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@master
         with:
           name: reobf-jar
           path: build/libs/

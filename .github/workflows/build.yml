@@ -13,10 +13,8 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Run build with Gradle Wrapper
         run: gradle reobfJar
-  archive-artifacts:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/upload-artifact@master
-      with:
-        name: reobf-jar
-        path: build/libs/
+      - name: Archive artifacts
+      - uses: actions/upload-artifact@master
+        with:
+          name: reobf-jar
+          path: build/libs/

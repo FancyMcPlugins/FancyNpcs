@@ -30,12 +30,6 @@ public class NpcPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if(!getConfig().isBoolean("mute_version_notification")){
-            getConfig().set("mute_version_notification", false);
-            saveConfig();
-        }
-
-        muteVersionNotification = getConfig().getBoolean("mute_version_notification");
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -90,8 +84,14 @@ public class NpcPlugin extends JavaPlugin {
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        // load and spawn npcs
+        // load config
         Bukkit.getScheduler().runTaskLater(instance, () -> {
+            if(!getConfig().isBoolean("mute_version_notification")){
+                getConfig().set("mute_version_notification", false);
+                saveConfig();
+            }
+            muteVersionNotification = getConfig().getBoolean("mute_version_notification");
+
             npcManager.loadNpcs();
 
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

@@ -58,7 +58,8 @@ public class NpcManager {
         }
 
         for (Npc npc : npcs.values()) {
-            if(!force || !npc.isDirty()){
+            boolean shouldSave = force || npc.isDirty();
+            if(!shouldSave){
                 continue;
             }
 

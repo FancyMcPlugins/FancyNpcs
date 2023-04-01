@@ -107,7 +107,7 @@ public class NpcManager {
 
         for (String name : config.getConfigurationSection("npcs").getKeys(false)) {
             String displayName = config.getString("npcs." + name + ".displayName");
-            Location location = (Location) config.get("npcs." + name + ".location");
+            Location location = config.getLocation("npcs." + name + ".location");
             String skinUuid = config.getString("npcs." + name + ".skin.uuid");
             String skinValue = config.getString("npcs." + name + ".skin.value");
             String skinSignature = config.getString("npcs." + name + ".skin.signature");

@@ -2,6 +2,7 @@ plugins {
     `java-library`
     id("io.papermc.paperweight.userdev") version "1.5.3"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
+    id("maven-publish")
 }
 
 group = "de.oliver"
@@ -17,6 +18,17 @@ dependencies {
 }
 
 tasks {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = project.group.toString()
+                artifactId = project.name
+                version = project.version.toString()
+                from(project.components["java"])
+            }
+        }
+    }
+
     // Configure reobfJar to run when invoking the build task
     assemble {
         dependsOn(reobfJar)

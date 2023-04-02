@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
+import de.oliver.events.NpcInteractEvent;
 import de.oliver.events.PacketReceivedEvent;
 import de.oliver.utils.ReflectionUtils;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
@@ -33,6 +34,13 @@ public class PacketReceivedListener implements Listener {
                     return;
                 }
 
+                NpcInteractEvent npcInteractEvent = new NpcInteractEvent(npc, npc.getPlayerCommand(), npc.getServerCommand(), npc.getOnClick(), event.getPlayer());
+                npcInteractEvent.callEvent();
+
+                if(npcInteractEvent.isCancelled()){
+                    return;
+                }
+
                 npc.getOnClick().accept(event.getPlayer());
                 if(npc.getServerCommand() != null && npc.getServerCommand().length() > 0){
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", event.getPlayer().getName()));
@@ -58,7 +66,5 @@ public class PacketReceivedListener implements Listener {
                 }
             }
         }
-
     }
-
 }

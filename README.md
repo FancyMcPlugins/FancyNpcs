@@ -1,4 +1,6 @@
-[![Generic badge](https://img.shields.io/badge/version-1.1.1-orange.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.1.1-green.svg)](https://shields.io/)
+[![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
+[![Downloads](https://img.shields.io/modrinth/dt/npc-plugin?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/npc-plugin/versions)
 
 # NPC Plugin
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)

@@ -7,6 +7,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Is fired when a NPC is being modified
+ */
 public class NpcModifyEvent extends Event implements Cancellable {
 
     private static HandlerList handlerList = new HandlerList();

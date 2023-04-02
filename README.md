@@ -1,4 +1,4 @@
-[![Generic badge](https://img.shields.io/badge/version-1.1.0-orange.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.1.1-orange.svg)](https://shields.io/)
 
 # NPC Plugin
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)

@@ -1,5 +1,23 @@
 # API usage
 
+## Using as dependency
+
+First clone this repo and run `gradlew publishToMavenLocal`.<br>
+Then include the following in your plugin's gradle project:
+```gradle
+repositories {
+    mavenLocal()
+    ...
+}
+
+dependencies {
+    implementation 'de.oliver:NpcPlugin:version'
+    ...
+}
+```
+
+You find the current version in the `README.md` file.
+
 ## Creating and modifying NPCs
 
 ### Getting an existing NPC

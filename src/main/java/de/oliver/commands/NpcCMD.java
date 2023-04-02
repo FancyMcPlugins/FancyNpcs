@@ -2,6 +2,8 @@ package de.oliver.commands;
 
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
+import de.oliver.events.NpcCreateEvent;
+import de.oliver.events.NpcRemoveEvent;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
 import de.oliver.utils.VersionFetcher;
@@ -140,10 +142,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
 
                 Npc npc = new Npc(name, p.getLocation());
-                npc.create();
-                npc.spawnForAll();
+                NpcCreateEvent npcCreateEvent = new NpcCreateEvent(npc, p);
+                npcCreateEvent.callEvent();
+                if(!npcCreateEvent.isCancelled()){
+                    npc.create();
+                    npc.spawnForAll();
 
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Created new npc</green>"));
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Created new npc</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creation has been cancelled</red>"));
+                }
             }
 
             case "remove" -> {
@@ -153,8 +161,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.removeForAll();
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Removed npc</green>"));
+                NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, p);
+                npcRemoveEvent.callEvent();
+                if(!npcRemoveEvent.isCancelled()){
+                    npc.removeForAll();
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Removed npc</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Removing has been cancelled</red>"));
+                }
             }
 
             case "movehere" -> {

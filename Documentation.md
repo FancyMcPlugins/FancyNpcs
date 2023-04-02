@@ -112,3 +112,8 @@ Contains the player who created the NPC and the NPC object.
 
 Is fired when a NPC is being deleted.<br>
 Contains the player who removed the NPC and the NPC object.
+
+### NpcModifyEvent
+
+Is fired when a NPC is being modified.<br>
+Contains the player who modified the NPC, the modification and the NPC object.

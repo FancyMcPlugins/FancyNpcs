@@ -3,6 +3,7 @@ package de.oliver.commands;
 import de.oliver.Npc;
 import de.oliver.NpcPlugin;
 import de.oliver.events.NpcCreateEvent;
+import de.oliver.events.NpcModifyEvent;
 import de.oliver.events.NpcRemoveEvent;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
@@ -178,8 +179,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.moveForAll(p.getLocation());
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Moved npc to your location</green>"));
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    npc.moveForAll(p.getLocation());
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Moved npc to your location</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "skin" -> {
@@ -196,9 +204,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
-                npc.updateSkin(skinFetcher);
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated skin of npc</green>"));
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
+                    npc.updateSkin(skinFetcher);
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated skin of npc</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "displayname" -> {
@@ -219,8 +234,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 displayName = displayName.substring(0, displayName.length() - 1);
 
-                npc.updateDisplayName(displayName);
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    npc.updateDisplayName(displayName);
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "equipment" -> {
@@ -247,11 +269,18 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 ItemStack item = p.getInventory().getItemInMainHand();
 
-                npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
-                npc.removeForAll();
-                npc.create();
-                npc.spawnForAll();
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated equipment of npc</green>"));
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated equipment of npc</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "servercommand" -> {
@@ -272,9 +301,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 cmd = cmd.substring(0, cmd.length() - 1);
 
-                npc.setServerCommand(cmd);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SERVER_COMMAND, p);
+                npcModifyEvent.callEvent();
 
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (server) command to be executed</green>"));
+                if(!npcModifyEvent.isCancelled()){
+                    npc.setServerCommand(cmd);
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (server) command to be executed</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "playercommand" -> {
@@ -295,9 +330,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 cmd = cmd.substring(0, cmd.length() - 1);
 
-                npc.setPlayerCommand(cmd);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, p);
+                npcModifyEvent.callEvent();
 
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (player) command to be executed</green>"));
+                if(!npcModifyEvent.isCancelled()){
+                    npc.setPlayerCommand(cmd);
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (player) command to be executed</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
             }
 
             case "showintab" -> {
@@ -327,41 +368,55 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.updateShowInTab(showInTab);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, p);
+                npcModifyEvent.callEvent();
 
-                if(showInTab){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now be shown in tab</green>"));
+                if(!npcModifyEvent.isCancelled()){
+                    npc.updateShowInTab(showInTab);
+
+                    if(showInTab){
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now be shown in tab</green>"));
+                    } else {
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer be shown in tab</green>"));
+                    }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer be shown in tab</green>"));
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
                 }
             }
 
             case "glowing" -> {
-                if(args.length < 3){
+                if (args.length < 3) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
                     return false;
                 }
 
                 Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
-                if(npc == null){
+                if (npc == null) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
                 }
 
                 boolean glowing;
-                try{
+                try {
                     glowing = Boolean.parseBoolean(args[2]);
-                }catch (Exception e){
+                } catch (Exception e) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
                     return false;
                 }
 
-                npc.updateGlowing(glowing);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, p);
+                npcModifyEvent.callEvent();
 
-                if(glowing){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now glow</green>"));
+                if (!npcModifyEvent.isCancelled()) {
+                    npc.updateGlowing(glowing);
+
+                    if (glowing) {
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now glow</green>"));
+                    } else {
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no glow</green>"));
+                    }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no glow</green>"));
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
                 }
             }
 
@@ -383,9 +438,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.updateGlowingColor(color);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING_COLOR, p);
+                npcModifyEvent.callEvent();
 
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
+                if(!npcModifyEvent.isCancelled()){
+                    npc.updateGlowingColor(color);
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
+                } else {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                }
+
             }
 
             case "turntoplayer" -> {
@@ -408,14 +470,20 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                npc.setTurnToPlayer(turnToPlayer);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, p);
+                npcModifyEvent.callEvent();
 
-                if(turnToPlayer){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will turn to the players</green>"));
+                if(!npcModifyEvent.isCancelled()){
+                    npc.setTurnToPlayer(turnToPlayer);
+
+                    if(turnToPlayer){
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will turn to the players</green>"));
+                    } else {
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer turn to the players</green>"));
+                        npc.moveForAll(npc.getLocation()); // move to default pos
+                    }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer turn to the players</green>"));
-
-                    npc.moveForAll(npc.getLocation()); // move to default pos
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
                 }
             }
 

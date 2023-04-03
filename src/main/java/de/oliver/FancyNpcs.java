@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+
 public class FancyNpcs extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.19.4";
@@ -24,6 +26,15 @@ public class FancyNpcs extends JavaPlugin {
     private boolean muteVersionNotification;
 
     public FancyNpcs() {
+        // TODO: remove in v1.1.3
+        // rename old plugin
+        File oldPluginFolder = new File("plugins/NpcPlugin/");
+        if(oldPluginFolder.exists() && oldPluginFolder.isDirectory()){
+            try {
+                oldPluginFolder.renameTo(new File("plugins/FancyNpcs/"));
+            } catch (Exception ignored){ }
+        }
+
         instance = this;
         this.npcManager = new NpcManager();
     }

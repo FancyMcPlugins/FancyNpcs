@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class VersionFetcher {
 
-    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/fancy-npcs/versions";
-    private static final String API_URL = "https://api.modrinth.com/v2/project/fancy-npcs/version";
+    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/fancynpcs/versions";
+    private static final String API_URL = "https://api.modrinth.com/v2/project/fancynpcs/version";
     private static ComparableVersion newestVersion = null;
 
     public static ComparableVersion getNewestVersion(){

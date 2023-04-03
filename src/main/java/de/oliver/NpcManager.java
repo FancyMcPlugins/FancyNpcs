@@ -51,7 +51,7 @@ public class NpcManager {
     }
 
     public void saveNpcs(boolean force){
-        FileConfiguration config = NpcPlugin.getInstance().getConfig();
+        FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
         if(config.isConfigurationSection("npcs")) {
             config.set("npcs", null);
@@ -94,12 +94,12 @@ public class NpcManager {
             npc.setDirty(false);
         }
 
-        NpcPlugin.getInstance().saveConfig();
+        FancyNpcs.getInstance().saveConfig();
     }
 
     public void loadNpcs(){
-        NpcPlugin.getInstance().reloadConfig();
-        FileConfiguration config = NpcPlugin.getInstance().getConfig();
+        FancyNpcs.getInstance().reloadConfig();
+        FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
         if(!config.isConfigurationSection("npcs")){
             return;

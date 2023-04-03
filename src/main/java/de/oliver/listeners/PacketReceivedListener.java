@@ -3,7 +3,7 @@ package de.oliver.listeners;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.Npc;
-import de.oliver.NpcPlugin;
+import de.oliver.FancyNpcs;
 import de.oliver.events.NpcInteractEvent;
 import de.oliver.events.PacketReceivedEvent;
 import de.oliver.utils.ReflectionUtils;
@@ -29,7 +29,7 @@ public class PacketReceivedListener implements Listener {
             boolean isSneaking = interactPacket.isUsingSecondaryAction();
 
             if(action == ServerboundInteractPacket.ActionType.ATTACK || action == ServerboundInteractPacket.ActionType.INTERACT && hand.equalsIgnoreCase("MAIN_HAND")){
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(entityId);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(entityId);
                 if(npc == null){
                     return;
                 }
@@ -58,7 +58,7 @@ public class PacketReceivedListener implements Listener {
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF("Connect");
                         out.writeUTF(server);
-                        event.getPlayer().sendPluginMessage(NpcPlugin.getInstance(), "BungeeCord", out.toByteArray());
+                        event.getPlayer().sendPluginMessage(FancyNpcs.getInstance(), "BungeeCord", out.toByteArray());
                         return;
                     }
 

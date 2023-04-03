@@ -1,7 +1,7 @@
 package de.oliver.listeners;
 
 import de.oliver.Npc;
-import de.oliver.NpcPlugin;
+import de.oliver.FancyNpcs;
 import de.oliver.PacketReader;
 import de.oliver.utils.VersionFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -18,17 +18,17 @@ public class PlayerJoinListener implements Listener {
         packetReader.inject();
 
 
-        for (Npc npc : NpcPlugin.getInstance().getNpcManager().getAllNpcs()) {
+        for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             npc.spawn(event.getPlayer());
         }
 
-        if(!NpcPlugin.getInstance().isMuteVersionNotification() && event.getPlayer().hasPermission("NpcPlugin.admin")){
+        if(!FancyNpcs.getInstance().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")){
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(NpcPlugin.getInstance().getDescription().getVersion());
-                if(newestVersion.compareTo(currentVersion) > 0){
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the NPC Plugin.</color>"));
+                ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
+                if(newestVersion != null && newestVersion.compareTo(currentVersion) > 0){
+                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyNpcs Plugin.</color>"));
                     event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
                 }
             }).start();

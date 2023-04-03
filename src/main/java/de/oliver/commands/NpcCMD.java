@@ -1,7 +1,7 @@
 package de.oliver.commands;
 
 import de.oliver.Npc;
-import de.oliver.NpcPlugin;
+import de.oliver.FancyNpcs;
 import de.oliver.events.NpcCreateEvent;
 import de.oliver.events.NpcModifyEvent;
 import de.oliver.events.NpcRemoveEvent;
@@ -38,7 +38,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
-            return NpcPlugin.getInstance().getNpcManager().getAllNpcs()
+            return FancyNpcs.getInstance().getNpcManager().getAllNpcs()
                     .stream()
                     .map(Npc::getName)
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
@@ -71,7 +71,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>NPC Plugin help:"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>FancyNpcs Plugin help:"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc version <dark_gray>- <white>Shows the plugin version"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc create (name) <dark_gray>- <white>Creates a new npc at your location"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc remove (name) <dark_gray>- <white>Removes an npc"));
@@ -94,12 +94,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(NpcPlugin.getInstance().getDescription().getVersion());
-                if(newestVersion.compareTo(currentVersion) > 0){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the NPC Plugin.</color>"));
+                ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
+                if(newestVersion == null){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#f25050>Could not find latest version</color>"));
+                } else if(newestVersion.compareTo(currentVersion) > 0){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyNpcs Plugin.</color>"));
                     p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
                 } else {
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the NPC Plugin (" + currentVersion + ").</color>"));
+                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ").</color>"));
                 }
             }).start();
 
@@ -107,7 +109,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         } else if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>All NPCs:</b></green>"));
 
-            Collection<Npc> allNpcs = NpcPlugin.getInstance().getNpcManager().getAllNpcs();
+            Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
 
             if(allNpcs.isEmpty()){
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>There are no NPCs. Use '/npc create' to create one</yellow>"));
@@ -137,7 +139,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         switch (subcommand.toLowerCase()){
             case "create" -> {
-                if(NpcPlugin.getInstance().getNpcManager().getNpc(name) != null){
+                if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>An npc with that name already exists</red>"));
                     return false;
                 }
@@ -156,7 +158,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "remove" -> {
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -173,7 +175,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "movehere" -> {
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -198,7 +200,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 String skinName = args[2];
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -222,7 +224,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -251,7 +253,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -289,7 +291,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -318,7 +320,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -347,7 +349,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -390,7 +392,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -426,7 +428,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;
@@ -456,7 +458,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(name);
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
                     return false;

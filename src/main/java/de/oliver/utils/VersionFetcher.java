@@ -9,8 +9,8 @@ import java.util.Map;
 
 public class VersionFetcher {
 
-    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/npc-plugin/versions";
-    private static final String API_URL = "https://api.modrinth.com/v2/project/npc-plugin/version";
+    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/fancy-npcs/versions";
+    private static final String API_URL = "https://api.modrinth.com/v2/project/fancy-npcs/version";
     private static ComparableVersion newestVersion = null;
 
     public static ComparableVersion getNewestVersion(){
@@ -25,7 +25,7 @@ public class VersionFetcher {
         try {
             jsonString = getDataFromUrl(url);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return null;
         }
 
         // Parse the JSON data into a Map

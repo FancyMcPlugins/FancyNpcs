@@ -11,7 +11,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'de.oliver:NpcPlugin:version'
+    implementation 'de.oliver:FancyNpcs:version'
     ...
 }
 ```
@@ -22,7 +22,7 @@ You find the current version in the `README.md` file.
 
 ### Getting an existing NPC
 ```java
-Npc npc = NpcPlugin.getInstance().getNpcManager().getNpc(npcName);
+Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(npcName);
 ```
 
 ### Creating a NPC

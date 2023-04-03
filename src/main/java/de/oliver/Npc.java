@@ -91,8 +91,8 @@ public class Npc {
     }
 
     public void create(){
-        if(NpcPlugin.getInstance().getNpcManager().getNpc(name) != null){
-            NpcPlugin.getInstance().getNpcManager().removeNpc(this);
+        if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null){
+            FancyNpcs.getInstance().getNpcManager().removeNpc(this);
         }
 
         MinecraftServer minecraftServer = ((CraftServer)Bukkit.getServer()).getServer();
@@ -107,7 +107,7 @@ public class Npc {
         npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
         npc.gameProfile = gameProfile;
 
-        NpcPlugin.getInstance().getNpcManager().registerNpc(this);
+        FancyNpcs.getInstance().getNpcManager().registerNpc(this);
     }
 
     private void spawn(ServerPlayer serverPlayer){
@@ -306,7 +306,7 @@ public class Npc {
     }
 
     private void remove(ServerPlayer serverPlayer){
-        NpcPlugin.getInstance().getNpcManager().removeNpc(this);
+        FancyNpcs.getInstance().getNpcManager().removeNpc(this);
 
         if(showInTab){
             removeFromTab(serverPlayer);

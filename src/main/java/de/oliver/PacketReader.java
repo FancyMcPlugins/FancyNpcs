@@ -34,7 +34,7 @@ public class PacketReader {
                 out.add(msg);
 
                 PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(msg, player);
-                Bukkit.getScheduler().runTaskLater(NpcPlugin.getInstance(), packetReceivedEvent::callEvent, 1L);
+                Bukkit.getScheduler().runTaskLater(FancyNpcs.getInstance(), packetReceivedEvent::callEvent, 1L);
             }
         });
 

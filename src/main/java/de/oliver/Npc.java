@@ -3,6 +3,7 @@ package de.oliver;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
+import de.oliver.events.NpcSpawnEvent;
 import de.oliver.utils.RandomUtils;
 import de.oliver.utils.ReflectionUtils;
 import de.oliver.utils.SkinFetcher;
@@ -186,6 +187,10 @@ public class Npc {
     }
 
     public void spawn(Player player){
+        NpcSpawnEvent npcSpawnEvent = new NpcSpawnEvent(this, player);
+        npcSpawnEvent.callEvent();
+        if(npcSpawnEvent.isCancelled()) return;
+
         CraftPlayer craftPlayer = (CraftPlayer) player;
         ServerPlayer serverPlayer = craftPlayer.getHandle();
         spawn(serverPlayer);

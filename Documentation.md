@@ -137,5 +137,11 @@ Is fired when a NPC is being modified.<br>
 Contains the player who modified the NPC, the modification and the NPC object.
 
 ### NpcInteractEvent
+
 Is fired when a player interacts with a NPC.<br>
 Contains the player who interacted, the NPC and all actions.
+
+### NpcSpawnEvent
+
+Is fired when a NPC is being spawned. This can happen when a player joins, a player switches the world or the NPC is being modified.<br>
+Contains the NPC that is being spawned and the player to whom the spawn packets are being sent.

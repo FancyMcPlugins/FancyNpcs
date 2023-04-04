@@ -1,10 +1,10 @@
-name: NpcPlugin
-main: de.oliver.NpcPlugin
+name: FancyNpcs
+main: de.oliver.FancyNpcs
 author: OliverHD
-version: 1.1.1
+version: 1.1.2
 api-version: 1.20
 load: POSTWORLD
 commands:
   Npc:
-    permission: NpcPlugin.admin
+    permission: FancyNpcs.admin
     description: Main command for the Npc plugin

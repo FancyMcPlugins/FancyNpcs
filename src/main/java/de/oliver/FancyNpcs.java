@@ -15,15 +15,26 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class NpcPlugin extends JavaPlugin {
+import java.io.File;
+
+public class FancyNpcs extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.20";
 
-    private static NpcPlugin instance;
+    private static FancyNpcs instance;
     private final NpcManager npcManager;
     private boolean muteVersionNotification;
 
-    public NpcPlugin() {
+    public FancyNpcs() {
+        // TODO: remove in v1.1.3
+        // rename old plugin
+        File oldPluginFolder = new File("plugins/NpcPlugin/");
+        if(oldPluginFolder.exists() && oldPluginFolder.isDirectory()){
+            try {
+                oldPluginFolder.renameTo(new File("plugins/FancyNpcs/"));
+            } catch (Exception ignored){ }
+        }
+
         instance = this;
         this.npcManager = new NpcManager();
     }
@@ -37,9 +48,11 @@ public class NpcPlugin extends JavaPlugin {
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-                if (newestVersion.compareTo(currentVersion) > 0) {
+                if(newestVersion == null){
+                    getLogger().warning("Could not fetch latest plugin version");
+                } else if (newestVersion.compareTo(currentVersion) > 0) {
                     getLogger().warning("-------------------------------------------------------");
-                    getLogger().warning("You are not using the latest version the NPC plugin.");
+                    getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
                     getLogger().warning("Please update to the newest version (" + newestVersion + ").");
                     getLogger().warning(VersionFetcher.DOWNLOAD_URL);
                     getLogger().warning("-------------------------------------------------------");
@@ -120,7 +133,7 @@ public class NpcPlugin extends JavaPlugin {
         return muteVersionNotification;
     }
 
-    public static NpcPlugin getInstance() {
+    public static FancyNpcs getInstance() {
         return instance;
     }
 }

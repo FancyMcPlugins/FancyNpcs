@@ -9,12 +9,25 @@ import java.util.Map;
 
 public class VersionFetcher {
 
-    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/npc-plugin/versions";
-    private static final String API_URL = "https://api.modrinth.com/v2/project/npc-plugin/version";
+    public static final String DOWNLOAD_URL = "https://modrinth.com/plugin/fancynpcs/versions";
+    private static final String API_URL = "https://api.modrinth.com/v2/project/fancynpcs/version";
     private static ComparableVersion newestVersion = null;
 
     public static ComparableVersion getNewestVersion(){
-        return newestVersion != null ? newestVersion : fetch(API_URL);
+        if(newestVersion != null) return newestVersion;
+
+        // TODO: remove when most servers have updated
+        newestVersion = fetch("https://api.modrinth.com/v2/project/npc-plugin/version");
+        if(newestVersion != null) return newestVersion;
+
+        newestVersion = fetch(API_URL);
+        if(newestVersion != null) return newestVersion;
+
+        // TODO: remove when most servers have updated
+        newestVersion = fetch("https://api.modrinth.com/v2/project/fancy-npcs/version");
+        if(newestVersion != null) return newestVersion;
+
+        return null;
     }
 
     /**
@@ -25,7 +38,7 @@ public class VersionFetcher {
         try {
             jsonString = getDataFromUrl(url);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            return null;
         }
 
         // Parse the JSON data into a Map

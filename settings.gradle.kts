@@ -1,1 +1,1 @@
-rootProject.name = "NpcPlugin"
+rootProject.name = "FancyNpcs"

@@ -6,3 +6,4 @@ This will help to update the plugin as fast as possible.
 Checked versions:
 - 23w12a
 - 23w13a
+- 23w14a

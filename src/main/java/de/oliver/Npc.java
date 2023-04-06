@@ -50,6 +50,7 @@ public class Npc {
     private String localName;
     private boolean isDirty;
     private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
+    private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
     public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
         this.name = name;
@@ -184,6 +185,8 @@ public class Npc {
 
         ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
         serverPlayer.connection.send(bundlePacket);
+
+        isVisibleForPlayer.put(serverPlayer.getUUID(), true);
     }
 
     public void spawn(Player player){
@@ -197,6 +200,7 @@ public class Npc {
     }
 
     public void spawnForAll(){
+        // TODO: check for each player if NPC should be visible (see distance thing - PlayerMoveListener)
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             spawn(onlinePlayer);
         }
@@ -312,6 +316,8 @@ public class Npc {
 
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
+
+        isVisibleForPlayer.put(serverPlayer.getUUID(), false);
     }
 
     public void remove(Player player){
@@ -500,5 +506,9 @@ public class Npc {
 
     public Map<UUID, Boolean> getIsTeamCreated() {
         return isTeamCreated;
+    }
+
+    public Map<UUID, Boolean> getIsVisibleForPlayer() {
+        return isVisibleForPlayer;
     }
 }

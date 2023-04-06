@@ -1,7 +1,7 @@
 package de.oliver.listeners;
 
-import de.oliver.Npc;
 import de.oliver.FancyNpcs;
+import de.oliver.Npc;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
@@ -16,27 +16,30 @@ public class PlayerMoveListener implements Listener {
         Location loc = event.getTo();
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
-            if(!npc.isTurnToPlayer()){
-                continue;
-            }
-
             if(loc.getWorld() != npc.getLocation().getWorld()){
-                continue;
-            }
-
-            double distance = loc.distance(npc.getLocation());
-
-            if(Double.isNaN(distance) || distance > 5){
                 continue;
             }
 
             CraftPlayer cp = ((CraftPlayer) event.getPlayer());
             ServerPlayer sp = cp.getHandle();
 
-            Location newLoc = loc.clone();
-            newLoc.setDirection(newLoc.subtract(npc.getLocation()).toVector());
-            npc.lookAt(sp, newLoc);
+            double distance = loc.distance(npc.getLocation());
+            if(Double.isNaN(distance))
+                continue;
+
+            boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(cp.getUniqueId(), false);
+
+            if(distance > FancyNpcs.getInstance().getFancyNpcConfig().getVisibilityDistance() && isCurrentlyVisible){
+                npc.remove(cp);
+            } else if(distance < FancyNpcs.getInstance().getFancyNpcConfig().getVisibilityDistance() && !isCurrentlyVisible) {
+                npc.spawn(cp);
+            }
+
+            if(npc.isTurnToPlayer() && distance < FancyNpcs.getInstance().getFancyNpcConfig().getTurnToPlayerDistance()){
+                Location newLoc = loc.clone();
+                newLoc.setDirection(newLoc.subtract(npc.getLocation()).toVector());
+                npc.lookAt(sp, newLoc);
+            }
         }
     }
-
 }

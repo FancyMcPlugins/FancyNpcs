@@ -24,7 +24,7 @@ public class FancyNpcs extends JavaPlugin {
 
     private static FancyNpcs instance;
     private final NpcManager npcManager;
-    private boolean muteVersionNotification;
+    private final FancyNpcConfig config;
 
     public FancyNpcs() {
         // TODO: remove in v1.1.3
@@ -38,29 +38,28 @@ public class FancyNpcs extends JavaPlugin {
 
         instance = this;
         this.npcManager = new NpcManager();
+        this.config = new FancyNpcConfig();
     }
 
     @Override
     public void onEnable() {
+        config.reload();
+
+        new Thread(() -> {
+            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
+            if(newestVersion == null){
+                getLogger().warning("Could not fetch latest plugin version");
+            } else if (newestVersion.compareTo(currentVersion) > 0) {
+                getLogger().warning("-------------------------------------------------------");
+                getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
+                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
+                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                getLogger().warning("-------------------------------------------------------");
+            }
+        }).start();
 
         PluginManager pluginManager = Bukkit.getPluginManager();
-
-        if(!muteVersionNotification) {
-            new Thread(() -> {
-                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-                if(newestVersion == null){
-                    getLogger().warning("Could not fetch latest plugin version");
-                } else if (newestVersion.compareTo(currentVersion) > 0) {
-                    getLogger().warning("-------------------------------------------------------");
-                    getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
-                    getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                    getLogger().warning(VersionFetcher.DOWNLOAD_URL);
-                    getLogger().warning("-------------------------------------------------------");
-                }
-            }).start();
-        }
-
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
         String serverVersion = nmsServer.getServerVersion();
@@ -101,12 +100,6 @@ public class FancyNpcs extends JavaPlugin {
 
         // load config
         Bukkit.getScheduler().runTaskLater(instance, () -> {
-            if(!getConfig().isBoolean("mute_version_notification")){
-                getConfig().set("mute_version_notification", false);
-                saveConfig();
-            }
-            muteVersionNotification = getConfig().getBoolean("mute_version_notification");
-
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 PacketReader packetReader = new PacketReader(onlinePlayer);
                 packetReader.inject();
@@ -129,10 +122,9 @@ public class FancyNpcs extends JavaPlugin {
         return npcManager;
     }
 
-    public boolean isMuteVersionNotification() {
-        return muteVersionNotification;
+    public FancyNpcConfig getFancyNpcConfig() {
+        return config;
     }
-
     public static FancyNpcs getInstance() {
         return instance;
     }

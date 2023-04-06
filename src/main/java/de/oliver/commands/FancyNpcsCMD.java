@@ -20,7 +20,7 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Stream.of("reload", "version").filter(input -> input.startsWith(args[0].toLowerCase())).toList();
+            return Stream.of("version", "reload", "save").filter(input -> input.startsWith(args[0].toLowerCase())).toList();
         }
 
         return null;
@@ -44,8 +44,12 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                 }
             }).start();
         } else if(args.length >= 1 && args[0].equalsIgnoreCase("reload")){
+            FancyNpcs.getInstance().getFancyNpcConfig().reload();
             FancyNpcs.getInstance().getNpcManager().reloadNpcs();
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Reloaded the config</green>"));
+        } else if(args.length >= 1 && args[0].equalsIgnoreCase("save")){
+            FancyNpcs.getInstance().getNpcManager().saveNpcs(true);
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Saved all NPCs</green>"));
         }
 
         return false;

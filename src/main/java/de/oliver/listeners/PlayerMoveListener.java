@@ -16,6 +16,10 @@ public class PlayerMoveListener implements Listener {
         Location loc = event.getTo();
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
+            if(!npc.isSpawnEntity()){
+                continue;
+            }
+
             if(loc.getWorld() != npc.getLocation().getWorld()){
                 continue;
             }

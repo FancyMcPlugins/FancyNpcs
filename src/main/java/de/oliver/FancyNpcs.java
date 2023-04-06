@@ -1,5 +1,6 @@
 package de.oliver;
 
+import de.oliver.commands.FancyNpcsCMD;
 import de.oliver.commands.NpcCMD;
 import de.oliver.listeners.PacketReceivedListener;
 import de.oliver.listeners.PlayerChangedWorldListener;
@@ -86,6 +87,7 @@ public class FancyNpcs extends JavaPlugin {
         Metrics metrics = new Metrics(this, 17543);
 
         // register commands
+        getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
         getCommand("npc").setExecutor(new NpcCMD());
 
         // register listeners
@@ -105,14 +107,12 @@ public class FancyNpcs extends JavaPlugin {
             }
             muteVersionNotification = getConfig().getBoolean("mute_version_notification");
 
-            npcManager.loadNpcs();
-
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 PacketReader packetReader = new PacketReader(onlinePlayer);
                 packetReader.inject();
-
-                npcManager.getAllNpcs().forEach(npc -> npc.spawn(onlinePlayer));
             }
+
+            npcManager.loadNpcs();
         }, 20L*5);
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> npcManager.saveNpcs(false), 20L*60*5, 20L*60*15);

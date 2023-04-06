@@ -91,7 +91,7 @@ public class Npc {
     }
 
     public void create(){
-        if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null){
+        if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null && npc != null){
             FancyNpcs.getInstance().getNpcManager().removeNpc(this);
         }
 
@@ -306,8 +306,6 @@ public class Npc {
     }
 
     private void remove(ServerPlayer serverPlayer){
-        FancyNpcs.getInstance().getNpcManager().removeNpc(this);
-
         if(showInTab){
             removeFromTab(serverPlayer);
         }
@@ -323,6 +321,8 @@ public class Npc {
     }
 
     public void removeForAll(){
+        FancyNpcs.getInstance().getNpcManager().removeNpc(this);
+
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             remove(onlinePlayer);
         }

@@ -5,15 +5,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class FancyNpcConfig {
 
     private boolean muteVersionNotification;
+    private boolean enableAutoSave;
     private int turnToPlayerDistance;
     private int visibilityDistance;
-
 
     public void reload(){
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
         muteVersionNotification = (boolean) getOrDefault(config, "mute_version_notification", false);
+        enableAutoSave = (boolean) getOrDefault(config, "enable_autosave", true);
         turnToPlayerDistance = (int) getOrDefault(config, "turn_to_player_distance", 5);
         visibilityDistance = (int) getOrDefault(config, "visibility_distance", 20);
 
@@ -22,6 +23,10 @@ public class FancyNpcConfig {
 
     public boolean isMuteVersionNotification() {
         return muteVersionNotification;
+    }
+
+    public boolean isEnableAutoSave() {
+        return enableAutoSave;
     }
 
     public int getTurnToPlayerDistance() {
@@ -33,7 +38,6 @@ public class FancyNpcConfig {
     }
 
     public static Object getOrDefault(FileConfiguration config, String path, Object defaultVal){
-
         if(!config.contains(path)){
             config.set(path, defaultVal);
             return defaultVal;

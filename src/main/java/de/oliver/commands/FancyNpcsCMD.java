@@ -1,8 +1,8 @@
 package de.oliver.commands;
 
 import de.oliver.FancyNpcs;
+import de.oliver.utils.MessageHelper;
 import de.oliver.utils.VersionFetcher;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,28 +28,27 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
         if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
+            MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if(newestVersion == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<color:#f25050>Could not find latest version</color>"));
+                    MessageHelper.error(sender, "Could not find latest version");
                 } else if(newestVersion.compareTo(currentVersion) > 0){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyNpcs Plugin.</color>"));
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
+                    MessageHelper.warning(sender, "You are using an outdated version of the FancyNpcs Plugin");
+                    MessageHelper.warning(sender, "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ").</color>"));
+                    MessageHelper.success(sender, "You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ")");
                 }
             }).start();
         } else if(args.length >= 1 && args[0].equalsIgnoreCase("reload")){
             FancyNpcs.getInstance().getFancyNpcConfig().reload();
             FancyNpcs.getInstance().getNpcManager().reloadNpcs();
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Reloaded the config</green>"));
+            MessageHelper.success(sender, "Reloaded the config");
         } else if(args.length >= 1 && args[0].equalsIgnoreCase("save")){
             FancyNpcs.getInstance().getNpcManager().saveNpcs(true);
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Saved all NPCs</green>"));
+            MessageHelper.success(sender, "Saved all NPCs");
         }
 
         return false;

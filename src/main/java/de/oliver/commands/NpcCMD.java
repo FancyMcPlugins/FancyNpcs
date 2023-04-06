@@ -1,17 +1,15 @@
 package de.oliver.commands;
 
-import de.oliver.Npc;
 import de.oliver.FancyNpcs;
+import de.oliver.Npc;
 import de.oliver.events.NpcCreateEvent;
 import de.oliver.events.NpcModifyEvent;
 import de.oliver.events.NpcRemoveEvent;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
-import de.oliver.utils.VersionFetcher;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -34,7 +32,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Stream.of("help", "version", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer")
+            return Stream.of("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
@@ -72,7 +70,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>FancyNpcs Plugin help:"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc version <dark_gray>- <white>Shows the plugin version"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc create (name) <dark_gray>- <white>Creates a new npc at your location"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc remove (name) <dark_gray>- <white>Removes an npc"));
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc list <dark_gray>- <white>Summary of all npcs"));
@@ -90,23 +87,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
-            p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790><i>Checking version, please wait...</i></color>"));
-            new Thread(() -> {
-                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
-                ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
-                if(newestVersion == null){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#f25050>Could not find latest version</color>"));
-                } else if(newestVersion.compareTo(currentVersion) > 0){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyNpcs Plugin.</color>"));
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
-                } else {
-                    p.sendMessage(MiniMessage.miniMessage().deserialize("<color:#54f790>You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ").</color>"));
-                }
-            }).start();
-
-            return true;
-        } else if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
+        if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>All NPCs:</b></green>"));
 
             Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();

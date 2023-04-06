@@ -23,7 +23,7 @@ public class PlayerJoinListener implements Listener {
             npc.spawn(event.getPlayer());
         }
 
-        if(!FancyNpcs.getInstance().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")){
+        if(!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")){
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
@@ -34,5 +34,4 @@ public class PlayerJoinListener implements Listener {
             }).start();
         }
     }
-
 }

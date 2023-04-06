@@ -135,10 +135,6 @@ public class Npc {
             npc.setPos(location.x(), location.y(), location.z());
             ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npc);
             packets.add(spawnPlayerPacket);
-
-            if(location != null) {
-                move(serverPlayer, location);
-            }
         }
 
         // set custom name
@@ -185,6 +181,10 @@ public class Npc {
 
         ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
         serverPlayer.connection.send(bundlePacket);
+
+        if(spawnEntity && location != null) {
+            move(serverPlayer, location);
+        }
 
         isVisibleForPlayer.put(serverPlayer.getUUID(), true);
     }

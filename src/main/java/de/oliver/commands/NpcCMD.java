@@ -5,9 +5,9 @@ import de.oliver.Npc;
 import de.oliver.events.NpcCreateEvent;
 import de.oliver.events.NpcModifyEvent;
 import de.oliver.events.NpcRemoveEvent;
+import de.oliver.utils.MessageHelper;
 import de.oliver.utils.SkinFetcher;
 import de.oliver.utils.UUIDFetcher;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;
@@ -64,46 +64,46 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(!(sender instanceof Player p)){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Only players can execute this command</red>"));
+            MessageHelper.error(sender, "Only players can execute this command");
             return false;
         }
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("help")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>FancyNpcs Plugin help:"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc create (name) <dark_gray>- <white>Creates a new npc at your location"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc remove (name) <dark_gray>- <white>Removes an npc"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc list <dark_gray>- <white>Summary of all npcs"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc skin (name) (skin) <dark_gray>- <white>Sets the skin for an npc"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc movehere (name) <dark_gray>- <white>Teleports an npc to your location"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect"));
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<dark_green> - <green>/npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not"));
+            MessageHelper.info(sender, "<b>FancyNpcs Plugin help:");
+            MessageHelper.info(sender, " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location", false);
+            MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc", false);
+            MessageHelper.info(sender, " - /npc list <dark_gray>- <white>Summary of all npcs", false);
+            MessageHelper.info(sender, " - /npc skin (name) (skin) <dark_gray>- <white>Sets the skin for an npc", false);
+            MessageHelper.info(sender, " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location", false);
+            MessageHelper.info(sender, " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc", false);
+            MessageHelper.info(sender, " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding", false);
+            MessageHelper.info(sender, " - /npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting", false);
+            MessageHelper.info(sender, " - /npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc", false);
+            MessageHelper.info(sender, " - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not", false);
+            MessageHelper.info(sender, " - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not", false);
+            MessageHelper.info(sender, " - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect", false);
+            MessageHelper.info(sender, " - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not", false);
 
             return true;
         }
 
         if(args.length >= 1 && args[0].equalsIgnoreCase("list")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><b>All NPCs:</b></green>"));
+            MessageHelper.info(sender, "<b>All NPCs:</b>");
 
             Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
 
             if(allNpcs.isEmpty()){
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<yellow>There are no NPCs. Use '/npc create' to create one</yellow>"));
+                MessageHelper.warning(sender, "There are no NPCs. Use '/npc create' to create one");
             } else {
                 final DecimalFormat df = new DecimalFormat("#########.##");
                 for (Npc npc : allNpcs) {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green><hover:show_text:'<gray><i>Click to teleport'><click:run_command:'{tp_cmd}'>- {name} ({x}/{y}/{z})</click></hover></green>"
+                    MessageHelper.info(sender, "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
                             .replace("{name}", npc.getName())
                             .replace("{x}", df.format(npc.getLocation().x()))
                             .replace("{y}", df.format(npc.getLocation().y()))
                             .replace("{z}", df.format(npc.getLocation().z()))
                             .replace("{tp_cmd}", "/tp " + npc.getLocation().x() + " " + npc.getLocation().y() + " " + npc.getLocation().z())
-                    ));
+                    );
                 }
             }
 
@@ -111,7 +111,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 2){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+            MessageHelper.error(sender, "Wrong usage: /npc help");
             return false;
         }
 
@@ -121,7 +121,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         switch (subcommand.toLowerCase()){
             case "create" -> {
                 if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>An npc with that name already exists</red>"));
+                    MessageHelper.error(sender, "An npc with that name already exists");
                     return false;
                 }
 
@@ -132,16 +132,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.create();
                     npc.spawnForAll();
 
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Created new npc</green>"));
+                    MessageHelper.success(sender, "Created new NPC");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Creation has been cancelled</red>"));
+                    MessageHelper.error(sender, "Creation has been cancelled");
                 }
             }
 
             case "remove" -> {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find NPC");
                     return false;
                 }
 
@@ -149,16 +149,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcRemoveEvent.callEvent();
                 if(!npcRemoveEvent.isCancelled()){
                     npc.removeForAll();
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Removed npc</green>"));
+                    MessageHelper.success(sender, "Removed NPC");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Removing has been cancelled</red>"));
+                    MessageHelper.error(sender, "Removing has been cancelled");
                 }
             }
 
             case "movehere" -> {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find NPC");
                     return false;
                 }
 
@@ -167,15 +167,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     npc.moveForAll(p.getLocation());
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Moved npc to your location</green>"));
+                    MessageHelper.success(sender, "Moved NPC to your location");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "skin" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
@@ -183,7 +183,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find NPC");
                     return false;
                 }
 
@@ -193,21 +193,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if(!npcModifyEvent.isCancelled()){
                     SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
                     npc.updateSkin(skinFetcher);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated skin of npc</green>"));
+                    MessageHelper.success(sender, "Updated skin");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "displayname" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -222,21 +222,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     npc.updateDisplayName(displayName);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated display name of npc</green>"));
+                    MessageHelper.success(sender, "Updated display name");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "equipment" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -246,7 +246,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 try {
                     equipmentSlot = EquipmentSlot.byName(slot);
                 } catch (IllegalArgumentException e){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid equipment slot</red>"));
+                    MessageHelper.error(sender, "Invalid equipment slot");
                     return false;
                 }
 
@@ -260,21 +260,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated equipment of npc</green>"));
+                    MessageHelper.success(sender, "Updated equipment");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "servercommand" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -289,21 +289,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     npc.setServerCommand(cmd);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (server) command to be executed</green>"));
+                    MessageHelper.success(sender, "Updated server command to be executed");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "playercommand" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -318,21 +318,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     npc.setPlayerCommand(cmd);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated (player) command to be executed</green>"));
+                    MessageHelper.success(sender, "Updated player command to be executed");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "showintab" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -341,13 +341,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     case "true" -> showInTab = true;
                     case "false" -> showInTab = false;
                     default -> {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid argument (use 'true' or 'false')</red>"));
+                        MessageHelper.error(sender, "Invalid argument (expected: 'true' or 'false')");
                         return false;
                     }
                 }
 
                 if(showInTab == npc.isShowInTab()){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Nothing has changed</red>"));
+                    MessageHelper.warning(sender, "Nothing has changed");
                     return false;
                 }
 
@@ -358,24 +358,24 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.updateShowInTab(showInTab);
 
                     if(showInTab){
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now be shown in tab</green>"));
+                        MessageHelper.success(sender, "NPC will now be shown in tab");
                     } else {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer be shown in tab</green>"));
+                        MessageHelper.success(sender, "NPC will no longer be shown in tab");
                     }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "glowing" -> {
                 if (args.length < 3) {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -383,7 +383,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
                 } catch (Exception e) {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
@@ -394,30 +394,30 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.updateGlowing(glowing);
 
                     if (glowing) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will now glow</green>"));
+                        MessageHelper.success(sender, "NPC will now glow");
                     } else {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no glow</green>"));
+                        MessageHelper.success(sender, "NPC will no longer glow");
                     }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             case "glowingcolor" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
                 ChatFormatting color = ChatFormatting.getByName(args[2]);
                 if(color == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
@@ -426,22 +426,22 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     npc.updateGlowingColor(color);
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Updated glowing color to '" + color.getName() + "'</green>"));
+                    MessageHelper.success(sender, "Updated glowing color");
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
 
             }
 
             case "turntoplayer" -> {
                 if(args.length < 3){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Could not find npc</red>"));
+                    MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
 
@@ -449,7 +449,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 try{
                     turnToPlayer = Boolean.parseBoolean(args[2]);
                 }catch (Exception e){
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
@@ -460,18 +460,18 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.setTurnToPlayer(turnToPlayer);
 
                     if(turnToPlayer){
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will turn to the players</green>"));
+                        MessageHelper.success(sender, "NPC will now turn to the players");
                     } else {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>NPC will no longer turn to the players</green>"));
+                        MessageHelper.success(sender, "NPC will no longer turn to the players");
                         npc.moveForAll(npc.getLocation()); // move to default pos
                     }
                 } else {
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Modification was cancelled</red>"));
+                    MessageHelper.error(sender, "Modification has been cancelled");
                 }
             }
 
             default -> {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Wrong usage: /npc help</red>"));
+                MessageHelper.error(sender, "Wrong usage: /npc help");
                 return false;
             }
         }

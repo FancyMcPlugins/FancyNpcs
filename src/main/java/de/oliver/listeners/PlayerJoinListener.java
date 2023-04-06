@@ -1,10 +1,10 @@
 package de.oliver.listeners;
 
-import de.oliver.Npc;
 import de.oliver.FancyNpcs;
+import de.oliver.Npc;
 import de.oliver.PacketReader;
+import de.oliver.utils.MessageHelper;
 import de.oliver.utils.VersionFetcher;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -28,8 +28,8 @@ public class PlayerJoinListener implements Listener {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if(newestVersion != null && newestVersion.compareTo(currentVersion) > 0){
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] You are using an outdated version of the FancyNpcs Plugin.</color>"));
-                    event.getPlayer().sendMessage(MiniMessage.miniMessage().deserialize("<color:#ffca1c>[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>.</color>"));
+                    MessageHelper.warning(event.getPlayer(), "You are using an outdated version of the FancyNpcs Plugin");
+                    MessageHelper.warning(event.getPlayer(), "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>");
                 }
             }).start();
         }

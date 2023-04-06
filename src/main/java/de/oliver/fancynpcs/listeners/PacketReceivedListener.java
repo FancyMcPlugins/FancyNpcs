@@ -62,7 +62,11 @@ public class PacketReceivedListener implements Listener {
                         return;
                     }
 
-                    event.getPlayer().performCommand(npc.getPlayerCommand());
+                    Bukkit.getRegionScheduler().execute(
+                            FancyNpcs.getInstance(),
+                            event.getPlayer().getLocation(),
+                            () -> event.getPlayer().performCommand(npc.getPlayerCommand())
+                    );
                 }
             }
         }

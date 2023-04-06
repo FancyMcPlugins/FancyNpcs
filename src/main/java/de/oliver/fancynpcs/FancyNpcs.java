@@ -20,6 +20,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.TimeUnit;
+
 public class FancyNpcs extends JavaPlugin {
 
     public static final String SUPPORTED_VERSION = "1.19.4";
@@ -69,12 +71,14 @@ public class FancyNpcs extends JavaPlugin {
             return;
         }
 
-        if(!ServerSoftware.isPaper()){
+        if(!ServerSoftware.isFolia()){
             getLogger().warning("--------------------------------------------------");
-            getLogger().warning("It is recommended to use Paper as server software.");
-            getLogger().warning("Because you are not using paper, the plugin");
-            getLogger().warning("might not work correctly.");
+            getLogger().warning("Unsupported server software used!");
+            getLogger().warning("This version of the plugin requires to use Folia (or a Folia fork)");
+            getLogger().warning("(https://github.com/PaperMC/Folia)");
             getLogger().warning("--------------------------------------------------");
+            pluginManager.disablePlugin(this);
+            return;
         }
 
         // register bStats
@@ -97,7 +101,7 @@ public class FancyNpcs extends JavaPlugin {
         EntityTypes.loadTypes();
 
         // load config
-        Bukkit.getScheduler().runTaskLater(instance, () -> {
+        Bukkit.getGlobalRegionScheduler().runDelayed(instance, (scheduledTask) -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 PacketReader packetReader = new PacketReader(onlinePlayer);
                 packetReader.inject();
@@ -108,11 +112,10 @@ public class FancyNpcs extends JavaPlugin {
 
         int autosaveInterval = config.getAutoSaveInterval();
         if(config.isEnableAutoSave()){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(
+            Bukkit.getAsyncScheduler().runAtFixedRate(
                     instance,
-                    () -> npcManager.saveNpcs(false),
-                    20L*60*autosaveInterval,
-                    20L*60*autosaveInterval
+                    (scheduledTask) -> { npcManager.saveNpcs(false); },
+                    autosaveInterval, autosaveInterval, TimeUnit.MINUTES
             );
         }
     }

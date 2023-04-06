@@ -1,4 +1,5 @@
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
+[![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
 [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
 ![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=GitHub&style=flat-square)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
@@ -8,7 +9,7 @@
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
 
 **Only for minecraft server version 1.19.4**<br>
-_Using [paper](https://papermc.io/downloads) is highly recommended_
+_Using [Folia](https://github.com/PaperMC/Folia) (a paper fork) is required_
 
 ## Get the plugin
 You can download the latest versions at the following places:

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.1.5-beta"
+version = "1.1.5-beta-folia"
 description = "NPC plugin"
 
 java {
@@ -20,7 +20,7 @@ repositories{
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
     implementation("com.github.FancyMcPlugins:FancyLib:225ba14e03")
 }
 

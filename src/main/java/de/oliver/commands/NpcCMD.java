@@ -130,6 +130,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcCreateEvent.callEvent();
                 if(!npcCreateEvent.isCancelled()){
                     npc.create();
+                    npc.register();
                     npc.spawnForAll();
 
                     MessageHelper.success(sender, "Created new NPC");
@@ -149,6 +150,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcRemoveEvent.callEvent();
                 if(!npcRemoveEvent.isCancelled()){
                     npc.removeForAll();
+                    npc.unregister();
                     MessageHelper.success(sender, "Removed NPC");
                 } else {
                     MessageHelper.error(sender, "Removing has been cancelled");

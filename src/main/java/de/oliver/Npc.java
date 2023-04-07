@@ -91,11 +91,15 @@ public class Npc {
         }
     }
 
-    public void create(){
-        if(FancyNpcs.getInstance().getNpcManager().getNpc(name) != null && npc != null){
-            FancyNpcs.getInstance().getNpcManager().removeNpc(this);
-        }
+    public void register(){
+        FancyNpcs.getInstance().getNpcManager().registerNpc(this);
+    }
 
+    public void unregister(){
+        FancyNpcs.getInstance().getNpcManager().removeNpc(this);
+    }
+
+    public void create(){
         MinecraftServer minecraftServer = ((CraftServer)Bukkit.getServer()).getServer();
         ServerLevel serverLevel = ((CraftWorld)location.getWorld()).getHandle();
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), localName);
@@ -107,11 +111,14 @@ public class Npc {
 
         npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
         npc.gameProfile = gameProfile;
-
-        FancyNpcs.getInstance().getNpcManager().registerNpc(this);
     }
 
     private void spawn(ServerPlayer serverPlayer){
+        if(npc == null){
+            FancyNpcs.getInstance().getLogger().warning("Trying to spawn an NPC that was not created");
+            return;
+        }
+
         if(!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())){
             return;
         }
@@ -327,8 +334,6 @@ public class Npc {
     }
 
     public void removeForAll(){
-        FancyNpcs.getInstance().getNpcManager().removeNpc(this);
-
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             remove(onlinePlayer);
         }

@@ -18,36 +18,32 @@ import java.util.Map;
 public class NpcManager {
 
     private final File npcConfigFile = new File(FancyNpcs.getInstance().getDataFolder().getAbsolutePath() + "/npcs.yml");
-    private final HashMap<Integer, Npc> npcs; // entityId -> npc
+    private final HashMap<String, Npc> npcs; // npc name -> npc
 
     public NpcManager() {
         npcs = new HashMap<>();
     }
 
     public void registerNpc(Npc npc){
-        npcs.put(npc.getNpc().getId(), npc);
+        npcs.put(npc.getName(), npc);
     }
 
     public void removeNpc(Npc npc){
-        npcs.remove(npc.getNpc().getId());
+        npcs.remove(npc.getName());
     }
 
     public Npc getNpc(int entityId){
-        if(npcs.containsKey(entityId)){
-            return npcs.get(entityId);
+        for (Npc npc : npcs.values()) {
+            if(npc.getNpc() != null && npc.getNpc().getId() == entityId){
+                return npc;
+            }
         }
 
         return null;
     }
 
     public Npc getNpc(String name){
-        for (Npc npc : npcs.values()) {
-            if(npc.getName().equalsIgnoreCase(name)){
-                return npc;
-            }
-        }
-
-        return null;
+        return npcs.getOrDefault(name, null);
     }
 
     public Collection<Npc> getAllNpcs(){
@@ -170,6 +166,7 @@ public class NpcManager {
             }
 
             npc.create();
+            npc.register();
             npc.spawnForAll();
         }
     }

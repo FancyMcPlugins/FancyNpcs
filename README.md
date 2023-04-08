@@ -1,4 +1,4 @@
-[![Generic badge](https://img.shields.io/badge/version-1.1.2-green.svg)](https://shields.io/)
+[![Generic badge](https://img.shields.io/badge/version-1.1.3-green.svg)](https://shields.io/)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
 [![Downloads](https://img.shields.io/modrinth/dt/npc-plugin?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/npc-plugin/versions)
 
@@ -28,6 +28,9 @@ You can download the latest versions at the following places:
 /npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
 /npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
+/fancynpcs version - _Shows you the current plugin version_<br>
+/fancynpcs save - _Saves all npcs_<br>
+/fancynpcs reload - _Reloads the config and npcs_
 <br>
 <br>
 Using `<empty>` as displayName will make the whole name tag invisible.

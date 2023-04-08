@@ -15,8 +15,12 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event){
         PacketReader packetReader = new PacketReader(event.getPlayer());
-        packetReader.inject();
+        boolean injected = packetReader.inject();
 
+        if(!injected){
+            MessageHelper.warning(event.getPlayer(), "Something went wrong. Interacting with NPCs will not work for you.");
+            MessageHelper.warning(event.getPlayer(), "Rejoin might fix this bug");
+        }
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);

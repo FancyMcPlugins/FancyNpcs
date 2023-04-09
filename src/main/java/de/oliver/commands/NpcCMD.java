@@ -73,7 +73,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location", false);
             MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc", false);
             MessageHelper.info(sender, " - /npc list <dark_gray>- <white>Summary of all npcs", false);
-            MessageHelper.info(sender, " - /npc skin (name) (skin) <dark_gray>- <white>Sets the skin for an npc", false);
+            MessageHelper.info(sender, " - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc", false);
             MessageHelper.info(sender, " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location", false);
             MessageHelper.info(sender, " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc", false);
             MessageHelper.info(sender, " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding", false);
@@ -176,12 +176,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "skin" -> {
-                if(args.length < 3){
+                if(args.length != 3 && args.length != 2) {
                     MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
-                String skinName = args[2];
+                final String skinName = args.length == 3 ? args[2] : sender.getName();
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){

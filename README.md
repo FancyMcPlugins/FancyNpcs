@@ -20,7 +20,7 @@ You can download the latest versions at the following places:
 /npc create (name) - _Creates a new npc at your location_<br>
 /npc remove (name) - _Removes an npc_<br>
 /npc list - _Summary of all npcs_<br>
-/npc skin (name) (skin) - _Sets the skin for an npc_<br>
+/npc skin (name) [(skin)] - _Sets the skin for an npc_<br>
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>

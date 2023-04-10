@@ -67,6 +67,10 @@ public class NpcManager {
         }
 
         for (Npc npc : npcs.values()) {
+            if(!npc.isSaveToFile()){
+                continue;
+            }
+
             boolean shouldSave = force || npc.isDirty();
             if(!shouldSave){
                 continue;

@@ -49,6 +49,7 @@ public class Npc {
     private String playerCommand;
     private String localName;
     private boolean isDirty;
+    private boolean saveToFile;
     private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
     private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
@@ -67,6 +68,7 @@ public class Npc {
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         this.isDirty = false;
+        this.saveToFile = true;
         generateLocalName();
     }
 
@@ -81,6 +83,7 @@ public class Npc {
         this.onClick = p -> {};
         this.turnToPlayer = false;
         this.isDirty = false;
+        this.saveToFile = true;
         generateLocalName();
     }
 
@@ -507,6 +510,14 @@ public class Npc {
 
     public void setDirty(boolean dirty) {
         isDirty = dirty;
+    }
+
+    public boolean isSaveToFile() {
+        return saveToFile;
+    }
+
+    public void setSaveToFile(boolean saveToFile) {
+        this.saveToFile = saveToFile;
     }
 
     public Map<UUID, Boolean> getIsTeamCreated() {

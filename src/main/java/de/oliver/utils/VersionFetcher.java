@@ -16,15 +16,7 @@ public class VersionFetcher {
     public static ComparableVersion getNewestVersion(){
         if(newestVersion != null) return newestVersion;
 
-        // TODO: remove when most servers have updated
-        newestVersion = fetch("https://api.modrinth.com/v2/project/npc-plugin/version");
-        if(newestVersion != null) return newestVersion;
-
         newestVersion = fetch(API_URL);
-        if(newestVersion != null) return newestVersion;
-
-        // TODO: remove when most servers have updated
-        newestVersion = fetch("https://api.modrinth.com/v2/project/fancy-npcs/version");
         if(newestVersion != null) return newestVersion;
 
         return null;

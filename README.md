@@ -1,6 +1,6 @@
 [![Generic badge](https://img.shields.io/badge/version-1.1.3-green.svg)](https://shields.io/)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
-[![Downloads](https://img.shields.io/modrinth/dt/npc-plugin?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/npc-plugin/versions)
+[![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
 # Fancy Npcs
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
@@ -12,7 +12,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 You can download the latest versions at the following places:
 
 - https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
-- https://modrinth.com/plugin/fancy-npcs/
+- https://modrinth.com/plugin/fancynpcs/
 - https://github.com/OliverSchlueter/FancyNpcs/releases
 - Build from source (``gradlew reobfJar``)
 

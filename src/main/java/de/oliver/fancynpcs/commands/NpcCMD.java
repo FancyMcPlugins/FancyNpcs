@@ -1,13 +1,13 @@
-package de.oliver.commands;
+package de.oliver.fancynpcs.commands;
 
-import de.oliver.FancyNpcs;
-import de.oliver.Npc;
-import de.oliver.events.NpcCreateEvent;
-import de.oliver.events.NpcModifyEvent;
-import de.oliver.events.NpcRemoveEvent;
-import de.oliver.utils.MessageHelper;
-import de.oliver.utils.SkinFetcher;
-import de.oliver.utils.UUIDFetcher;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.events.NpcCreateEvent;
+import de.oliver.fancynpcs.events.NpcModifyEvent;
+import de.oliver.fancynpcs.events.NpcRemoveEvent;
+import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.utils.SkinFetcher;
+import de.oliver.fancynpcs.utils.UUIDFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;

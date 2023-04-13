@@ -1,6 +1,6 @@
-package de.oliver;
+package de.oliver.fancynpcs;
 
-import de.oliver.utils.SkinFetcher;
+import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;

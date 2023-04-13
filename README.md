@@ -14,7 +14,7 @@ You can download the latest versions at the following places:
 - https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
 - https://modrinth.com/plugin/fancynpcs/
 - https://github.com/OliverSchlueter/FancyNpcs/releases
-- Build from source (``gradlew reobfJar``)
+- [Build from source](Build from source)
 
 ## Commands
 /npc create (name) - _Creates a new npc at your location_<br>
@@ -51,6 +51,12 @@ To have multiple lines as the display name of an NPC follow the following steps:
 5. link the hologram with the npc `/hologram edit <hologram> linkWithNpc <npc>`
 6. you can now move the npc around and the hologram will always follow
 7. to unlink simply run `/hologram edit <hologram> unlinkWithNpc`
+
+## Build from source
+
+1. Clone [FancyLib](https://github.com/FancyMcPlugins/FancyLib) repo and run `gradlew publishToMavenLocal`
+2. Clone this repo and run `gradlew reobfJar`
+3. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
 
 ## Used packets
 

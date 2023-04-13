@@ -1,12 +1,12 @@
-package de.oliver;
+package de.oliver.fancynpcs;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
-import de.oliver.events.NpcSpawnEvent;
-import de.oliver.utils.RandomUtils;
-import de.oliver.utils.ReflectionUtils;
-import de.oliver.utils.SkinFetcher;
+import de.oliver.fancynpcs.events.NpcSpawnEvent;
+import de.oliver.fancylib.RandomUtils;
+import de.oliver.fancynpcs.utils.ReflectionUtils;
+import de.oliver.fancynpcs.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;

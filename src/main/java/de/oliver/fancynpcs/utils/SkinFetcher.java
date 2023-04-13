@@ -1,4 +1,4 @@
-package de.oliver.utils;
+package de.oliver.fancynpcs.utils;
 
 
 import org.bukkit.Bukkit;

@@ -1,6 +1,6 @@
-package de.oliver;
+package de.oliver.fancynpcs;
 
-import de.oliver.events.PacketReceivedEvent;
+import de.oliver.fancynpcs.events.PacketReceivedEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

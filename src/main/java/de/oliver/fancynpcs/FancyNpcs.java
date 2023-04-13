@@ -1,13 +1,15 @@
-package de.oliver;
+package de.oliver.fancynpcs;
 
-import de.oliver.commands.FancyNpcsCMD;
-import de.oliver.commands.NpcCMD;
-import de.oliver.listeners.PacketReceivedListener;
-import de.oliver.listeners.PlayerChangedWorldListener;
-import de.oliver.listeners.PlayerJoinListener;
-import de.oliver.listeners.PlayerMoveListener;
-import de.oliver.utils.Metrics;
-import de.oliver.utils.VersionFetcher;
+import de.oliver.fancynpcs.commands.FancyNpcsCMD;
+import de.oliver.fancynpcs.commands.NpcCMD;
+import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.Metrics;
+import de.oliver.fancylib.VersionFetcher;
+import de.oliver.fancynpcs.listeners.PacketReceivedListener;
+import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
+import de.oliver.fancynpcs.listeners.PlayerJoinListener;
+import de.oliver.fancynpcs.listeners.PlayerMoveListener;
+
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -25,9 +27,10 @@ public class FancyNpcs extends JavaPlugin {
     private static FancyNpcs instance;
     private final NpcManager npcManager;
     private final FancyNpcConfig config;
+    private final VersionFetcher versionFetcher;
 
     public FancyNpcs() {
-        // TODO: remove in v1.1.3
+        // TODO: remove in v1.1.5
         // rename old plugin
         File oldPluginFolder = new File("plugins/NpcPlugin/");
         if(oldPluginFolder.exists() && oldPluginFolder.isDirectory()){
@@ -39,14 +42,16 @@ public class FancyNpcs extends JavaPlugin {
         instance = this;
         this.npcManager = new NpcManager();
         this.config = new FancyNpcConfig();
+        this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
 
     @Override
     public void onEnable() {
+        MessageHelper.pluginName = getDescription().getName();
         config.reload();
 
         new Thread(() -> {
-            ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+            ComparableVersion newestVersion = versionFetcher.getNewestVersion();
             ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
             if(newestVersion == null){
                 getLogger().warning("Could not fetch latest plugin version");
@@ -54,7 +59,7 @@ public class FancyNpcs extends JavaPlugin {
                 getLogger().warning("-------------------------------------------------------");
                 getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
                 getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                getLogger().warning(VersionFetcher.DOWNLOAD_URL);
+                getLogger().warning(versionFetcher.getDownloadUrl());
                 getLogger().warning("-------------------------------------------------------");
             }
         }).start();
@@ -127,6 +132,11 @@ public class FancyNpcs extends JavaPlugin {
     public FancyNpcConfig getFancyNpcConfig() {
         return config;
     }
+
+    public VersionFetcher getVersionFetcher() {
+        return versionFetcher;
+    }
+
     public static FancyNpcs getInstance() {
         return instance;
     }

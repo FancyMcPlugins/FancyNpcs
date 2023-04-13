@@ -1,4 +1,4 @@
-package de.oliver;
+package de.oliver.fancynpcs;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

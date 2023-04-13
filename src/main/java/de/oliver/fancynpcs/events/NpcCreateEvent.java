@@ -1,6 +1,6 @@
-package de.oliver.events;
+package de.oliver.fancynpcs.events;
 
-import de.oliver.Npc;
+import de.oliver.fancynpcs.Npc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -8,9 +8,10 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Is fired when a NPC is being spawned
+ * Is fired when a new NPC is being created
  */
-public class NpcSpawnEvent extends Event implements Cancellable {
+public class NpcCreateEvent extends Event implements Cancellable {
+
     private static HandlerList handlerList = new HandlerList();
     private boolean isCancelled;
 
@@ -19,20 +20,20 @@ public class NpcSpawnEvent extends Event implements Cancellable {
     @NotNull
     private final Player player;
 
-    public NpcSpawnEvent(@NotNull Npc npc, @NotNull Player player) {
+    public NpcCreateEvent(@NotNull Npc npc, @NotNull Player player) {
         this.npc = npc;
         this.player = player;
     }
 
     /**
-     * @return the npc that is being spawned
+     * @return the created npc
      */
     public @NotNull Npc getNpc() {
         return npc;
     }
 
     /**
-     * @return the player to whom the spawn packets are being sent
+     * @return the player who created the npc
      */
     public @NotNull Player getPlayer() {
         return player;

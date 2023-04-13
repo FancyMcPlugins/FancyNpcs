@@ -1,6 +1,6 @@
-package de.oliver.events;
+package de.oliver.fancynpcs.events;
 
-import de.oliver.Npc;
+import de.oliver.fancynpcs.Npc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -8,42 +8,31 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Is fired when a NPC is being modified
+ * Is fired when a NPC is being spawned
  */
-public class NpcModifyEvent extends Event implements Cancellable {
-
+public class NpcSpawnEvent extends Event implements Cancellable {
     private static HandlerList handlerList = new HandlerList();
     private boolean isCancelled;
 
     @NotNull
     private final Npc npc;
     @NotNull
-    private final NpcModification modification;
-    @NotNull
     private final Player player;
 
-    public NpcModifyEvent(@NotNull Npc npc, @NotNull NpcModification modification, @NotNull Player player) {
+    public NpcSpawnEvent(@NotNull Npc npc, @NotNull Player player) {
         this.npc = npc;
-        this.modification = modification;
         this.player = player;
     }
 
     /**
-     * @return the modified npc
+     * @return the npc that is being spawned
      */
     public @NotNull Npc getNpc() {
         return npc;
     }
 
     /**
-     * @return the modification that was being made
-     */
-    public @NotNull NpcModification getModification() {
-        return modification;
-    }
-
-    /**
-     * @return the player who modified the npc
+     * @return the player to whom the spawn packets are being sent
      */
     public @NotNull Player getPlayer() {
         return player;
@@ -66,19 +55,5 @@ public class NpcModifyEvent extends Event implements Cancellable {
 
     public static HandlerList getHandlerList() {
         return handlerList;
-    }
-
-    public enum NpcModification{
-        LOCATION,
-        SKIN,
-        DISPLAY_NAME,
-        EQUIPMENT,
-        SERVER_COMMAND,
-        PLAYER_COMMAND,
-        SHOW_IN_TAB,
-        GLOWING,
-        GLOWING_COLOR,
-        TURN_TO_PLAYER,
-        ;
     }
 }

@@ -1,12 +1,12 @@
-package de.oliver.listeners;
+package de.oliver.fancynpcs.listeners;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import de.oliver.Npc;
-import de.oliver.FancyNpcs;
-import de.oliver.events.NpcInteractEvent;
-import de.oliver.events.PacketReceivedEvent;
-import de.oliver.utils.ReflectionUtils;
+import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.events.NpcInteractEvent;
+import de.oliver.fancynpcs.events.PacketReceivedEvent;
+import de.oliver.fancynpcs.utils.ReflectionUtils;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

@@ -16,11 +16,12 @@ java {
 
 repositories{
     mavenLocal()
+    maven("https://jitpack.io")
 }
 
 dependencies {
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
-    implementation("de.oliver:FancyLib:1.0.0")
+    implementation("com.github.FancyMcPlugins:FancyLib:main-SNAPSHOT")
 }
 
 tasks {

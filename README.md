@@ -53,10 +53,8 @@ To have multiple lines as the display name of an NPC follow the following steps:
 7. to unlink simply run `/hologram edit <hologram> unlinkWithNpc`
 
 ## Build from source
-
-1. Clone [FancyLib](https://github.com/FancyMcPlugins/FancyLib) repo and run `gradlew publishToMavenLocal`
-2. Clone this repo and run `gradlew reobfJar`
-3. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
+1. Clone this repo and run `gradlew reobfJar`
+2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
 
 ## Used packets
 

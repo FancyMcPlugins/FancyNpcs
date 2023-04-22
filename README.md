@@ -13,8 +13,8 @@ You can download the latest versions at the following places:
 
 - https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
 - https://modrinth.com/plugin/fancynpcs/
-- https://github.com/OliverSchlueter/FancyNpcs/releases
-- [Build from source](Build from source)
+- https://github.com/FancyMcPlugins/FancyNpcs/releases
+- Build from source
 
 ## Commands
 /npc create (name) - _Creates a new npc at your location_<br>

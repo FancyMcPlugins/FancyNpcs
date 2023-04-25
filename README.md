@@ -11,9 +11,10 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 ## Get the plugin
 You can download the latest versions at the following places:
 
-- https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
+- https://hangar.papermc.io/Oliver/FancyNpcs
 - https://modrinth.com/plugin/fancynpcs/
 - https://github.com/FancyMcPlugins/FancyNpcs/releases
+- https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
 - Build from source
 
 ## Commands

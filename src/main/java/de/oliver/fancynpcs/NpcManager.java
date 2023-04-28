@@ -30,6 +30,14 @@ public class NpcManager {
 
     public void removeNpc(Npc npc){
         npcs.remove(npc.getName());
+
+        YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
+        npcConfig.set("npcs." + npc.getName(), null);
+        try {
+            npcConfig.save(npcConfigFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Npc getNpc(int entityId){
@@ -61,10 +69,6 @@ public class NpcManager {
         }
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
-
-        if(npcConfig.isConfigurationSection("npcs")) {
-            npcConfig.set("npcs", null);
-        }
 
         for (Npc npc : npcs.values()) {
             if(!npc.isSaveToFile()){

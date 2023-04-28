@@ -4,7 +4,10 @@ import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
@@ -81,7 +84,12 @@ public class NpcManager {
             }
 
             npcConfig.set("npcs." + npc.getName() + ".displayName", npc.getDisplayName());
-            npcConfig.set("npcs." + npc.getName() + ".location", npc.getLocation());
+            npcConfig.set("npcs." + npc.getName() + ".location.world", npc.getLocation().getWorld().getName());
+            npcConfig.set("npcs." + npc.getName() + ".location.x", npc.getLocation().getX());
+            npcConfig.set("npcs." + npc.getName() + ".location.y", npc.getLocation().getY());
+            npcConfig.set("npcs." + npc.getName() + ".location.z", npc.getLocation().getZ());
+            npcConfig.set("npcs." + npc.getName() + ".location.yaw", npc.getLocation().getYaw());
+            npcConfig.set("npcs." + npc.getName() + ".location.pitch", npc.getLocation().getPitch());
             npcConfig.set("npcs." + npc.getName() + ".showInTab", npc.isShowInTab());
             npcConfig.set("npcs." + npc.getName() + ".spawnEntity", npc.isSpawnEntity());
             npcConfig.set("npcs." + npc.getName() + ".glowing", npc.isGlowing());
@@ -127,7 +135,36 @@ public class NpcManager {
 
         for (String name : npcConfig.getConfigurationSection("npcs").getKeys(false)) {
             String displayName = npcConfig.getString("npcs." + name + ".displayName");
-            Location location = npcConfig.getLocation("npcs." + name + ".location");
+
+            Location location = null;
+
+            try{
+                location = npcConfig.getLocation("npcs." + name + ".location");
+            } catch (Exception ignored){ }
+
+            if(location == null){
+                String worldName = npcConfig.getString("npcs." + name + ".location.world");
+                World world = Bukkit.getWorld(worldName);
+
+                if(world == null){
+                    FancyNpcs.getInstance().getLogger().info("Trying to load the world: '" + worldName + "'");
+                    world = new WorldCreator(worldName).createWorld();
+                }
+
+                if(world == null){
+                    FancyNpcs.getInstance().getLogger().info("Could not load npc '" + name + "', because the world '" + worldName + "' is not loaded");
+                    continue;
+                }
+
+                double x = npcConfig.getDouble("npcs." + name + ".location.x");
+                double y = npcConfig.getDouble("npcs." + name + ".location.y");
+                double z = npcConfig.getDouble("npcs." + name + ".location.z");
+                float yaw = (float) npcConfig.getDouble("npcs." + name + ".location.yaw");
+                float pitch = (float) npcConfig.getDouble("npcs." + name + ".location.pitch");
+
+                location = new Location(world, x, y, z, yaw, pitch);
+            }
+
             String skinUuid = npcConfig.getString("npcs." + name + ".skin.uuid");
             String skinValue = npcConfig.getString("npcs." + name + ".skin.value");
             String skinSignature = npcConfig.getString("npcs." + name + ".skin.signature");

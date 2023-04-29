@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
 import de.oliver.fancynpcs.events.NpcCreateEvent;
@@ -7,7 +8,6 @@ import de.oliver.fancynpcs.events.NpcModifyEvent;
 import de.oliver.fancynpcs.events.NpcRemoveEvent;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.utils.SkinFetcher;
-import de.oliver.fancynpcs.utils.UUIDFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;

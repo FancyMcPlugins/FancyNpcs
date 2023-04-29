@@ -1,15 +1,9 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancylib.ConfigHelper;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class FancyNpcConfig {
-
-    private final String prefix = "<color:#3b3f8c>[</color><gradient:#9666e3:#6696e3>FancyNpcs</gradient><color:#3b3f8c>]</color>";
-    private final String primaryColor = "#6696e3";
-    private final String successColor = "#81e366";
-    private final String warningColor = "#e3ca66";
-    private final String errorColor = "#e36666";
-
     private boolean muteVersionNotification;
     private boolean enableAutoSave;
     private int turnToPlayerDistance;
@@ -19,32 +13,12 @@ public class FancyNpcConfig {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
-        muteVersionNotification = (boolean) getOrDefault(config, "mute_version_notification", false);
-        enableAutoSave = (boolean) getOrDefault(config, "enable_autosave", true);
-        turnToPlayerDistance = (int) getOrDefault(config, "turn_to_player_distance", 5);
-        visibilityDistance = (int) getOrDefault(config, "visibility_distance", 20);
+        muteVersionNotification = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
+        enableAutoSave = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
+        turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
+        visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
 
         FancyNpcs.getInstance().saveConfig();
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public String getPrimaryColor() {
-        return primaryColor;
-    }
-
-    public String getSuccessColor() {
-        return successColor;
-    }
-
-    public String getWarningColor() {
-        return warningColor;
-    }
-
-    public String getErrorColor() {
-        return errorColor;
     }
 
     public boolean isMuteVersionNotification() {
@@ -61,14 +35,5 @@ public class FancyNpcConfig {
 
     public int getVisibilityDistance() {
         return visibilityDistance;
-    }
-
-    public static Object getOrDefault(FileConfiguration config, String path, Object defaultVal){
-        if(!config.contains(path)){
-            config.set(path, defaultVal);
-            return defaultVal;
-        }
-
-        return config.get(path);
     }
 }

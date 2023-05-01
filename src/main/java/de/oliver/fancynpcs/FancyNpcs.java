@@ -117,7 +117,7 @@ public class FancyNpcs extends JavaPlugin {
             Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> {
                 getLogger().info("Automatically saving npcs");
                 npcManager.saveNpcs(false);
-            }, 20L, 20L*30);
+            }, 20L*60*5, 20L*60*15);
         }
     }
 

@@ -30,15 +30,6 @@ public class FancyNpcs extends JavaPlugin {
     private final VersionFetcher versionFetcher;
 
     public FancyNpcs() {
-        // TODO: remove in v1.1.5
-        // rename old plugin
-        File oldPluginFolder = new File("plugins/NpcPlugin/");
-        if(oldPluginFolder.exists() && oldPluginFolder.isDirectory()){
-            try {
-                oldPluginFolder.renameTo(new File("plugins/FancyNpcs/"));
-            } catch (Exception ignored){ }
-        }
-
         instance = this;
         this.npcManager = new NpcManager();
         this.config = new FancyNpcConfig();

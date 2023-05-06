@@ -52,6 +52,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .toList();
         } else if(args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")){
             return Arrays.stream(ChatFormatting.values())
+                    .filter(ChatFormatting::isColor)
                     .map(ChatFormatting::getName)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
@@ -420,6 +421,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 ChatFormatting color = ChatFormatting.getByName(args[2]);
                 if(color == null){
                     MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                if(!color.isColor()){
+                    MessageHelper.error(sender, "Glowing color must be a color");
                     return false;
                 }
 

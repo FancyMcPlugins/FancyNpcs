@@ -1,8 +1,8 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancylib.FancyLib;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.NpcCMD;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
 import de.oliver.fancynpcs.listeners.PacketReceivedListener;
@@ -17,8 +17,6 @@ import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public class FancyNpcs extends JavaPlugin {
 
@@ -38,7 +36,7 @@ public class FancyNpcs extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        MessageHelper.pluginName = getDescription().getName();
+        FancyLib.setPlugin(instance);
         config.reload();
 
         new Thread(() -> {

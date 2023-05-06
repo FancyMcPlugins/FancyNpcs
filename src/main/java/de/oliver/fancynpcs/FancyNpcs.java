@@ -102,11 +102,14 @@ public class FancyNpcs extends JavaPlugin {
             npcManager.loadNpcs();
         }, 20L*5);
 
+        int autosaveInterval = config.getAutoSaveInterval();
         if(config.isEnableAutoSave()){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> {
-                getLogger().info("Automatically saving npcs");
-                npcManager.saveNpcs(false);
-            }, 20L*60*5, 20L*60*15);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(
+                    instance,
+                    () -> npcManager.saveNpcs(false),
+                    20L*60*autosaveInterval,
+                    20L*60*autosaveInterval
+            );
         }
     }
 

@@ -1,7 +1,9 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
@@ -84,6 +86,7 @@ public class NpcManager {
             }
 
             npcConfig.set("npcs." + npc.getName() + ".displayName", npc.getDisplayName());
+            npcConfig.set("npcs." + npc.getName() + ".type", npc.getType().toShortString());
             npcConfig.set("npcs." + npc.getName() + ".location.world", npc.getLocation().getWorld().getName());
             npcConfig.set("npcs." + npc.getName() + ".location.x", npc.getLocation().getX());
             npcConfig.set("npcs." + npc.getName() + ".location.y", npc.getLocation().getY());
@@ -135,6 +138,7 @@ public class NpcManager {
 
         for (String name : npcConfig.getConfigurationSection("npcs").getKeys(false)) {
             String displayName = npcConfig.getString("npcs." + name + ".displayName");
+            EntityType<?> type = EntityTypes.TYPES.get(npcConfig.getString("npcs." + name + ".type", "player"));
 
             Location location = null;
 
@@ -185,6 +189,8 @@ public class NpcManager {
                     npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
                 }
             }
+
+            npc.setType(type);
 
             npc.setShowInTab(showInTab);
             npc.setSpawnEntity(spawnEntity);

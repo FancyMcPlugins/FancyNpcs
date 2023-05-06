@@ -10,6 +10,7 @@ import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerMoveListener;
 
+import de.oliver.fancynpcs.utils.EntityTypes;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -91,6 +92,9 @@ public class FancyNpcs extends JavaPlugin {
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+
+        // load entity type mappings
+        EntityTypes.loadTypes();
 
         // load config
         Bukkit.getScheduler().runTaskLater(instance, () -> {

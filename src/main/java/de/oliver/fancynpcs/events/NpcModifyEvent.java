@@ -79,6 +79,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         GLOWING,
         GLOWING_COLOR,
         TURN_TO_PLAYER,
+        TYPE,
         ;
     }
 }

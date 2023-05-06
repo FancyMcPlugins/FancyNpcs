@@ -10,12 +10,16 @@ import de.oliver.fancynpcs.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
@@ -41,7 +45,8 @@ public class Npc {
     private boolean spawnEntity;
     private boolean glowing;
     private ChatFormatting glowingColor;
-    private ServerPlayer npc;
+    private EntityType<?> type;
+    private Entity npc;
     private Map<EquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
     private boolean turnToPlayer;
@@ -53,8 +58,9 @@ public class Npc {
     private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
     private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
 
-    public Npc(String name, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
+    public Npc(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand) {
         this.name = name;
+        this.type = type;
         this.displayName = displayName;
         this.skin = skin;
         this.location = location;
@@ -74,6 +80,7 @@ public class Npc {
 
     public Npc(String name, Location location){
         this.name = name;
+        this.type = EntityType.PLAYER;
         this.displayName = name;
         this.location = location;
         this.showInTab = false;
@@ -112,8 +119,12 @@ public class Npc {
             gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         }
 
-        npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
-        npc.gameProfile = gameProfile;
+        if(type == EntityType.PLAYER){
+            npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
+            ((ServerPlayer)npc).gameProfile = gameProfile;
+        } else {
+            npc = type.create(serverLevel);
+        }
     }
 
     private void spawn(ServerPlayer serverPlayer){
@@ -128,51 +139,61 @@ public class Npc {
 
         List<Packet<ClientGamePacketListener>> packets = new ArrayList<>();
 
-        npc.displayName = displayName;
-        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
+        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
+        npc.setCustomName(vanillaComponent);
+        npc.setCustomNameVisible(!displayName.equalsIgnoreCase("<empty>"));
+        if(npc instanceof ServerPlayer player) {
+            player.listName = vanillaComponent;
 
-        EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
-        actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
-        actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
-        if(showInTab){
-            actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
-        }
+            EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
+            actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
+            actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);
+            if (showInTab) {
+                actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
+            }
 
-        ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npc));
-        packets.add(playerInfoPacket);
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(player));
+            packets.add(playerInfoPacket);
 
-        if(spawnEntity) {
-            npc.setPos(location.x(), location.y(), location.z());
-            ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npc);
-            packets.add(spawnPlayerPacket);
-        }
+            if (spawnEntity) {
+                npc.setPos(location.x(), location.y(), location.z());
+                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(player);
+                packets.add(spawnPlayerPacket);
+            }
 
-        // set custom name
-        String teamName = "npc-" + localName;
+            // set custom name
+            String teamName = "npc-" + localName;
 
-        PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
-        team.setColor(glowingColor);
-        if(displayName.equalsIgnoreCase("<empty>")){
-            team.setNameTagVisibility(Team.Visibility.NEVER);
+            PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
+            team.setColor(glowingColor);
+            if (displayName.equalsIgnoreCase("<empty>")) {
+                team.setNameTagVisibility(Team.Visibility.NEVER);
+            } else {
+                team.setNameTagVisibility(Team.Visibility.ALWAYS);
+            }
+            team.getPlayers().clear();
+            team.getPlayers().add(player.getGameProfile().getName());
+            team.setPlayerPrefix(vanillaComponent);
+
+            boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
+
+            ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer);
+            packets.add(setPlayerTeamPacket);
+
+            if (!isTeamCreatedForPlayer) {
+                isTeamCreated.put(serverPlayer.getUUID(), true);
+            }
         } else {
-            team.setNameTagVisibility(Team.Visibility.ALWAYS);
-        }
-        team.getPlayers().clear();
-        team.getPlayers().add(npc.getGameProfile().getName());
-        team.setPlayerPrefix(PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName)));
-
-        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
-
-        ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer);
-        packets.add(setPlayerTeamPacket);
-
-        if(!isTeamCreatedForPlayer){
-            isTeamCreated.put(serverPlayer.getUUID(), true);
+            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+            packets.add(addEntityPacket);
         }
 
 
-        // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
-        npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
+        if(npc instanceof ServerPlayer){
+            // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
+            npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
+        }
+
         npc.setGlowingTag(glowing);
 
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
@@ -219,8 +240,13 @@ public class Npc {
     public void updateDisplayName(String displayName){
         this.displayName = displayName;
         isDirty = true;
-        npc.listName = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
-        npc.displayName = displayName;
+
+        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
+        npc.setCustomName(vanillaComponent);
+        npc.setCustomNameVisible(!displayName.equalsIgnoreCase("<empty>"));
+        if(npc instanceof ServerPlayer player) {
+            player.listName = vanillaComponent;
+        }
 
         removeForAll();
         create();
@@ -343,7 +369,11 @@ public class Npc {
     }
 
     private void removeFromTab(ServerPlayer serverPlayer){
-        ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, npc);
+        if(!(npc instanceof ServerPlayer player)){
+            return;
+        }
+
+        ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, player);
 
         ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
         ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
@@ -376,6 +406,14 @@ public class Npc {
 
     public String getName() {
         return name;
+    }
+
+    public EntityType<?> getType() {
+        return type;
+    }
+
+    public void setType(EntityType<?> type) {
+        this.type = type;
     }
 
     public String getDisplayName() {
@@ -500,7 +538,7 @@ public class Npc {
         return this;
     }
 
-    public ServerPlayer getNpc() {
+    public Entity getNpc() {
         return npc;
     }
 

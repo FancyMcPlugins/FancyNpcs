@@ -7,8 +7,11 @@ import de.oliver.fancynpcs.events.NpcCreateEvent;
 import de.oliver.fancynpcs.events.NpcModifyEvent;
 import de.oliver.fancynpcs.events.NpcRemoveEvent;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,7 +35,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(args.length == 1){
-            return Stream.of("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer")
+            return Stream.of("help", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if(args.length == 2 && !args[0].equalsIgnoreCase("create")){
@@ -54,6 +57,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             return Arrays.stream(ChatFormatting.values())
                     .filter(ChatFormatting::isColor)
                     .map(ChatFormatting::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        } else if(args.length == 3 && args[0].equalsIgnoreCase("type")){
+            return EntityTypes.TYPES.keySet().stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
@@ -190,6 +197,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, p);
                 npcModifyEvent.callEvent();
 
@@ -240,6 +252,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 
@@ -339,6 +356,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 boolean showInTab;
                 switch (args[2].toLowerCase()) {
                     case "true" -> showInTab = true;
@@ -382,6 +404,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 boolean glowing;
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
@@ -415,6 +442,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
                     MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 
@@ -473,6 +505,39 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                         MessageHelper.success(sender, "NPC will no longer turn to the players");
                         npc.moveForAll(npc.getLocation()); // move to default pos
                     }
+                } else {
+                    MessageHelper.error(sender, "Modification has been cancelled");
+                }
+            }
+
+            case "type" -> {
+                if(args.length < 3){
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
+                        MessageHelper.error(sender, "Invalid type");
+                        return false;
+                    }
+
+                    EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
+                    npc.setType(type);
+
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                    MessageHelper.success(sender, "Updated entity type");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
                 }

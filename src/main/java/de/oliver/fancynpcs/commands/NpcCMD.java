@@ -535,6 +535,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
                     npc.setType(type);
 
+                    if(type != EntityType.PLAYER){
+                        npc.setGlowing(false);
+                        npc.setShowInTab(false);
+                        if(npc.getEquipment() != null){
+                            npc.getEquipment().clear();
+                        }
+                    }
+
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();

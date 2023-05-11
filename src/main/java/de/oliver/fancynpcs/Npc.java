@@ -16,9 +16,8 @@ import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
@@ -140,8 +139,14 @@ public class Npc {
         List<Packet<ClientGamePacketListener>> packets = new ArrayList<>();
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
-        npc.setCustomName(vanillaComponent);
-        npc.setCustomNameVisible(!displayName.equalsIgnoreCase("<empty>"));
+        if(!displayName.equalsIgnoreCase("<empty>")){
+            npc.setCustomName(vanillaComponent);
+            npc.setCustomNameVisible(true);
+        } else {
+            npc.setCustomName(Component.empty());
+            npc.setCustomNameVisible(false);
+        }
+
         if(npc instanceof ServerPlayer player) {
             player.listName = vanillaComponent;
 
@@ -196,8 +201,8 @@ public class Npc {
 
         npc.setGlowingTag(glowing);
 
-        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
-        packets.add(setEntityDataPacket);
+//        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
+//        packets.add(setEntityDataPacket);
 
         if(equipment != null && equipment.size() > 0) {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
@@ -212,6 +217,7 @@ public class Npc {
 
         ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
         serverPlayer.connection.send(bundlePacket);
+        npc.getEntityData().refresh(serverPlayer);
 
         if(spawnEntity && location != null) {
             move(serverPlayer, location);
@@ -242,8 +248,14 @@ public class Npc {
         isDirty = true;
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
-        npc.setCustomName(vanillaComponent);
-        npc.setCustomNameVisible(!displayName.equalsIgnoreCase("<empty>"));
+        if(displayName.equalsIgnoreCase("<empty>")){
+            npc.setCustomNameVisible(false);
+            npc.setCustomName(Component.empty());
+        } else {
+            npc.setCustomNameVisible(true);
+            npc.setCustomName(vanillaComponent);
+        }
+
         if(npc instanceof ServerPlayer player) {
             player.listName = vanillaComponent;
         }
@@ -251,7 +263,6 @@ public class Npc {
         removeForAll();
         create();
         spawnForAll();
-        
     }
 
     public void updateSkin(SkinFetcher skin){

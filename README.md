@@ -24,6 +24,7 @@ You can download the latest versions at the following places:
 /npc remove (name) - _Removes an npc_<br>
 /npc list - _Summary of all npcs_<br>
 /npc skin (name) [(skin)] - _Sets the skin for an npc_<br>
+/npc type (name) (type) - _Sets the entity type for an npc_<br>
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
@@ -42,6 +43,14 @@ For the serverCommand, there is a placeholder `{player}` - it will be replaced w
 
 ## Permissions
 For the /npc command - ``FancyNpcs.admin``
+
+## Entity types
+
+When using any entity type other than Player, the following features are disabled:
+- Changing the skin
+- Changing the equipment
+- Showing in tab
+- Glowing and changing the glowing-color
 
 ## Multiple lines
 

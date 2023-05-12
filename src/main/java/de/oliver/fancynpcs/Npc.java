@@ -8,17 +8,17 @@ import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancynpcs.utils.ReflectionUtils;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.animal.Bee;
-import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
@@ -201,9 +201,6 @@ public class Npc {
 
         npc.setGlowingTag(glowing);
 
-//        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), npc.getEntityData().getNonDefaultValues());
-//        packets.add(setEntityDataPacket);
-
         if(equipment != null && equipment.size() > 0) {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
 
@@ -217,7 +214,8 @@ public class Npc {
 
         ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
         serverPlayer.connection.send(bundlePacket);
-        npc.getEntityData().refresh(serverPlayer);
+
+        refreshEntityData(serverPlayer);
 
         if(spawnEntity && location != null) {
             move(serverPlayer, location);
@@ -413,6 +411,16 @@ public class Npc {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             removeFromTab(onlinePlayer);
         }
+    }
+
+    private void refreshEntityData(ServerPlayer serverPlayer){
+        Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), "e"); // itemsById
+        List<SynchedEntityData.DataValue<?>> entityData = new ArrayList<>();
+        for (SynchedEntityData.DataItem<?> dataItem : itemsById.values()) {
+            entityData.add(dataItem.value());
+        }
+        ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), entityData);
+        serverPlayer.connection.send(setEntityDataPacket);
     }
 
     public String getName() {

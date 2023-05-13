@@ -5,7 +5,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
-import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
@@ -34,7 +33,7 @@ public class PacketReader {
                 out.add(msg);
 
                 PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(msg, player);
-                Bukkit.getGlobalRegionScheduler().runDelayed(FancyNpcs.getInstance(), scheduledTask -> packetReceivedEvent.callEvent(), 1L);
+                FancyNpcs.getInstance().getScheduler().runTaskLater(null, 1L, packetReceivedEvent::callEvent);
             }
         });
 

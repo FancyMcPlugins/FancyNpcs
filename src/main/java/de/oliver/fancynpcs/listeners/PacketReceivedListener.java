@@ -62,8 +62,7 @@ public class PacketReceivedListener implements Listener {
                         return;
                     }
 
-                    Bukkit.getRegionScheduler().execute(
-                            FancyNpcs.getInstance(),
+                    FancyNpcs.getInstance().getScheduler().runTask(
                             event.getPlayer().getLocation(),
                             () -> event.getPlayer().performCommand(npc.getPlayerCommand())
                     );

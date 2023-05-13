@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancylib.FancyLib;
+import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.NpcCMD;
 import de.oliver.fancylib.Metrics;
@@ -68,8 +69,7 @@ public class FancyNpcs extends JavaPlugin {
             return;
         }
 
-        String serverSoftware = nmsServer.getServerModName();
-        if(!serverSoftware.equals("Paper")){
+        if(!ServerSoftware.isPaper()){
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");

@@ -21,7 +21,7 @@ repositories{
 
 dependencies {
     paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
-    implementation("com.github.FancyMcPlugins:FancyLib:25458c9930")
+    implementation("com.github.FancyMcPlugins:FancyLib:225ba14e03")
 }
 
 tasks {

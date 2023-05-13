@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
@@ -207,8 +208,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if(!npcModifyEvent.isCancelled()){
                     if(SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID){
-                        skinName = UUIDFetcher.getUUID(skinName).toString();
+                        UUID uuid = UUIDFetcher.getUUID(skinName);
+                        if(uuid == null){
+                            MessageHelper.error(sender, "Invalid username");
+                            return false;
+                        }
+                        skinName = uuid.toString();
                     }
+
                     SkinFetcher skinFetcher = new SkinFetcher(skinName);
                     if(!skinFetcher.isLoaded()){
                         MessageHelper.error(sender, "Could not load skin. Possible causes:");
@@ -216,6 +223,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                         MessageHelper.error(sender, " - Rate limit reached (try again later)");
                         return false;
                     }
+
                     npc.updateSkin(skinFetcher);
                     MessageHelper.success(sender, "Updated skin");
                 } else {

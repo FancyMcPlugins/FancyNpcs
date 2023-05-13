@@ -190,7 +190,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                final String skinName = args.length == 3 ? args[2] : sender.getName();
+                String skinName = args.length == 3 ? args[2] : sender.getName();
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if(npc == null){
@@ -207,7 +207,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if(!npcModifyEvent.isCancelled()){
-                    SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
+                    if(SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID){
+                        skinName = UUIDFetcher.getUUID(skinName).toString();
+                    }
+                    SkinFetcher skinFetcher = new SkinFetcher(skinName);
+                    if(!skinFetcher.isLoaded()){
+                        MessageHelper.error(sender, "Could not load skin. Possible causes:");
+                        MessageHelper.error(sender, " - Invalid URL (check the url)");
+                        MessageHelper.error(sender, " - Rate limit reached (try again later)");
+                        return false;
+                    }
                     npc.updateSkin(skinFetcher);
                     MessageHelper.success(sender, "Updated skin");
                 } else {

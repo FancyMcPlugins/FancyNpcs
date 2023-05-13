@@ -100,7 +100,7 @@ public class NpcManager {
             npcConfig.set("npcs." + npc.getName() + ".turnToPlayer", npc.isTurnToPlayer());
 
             if(npc.getSkin() != null) {
-                npcConfig.set("npcs." + npc.getName() + ".skin.uuid", npc.getSkin().getUuid());
+                npcConfig.set("npcs." + npc.getName() + ".skin.identifier", npc.getSkin().getIdentifier());
                 npcConfig.set("npcs." + npc.getName() + ".skin.value", npc.getSkin().getValue());
                 npcConfig.set("npcs." + npc.getName() + ".skin.signature", npc.getSkin().getSignature());
             }
@@ -169,10 +169,14 @@ public class NpcManager {
                 location = new Location(world, x, y, z, yaw, pitch);
             }
 
-            String skinUuid = npcConfig.getString("npcs." + name + ".skin.uuid");
+            String skinIdentifier = npcConfig.getString("npcs." + name + ".skin.identifier", npcConfig.getString("npcs." + name + ".skin.uuid", ""));
             String skinValue = npcConfig.getString("npcs." + name + ".skin.value");
             String skinSignature = npcConfig.getString("npcs." + name + ".skin.signature");
-            SkinFetcher skin = new SkinFetcher(skinUuid, skinValue, skinSignature);
+            SkinFetcher skin = null;
+            if(skinIdentifier.length() > 0){
+                skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
+            }
+
             boolean showInTab = npcConfig.getBoolean("npcs." + name + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + name + ".spawnEntity");
             boolean glowing = npcConfig.getBoolean("npcs." + name + ".glowing");
@@ -212,7 +216,7 @@ public class NpcManager {
                 npc.setPlayerCommand(playerCommand);
             }
 
-            if(npcConfig.isConfigurationSection("npcs." + name + ".skin")){
+            if(skin != null && skin.isLoaded()){
                 npc.setSkin(skin);
             }
 

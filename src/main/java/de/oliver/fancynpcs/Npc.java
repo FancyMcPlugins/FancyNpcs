@@ -265,6 +265,10 @@ public class Npc {
 
     public void updateSkin(SkinFetcher skin){
         if(!skin.isLoaded()){
+            skin.load();
+        }
+
+        if(!skin.isLoaded()){
             return;
         }
 

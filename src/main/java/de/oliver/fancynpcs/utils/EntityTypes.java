@@ -1,8 +1,6 @@
 package de.oliver.fancynpcs.utils;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.flag.FeatureFlag;
-import net.minecraft.world.flag.FeatureFlags;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

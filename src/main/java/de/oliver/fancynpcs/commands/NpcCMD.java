@@ -10,7 +10,6 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;

@@ -30,15 +30,20 @@ public class FancyNpcs extends JavaPlugin {
         // TODO: remove in v1.1.3
         // rename old plugin
         File oldPluginFolder = new File("plugins/NpcPlugin/");
-        if(oldPluginFolder.exists() && oldPluginFolder.isDirectory()){
+        if (oldPluginFolder.exists() && oldPluginFolder.isDirectory()) {
             try {
                 oldPluginFolder.renameTo(new File("plugins/FancyNpcs/"));
-            } catch (Exception ignored){ }
+            } catch (Exception ignored) {
+            }
         }
 
         instance = this;
         this.npcManager = new NpcManager();
         this.config = new FancyNpcConfig();
+    }
+
+    public static FancyNpcs getInstance() {
+        return instance;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class FancyNpcs extends JavaPlugin {
         new Thread(() -> {
             ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
             ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-            if(newestVersion == null){
+            if (newestVersion == null) {
                 getLogger().warning("Could not fetch latest plugin version");
             } else if (newestVersion.compareTo(currentVersion) > 0) {
                 getLogger().warning("-------------------------------------------------------");
@@ -63,7 +68,7 @@ public class FancyNpcs extends JavaPlugin {
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
         String serverVersion = nmsServer.getServerVersion();
-        if(!serverVersion.equals(SUPPORTED_VERSION)){
+        if (!serverVersion.equals(SUPPORTED_VERSION)) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
@@ -74,7 +79,7 @@ public class FancyNpcs extends JavaPlugin {
         }
 
         String serverSoftware = nmsServer.getServerModName();
-        if(!serverSoftware.equals("Paper")){
+        if (!serverSoftware.equals("Paper")) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");
@@ -106,10 +111,10 @@ public class FancyNpcs extends JavaPlugin {
             }
 
             npcManager.loadNpcs();
-        }, 20L*5);
+        }, 20L * 5);
 
-        if(config.isEnableAutoSave()){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> npcManager.saveNpcs(false), 20L*60*5, 20L*60*15);
+        if (config.isEnableAutoSave()) {
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(instance, () -> npcManager.saveNpcs(false), 20L * 60 * 5, 20L * 60 * 15);
         }
     }
 
@@ -126,8 +131,5 @@ public class FancyNpcs extends JavaPlugin {
 
     public FancyNpcConfig getFancyNpcConfig() {
         return config;
-    }
-    public static FancyNpcs getInstance() {
-        return instance;
     }
 }

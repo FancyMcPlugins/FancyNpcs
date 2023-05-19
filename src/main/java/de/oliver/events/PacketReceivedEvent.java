@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PacketReceivedEvent extends Event {
 
-    private static HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
 
     private final Packet<?> packet;
     private final Player player;
@@ -19,6 +19,10 @@ public class PacketReceivedEvent extends Event {
     public PacketReceivedEvent(Packet<?> packet, Player player) {
         this.packet = packet;
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     public Packet<?> getPacket() {
@@ -31,10 +35,6 @@ public class PacketReceivedEvent extends Event {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlerList;
     }
 }

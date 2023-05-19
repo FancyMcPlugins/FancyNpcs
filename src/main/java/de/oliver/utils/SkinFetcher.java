@@ -8,6 +8,7 @@ import org.json.simple.parser.JSONParser;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -25,7 +26,7 @@ public class SkinFetcher {
     public SkinFetcher(String uuid) {
         this.uuid = uuid;
 
-        if(skinCache.containsKey(uuid)){
+        if (skinCache.containsKey(uuid)) {
             SkinFetcher cached = skinCache.get(uuid);
             this.name = cached.getName();
             this.value = cached.getValue();
@@ -38,7 +39,7 @@ public class SkinFetcher {
         load();
     }
 
-    public SkinFetcher(String uuid, String value, String signature){
+    public SkinFetcher(String uuid, String value, String signature) {
         this.uuid = uuid;
         this.value = value;
         this.signature = signature;
@@ -57,7 +58,7 @@ public class SkinFetcher {
             uc.addRequestProperty("Cache-Control", "no-cache, no-store, must-revalidate");
             uc.addRequestProperty("Pragma", "no-cache");
 
-            String json = new Scanner(uc.getInputStream(), "UTF-8").useDelimiter("\\A").next();
+            String json = new Scanner(uc.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A").next();
             JSONParser parser = new JSONParser();
             Object obj = parser.parse(json);
             JSONArray properties = (JSONArray) ((JSONObject) obj).get("properties");

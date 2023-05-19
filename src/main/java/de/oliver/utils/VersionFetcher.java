@@ -5,6 +5,7 @@ import org.apache.maven.artifact.versioning.ComparableVersion;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class VersionFetcher {
@@ -13,19 +14,19 @@ public class VersionFetcher {
     private static final String API_URL = "https://api.modrinth.com/v2/project/fancynpcs/version";
     private static ComparableVersion newestVersion = null;
 
-    public static ComparableVersion getNewestVersion(){
-        if(newestVersion != null) return newestVersion;
+    public static ComparableVersion getNewestVersion() {
+        if (newestVersion != null) return newestVersion;
 
         // TODO: remove when most servers have updated
         newestVersion = fetch("https://api.modrinth.com/v2/project/npc-plugin/version");
-        if(newestVersion != null) return newestVersion;
+        if (newestVersion != null) return newestVersion;
 
         newestVersion = fetch(API_URL);
-        if(newestVersion != null) return newestVersion;
+        if (newestVersion != null) return newestVersion;
 
         // TODO: remove when most servers have updated
         newestVersion = fetch("https://api.modrinth.com/v2/project/fancy-npcs/version");
-        if(newestVersion != null) return newestVersion;
+        if (newestVersion != null) return newestVersion;
 
         return null;
     }
@@ -33,7 +34,7 @@ public class VersionFetcher {
     /**
      * @return the newest version string
      */
-    private static ComparableVersion fetch(String url){
+    private static ComparableVersion fetch(String url) {
         String jsonString = null;
         try {
             jsonString = getDataFromUrl(url);
@@ -57,7 +58,7 @@ public class VersionFetcher {
 
     private static String getDataFromUrl(String urlString) throws IOException {
         URL url = new URL(urlString);
-        try (java.util.Scanner scanner = new java.util.Scanner(url.openStream(), "UTF-8").useDelimiter("\\A")) {
+        try (java.util.Scanner scanner = new java.util.Scanner(url.openStream(), StandardCharsets.UTF_8).useDelimiter("\\A")) {
             return scanner.hasNext() ? scanner.next() : "";
         }
     }

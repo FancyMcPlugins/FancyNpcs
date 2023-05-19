@@ -15,7 +15,16 @@ public class FancyNpcConfig {
     private int turnToPlayerDistance;
     private int visibilityDistance;
 
-    public void reload(){
+    public static Object getOrDefault(FileConfiguration config, String path, Object defaultVal) {
+        if (!config.contains(path)) {
+            config.set(path, defaultVal);
+            return defaultVal;
+        }
+
+        return config.get(path);
+    }
+
+    public void reload() {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
@@ -61,14 +70,5 @@ public class FancyNpcConfig {
 
     public int getVisibilityDistance() {
         return visibilityDistance;
-    }
-
-    public static Object getOrDefault(FileConfiguration config, String path, Object defaultVal){
-        if(!config.contains(path)){
-            config.set(path, defaultVal);
-            return defaultVal;
-        }
-
-        return config.get(path);
     }
 }

@@ -13,11 +13,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoinListener implements Listener {
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event) {
         PacketReader packetReader = new PacketReader(event.getPlayer());
         boolean injected = packetReader.inject();
 
-        if(!injected){
+        if (!injected) {
             MessageHelper.warning(event.getPlayer(), "Something went wrong. Interacting with NPCs will not work for you.");
             MessageHelper.warning(event.getPlayer(), "Rejoin might fix this bug");
         }
@@ -27,11 +27,11 @@ public class PlayerJoinListener implements Listener {
             npc.spawn(event.getPlayer());
         }
 
-        if(!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")){
+        if (!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")) {
             new Thread(() -> {
                 ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
-                if(newestVersion != null && newestVersion.compareTo(currentVersion) > 0){
+                if (newestVersion != null && newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(event.getPlayer(), "You are using an outdated version of the FancyNpcs Plugin");
                     MessageHelper.warning(event.getPlayer(), "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>");
                 }

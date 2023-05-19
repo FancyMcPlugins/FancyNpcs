@@ -19,11 +19,11 @@ public class PacketReader {
         this.player = player;
     }
 
-    public boolean inject(){
+    public boolean inject() {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         Channel channel = craftPlayer.getHandle().connection.connection.channel;
 
-        if(channel.pipeline().get("PacketInjector") != null){
+        if (channel.pipeline().get("PacketInjector") != null) {
             return false;
         }
 

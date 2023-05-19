@@ -9,7 +9,7 @@
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
 
 **Only for minecraft server version 1.19.4**<br>
-_Using [Folia](https://github.com/PaperMC/Folia) (a paper fork) is required_
+_Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
 You can download the latest versions at the following places:

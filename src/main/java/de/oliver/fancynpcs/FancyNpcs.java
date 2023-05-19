@@ -77,12 +77,10 @@ public class FancyNpcs extends JavaPlugin {
 
         if(!ServerSoftware.isPaper()){
             getLogger().warning("--------------------------------------------------");
-            getLogger().warning("Unsupported server software used!");
-            getLogger().warning("This version of the plugin requires to use Folia (or a Folia fork)");
-            getLogger().warning("(https://github.com/PaperMC/Folia)");
+            getLogger().warning("It is recommended to use Paper as server software.");
+            getLogger().warning("Because you are not using paper, the plugin");
+            getLogger().warning("might not work correctly.");
             getLogger().warning("--------------------------------------------------");
-            pluginManager.disablePlugin(this);
-            return;
         }
 
         // register bStats

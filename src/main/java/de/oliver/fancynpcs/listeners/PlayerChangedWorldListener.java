@@ -1,7 +1,7 @@
-package de.oliver.listeners;
+package de.oliver.fancynpcs.listeners;
 
-import de.oliver.Npc;
-import de.oliver.FancyNpcs;
+import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;

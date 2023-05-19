@@ -3,18 +3,25 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.5.4"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     id("maven-publish")
+    id ("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "de.oliver"
-version = "1.1.3"
+version = "1.1.5-beta"
 description = "NPC plugin"
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
+repositories{
+    mavenLocal()
+    maven("https://jitpack.io")
+}
+
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
+    implementation("com.github.FancyMcPlugins:FancyLib:7a5d9a8951")
 }
 
 tasks {

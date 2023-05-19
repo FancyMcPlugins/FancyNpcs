@@ -1,15 +1,16 @@
-package de.oliver.commands;
+package de.oliver.fancynpcs.commands;
 
-import de.oliver.FancyNpcs;
-import de.oliver.Npc;
-import de.oliver.events.NpcCreateEvent;
-import de.oliver.events.NpcModifyEvent;
-import de.oliver.events.NpcRemoveEvent;
-import de.oliver.utils.MessageHelper;
-import de.oliver.utils.SkinFetcher;
-import de.oliver.utils.UUIDFetcher;
-import net.kyori.adventure.text.Component;
+import de.oliver.fancylib.UUIDFetcher;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.events.NpcCreateEvent;
+import de.oliver.fancynpcs.events.NpcModifyEvent;
+import de.oliver.fancynpcs.events.NpcRemoveEvent;
+import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.utils.EntityTypes;
+import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
@@ -32,8 +34,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (args.length == 1) {
-            return Stream.of("help", "message", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer")
+        if(args.length == 1){
+            return Stream.of("help", "message", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
@@ -53,7 +55,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")) {
             return Arrays.stream(ChatFormatting.values())
+                    .filter(ChatFormatting::isColor)
                     .map(ChatFormatting::getName)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        } else if(args.length == 3 && args[0].equalsIgnoreCase("type")){
+            return EntityTypes.TYPES.keySet().stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
@@ -71,20 +78,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             MessageHelper.info(sender, "<b>FancyNpcs Plugin help:");
-            MessageHelper.info(sender, " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location", false);
-            MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc", false);
+            MessageHelper.info(sender, " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location");
+            MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc");
+            MessageHelper.info(sender, " - /npc list <dark_gray>- <white>Summary of all npcs");
+            MessageHelper.info(sender, " - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc");
             MessageHelper.info(sender, " - /npc message (name) (message) <dark_gray>- <white>Set NPC message", false);
-            MessageHelper.info(sender, " - /npc list <dark_gray>- <white>Summary of all npcs", false);
-            MessageHelper.info(sender, " - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc", false);
-            MessageHelper.info(sender, " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location", false);
-            MessageHelper.info(sender, " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc", false);
-            MessageHelper.info(sender, " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding", false);
-            MessageHelper.info(sender, " - /npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting", false);
-            MessageHelper.info(sender, " - /npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc", false);
-            MessageHelper.info(sender, " - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not", false);
-            MessageHelper.info(sender, " - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not", false);
-            MessageHelper.info(sender, " - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect", false);
-            MessageHelper.info(sender, " - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not", false);
+            MessageHelper.info(sender, " - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc");
+            MessageHelper.info(sender, " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location");
+            MessageHelper.info(sender, " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc");
+            MessageHelper.info(sender, " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding");
+            MessageHelper.info(sender, " - /npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting");
+            MessageHelper.info(sender, " - /npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc");
+            MessageHelper.info(sender, " - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not");
+            MessageHelper.info(sender, " - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not");
+            MessageHelper.info(sender, " - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect");
+            MessageHelper.info(sender, " - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not");
 
             return true;
         }
@@ -205,12 +213,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "skin" -> {
-                if (args.length != 3 && args.length != 2) {
+                if(args.length != 3 && args.length != 2) {
                     MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
 
-                final String skinName = args.length == 3 ? args[2] : sender.getName();
+                String skinName = args.length == 3 ? args[2] : sender.getName();
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
@@ -218,11 +226,32 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, p);
                 npcModifyEvent.callEvent();
 
-                if (!npcModifyEvent.isCancelled()) {
-                    SkinFetcher skinFetcher = new SkinFetcher(UUIDFetcher.getUUID(skinName).toString());
+                if(!npcModifyEvent.isCancelled()){
+                    if(SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID){
+                        UUID uuid = UUIDFetcher.getUUID(skinName);
+                        if(uuid == null){
+                            MessageHelper.error(sender, "Invalid username");
+                            return false;
+                        }
+                        skinName = uuid.toString();
+                    }
+
+                    SkinFetcher skinFetcher = new SkinFetcher(skinName);
+                    if(!skinFetcher.isLoaded()){
+                        MessageHelper.error(sender, "Could not load skin. Possible causes:");
+                        MessageHelper.error(sender, " - Invalid URL (check the url)");
+                        MessageHelper.error(sender, " - Rate limit reached (try again later)");
+                        return false;
+                    }
+
                     npc.updateSkin(skinFetcher);
                     MessageHelper.success(sender, "Updated skin");
                 } else {
@@ -268,6 +297,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 
@@ -367,6 +401,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 boolean showInTab;
                 switch (args[2].toLowerCase()) {
                     case "true" -> showInTab = true;
@@ -410,6 +449,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 boolean glowing;
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
@@ -446,9 +490,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
+                if(npc.getType() != EntityType.PLAYER){
+                    MessageHelper.error(sender, "Npc's type must be Player to do this");
+                    return false;
+                }
+
                 ChatFormatting color = ChatFormatting.getByName(args[2]);
                 if (color == null) {
                     MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                if(!color.isColor()){
+                    MessageHelper.error(sender, "Glowing color must be a color");
                     return false;
                 }
 
@@ -496,6 +550,47 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                         MessageHelper.success(sender, "NPC will no longer turn to the players");
                         npc.moveForAll(npc.getLocation()); // move to default pos
                     }
+                } else {
+                    MessageHelper.error(sender, "Modification has been cancelled");
+                }
+            }
+
+            case "type" -> {
+                if(args.length < 3){
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if(npc == null){
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, p);
+                npcModifyEvent.callEvent();
+
+                if(!npcModifyEvent.isCancelled()){
+                    if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
+                        MessageHelper.error(sender, "Invalid type");
+                        return false;
+                    }
+
+                    EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
+                    npc.setType(type);
+
+                    if(type != EntityType.PLAYER){
+                        npc.setGlowing(false);
+                        npc.setShowInTab(false);
+                        if(npc.getEquipment() != null){
+                            npc.getEquipment().clear();
+                        }
+                    }
+
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                    MessageHelper.success(sender, "Updated entity type");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
                 }

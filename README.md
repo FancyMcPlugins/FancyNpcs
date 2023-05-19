@@ -1,6 +1,9 @@
-[![Generic badge](https://img.shields.io/badge/version-1.1.3-green.svg)](https://shields.io/)
+![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
+[![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
+[![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
+![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=GitHub&style=flat-square)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
-[![Downloads](https://img.shields.io/modrinth/dt/npc-plugin?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/npc-plugin/versions)
+[![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
 # Fancy Npcs
 A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
@@ -11,16 +14,18 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 ## Get the plugin
 You can download the latest versions at the following places:
 
+- https://hangar.papermc.io/Oliver/FancyNpcs
+- https://modrinth.com/plugin/fancynpcs/
+- https://github.com/FancyMcPlugins/FancyNpcs/releases
 - https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
-- https://modrinth.com/plugin/fancy-npcs/
-- https://github.com/OliverSchlueter/FancyNpcs/releases
-- Build from source (``gradlew reobfJar``)
+- Build from source
 
 ## Commands
 /npc create (name) - _Creates a new npc at your location_<br>
 /npc remove (name) - _Removes an npc_<br>
 /npc list - _Summary of all npcs_<br>
-/npc skin (name) (skin) - _Sets the skin for an npc_<br>
+/npc skin (name) [(skin)] - _Sets the skin for an npc_<br>
+/npc type (name) (type) - _Sets the entity type for an npc_<br>
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
@@ -39,6 +44,30 @@ For the serverCommand, there is a placeholder `{player}` - it will be replaced w
 
 ## Permissions
 For the /npc command - ``FancyNpcs.admin``
+
+## Entity types
+
+When using any entity type other than Player, the following features are disabled:
+- Changing the skin
+- Changing the equipment
+- Showing in tab
+- Glowing and changing the glowing-color
+
+## Multiple lines
+
+To have multiple lines as the display name of an NPC follow the following steps:
+
+1. download the [FancyHolograms](https://modrinth.com/plugin/fancyholograms/versions) plugin and put it in the plugins folder
+2. start your server and make sure the FancyNpcs and FancyHolograms plugin have both loaded
+3. create a hologram with multiple lines
+4. create a npc
+5. link the hologram with the npc `/hologram edit <hologram> linkWithNpc <npc>`
+6. you can now move the npc around and the hologram will always follow
+7. to unlink simply run `/hologram edit <hologram> unlinkWithNpc`
+
+## Build from source
+1. Clone this repo and run `gradlew reobfJar`
+2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
 
 ## Used packets
 

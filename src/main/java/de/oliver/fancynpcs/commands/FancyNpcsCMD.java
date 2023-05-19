@@ -1,8 +1,7 @@
-package de.oliver.commands;
+package de.oliver.fancynpcs.commands;
 
-import de.oliver.FancyNpcs;
-import de.oliver.utils.MessageHelper;
-import de.oliver.utils.VersionFetcher;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -31,13 +30,13 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
             MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
-                ComparableVersion newestVersion = VersionFetcher.getNewestVersion();
+                ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion == null) {
                     MessageHelper.error(sender, "Could not find latest version");
                 } else if (newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(sender, "You are using an outdated version of the FancyNpcs Plugin");
-                    MessageHelper.warning(sender, "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + VersionFetcher.DOWNLOAD_URL + "'><u>click here</u></click>");
+                    MessageHelper.warning(sender, "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>");
                 } else {
                     MessageHelper.success(sender, "You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ")");
                 }

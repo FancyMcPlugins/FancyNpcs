@@ -1,6 +1,6 @@
-package de.oliver.events;
+package de.oliver.fancynpcs.events;
 
-import de.oliver.Npc;
+import de.oliver.fancynpcs.Npc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -8,22 +8,19 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Is fired when a NPC is being modified
+ * Is fired when a new NPC is being created
  */
-public class NpcModifyEvent extends Event implements Cancellable {
+public class NpcCreateEvent extends Event implements Cancellable {
 
     private static final HandlerList handlerList = new HandlerList();
     @NotNull
     private final Npc npc;
     @NotNull
-    private final NpcModification modification;
-    @NotNull
     private final Player player;
     private boolean isCancelled;
 
-    public NpcModifyEvent(@NotNull Npc npc, @NotNull NpcModification modification, @NotNull Player player) {
+    public NpcCreateEvent(@NotNull Npc npc, @NotNull Player player) {
         this.npc = npc;
-        this.modification = modification;
         this.player = player;
     }
 
@@ -32,21 +29,14 @@ public class NpcModifyEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the modified npc
+     * @return the created npc
      */
     public @NotNull Npc getNpc() {
         return npc;
     }
 
     /**
-     * @return the modification that was being made
-     */
-    public @NotNull NpcModification getModification() {
-        return modification;
-    }
-
-    /**
-     * @return the player who modified the npc
+     * @return the player who created the npc
      */
     public @NotNull Player getPlayer() {
         return player;
@@ -65,19 +55,5 @@ public class NpcModifyEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
-    }
-
-    public enum NpcModification {
-        LOCATION,
-        SKIN,
-        DISPLAY_NAME,
-        EQUIPMENT,
-        SERVER_COMMAND,
-        PLAYER_COMMAND,
-        SHOW_IN_TAB,
-        GLOWING,
-        GLOWING_COLOR,
-        TURN_TO_PLAYER,
-        CUSTOM_MESSAGE
     }
 }

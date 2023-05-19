@@ -1,7 +1,7 @@
-package de.oliver.listeners;
+package de.oliver.fancynpcs.listeners;
 
-import de.oliver.FancyNpcs;
-import de.oliver.Npc;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.Npc;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;

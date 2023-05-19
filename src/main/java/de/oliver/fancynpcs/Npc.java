@@ -443,89 +443,80 @@ public class Npc {
         return displayName;
     }
 
-    public Npc setDisplayName(String displayName) {
+    public void setDisplayName(String displayName) {
         this.displayName = displayName;
         isDirty = true;
-        return this;
     }
 
     public SkinFetcher getSkin() {
         return skin;
     }
 
-    public Npc setSkin(SkinFetcher skin) {
+    public void setSkin(SkinFetcher skin) {
         this.skin = skin;
         isDirty = true;
-        return this;
     }
 
     public Location getLocation() {
         return location;
     }
 
-    public Npc setLocation(Location location) {
+    public void setLocation(Location location) {
         this.location = location;
         isDirty = true;
-        return this;
     }
 
     public boolean isShowInTab() {
         return showInTab;
     }
 
-    public Npc setShowInTab(boolean showInTab) {
+    public void setShowInTab(boolean showInTab) {
         this.showInTab = showInTab;
         isDirty = true;
-        return this;
     }
 
     public boolean isSpawnEntity() {
         return spawnEntity;
     }
 
-    public Npc setSpawnEntity(boolean spawnEntity) {
+    public void setSpawnEntity(boolean spawnEntity) {
         this.spawnEntity = spawnEntity;
         isDirty = true;
-        return this;
     }
 
     public boolean isGlowing() {
         return glowing;
     }
 
-    public Npc setGlowing(boolean glowing) {
+    public void setGlowing(boolean glowing) {
         this.glowing = glowing;
         isDirty = true;
-        return this;
     }
 
     public ChatFormatting getGlowingColor() {
         return glowingColor;
     }
 
-    public Npc setGlowingColor(ChatFormatting glowingColor) {
+    public void setGlowingColor(ChatFormatting glowingColor) {
         this.glowingColor = glowingColor;
         isDirty = true;
-        return this;
     }
 
-    public Npc addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
+    public void addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
         if(equipment == null){
             equipment = new HashMap<>();
         }
 
         equipment.put(equipmentSlot, itemStack);
         isDirty = true;
-        return this;
     }
 
     public Map<EquipmentSlot, ItemStack> getEquipment() {
         return equipment;
     }
 
-    public Npc setOnClick(Consumer<Player> consumer){
+    public void setOnClick(Consumer<Player> consumer){
         onClick = consumer;
-        return this;
     }
 
     public Consumer<Player> getOnClick() {
@@ -545,20 +536,18 @@ public class Npc {
         return serverCommand;
     }
 
-    public Npc setServerCommand(String serverCommand) {
+    public void setServerCommand(String serverCommand) {
         this.serverCommand = serverCommand;
         isDirty = true;
-        return this;
     }
 
     public String getPlayerCommand() {
         return playerCommand;
     }
 
-    public Npc setPlayerCommand(String playerCommand) {
+    public void setPlayerCommand(String playerCommand) {
         this.playerCommand = playerCommand;
         isDirty = true;
-        return this;
     }
 
     public Entity getNpc() {

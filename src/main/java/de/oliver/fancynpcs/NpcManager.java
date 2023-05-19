@@ -76,7 +76,7 @@ public class NpcManager {
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         for (Npc npc : npcs.values()) {
-            if(!npc.isSaveToFile()){
+            if (!npc.isSaveToFile()) {
                 continue;
             }
 
@@ -100,7 +100,7 @@ public class NpcManager {
             npcConfig.set("npcs." + npc.getName() + ".turnToPlayer", npc.isTurnToPlayer());
             npcConfig.set("npcs." + npc.getName() + ".message", npc.getMessage());
 
-            if(npc.getSkin() != null) {
+            if (npc.getSkin() != null) {
                 npcConfig.set("npcs." + npc.getName() + ".skin.identifier", npc.getSkin().getIdentifier());
                 npcConfig.set("npcs." + npc.getName() + ".skin.value", npc.getSkin().getValue());
                 npcConfig.set("npcs." + npc.getName() + ".skin.signature", npc.getSkin().getSignature());
@@ -143,20 +143,21 @@ public class NpcManager {
 
             Location location = null;
 
-            try{
+            try {
                 location = npcConfig.getLocation("npcs." + name + ".location");
-            } catch (Exception ignored){ }
+            } catch (Exception ignored) {
+            }
 
-            if(location == null){
+            if (location == null) {
                 String worldName = npcConfig.getString("npcs." + name + ".location.world");
                 World world = Bukkit.getWorld(worldName);
 
-                if(world == null){
+                if (world == null) {
                     FancyNpcs.getInstance().getLogger().info("Trying to load the world: '" + worldName + "'");
                     world = new WorldCreator(worldName).createWorld();
                 }
 
-                if(world == null){
+                if (world == null) {
                     FancyNpcs.getInstance().getLogger().info("Could not load npc '" + name + "', because the world '" + worldName + "' is not loaded");
                     continue;
                 }
@@ -174,7 +175,7 @@ public class NpcManager {
             String skinValue = npcConfig.getString("npcs." + name + ".skin.value");
             String skinSignature = npcConfig.getString("npcs." + name + ".skin.signature");
             SkinFetcher skin = null;
-            if(skinIdentifier.length() > 0){
+            if (skinIdentifier.length() > 0) {
                 skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
             }
 
@@ -219,7 +220,7 @@ public class NpcManager {
                 npc.setPlayerCommand(playerCommand);
             }
 
-            if(skin != null && skin.isLoaded()){
+            if (skin != null && skin.isLoaded()) {
                 npc.setSkin(skin);
             }
 

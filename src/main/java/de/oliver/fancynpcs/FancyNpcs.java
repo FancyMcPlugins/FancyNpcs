@@ -35,11 +35,15 @@ public class FancyNpcs extends JavaPlugin {
     public FancyNpcs() {
         instance = this;
         this.scheduler = ServerSoftware.isFolia()
-                        ? new FoliaScheduler(instance)
-                        : new BukkitScheduler(instance);
+                ? new FoliaScheduler(instance)
+                : new BukkitScheduler(instance);
         this.npcManager = new NpcManager();
         this.config = new FancyNpcConfig();
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
+    }
+
+    public static FancyNpcs getInstance() {
+        return instance;
     }
 
     @Override
@@ -75,7 +79,7 @@ public class FancyNpcs extends JavaPlugin {
             return;
         }
 
-        if (!serverSoftware.isPaper()) {
+        if (!ServerSoftware.isPaper()) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");
@@ -103,18 +107,18 @@ public class FancyNpcs extends JavaPlugin {
         EntityTypes.loadTypes();
 
         // load config
-        scheduler.runTaskLater(null, 20L*5, () -> {
+        scheduler.runTaskLater(null, 20L * 5, () -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 PacketReader packetReader = new PacketReader(onlinePlayer);
                 packetReader.inject();
             }
 
             npcManager.loadNpcs();
-        }, 20L * 5);
+        });
 
         int autosaveInterval = config.getAutoSaveInterval();
-        if(config.isEnableAutoSave()){
-            scheduler.runTaskTimerAsynchronously(autosaveInterval*60L, autosaveInterval*60L, () -> npcManager.saveNpcs(false));
+        if (config.isEnableAutoSave()) {
+            scheduler.runTaskTimerAsynchronously(autosaveInterval * 60L, autosaveInterval * 60L, () -> npcManager.saveNpcs(false));
         }
     }
 
@@ -139,9 +143,5 @@ public class FancyNpcs extends JavaPlugin {
 
     public VersionFetcher getVersionFetcher() {
         return versionFetcher;
-    }
-
-    public static FancyNpcs getInstance() {
-        return instance;
     }
 }

@@ -1,6 +1,6 @@
-package de.oliver.events;
+package de.oliver.fancynpcs.events;
 
-import de.oliver.Npc;
+import de.oliver.fancynpcs.Npc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -80,6 +80,5 @@ public class NpcModifyEvent extends Event implements Cancellable {
         TURN_TO_PLAYER,
         CUSTOM_MESSAGE,
         TYPE,
-        ;
     }
 }

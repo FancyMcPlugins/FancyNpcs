@@ -39,6 +39,8 @@ public class Npc {
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
 
     private final String name;
+    private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
+    private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
     private String displayName;
     private SkinFetcher skin;
     private Location location;
@@ -56,8 +58,6 @@ public class Npc {
     private String localName;
     private boolean isDirty;
     private boolean saveToFile;
-    private final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
-    private final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
     private String message;
 
     public Npc(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand, String message) {
@@ -124,9 +124,9 @@ public class Npc {
             gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
         }
 
-        if(type == EntityType.PLAYER){
+        if (type == EntityType.PLAYER) {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
-            ((ServerPlayer)npc).gameProfile = gameProfile;
+            ((ServerPlayer) npc).gameProfile = gameProfile;
         } else {
             npc = type.create(serverLevel);
         }
@@ -145,7 +145,7 @@ public class Npc {
         List<Packet<ClientGamePacketListener>> packets = new ArrayList<>();
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
-        if(!displayName.equalsIgnoreCase("<empty>")){
+        if (!displayName.equalsIgnoreCase("<empty>")) {
             npc.setCustomName(vanillaComponent);
             npc.setCustomNameVisible(true);
         } else {
@@ -153,7 +153,7 @@ public class Npc {
             npc.setCustomNameVisible(false);
         }
 
-        if(npc instanceof ServerPlayer player) {
+        if (npc instanceof ServerPlayer player) {
             player.listName = vanillaComponent;
 
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
@@ -200,14 +200,14 @@ public class Npc {
         }
 
 
-        if(npc instanceof ServerPlayer){
+        if (npc instanceof ServerPlayer) {
             // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
             npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         }
 
         npc.setGlowingTag(glowing);
 
-        if(equipment != null && equipment.size() > 0) {
+        if (equipment != null && equipment.size() > 0) {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
 
             for (EquipmentSlot slot : equipment.keySet()) {
@@ -252,7 +252,7 @@ public class Npc {
         isDirty = true;
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
-        if(displayName.equalsIgnoreCase("<empty>")){
+        if (displayName.equalsIgnoreCase("<empty>")) {
             npc.setCustomNameVisible(false);
             npc.setCustomName(Component.empty());
         } else {
@@ -260,7 +260,7 @@ public class Npc {
             npc.setCustomName(vanillaComponent);
         }
 
-        if(npc instanceof ServerPlayer player) {
+        if (npc instanceof ServerPlayer player) {
             player.listName = vanillaComponent;
         }
 
@@ -270,12 +270,12 @@ public class Npc {
 
     }
 
-    public void updateSkin(SkinFetcher skin){
-        if(!skin.isLoaded()){
+    public void updateSkin(SkinFetcher skin) {
+        if (!skin.isLoaded()) {
             skin.load();
         }
 
-        if(!skin.isLoaded()){
+        if (!skin.isLoaded()) {
             return;
         }
 
@@ -394,7 +394,7 @@ public class Npc {
     }
 
     private void removeFromTab(ServerPlayer serverPlayer) {
-        if(!(npc instanceof ServerPlayer player)) {
+        if (!(npc instanceof ServerPlayer player)) {
             return;
         }
 
@@ -429,7 +429,7 @@ public class Npc {
         }
     }
 
-    private void refreshEntityData(ServerPlayer serverPlayer){
+    private void refreshEntityData(ServerPlayer serverPlayer) {
         Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), "e"); // itemsById
         List<SynchedEntityData.DataValue<?>> entityData = new ArrayList<>();
         for (SynchedEntityData.DataItem<?> dataItem : itemsById.values()) {
@@ -514,8 +514,8 @@ public class Npc {
         isDirty = true;
     }
 
-    public void addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack){
-        if(equipment == null){
+    public void addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack) {
+        if (equipment == null) {
             equipment = new HashMap<>();
         }
 
@@ -527,12 +527,12 @@ public class Npc {
         return equipment;
     }
 
-    public void setOnClick(Consumer<Player> consumer){
-        onClick = consumer;
-    }
-
     public Consumer<Player> getOnClick() {
         return onClick;
+    }
+
+    public void setOnClick(Consumer<Player> consumer) {
+        onClick = consumer;
     }
 
     public boolean isTurnToPlayer() {
@@ -551,7 +551,7 @@ public class Npc {
     public void setMessage(String message) {
         this.message = message;
         this.isDirty = true;
-        setOnClick(player -> player.sendMessage(Component.text(message)));
+        setOnClick(player -> player.sendMessage(net.kyori.adventure.text.Component.text(message)));
     }
 
     public String getServerCommand() {

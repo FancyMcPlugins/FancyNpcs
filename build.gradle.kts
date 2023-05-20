@@ -21,7 +21,7 @@ repositories{
 
 dependencies {
     paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
-    implementation("com.github.FancyMcPlugins:FancyLib:7a5d9a8951")
+    implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
 }
 
 tasks {

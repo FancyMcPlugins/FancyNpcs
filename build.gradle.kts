@@ -1,6 +1,6 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+//    id("io.papermc.paperweight.userdev") version "1.5.5"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     id("maven-publish")
     id ("com.github.johnrengelman.shadow") version "8.1.1"
@@ -52,7 +52,8 @@ repositories{
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+//    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
 
@@ -64,6 +65,9 @@ dependencies {
 
     implementation(project(":implementation:nms_1_19_R3", configuration = "reobf"))
     compileOnly(project(":implementation:nms_1_19_R3"))
+
+    implementation(project(":implementation:nms_1_19_R2", configuration = "reobf"))
+    compileOnly(project(":implementation:nms_1_19_R2"))
 
     implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
 }
@@ -102,9 +106,9 @@ tasks {
     }
 
     // Configure reobfJar to run when invoking the build task
-    assemble {
-        dependsOn(reobfJar)
-    }
+//    assemble {
+//        dependsOn(reobfJar)
+//    }
 
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything

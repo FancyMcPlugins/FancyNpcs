@@ -16,7 +16,6 @@ import de.oliver.fancynpcs.listeners.PlayerMoveListener;
 import de.oliver.fancynpcs.nms.NmsBase;
 import de.oliver.fancynpcs.nms.v1_19_R2;
 import de.oliver.fancynpcs.nms.v1_19_R3;
-import de.oliver.fancynpcs.utils.EntityTypes;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -110,7 +109,7 @@ public class FancyNpcs extends JavaPlugin {
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // load entity type mappings
-        EntityTypes.loadTypes();
+        nmsBase.getAllEntityTypes();
 
         // load config
         scheduler.runTaskLater(null, 20L * 5, () -> {

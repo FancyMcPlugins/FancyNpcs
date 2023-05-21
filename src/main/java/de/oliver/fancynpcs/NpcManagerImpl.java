@@ -2,7 +2,6 @@ package de.oliver.fancynpcs;
 
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcManager;
-import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
@@ -159,7 +158,7 @@ public class NpcManagerImpl implements NpcManager {
 
         for (String name : npcConfig.getConfigurationSection("npcs").getKeys(false)) {
             String displayName = npcConfig.getString("npcs." + name + ".displayName");
-            EntityType<?> type = EntityTypes.TYPES.get(npcConfig.getString("npcs." + name + ".type", "player"));
+            EntityType<?> type = FancyNpcs.getInstance().getNmsBase().getAllEntityTypes().get(npcConfig.getString("npcs." + name + ".type", "player"));
 
             Location location = null;
 

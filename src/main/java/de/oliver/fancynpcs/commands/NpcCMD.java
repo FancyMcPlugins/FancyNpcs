@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.NpcImpl;
 import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
-import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
@@ -22,10 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
@@ -59,7 +55,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("type")) {
-            return EntityTypes.TYPES.keySet().stream()
+            return FancyNpcs.getInstance().getNmsBase().getAllEntityTypes().keySet().stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
@@ -570,13 +566,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, p);
                 npcModifyEvent.callEvent();
 
+                Map<String, EntityType<?>> types = FancyNpcs.getInstance().getNmsBase().getAllEntityTypes();
+
                 if (!npcModifyEvent.isCancelled()) {
-                    if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
+                    if (!types.containsKey(args[2].toLowerCase())) {
                         MessageHelper.error(sender, "Invalid type");
                         return false;
                     }
 
-                    EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
+                    EntityType<?> type = types.get(args[2].toLowerCase());
                     npc.setType(type);
 
                     if (type != EntityType.PLAYER) {

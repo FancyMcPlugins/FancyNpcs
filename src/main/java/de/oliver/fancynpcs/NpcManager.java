@@ -198,13 +198,10 @@ public class NpcManager {
             }
 
             npc.setType(type);
-
             npc.setShowInTab(showInTab);
             npc.setSpawnEntity(spawnEntity);
-
             npc.setGlowing(glowing);
             npc.setGlowingColor(glowingColor);
-
             npc.setTurnToPlayer(turnToPlayer);
             npc.setMessage(message);
 

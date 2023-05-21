@@ -7,8 +7,10 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
 import de.oliver.fancynpcs.events.NpcInteractEvent;
 import de.oliver.fancynpcs.events.PacketReceivedEvent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
@@ -16,8 +18,9 @@ public class PacketReceivedListener implements Listener {
 
     @EventHandler
     public void onPacketReceived(PacketReceivedEvent event) {
-
         if (event.getPacket() instanceof ServerboundInteractPacket interactPacket) {
+            Player p = event.getPlayer();
+
             String hand = "";
 
             if (interactPacket.getActionType() != ServerboundInteractPacket.ActionType.ATTACK) {
@@ -34,18 +37,27 @@ public class PacketReceivedListener implements Listener {
                     return;
                 }
 
-                NpcInteractEvent npcInteractEvent = new NpcInteractEvent(npc, npc.getPlayerCommand(), npc.getServerCommand(), npc.getOnClick(), event.getPlayer());
+                NpcInteractEvent npcInteractEvent = new NpcInteractEvent(npc, npc.getPlayerCommand(), npc.getServerCommand(), npc.getOnClick(), p);
                 npcInteractEvent.callEvent();
 
                 if (npcInteractEvent.isCancelled()) {
                     return;
                 }
 
-                npc.getOnClick().accept(event.getPlayer());
-                if (npc.getServerCommand() != null && npc.getServerCommand().length() > 0) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", event.getPlayer().getName()));
+                // onClick
+                npc.getOnClick().accept(p);
+
+                // message
+                if(npc.getMessage() != null && npc.getMessage().length() > 0){
+                    p.sendMessage(MiniMessage.miniMessage().deserialize(npc.getMessage()));
                 }
 
+                // serverCommand
+                if (npc.getServerCommand() != null && npc.getServerCommand().length() > 0) {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", p.getName()));
+                }
+
+                // playerCommand
                 if (npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0) {
 
                     if (npc.getPlayerCommand().toLowerCase().startsWith("server")) {
@@ -58,13 +70,13 @@ public class PacketReceivedListener implements Listener {
                         ByteArrayDataOutput out = ByteStreams.newDataOutput();
                         out.writeUTF("Connect");
                         out.writeUTF(server);
-                        event.getPlayer().sendPluginMessage(FancyNpcs.getInstance(), "BungeeCord", out.toByteArray());
+                        p.sendPluginMessage(FancyNpcs.getInstance(), "BungeeCord", out.toByteArray());
                         return;
                     }
 
                     FancyNpcs.getInstance().getScheduler().runTask(
-                            event.getPlayer().getLocation(),
-                            () -> event.getPlayer().performCommand(npc.getPlayerCommand())
+                            p.getLocation(),
+                            () -> p.performCommand(npc.getPlayerCommand())
                     );
                 }
             }

@@ -287,12 +287,6 @@ public class Npc {
         spawnForAll();
     }
 
-    public void updateMessage(String message) {
-        this.message = message;
-        setOnClick(player -> player.sendMessage(net.kyori.adventure.text.Component.text(message)));
-        isDirty = true;
-    }
-
     public void updateGlowing(boolean glowing) {
         this.glowing = glowing;
         isDirty = true;
@@ -552,7 +546,6 @@ public class Npc {
     public void setMessage(String message) {
         this.message = message;
         this.isDirty = true;
-        setOnClick(player -> player.sendMessage(net.kyori.adventure.text.Component.text(message)));
     }
 
     public String getServerCommand() {

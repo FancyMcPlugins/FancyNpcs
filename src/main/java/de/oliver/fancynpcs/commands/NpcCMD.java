@@ -1,15 +1,14 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
 import de.oliver.fancynpcs.events.NpcCreateEvent;
 import de.oliver.fancynpcs.events.NpcModifyEvent;
 import de.oliver.fancynpcs.events.NpcRemoveEvent;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
-import net.kyori.adventure.text.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -83,11 +82,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc");
             MessageHelper.info(sender, " - /npc list <dark_gray>- <white>Summary of all npcs");
             MessageHelper.info(sender, " - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc");
-            MessageHelper.info(sender, " - /npc message (name) (message) <dark_gray>- <white>Set NPC message");
             MessageHelper.info(sender, " - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc");
             MessageHelper.info(sender, " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location");
             MessageHelper.info(sender, " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc");
             MessageHelper.info(sender, " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding");
+            MessageHelper.info(sender, " - /npc message (name) (message) <dark_gray>- <white>Set NPC message");
             MessageHelper.info(sender, " - /npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting");
             MessageHelper.info(sender, " - /npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc");
             MessageHelper.info(sender, " - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not");
@@ -204,9 +203,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcModifyEvent.isCancelled()) {
                     StringBuilder message = new StringBuilder();
                     for (int i = 2; i < args.length; i++) {
-                        message.append(args[i]);
+                        message.append(args[i]).append(" ");
                     }
-                    npc.updateMessage(message.toString());
+                    npc.setMessage(message.substring(0, message.length()-1));
                     MessageHelper.success(sender, "Updated Message");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");

@@ -18,7 +18,7 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if(args.length == 1){
+        if (args.length == 1) {
             return Stream.of("version", "reload", "save").filter(input -> input.startsWith(args[0].toLowerCase())).toList();
         }
 
@@ -27,25 +27,25 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(args.length >= 1 && args[0].equalsIgnoreCase("version")){
+        if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
             MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
             new Thread(() -> {
                 ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
-                if(newestVersion == null){
+                if (newestVersion == null) {
                     MessageHelper.error(sender, "Could not find latest version");
-                } else if(newestVersion.compareTo(currentVersion) > 0){
+                } else if (newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(sender, "You are using an outdated version of the FancyNpcs Plugin");
                     MessageHelper.warning(sender, "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>");
                 } else {
                     MessageHelper.success(sender, "You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ")");
                 }
             }).start();
-        } else if(args.length >= 1 && args[0].equalsIgnoreCase("reload")){
+        } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
             FancyNpcs.getInstance().getFancyNpcConfig().reload();
             FancyNpcs.getInstance().getNpcManager().reloadNpcs();
             MessageHelper.success(sender, "Reloaded the config");
-        } else if(args.length >= 1 && args[0].equalsIgnoreCase("save")){
+        } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
             FancyNpcs.getInstance().getNpcManager().saveNpcs(true);
             MessageHelper.success(sender, "Saved all NPCs");
         }

@@ -15,9 +15,7 @@ import java.util.function.Consumer;
  */
 public class NpcInteractEvent extends Event implements Cancellable {
 
-    private static HandlerList handlerList = new HandlerList();
-    private boolean isCancelled;
-
+    private static final HandlerList handlerList = new HandlerList();
     @NotNull
     private final Npc npc;
     @Nullable
@@ -28,6 +26,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final Consumer<Player> onClick;
     @NotNull
     private final Player player;
+    private boolean isCancelled;
 
     public NpcInteractEvent(@NotNull Npc npc, @Nullable String playerCommand, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player) {
         this.npc = npc;
@@ -35,6 +34,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
         this.serverCommand = serverCommand;
         this.onClick = onClick;
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     /**
@@ -84,10 +87,6 @@ public class NpcInteractEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlerList;
     }
 

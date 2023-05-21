@@ -10,9 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FoliaScheduler implements FancyScheduler {
 
-    ScheduledTask scheduledTask;
-
-    JavaPlugin plugin;
+    private final JavaPlugin plugin;
+    private ScheduledTask scheduledTask;
 
     public FoliaScheduler(JavaPlugin plugin) {
         this.plugin = plugin;

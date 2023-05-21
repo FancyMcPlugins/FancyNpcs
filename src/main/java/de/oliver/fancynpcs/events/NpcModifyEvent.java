@@ -12,20 +12,23 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NpcModifyEvent extends Event implements Cancellable {
 
-    private static HandlerList handlerList = new HandlerList();
-    private boolean isCancelled;
-
+    private static final HandlerList handlerList = new HandlerList();
     @NotNull
     private final Npc npc;
     @NotNull
     private final NpcModification modification;
     @NotNull
     private final Player player;
+    private boolean isCancelled;
 
     public NpcModifyEvent(@NotNull Npc npc, @NotNull NpcModification modification, @NotNull Player player) {
         this.npc = npc;
         this.modification = modification;
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     /**
@@ -64,11 +67,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         return handlerList;
     }
 
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
-
-    public enum NpcModification{
+    public enum NpcModification {
         LOCATION,
         SKIN,
         DISPLAY_NAME,
@@ -79,7 +78,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         GLOWING,
         GLOWING_COLOR,
         TURN_TO_PLAYER,
+        CUSTOM_MESSAGE,
         TYPE,
-        ;
     }
 }

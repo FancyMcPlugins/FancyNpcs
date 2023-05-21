@@ -11,17 +11,20 @@ import org.jetbrains.annotations.NotNull;
  * Is fired when a NPC is being spawned
  */
 public class NpcSpawnEvent extends Event implements Cancellable {
-    private static HandlerList handlerList = new HandlerList();
-    private boolean isCancelled;
-
+    private static final HandlerList handlerList = new HandlerList();
     @NotNull
     private final Npc npc;
     @NotNull
     private final Player player;
+    private boolean isCancelled;
 
     public NpcSpawnEvent(@NotNull Npc npc, @NotNull Player player) {
         this.npc = npc;
         this.player = player;
+    }
+
+    public static HandlerList getHandlerList() {
+        return handlerList;
     }
 
     /**
@@ -50,10 +53,6 @@ public class NpcSpawnEvent extends Event implements Cancellable {
 
     @Override
     public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
-
-    public static HandlerList getHandlerList() {
         return handlerList;
     }
 }

@@ -15,12 +15,12 @@ import org.bukkit.event.Listener;
 public class PacketReceivedListener implements Listener {
 
     @EventHandler
-    public void onPacketReceived(PacketReceivedEvent event){
+    public void onPacketReceived(PacketReceivedEvent event) {
 
-        if(event.getPacket() instanceof ServerboundInteractPacket interactPacket){
+        if (event.getPacket() instanceof ServerboundInteractPacket interactPacket) {
             String hand = "";
 
-            if(interactPacket.getActionType() != ServerboundInteractPacket.ActionType.ATTACK){
+            if (interactPacket.getActionType() != ServerboundInteractPacket.ActionType.ATTACK) {
                 hand = ReflectionUtils.getValue(ReflectionUtils.getValue(interactPacket, "b"), "a").toString(); // ServerboundInteractPacket.InteractionAction.hand
             }
 
@@ -28,29 +28,29 @@ public class PacketReceivedListener implements Listener {
             ServerboundInteractPacket.ActionType action = interactPacket.getActionType();
             boolean isSneaking = interactPacket.isUsingSecondaryAction();
 
-            if(action == ServerboundInteractPacket.ActionType.ATTACK || action == ServerboundInteractPacket.ActionType.INTERACT && hand.equalsIgnoreCase("MAIN_HAND")){
+            if (action == ServerboundInteractPacket.ActionType.ATTACK || action == ServerboundInteractPacket.ActionType.INTERACT && hand.equalsIgnoreCase("MAIN_HAND")) {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(entityId);
-                if(npc == null){
+                if (npc == null) {
                     return;
                 }
 
                 NpcInteractEvent npcInteractEvent = new NpcInteractEvent(npc, npc.getPlayerCommand(), npc.getServerCommand(), npc.getOnClick(), event.getPlayer());
                 npcInteractEvent.callEvent();
 
-                if(npcInteractEvent.isCancelled()){
+                if (npcInteractEvent.isCancelled()) {
                     return;
                 }
 
                 npc.getOnClick().accept(event.getPlayer());
-                if(npc.getServerCommand() != null && npc.getServerCommand().length() > 0){
+                if (npc.getServerCommand() != null && npc.getServerCommand().length() > 0) {
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", event.getPlayer().getName()));
                 }
 
-                if(npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0){
+                if (npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0) {
 
-                    if(npc.getPlayerCommand().toLowerCase().startsWith("server")){
+                    if (npc.getPlayerCommand().toLowerCase().startsWith("server")) {
                         String[] args = npc.getPlayerCommand().split(" ");
-                        if(args.length < 2){
+                        if (args.length < 2) {
                             return;
                         }
                         String server = args[1];

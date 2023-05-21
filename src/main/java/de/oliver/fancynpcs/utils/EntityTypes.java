@@ -10,8 +10,9 @@ import java.util.Map;
 
 public class EntityTypes {
 
+    private static final List<EntityType<?>> excludedTypes = new ArrayList<>();
     public static Map<String, EntityType<?>> TYPES = new HashMap<>();
-    private static List<EntityType<?>> excludedTypes = new ArrayList<>();
+
     static {
         excludedTypes.add(EntityType.AREA_EFFECT_CLOUD);
         excludedTypes.add(EntityType.BLOCK_DISPLAY);
@@ -38,23 +39,24 @@ public class EntityTypes {
         excludedTypes.add(EntityType.TRIDENT);
     }
 
-    public static void loadTypes(){
+    public static void loadTypes() {
         TYPES.clear();
 
         for (Field field : net.minecraft.world.entity.EntityType.class.getFields()) {
-            try{
+            try {
                 field.setAccessible(true);
                 Object possibleType = field.get(null);
-                if(!(possibleType instanceof net.minecraft.world.entity.EntityType<?> type)){
+                if (!(possibleType instanceof net.minecraft.world.entity.EntityType<?> type)) {
                     continue;
                 }
 
-                if(excludedTypes.contains(type)){
+                if (excludedTypes.contains(type)) {
                     continue;
                 }
 
                 TYPES.put(type.toShortString(), type);
-            } catch (Exception e){ }
+            } catch (Exception ex) {
+            }
         }
     }
 

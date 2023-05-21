@@ -10,7 +10,7 @@ public class FancyNpcConfig {
     private int turnToPlayerDistance;
     private int visibilityDistance;
 
-    public void reload(){
+    public void reload() {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 

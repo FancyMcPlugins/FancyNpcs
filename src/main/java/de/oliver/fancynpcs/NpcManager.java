@@ -29,11 +29,11 @@ public class NpcManager {
         npcs = new HashMap<>();
     }
 
-    public void registerNpc(Npc npc){
+    public void registerNpc(Npc npc) {
         npcs.put(npc.getName(), npc);
     }
 
-    public void removeNpc(Npc npc){
+    public void removeNpc(Npc npc) {
         npcs.remove(npc.getName());
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
@@ -45,9 +45,9 @@ public class NpcManager {
         }
     }
 
-    public Npc getNpc(int entityId){
+    public Npc getNpc(int entityId) {
         for (Npc npc : npcs.values()) {
-            if(npc.getNpc() != null && npc.getNpc().getId() == entityId){
+            if (npc.getNpc() != null && npc.getNpc().getId() == entityId) {
                 return npc;
             }
         }
@@ -55,16 +55,16 @@ public class NpcManager {
         return null;
     }
 
-    public Npc getNpc(String name){
+    public Npc getNpc(String name) {
         return npcs.getOrDefault(name, null);
     }
 
-    public Collection<Npc> getAllNpcs(){
+    public Collection<Npc> getAllNpcs() {
         return npcs.values();
     }
 
-    public void saveNpcs(boolean force){
-        if(!npcConfigFile.exists()){
+    public void saveNpcs(boolean force) {
+        if (!npcConfigFile.exists()) {
             try {
                 npcConfigFile.createNewFile();
             } catch (IOException e) {
@@ -76,12 +76,12 @@ public class NpcManager {
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         for (Npc npc : npcs.values()) {
-            if(!npc.isSaveToFile()){
+            if (!npc.isSaveToFile()) {
                 continue;
             }
 
             boolean shouldSave = force || npc.isDirty();
-            if(!shouldSave){
+            if (!shouldSave) {
                 continue;
             }
 
@@ -98,24 +98,25 @@ public class NpcManager {
             npcConfig.set("npcs." + npc.getName() + ".glowing", npc.isGlowing());
             npcConfig.set("npcs." + npc.getName() + ".glowingColor", npc.getGlowingColor().getName());
             npcConfig.set("npcs." + npc.getName() + ".turnToPlayer", npc.isTurnToPlayer());
+            npcConfig.set("npcs." + npc.getName() + ".message", npc.getMessage());
 
-            if(npc.getSkin() != null) {
+            if (npc.getSkin() != null) {
                 npcConfig.set("npcs." + npc.getName() + ".skin.identifier", npc.getSkin().getIdentifier());
                 npcConfig.set("npcs." + npc.getName() + ".skin.value", npc.getSkin().getValue());
                 npcConfig.set("npcs." + npc.getName() + ".skin.signature", npc.getSkin().getSignature());
             }
 
-            if(npc.getEquipment() != null) {
+            if (npc.getEquipment() != null) {
                 for (Map.Entry<EquipmentSlot, ItemStack> entry : npc.getEquipment().entrySet()) {
                     npcConfig.set("npcs." + npc.getName() + ".equipment." + entry.getKey().getName(), CraftItemStack.asBukkitCopy(entry.getValue()));
                 }
             }
 
-            if(npc.getServerCommand() != null){
+            if (npc.getServerCommand() != null) {
                 npcConfig.set("npcs." + npc.getName() + ".serverCommand", npc.getServerCommand());
             }
 
-            if(npc.getPlayerCommand() != null){
+            if (npc.getPlayerCommand() != null) {
                 npcConfig.set("npcs." + npc.getName() + ".playerCommand", npc.getPlayerCommand());
             }
 
@@ -129,10 +130,10 @@ public class NpcManager {
         }
     }
 
-    public void loadNpcs(){
+    public void loadNpcs() {
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
-        if(!npcConfig.isConfigurationSection("npcs")){
+        if (!npcConfig.isConfigurationSection("npcs")) {
             return;
         }
 
@@ -142,20 +143,21 @@ public class NpcManager {
 
             Location location = null;
 
-            try{
+            try {
                 location = npcConfig.getLocation("npcs." + name + ".location");
-            } catch (Exception ignored){ }
+            } catch (Exception ignored) {
+            }
 
-            if(location == null){
+            if (location == null) {
                 String worldName = npcConfig.getString("npcs." + name + ".location.world");
                 World world = Bukkit.getWorld(worldName);
 
-                if(world == null){
+                if (world == null) {
                     FancyNpcs.getInstance().getLogger().info("Trying to load the world: '" + worldName + "'");
                     world = new WorldCreator(worldName).createWorld();
                 }
 
-                if(world == null){
+                if (world == null) {
                     FancyNpcs.getInstance().getLogger().info("Could not load npc '" + name + "', because the world '" + worldName + "' is not loaded");
                     continue;
                 }
@@ -173,7 +175,7 @@ public class NpcManager {
             String skinValue = npcConfig.getString("npcs." + name + ".skin.value");
             String skinSignature = npcConfig.getString("npcs." + name + ".skin.signature");
             SkinFetcher skin = null;
-            if(skinIdentifier.length() > 0){
+            if (skinIdentifier.length() > 0) {
                 skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
             }
 
@@ -184,9 +186,10 @@ public class NpcManager {
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + name + ".turnToPlayer");
             String serverCommand = npcConfig.getString("npcs." + name + ".serverCommand");
             String playerCommand = npcConfig.getString("npcs." + name + ".playerCommand");
+            String message = npcConfig.getString("npcs." + name + ".message");
 
             Npc npc = new Npc(name, location);
-            if(npcConfig.isConfigurationSection("npcs." + name + ".equipment")){
+            if (npcConfig.isConfigurationSection("npcs." + name + ".equipment")) {
                 for (String equipmentSlotStr : npcConfig.getConfigurationSection("npcs." + name + ".equipment").getKeys(false)) {
                     EquipmentSlot equipmentSlot = EquipmentSlot.byName(equipmentSlotStr);
                     org.bukkit.inventory.ItemStack item = npcConfig.getItemStack("npcs." + name + ".equipment." + equipmentSlotStr);
@@ -203,20 +206,21 @@ public class NpcManager {
             npc.setGlowingColor(glowingColor);
 
             npc.setTurnToPlayer(turnToPlayer);
+            npc.setMessage(message);
 
-            if(displayName != null && displayName.length() > 0) {
+            if (displayName != null && displayName.length() > 0) {
                 npc.setDisplayName(displayName);
             }
 
-            if(serverCommand != null && serverCommand.length() > 0){
+            if (serverCommand != null && serverCommand.length() > 0) {
                 npc.setServerCommand(serverCommand);
             }
 
-            if(playerCommand != null && playerCommand.length() > 0){
+            if (playerCommand != null && playerCommand.length() > 0) {
                 npc.setPlayerCommand(playerCommand);
             }
 
-            if(skin != null && skin.isLoaded()){
+            if (skin != null && skin.isLoaded()) {
                 npc.setSkin(skin);
             }
 
@@ -226,7 +230,7 @@ public class NpcManager {
         }
     }
 
-    public void reloadNpcs(){
+    public void reloadNpcs() {
         for (Npc npc : new ArrayList<>(getAllNpcs())) {
             npc.removeForAll();
         }

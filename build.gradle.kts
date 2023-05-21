@@ -52,12 +52,19 @@ repositories{
 }
 
 dependencies {
-    implementation("de.oliver:FancyLib:1.0.2")
-    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+
     implementation(project(":api"))
+
     implementation(project(":implementation:folia", configuration = "reobf"))
+    compileOnly(project(":implementation:folia"))
+
     implementation(project(":implementation:nms_base", configuration = "reobf"))
+    compileOnly(project(":implementation:nms_base"))
+
     implementation(project(":implementation:nms_1_19_R3", configuration = "reobf"))
+    compileOnly(project(":implementation:nms_1_19_R3"))
+
     implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
 }
 

@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.events;
+package de.oliver.fancynpcs.api.events;
 
 import net.minecraft.network.protocol.Packet;
 import org.bukkit.entity.Player;

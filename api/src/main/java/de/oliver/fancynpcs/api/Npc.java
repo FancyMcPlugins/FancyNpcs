@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs;
+package de.oliver.fancynpcs.api;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

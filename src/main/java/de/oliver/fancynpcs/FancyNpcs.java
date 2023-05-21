@@ -13,11 +13,11 @@ import de.oliver.fancynpcs.listeners.PacketReceivedListener;
 import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerMoveListener;
+import de.oliver.fancynpcs.nms.NmsBase;
+import de.oliver.fancynpcs.nms.v1_19_R3;
 import de.oliver.fancynpcs.utils.EntityTypes;
-import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +27,7 @@ public class FancyNpcs extends JavaPlugin {
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4"};
 
     private static FancyNpcs instance;
+    private NmsBase nmsBase;
     private final FancyScheduler scheduler;
     private final NpcManagerImpl npcManager;
     private final FancyNpcConfig config;
@@ -65,11 +66,14 @@ public class FancyNpcs extends JavaPlugin {
             }
         }).start();
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
-        String serverVersion = nmsServer.getServerVersion();
-        if (!isMinecraftVersionSupported(serverVersion)) {
+        String serverVersion = Bukkit.getMinecraftVersion();
+        switch (serverVersion){
+            case "1.19.4" -> nmsBase = new v1_19_R3();
+        }
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        if (nmsBase == null) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please one of the following version: " + String.join(", ", SUPPORTED_VERSIONS) + ".");
@@ -129,14 +133,8 @@ public class FancyNpcs extends JavaPlugin {
         npcManager.saveNpcs(true);
     }
 
-    private boolean isMinecraftVersionSupported(String version) {
-        for (String v : SUPPORTED_VERSIONS) {
-            if(v.equals(version)){
-                return true;
-            }
-        }
-
-        return false;
+    public NmsBase getNmsBase() {
+        return nmsBase;
     }
 
     public FancyScheduler getScheduler() {

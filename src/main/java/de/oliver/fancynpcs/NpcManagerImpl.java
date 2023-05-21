@@ -1,5 +1,7 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
@@ -11,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 
 import java.io.File;
 import java.io.IOException;
@@ -126,7 +127,8 @@ public class NpcManagerImpl implements NpcManager {
 
             if (npc.getEquipment() != null) {
                 for (Map.Entry<EquipmentSlot, ItemStack> entry : npc.getEquipment().entrySet()) {
-                    npcConfig.set("npcs." + npc.getName() + ".equipment." + entry.getKey().getName(), CraftItemStack.asBukkitCopy(entry.getValue()));
+                    org.bukkit.inventory.ItemStack bukkitItemStack = FancyNpcs.getInstance().getNmsBase().getBukkitItemStack(entry.getValue());
+                    npcConfig.set("npcs." + npc.getName() + ".equipment." + entry.getKey().getName(), bukkitItemStack);
                 }
             }
 
@@ -211,7 +213,9 @@ public class NpcManagerImpl implements NpcManager {
                 for (String equipmentSlotStr : npcConfig.getConfigurationSection("npcs." + name + ".equipment").getKeys(false)) {
                     EquipmentSlot equipmentSlot = EquipmentSlot.byName(equipmentSlotStr);
                     org.bukkit.inventory.ItemStack item = npcConfig.getItemStack("npcs." + name + ".equipment." + equipmentSlotStr);
-                    npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
+
+                    ItemStack nmsItemStack = FancyNpcs.getInstance().getNmsBase().getNmsItemStack(item);
+                    npc.addEquipment(equipmentSlot, nmsItemStack);
                 }
             }
 

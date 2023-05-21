@@ -4,9 +4,9 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.NpcImpl;
-import de.oliver.fancynpcs.events.NpcCreateEvent;
-import de.oliver.fancynpcs.events.NpcModifyEvent;
-import de.oliver.fancynpcs.events.NpcRemoveEvent;
+import de.oliver.fancynpcs.api.events.NpcCreateEvent;
+import de.oliver.fancynpcs.api.events.NpcModifyEvent;
+import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
 import de.oliver.fancynpcs.utils.EntityTypes;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
@@ -16,7 +16,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -321,7 +320,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
+                    net.minecraft.world.item.ItemStack nmsItemStack = FancyNpcs.getInstance().getNmsBase().getNmsItemStack(item);
+                    npc.addEquipment(equipmentSlot, nmsItemStack);
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();

@@ -1,11 +1,10 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancynpcs.events.PacketReceivedEvent;
+import de.oliver.fancynpcs.api.events.PacketReceivedEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -19,8 +18,7 @@ public class PacketReader {
     }
 
     public boolean inject() {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        Channel channel = craftPlayer.getHandle().connection.connection.channel;
+        Channel channel = FancyNpcs.getInstance().getNmsBase().getChannel(player);
 
         if (channel.pipeline().get("PacketInjector") != null) {
             return false;

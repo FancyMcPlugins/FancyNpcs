@@ -5,7 +5,8 @@ import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.ReflectionUtils;
-import de.oliver.fancynpcs.events.NpcSpawnEvent;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -26,9 +27,6 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -115,8 +113,8 @@ public class NpcImpl implements Npc {
     }
 
     public void create() {
-        MinecraftServer minecraftServer = ((CraftServer) Bukkit.getServer()).getServer();
-        ServerLevel serverLevel = ((CraftWorld) location.getWorld()).getHandle();
+        MinecraftServer minecraftServer = FancyNpcs.getInstance().getNmsBase().getMinecraftServer(Bukkit.getServer());
+        ServerLevel serverLevel = FancyNpcs.getInstance().getNmsBase().getServerLevel(location.getWorld());
         GameProfile gameProfile = new GameProfile(UUID.randomUUID(), localName);
 
         if (skin != null && skin.isLoaded()) {
@@ -235,8 +233,8 @@ public class NpcImpl implements Npc {
         npcSpawnEvent.callEvent();
         if (npcSpawnEvent.isCancelled()) return;
 
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        
+        ServerPlayer serverPlayer = FancyNpcs.getInstance().getNmsBase().getServerPlayer(player);
         spawn(serverPlayer);
     }
 
@@ -334,8 +332,8 @@ public class NpcImpl implements Npc {
 
     @Override
     public void lookAt(Player player, Location location) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        
+        ServerPlayer serverPlayer = FancyNpcs.getInstance().getNmsBase().getServerPlayer(player);
         lookAt(serverPlayer, location);
     }
 
@@ -361,8 +359,8 @@ public class NpcImpl implements Npc {
     }
 
     public void move(Player player, Location location) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        
+        ServerPlayer serverPlayer = FancyNpcs.getInstance().getNmsBase().getServerPlayer(player);
         move(serverPlayer, location);
     }
 
@@ -384,8 +382,8 @@ public class NpcImpl implements Npc {
     }
 
     public void remove(Player player) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        
+        ServerPlayer serverPlayer = FancyNpcs.getInstance().getNmsBase().getServerPlayer(player);
         remove(serverPlayer);
     }
 
@@ -420,8 +418,8 @@ public class NpcImpl implements Npc {
     }
 
     private void removeFromTab(Player player) {
-        CraftPlayer craftPlayer = (CraftPlayer) player;
-        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        
+        ServerPlayer serverPlayer = FancyNpcs.getInstance().getNmsBase().getServerPlayer(player);
         removeFromTab(serverPlayer);
     }
 

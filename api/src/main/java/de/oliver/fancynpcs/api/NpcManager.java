@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs;
+package de.oliver.fancynpcs.api;
 
 import java.util.Collection;
 

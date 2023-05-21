@@ -187,7 +187,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "message" -> {
-                if (args.length >= 3) {
+                if (args.length < 3) {
                     MessageHelper.error(sender, "Wrong usage: /npc help");
                     return false;
                 }
@@ -206,7 +206,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     for (int i = 2; i < args.length; i++) {
                         message.append(args[i]);
                     }
-                    npc.setOnClick(player -> player.sendMessage(Component.text(message.toString())));
+                    npc.updateMessage(message.toString());
                     MessageHelper.success(sender, "Updated Message");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");

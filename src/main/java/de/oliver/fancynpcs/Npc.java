@@ -289,6 +289,7 @@ public class Npc {
 
     public void updateMessage(String message) {
         this.message = message;
+        setOnClick(player -> player.sendMessage(net.kyori.adventure.text.Component.text(message)));
         isDirty = true;
     }
 

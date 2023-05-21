@@ -56,7 +56,6 @@ public class EntityTypes {
 
                 TYPES.put(type.toShortString(), type);
             } catch (Exception ex) {
-                ex.printStackTrace();
             }
         }
     }

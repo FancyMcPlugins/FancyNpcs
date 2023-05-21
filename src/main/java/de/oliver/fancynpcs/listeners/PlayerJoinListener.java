@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.listeners;
 
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.NpcImpl;
 import de.oliver.fancynpcs.PacketReader;
 import de.oliver.fancylib.MessageHelper;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -21,7 +21,7 @@ public class PlayerJoinListener implements Listener {
             MessageHelper.warning(event.getPlayer(), "Rejoin might fix this bug");
         }
 
-        for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
+        for (NpcImpl npc : FancyNpcs.getInstance().getNpcManager().getAllNpcsImpl()) {
             npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             npc.spawn(event.getPlayer());
         }

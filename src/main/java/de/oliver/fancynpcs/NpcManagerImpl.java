@@ -20,19 +20,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NpcManager {
+public class NpcManagerImpl implements NpcManager {
 
     private final File npcConfigFile = new File(FancyNpcs.getInstance().getDataFolder().getAbsolutePath() + "/npcs.yml");
-    private final HashMap<String, Npc> npcs; // npc name -> npc
+    private final HashMap<String, NpcImpl> npcs; // npc name -> npc
 
-    public NpcManager() {
+    public NpcManagerImpl() {
         npcs = new HashMap<>();
     }
 
+    @Override
     public void registerNpc(Npc npc) {
-        npcs.put(npc.getName(), npc);
+        npcs.put(npc.getName(), (NpcImpl) npc);
     }
 
+    @Override
     public void removeNpc(Npc npc) {
         npcs.remove(npc.getName());
 
@@ -45,8 +47,13 @@ public class NpcManager {
         }
     }
 
+    @Override
     public Npc getNpc(int entityId) {
-        for (Npc npc : npcs.values()) {
+        return getNpcImpl(entityId);
+    }
+
+    public NpcImpl getNpcImpl(int entityId) {
+        for (NpcImpl npc : npcs.values()) {
             if (npc.getNpc() != null && npc.getNpc().getId() == entityId) {
                 return npc;
             }
@@ -55,14 +62,25 @@ public class NpcManager {
         return null;
     }
 
+    @Override
     public Npc getNpc(String name) {
+        return getNpcImpl(name);
+    }
+
+    public NpcImpl getNpcImpl(String name){
         return npcs.getOrDefault(name, null);
     }
 
+    @Override
     public Collection<Npc> getAllNpcs() {
+        return getAllNpcsImpl().stream().map(npc -> (Npc) npc).toList();
+    }
+
+    public Collection<NpcImpl> getAllNpcsImpl() {
         return npcs.values();
     }
 
+    @Override
     public void saveNpcs(boolean force) {
         if (!npcConfigFile.exists()) {
             try {
@@ -75,7 +93,7 @@ public class NpcManager {
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
-        for (Npc npc : npcs.values()) {
+        for (NpcImpl npc : npcs.values()) {
             if (!npc.isSaveToFile()) {
                 continue;
             }
@@ -188,7 +206,7 @@ public class NpcManager {
             String playerCommand = npcConfig.getString("npcs." + name + ".playerCommand");
             String message = npcConfig.getString("npcs." + name + ".message");
 
-            Npc npc = new Npc(name, location);
+            NpcImpl npc = new NpcImpl(name, location);
             if (npcConfig.isConfigurationSection("npcs." + name + ".equipment")) {
                 for (String equipmentSlotStr : npcConfig.getConfigurationSection("npcs." + name + ".equipment").getKeys(false)) {
                     EquipmentSlot equipmentSlot = EquipmentSlot.byName(equipmentSlotStr);
@@ -227,6 +245,7 @@ public class NpcManager {
         }
     }
 
+    @Override
     public void reloadNpcs() {
         for (Npc npc : new ArrayList<>(getAllNpcs())) {
             npc.removeForAll();

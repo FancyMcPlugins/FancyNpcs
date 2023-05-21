@@ -24,11 +24,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class FancyNpcs extends JavaPlugin {
 
-    public static final String SUPPORTED_VERSION = "1.19.4";
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4"};
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
-    private final NpcManager npcManager;
+    private final NpcManagerImpl npcManager;
     private final FancyNpcConfig config;
     private final VersionFetcher versionFetcher;
 
@@ -37,7 +37,7 @@ public class FancyNpcs extends JavaPlugin {
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
-        this.npcManager = new NpcManager();
+        this.npcManager = new NpcManagerImpl();
         this.config = new FancyNpcConfig();
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
@@ -69,11 +69,11 @@ public class FancyNpcs extends JavaPlugin {
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
 
         String serverVersion = nmsServer.getServerVersion();
-        if (!serverVersion.equals(SUPPORTED_VERSION)) {
+        if (!isMinecraftVersionSupported(serverVersion)) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
-            getLogger().warning("Disabling NPC plugin.");
+            getLogger().warning("Please one of the following version: " + String.join(", ", SUPPORTED_VERSIONS) + ".");
+            getLogger().warning("Disabling this plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
             return;
@@ -129,11 +129,21 @@ public class FancyNpcs extends JavaPlugin {
         npcManager.saveNpcs(true);
     }
 
+    private boolean isMinecraftVersionSupported(String version) {
+        for (String v : SUPPORTED_VERSIONS) {
+            if(v.equals(version)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public FancyScheduler getScheduler() {
         return scheduler;
     }
 
-    public NpcManager getNpcManager() {
+    public NpcManagerImpl getNpcManager() {
         return npcManager;
     }
 

@@ -1,14 +1,45 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "1.5.4"
+    id("io.papermc.paperweight.userdev") version "1.5.5"
     id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
     id("maven-publish")
     id ("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "de.oliver"
-version = "1.1.5"
-description = "NPC plugin"
+version = findProperty("version")!!
+description = findProperty("description").toString()
+
+allprojects {
+    apply(plugin = "java-library")
+    apply(plugin = "maven-publish")
+    apply(plugin = "com.github.johnrengelman.shadow")
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://jitpack.io")
+    }
+
+    dependencies {
+        compileOnly("net.kyori:adventure-text-minimessage:4.13.1")
+        compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
+
+        //implementation("net.byteflux:libby-bukkit:1.2.0")
+        compileOnly("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
+    }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    }
+
+    tasks{
+        shadowJar{
+            archiveClassifier.set("")
+        }
+    }
+}
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
@@ -21,8 +52,13 @@ repositories{
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
     implementation("de.oliver:FancyLib:1.0.2")
+    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
+    implementation(project(":api"))
+    implementation(project(":implementation:folia", configuration = "reobf"))
+    implementation(project(":implementation:nms_base", configuration = "reobf"))
+    implementation(project(":implementation:nms_1_19_R3", configuration = "reobf"))
+    implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
 }
 
 tasks {

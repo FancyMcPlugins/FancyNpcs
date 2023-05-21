@@ -4,7 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.NpcImpl;
 import de.oliver.fancynpcs.events.NpcInteractEvent;
 import de.oliver.fancynpcs.events.PacketReceivedEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -32,7 +32,7 @@ public class PacketReceivedListener implements Listener {
             boolean isSneaking = interactPacket.isUsingSecondaryAction();
 
             if (action == ServerboundInteractPacket.ActionType.ATTACK || action == ServerboundInteractPacket.ActionType.INTERACT && hand.equalsIgnoreCase("MAIN_HAND")) {
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(entityId);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(entityId);
                 if (npc == null) {
                     return;
                 }

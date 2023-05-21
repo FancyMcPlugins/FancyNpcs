@@ -34,7 +34,7 @@ import org.bukkit.entity.Player;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class Npc {
+public class NpcImpl implements Npc {
 
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
 
@@ -60,7 +60,7 @@ public class Npc {
     private boolean saveToFile;
     private String message;
 
-    public Npc(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand, String message) {
+    public NpcImpl(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand, String message) {
         this.name = name;
         this.type = type;
         this.displayName = displayName;
@@ -81,7 +81,7 @@ public class Npc {
         generateLocalName();
     }
 
-    public Npc(String name, Location location) {
+    public NpcImpl(String name, Location location) {
         this.name = name;
         this.type = EntityType.PLAYER;
         this.displayName = name;
@@ -330,6 +330,13 @@ public class Npc {
         float angelMultiplier = 256f / 360f;
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (location.getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
+    }
+
+    @Override
+    public void lookAt(Player player, Location location) {
+        CraftPlayer craftPlayer = (CraftPlayer) player;
+        ServerPlayer serverPlayer = craftPlayer.getHandle();
+        lookAt(serverPlayer, location);
     }
 
     private void move(ServerPlayer serverPlayer, Location location) {

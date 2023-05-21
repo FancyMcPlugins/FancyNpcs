@@ -3,7 +3,7 @@ package de.oliver.fancynpcs.commands;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.NpcImpl;
 import de.oliver.fancynpcs.events.NpcCreateEvent;
 import de.oliver.fancynpcs.events.NpcModifyEvent;
 import de.oliver.fancynpcs.events.NpcRemoveEvent;
@@ -39,9 +39,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
-            return FancyNpcs.getInstance().getNpcManager().getAllNpcs()
+            return FancyNpcs.getInstance().getNpcManager().getAllNpcsImpl()
                     .stream()
-                    .map(Npc::getName)
+                    .map(NpcImpl::getName)
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("equipment")) {
@@ -100,13 +100,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
             MessageHelper.info(sender, "<b>All NPCs:</b>");
 
-            Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
+            Collection<NpcImpl> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcsImpl();
 
             if (allNpcs.isEmpty()) {
                 MessageHelper.warning(sender, "There are no NPCs. Use '/npc create' to create one");
             } else {
                 final DecimalFormat df = new DecimalFormat("#########.##");
-                for (Npc npc : allNpcs) {
+                for (NpcImpl npc : allNpcs) {
                     MessageHelper.info(sender, "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
                             .replace("{name}", npc.getName())
                             .replace("{x}", df.format(npc.getLocation().x()))
@@ -130,12 +130,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         switch (subcommand.toLowerCase()) {
             case "create" -> {
-                if (FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
+                if (FancyNpcs.getInstance().getNpcManager().getNpcImpl(name) != null) {
                     MessageHelper.error(sender, "An npc with that name already exists");
                     return false;
                 }
 
-                Npc npc = new Npc(name, p.getLocation());
+                NpcImpl npc = new NpcImpl(name, p.getLocation());
                 NpcCreateEvent npcCreateEvent = new NpcCreateEvent(npc, p);
                 npcCreateEvent.callEvent();
                 if (!npcCreateEvent.isCancelled()) {
@@ -150,7 +150,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "remove" -> {
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find NPC");
                     return false;
@@ -168,7 +168,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "movehere" -> {
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find NPC");
                     return false;
@@ -191,7 +191,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find NPC");
                     return false;
@@ -220,7 +220,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 String skinName = args.length == 3 ? args[2] : sender.getName();
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find NPC");
                     return false;
@@ -265,7 +265,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -294,7 +294,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -337,7 +337,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -366,7 +366,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -395,7 +395,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -443,7 +443,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -484,7 +484,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -524,7 +524,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
@@ -561,7 +561,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                NpcImpl npc = FancyNpcs.getInstance().getNpcManager().getNpcImpl(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;

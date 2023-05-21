@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.listeners;
 
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.NpcImpl;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
@@ -15,7 +15,7 @@ public class PlayerMoveListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Location loc = event.getTo();
 
-        for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
+        for (NpcImpl npc : FancyNpcs.getInstance().getNpcManager().getAllNpcsImpl()) {
             if (!npc.isSpawnEntity()) {
                 continue;
             }

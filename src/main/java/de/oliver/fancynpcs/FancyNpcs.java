@@ -14,7 +14,6 @@ import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerMoveListener;
 import de.oliver.fancynpcs.nms.NmsBase;
-import de.oliver.fancynpcs.nms.v1_19_R2;
 import de.oliver.fancynpcs.nms.v1_19_R3;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -24,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class FancyNpcs extends JavaPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.3", "1.19.4"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4"};
 
     private static FancyNpcs instance;
     private NmsBase nmsBase;
@@ -70,7 +69,6 @@ public class FancyNpcs extends JavaPlugin {
         String serverVersion = Bukkit.getMinecraftVersion();
         switch (serverVersion){
             case "1.19.4" -> nmsBase = new v1_19_R3();
-            case "1.19.3" -> nmsBase = new v1_19_R2();
         }
 
         PluginManager pluginManager = Bukkit.getPluginManager();

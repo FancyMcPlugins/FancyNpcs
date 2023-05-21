@@ -66,9 +66,6 @@ dependencies {
     implementation(project(":implementation:nms_1_19_R3", configuration = "reobf"))
     compileOnly(project(":implementation:nms_1_19_R3"))
 
-    implementation(project(":implementation:nms_1_19_R2", configuration = "reobf"))
-    compileOnly(project(":implementation:nms_1_19_R2"))
-
     implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
 }
 

@@ -23,7 +23,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class FancyNpcs extends JavaPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20"};
 
     private static FancyNpcs instance;
     private NmsBase nmsBase;
@@ -69,6 +69,7 @@ public class FancyNpcs extends JavaPlugin {
         String serverVersion = Bukkit.getMinecraftVersion();
         switch (serverVersion){
             case "1.19.4" -> nmsBase = new v1_19_R3();
+            case "1.20" -> nmsBase = new v1_20_R0();
         }
 
         PluginManager pluginManager = Bukkit.getPluginManager();

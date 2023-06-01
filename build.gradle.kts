@@ -21,8 +21,8 @@ repositories{
 }
 
 dependencies {
-    paperweight.foliaDevBundle("1.19.4-R0.1-SNAPSHOT")
-    implementation("de.oliver:FancyLib:1.0.1")
+    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    implementation("de.oliver:FancyLib:1.0.2")
 }
 
 tasks {

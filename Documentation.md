@@ -6,7 +6,7 @@ First clone this repo and run `gradlew publishToMavenLocal`.<br>
 Then include the following in your plugin's gradle project:
 ```gradle
 repositories {
-    mavenLocal()
+    maven("https://repo.fancyplugins.de/releases")
     ...
 }
 

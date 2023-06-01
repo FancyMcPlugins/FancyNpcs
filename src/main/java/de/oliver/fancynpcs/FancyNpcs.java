@@ -15,6 +15,7 @@ import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerMoveListener;
 import de.oliver.fancynpcs.nms.NmsBase;
 import de.oliver.fancynpcs.nms.v1_19_R3;
+import de.oliver.fancynpcs.nms.v1_20_R0;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

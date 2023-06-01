@@ -20,6 +20,7 @@ allprojects {
         mavenCentral()
         maven("https://repo.papermc.io/repository/maven-public/")
         maven("https://jitpack.io")
+        maven("https://repo.fancyplugins.de/releases")
     }
 
     dependencies {
@@ -27,7 +28,7 @@ allprojects {
         compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
 
         //implementation("net.byteflux:libby-bukkit:1.2.0")
-        compileOnly("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
+        compileOnly("de.oliver:FancyLib:1.0.2")
     }
 
     java {
@@ -47,7 +48,6 @@ java {
 
 repositories{
     mavenLocal()
-    maven("https://jitpack.io")
     maven("https://repo.fancyplugins.de/releases")
 }
 
@@ -56,9 +56,6 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.19.4-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-
-    implementation(project(":implementation:folia", configuration = "reobf"))
-    compileOnly(project(":implementation:folia"))
 
     implementation(project(":implementation:nms_base", configuration = "reobf"))
     compileOnly(project(":implementation:nms_base"))
@@ -69,7 +66,7 @@ dependencies {
     implementation(project(":implementation:nms_1_20_R0", configuration = "reobf"))
     compileOnly(project(":implementation:nms_1_20_R0"))
 
-    implementation("com.github.FancyMcPlugins:FancyLib:f2a7b13071")
+    implementation("de.oliver:FancyLib:1.0.2")
 }
 
 tasks {

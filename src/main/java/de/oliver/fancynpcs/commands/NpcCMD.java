@@ -77,6 +77,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
+            if(!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")){
+                MessageHelper.error(p, "You don't have permission for this subcommand");
+                return false;
+            }
+
             MessageHelper.info(sender, "<b>FancyNpcs Plugin help:");
             MessageHelper.info(sender, " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location");
             MessageHelper.info(sender, " - /npc remove (name) <dark_gray>- <white>Removes an npc");
@@ -98,6 +103,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
+            if(!p.hasPermission("fancynpcs.npc.list") && !p.hasPermission("fancynpcs.npc.*")){
+                MessageHelper.error(p, "You don't have permission for this subcommand");
+                return false;
+            }
+
             MessageHelper.info(sender, "<b>All NPCs:</b>");
 
             Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
@@ -127,6 +137,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         String subcommand = args[0];
         String name = args[1];
+
+        if(!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")){
+            MessageHelper.error(p, "You don't have permission for this subcommand");
+            return false;
+        }
 
         switch (subcommand.toLowerCase()) {
             case "create" -> {

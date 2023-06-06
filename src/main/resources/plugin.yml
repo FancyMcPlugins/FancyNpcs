@@ -9,5 +9,5 @@ commands:
   FancyNpcs:
     permission: FancyNpcs.admin
   Npc:
-    permission: FancyNpcs.admin
+    permission: FancyNpcs.npc
     description: Main command for the Npc plugin

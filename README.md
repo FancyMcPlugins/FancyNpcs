@@ -44,7 +44,10 @@ Using `<empty>` as displayName will make the whole name tag invisible.
 For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who interacted with the npc.
 
 ## Permissions
-For the /npc command - ``FancyNpcs.admin``
+For the /fancynpcs command - ``FancyNpcs.admin``<br>
+For the /npc command - ``FancyNpcs.npc``<br>
+For all subcommands of /npc - ``FancyNpcs.npc.*``<br>
+Permission for a subcommand of /npc - ``fancyNpcs.npc.<subcommand>``
 
 ## Entity types
 

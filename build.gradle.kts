@@ -1,7 +1,7 @@
 plugins {
-    `java-library`
-    id("io.papermc.paperweight.userdev") version "1.5.4"
-    id("xyz.jpenilla.run-paper") version "2.0.1" // Adds runServer and runMojangMappedServer tasks for testing
+    id("java")
+    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("xyz.jpenilla.run-paper") version "2.1.0"
     id("maven-publish")
     id ("com.github.johnrengelman.shadow") version "8.1.1"
 }
@@ -16,7 +16,6 @@ java {
 
 repositories{
     mavenLocal()
-    maven("https://jitpack.io")
     maven("https://repo.fancyplugins.de/releases")
 }
 

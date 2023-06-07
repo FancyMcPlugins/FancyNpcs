@@ -12,6 +12,7 @@ import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -189,11 +190,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, p);
+                Location location = p.getLocation();
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.moveForAll(p.getLocation());
+                    npc.moveForAll(location);
                     MessageHelper.success(sender, "Moved NPC to your location");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -212,15 +215,18 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, p);
+                String message = "";
+                for (int i = 2; i < args.length; i++) {
+                    message += args[i] + " ";
+                }
+
+                message = message.substring(0, message.length()-1);
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    StringBuilder message = new StringBuilder();
-                    for (int i = 2; i < args.length; i++) {
-                        message.append(args[i]).append(" ");
-                    }
-                    npc.setMessage(message.substring(0, message.length()-1));
+                    npc.setMessage(message);
                     MessageHelper.success(sender, "Updated Message");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -246,27 +252,27 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, p);
+                if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
+                    UUID uuid = UUIDFetcher.getUUID(skinName);
+                    if (uuid == null) {
+                        MessageHelper.error(sender, "Invalid username");
+                        return false;
+                    }
+                    skinName = uuid.toString();
+                }
+
+                SkinFetcher skinFetcher = new SkinFetcher(skinName);
+                if (!skinFetcher.isLoaded()) {
+                    MessageHelper.error(sender, "Could not load skin. Possible causes:");
+                    MessageHelper.error(sender, " - Invalid URL (check the url)");
+                    MessageHelper.error(sender, " - Rate limit reached (try again later)");
+                    return false;
+                }
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
-                        UUID uuid = UUIDFetcher.getUUID(skinName);
-                        if (uuid == null) {
-                            MessageHelper.error(sender, "Invalid username");
-                            return false;
-                        }
-                        skinName = uuid.toString();
-                    }
-
-                    SkinFetcher skinFetcher = new SkinFetcher(skinName);
-                    if (!skinFetcher.isLoaded()) {
-                        MessageHelper.error(sender, "Could not load skin. Possible causes:");
-                        MessageHelper.error(sender, " - Invalid URL (check the url)");
-                        MessageHelper.error(sender, " - Rate limit reached (try again later)");
-                        return false;
-                    }
-
                     npc.updateSkin(skinFetcher);
                     MessageHelper.success(sender, "Updated skin");
                 } else {
@@ -286,13 +292,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                StringBuilder displayName = new StringBuilder();
+                String displayName = "";
                 for (int i = 2; i < args.length; i++) {
-                    displayName.append(args[i]).append(" ");
+                    displayName += args[i] + " ";
                 }
-                displayName = new StringBuilder(displayName.substring(0, displayName.length() - 1));
+                displayName = displayName.substring(0, displayName.length() - 1);
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, displayName, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
@@ -332,7 +338,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 ItemStack item = p.getInventory().getItemInMainHand();
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
@@ -358,17 +364,17 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                StringBuilder cmd = new StringBuilder();
+                String cmd = "";
                 for (int i = 2; i < args.length; i++) {
-                    cmd.append(args[i]).append(" ");
+                    cmd += args[i] + " ";
                 }
-                cmd = new StringBuilder(cmd.substring(0, cmd.length() - 1));
+                cmd = cmd.substring(0, cmd.length() - 1);
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SERVER_COMMAND, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SERVER_COMMAND, cmd, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setServerCommand(cmd.toString());
+                    npc.setServerCommand(cmd);
                     MessageHelper.success(sender, "Updated server command to be executed");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -387,17 +393,17 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                StringBuilder cmd = new StringBuilder();
+                String cmd = "";
                 for (int i = 2; i < args.length; i++) {
-                    cmd.append(args[i]).append(" ");
+                    cmd += args[i] + " ";
                 }
-                cmd = new StringBuilder(cmd.substring(0, cmd.length() - 1));
+                cmd = cmd.substring(0, cmd.length() - 1);
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, cmd, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setPlayerCommand(cmd.toString());
+                    npc.setPlayerCommand(cmd);
                     MessageHelper.success(sender, "Updated player command to be executed");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -431,13 +437,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     }
                 }
 
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, p);
+                npcModifyEvent.callEvent();
+
                 if (showInTab == npc.isShowInTab()) {
                     MessageHelper.warning(sender, "Nothing has changed");
                     return false;
                 }
-
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, p);
-                npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
                     npc.updateShowInTab(showInTab);
@@ -477,7 +483,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, glowing, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
@@ -521,7 +527,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING_COLOR, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING_COLOR, color, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
@@ -553,7 +559,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, p);
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, turnToPlayer, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
@@ -582,16 +588,17 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, p);
+                if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
+                    MessageHelper.error(sender, "Invalid type");
+                    return false;
+                }
+
+                EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
+
+                NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, type, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
-                        MessageHelper.error(sender, "Invalid type");
-                        return false;
-                    }
-
-                    EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
                     npc.setType(type);
 
                     if (type != EntityType.PLAYER) {

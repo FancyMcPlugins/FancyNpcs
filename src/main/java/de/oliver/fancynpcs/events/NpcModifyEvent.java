@@ -18,12 +18,15 @@ public class NpcModifyEvent extends Event implements Cancellable {
     @NotNull
     private final NpcModification modification;
     @NotNull
+    private final Object newValue;
+    @NotNull
     private final Player player;
     private boolean isCancelled;
 
-    public NpcModifyEvent(@NotNull Npc npc, @NotNull NpcModification modification, @NotNull Player player) {
+    public NpcModifyEvent(@NotNull Npc npc, @NotNull NpcModification modification, Object newValue, @NotNull Player player) {
         this.npc = npc;
         this.modification = modification;
+        this.newValue = newValue;
         this.player = player;
     }
 
@@ -43,6 +46,14 @@ public class NpcModifyEvent extends Event implements Cancellable {
      */
     public @NotNull NpcModification getModification() {
         return modification;
+    }
+
+    /**
+     *
+     * @return the value that is being set
+     */
+    public @NotNull Object getNewValue() {
+        return newValue;
     }
 
     /**

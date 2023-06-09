@@ -4,7 +4,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;

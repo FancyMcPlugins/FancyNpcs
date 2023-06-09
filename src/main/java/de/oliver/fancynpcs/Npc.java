@@ -26,9 +26,9 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_19_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -128,7 +128,8 @@ public class Npc {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(gameProfile.getId(), ""));
             ((ServerPlayer) npc).gameProfile = gameProfile;
         } else {
-            npc = type.create(serverLevel);
+            EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(type, "bA"); // EntityType.factory
+            npc = factory.create(type, serverLevel);
         }
     }
 
@@ -138,7 +139,7 @@ public class Npc {
             return;
         }
 
-        if (!location.getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())) {
+        if (!location.getWorld().getName().equalsIgnoreCase(serverPlayer.level().getWorld().getName())) {
             return;
         }
 
@@ -199,12 +200,6 @@ public class Npc {
             packets.add(addEntityPacket);
         }
 
-
-        if (npc instanceof ServerPlayer) {
-            // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
-            npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
-        }
-
         npc.setGlowingTag(glowing);
 
         if (equipment != null && equipment.size() > 0) {
@@ -220,6 +215,11 @@ public class Npc {
 
         ClientboundBundlePacket bundlePacket = new ClientboundBundlePacket(packets);
         serverPlayer.connection.send(bundlePacket);
+
+        if (npc instanceof ServerPlayer) {
+            // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
+            npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
+        }
 
         refreshEntityData(serverPlayer);
 

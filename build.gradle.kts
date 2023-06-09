@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.1.6-beta1"
+version = "1.2.0-rc1"
 description = "NPC plugin"
 
 java {
@@ -20,7 +20,7 @@ repositories{
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.19.4-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
     implementation("de.oliver:FancyLib:1.0.2")
 }
 
@@ -55,6 +55,10 @@ tasks {
                 from(project.components["java"])
             }
         }
+    }
+
+    runServer{
+        minecraftVersion("1.20")
     }
 
     // Configure reobfJar to run when invoking the build task

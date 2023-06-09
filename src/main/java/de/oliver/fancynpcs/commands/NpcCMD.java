@@ -17,7 +17,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_19_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -611,7 +611,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                     npc.removeForAll();
                     npc.create();
-                    npc.spawnForAll();
                     npc.spawnForAll();
                     MessageHelper.success(sender, "Updated entity type");
                 } else {

@@ -17,14 +17,14 @@ import de.oliver.fancynpcs.utils.EntityTypes;
 import net.minecraft.server.dedicated.DedicatedServer;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_19_R3.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class FancyNpcs extends JavaPlugin {
 
-    public static final String SUPPORTED_VERSION = "1.19.4";
+    public static final String SUPPORTED_VERSION = "1.20";
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;

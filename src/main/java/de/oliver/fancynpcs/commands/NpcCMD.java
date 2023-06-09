@@ -612,6 +612,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();
+                    npc.spawnForAll();
                     MessageHelper.success(sender, "Updated entity type");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");

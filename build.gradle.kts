@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.2.0-rc1"
+version = "1.2.0"
 description = "NPC plugin"
 
 java {

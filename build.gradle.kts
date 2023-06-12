@@ -8,11 +8,7 @@ plugins {
 
 group = "de.oliver"
 version = "1.2.0"
-description = "NPC plugin"
-
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
-}
+description = "Simple, lightweight and fast NPC plugin using packets"
 
 repositories{
     mavenLocal()
@@ -79,4 +75,8 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }

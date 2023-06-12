@@ -2,8 +2,7 @@
 
 ## Using as dependency
 
-First clone this repo and run `gradlew publishToMavenLocal`.<br>
-Then include the following in your plugin's gradle project:
+Include the following in your plugin's gradle project:
 ```gradle
 repositories {
     maven("https://repo.fancyplugins.de/releases")
@@ -11,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'de.oliver:FancyNpcs:version'
+    implementation("de.oliver:FancyNpcs:version")
     ...
 }
 ```

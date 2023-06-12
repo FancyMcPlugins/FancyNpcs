@@ -6,7 +6,7 @@
 [![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
 # Fancy Npcs
-A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
+Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
 **Only for minecraft server version 1.20**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_

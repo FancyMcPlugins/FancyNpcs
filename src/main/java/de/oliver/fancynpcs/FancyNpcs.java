@@ -73,7 +73,7 @@ public class FancyNpcs extends JavaPlugin {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
-            getLogger().warning("Disabling NPC plugin.");
+            getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
             return;

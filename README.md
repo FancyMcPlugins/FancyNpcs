@@ -17,7 +17,7 @@ You can download the latest versions at the following places:
 - https://hangar.papermc.io/Oliver/FancyNpcs
 - https://modrinth.com/plugin/fancynpcs/
 - https://github.com/FancyMcPlugins/FancyNpcs/releases
-- https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
+- https://www.spigotmc.org/resources/fancy-npcs-1-20.107306/
 - Build from source
 
 ## Commands
@@ -47,7 +47,7 @@ For the serverCommand, there is a placeholder `{player}` - it will be replaced w
 For the /fancynpcs command - ``FancyNpcs.admin``<br>
 For the /npc command - ``FancyNpcs.npc``<br>
 For all subcommands of /npc - ``FancyNpcs.npc.*``<br>
-Permission for a subcommand of /npc - ``fancyNpcs.npc.<subcommand>``
+Permission for a subcommand of /npc - ``FancyNpcs.npc.<subcommand>``
 
 ## Entity types
 
@@ -72,26 +72,3 @@ To have multiple lines as the display name of an NPC follow the following steps:
 ## Build from source
 1. Clone this repo and run `gradlew reobfJar`
 2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
-
-## Used packets
-
-_(Just a note for me when updating this plugin to a new version)_
-
-- ClientboundPlayerInfoUpdatePacket
-- ClientboundAddPlayerPacket
-- ClientboundSetPlayerTeamPacket
-- ClientboundSetEntityDataPacket
-- ClientboundSetEquipmentPacket
-- ClientboundTeleportEntityPacket
-- ClientboundRotateHeadPacket
-- ClientboundRemoveEntitiesPacket
-
-### Mappings
-
-- Npc#move
-  - ClientboundTeleportEntityPacket.b ('x')
-  - ClientboundTeleportEntityPacket.c ('y')
-  - ClientboundTeleportEntityPacket.d ('z')
-
-- Npc#removeFromTab
-  - ClientboundPlayerInfoUpdatePacket.b ('entries')

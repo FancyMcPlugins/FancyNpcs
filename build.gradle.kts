@@ -8,7 +8,7 @@ plugins {
 
 group = "de.oliver"
 description = "Simple, lightweight and fast NPC plugin using packets"
-version = "1.2.0"
+version = "1.2.1"
 val mcVersion = "1.20.1"
 
 repositories{

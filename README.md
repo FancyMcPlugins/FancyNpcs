@@ -8,7 +8,7 @@
 # Fancy Npcs
 Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.20**<br>
+**Only for minecraft server version 1.20 & 1.20.1**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin

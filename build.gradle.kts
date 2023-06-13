@@ -7,8 +7,9 @@ plugins {
 }
 
 group = "de.oliver"
-version = "1.2.0"
 description = "Simple, lightweight and fast NPC plugin using packets"
+version = "1.2.0"
+val mcVersion = "1.20.1"
 
 repositories{
     mavenLocal()
@@ -16,11 +17,15 @@ repositories{
 }
 
 dependencies {
-    paperweight.paperDevBundle("1.20-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
     implementation("de.oliver:FancyLib:1.0.2")
 }
 
 tasks {
+    runServer{
+        minecraftVersion(mcVersion)
+    }
+
     publishing {
         repositories {
             maven {
@@ -53,10 +58,6 @@ tasks {
         }
     }
 
-    runServer{
-        minecraftVersion("1.20")
-    }
-
     // Configure reobfJar to run when invoking the build task
     assemble {
         dependsOn(reobfJar)
@@ -69,11 +70,21 @@ tasks {
         // See https://openjdk.java.net/jeps/247 for more information.
         options.release.set(17)
     }
+
     javadoc {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
+
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
+        val props = mapOf(
+            "version" to project.version,
+            "description" to project.description,
+        )
+        inputs.properties(props)
+        filesMatching("plugin.yml") {
+            expand(props)
+        }
     }
 }
 

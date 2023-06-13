@@ -24,7 +24,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class FancyNpcs extends JavaPlugin {
 
-    public static final String SUPPORTED_VERSION = "1.20";
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.20", "1.20.1"};
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
@@ -67,12 +67,20 @@ public class FancyNpcs extends JavaPlugin {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
-
         String serverVersion = nmsServer.getServerVersion();
-        if (!serverVersion.equals(SUPPORTED_VERSION)) {
+
+        boolean isSupportedVersion = false;
+        for (String supportedVersion : SUPPORTED_VERSIONS) {
+            if(serverVersion.equals(supportedVersion)){
+                isSupportedVersion = true;
+                break;
+            }
+        }
+
+        if (!isSupportedVersion) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + SUPPORTED_VERSION + ".");
+            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);

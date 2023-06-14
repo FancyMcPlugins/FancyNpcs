@@ -3,7 +3,7 @@ jobs:
 - name: Build
   steps:
   - !CheckoutStep
-    name: checkout code
+    name: checkout
     cloneCredential: !DefaultCredential {}
     withLfs: false
     withSubmodules: false
@@ -11,9 +11,11 @@ jobs:
   - !CommandStep
     name: build
     runInContainer: false
-    interpreter: !DefaultInterpreter
+    interpreter: !ShellInterpreter
+      shell: bash
       commands:
-      - gradlew reobfJar
+      - chmod +x ./gradlew
+      - bash ./gradlew reobfJar
     useTTY: false
     condition: ALL_PREVIOUS_STEPS_WERE_SUCCESSFUL
   - !PublishArtifactStep
@@ -26,6 +28,9 @@ jobs:
   retryCondition: never
   maxRetries: 3
   retryDelay: 30
+  caches:
+  - key: '@project_path@.gradle'
+    path: ./.gradle/
   timeout: 3600
 - name: Pull from Github
   steps:

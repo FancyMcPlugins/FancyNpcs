@@ -14,11 +14,15 @@ val mcVersion = "1.20.1"
 repositories{
     mavenLocal()
     maven("https://repo.fancyplugins.de/releases")
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
 }
 
 dependencies {
     paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
+
     implementation("de.oliver:FancyLib:1.0.2")
+
+    compileOnly("me.clip:placeholderapi:2.11.3")
 }
 
 tasks {

@@ -31,6 +31,7 @@ public class FancyNpcs extends JavaPlugin {
     private final NpcManager npcManager;
     private final FancyNpcConfig config;
     private final VersionFetcher versionFetcher;
+    private boolean usingPlaceholderAPI;
 
     public FancyNpcs() {
         instance = this;
@@ -98,6 +99,8 @@ public class FancyNpcs extends JavaPlugin {
         // register bStats
         Metrics metrics = new Metrics(this, 17543);
 
+        usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
+
         // register commands
         getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
         getCommand("npc").setExecutor(new NpcCMD());
@@ -151,5 +154,9 @@ public class FancyNpcs extends JavaPlugin {
 
     public VersionFetcher getVersionFetcher() {
         return versionFetcher;
+    }
+
+    public boolean isUsingPlaceholderAPI() {
+        return usingPlaceholderAPI;
     }
 }

@@ -7,6 +7,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.Npc;
 import de.oliver.fancynpcs.events.NpcInteractEvent;
 import de.oliver.fancynpcs.events.PacketReceivedEvent;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import org.bukkit.Bukkit;
@@ -48,19 +49,38 @@ public class PacketReceivedListener implements Listener {
                 npc.getOnClick().accept(p);
 
                 // message
-                if(npc.getMessage() != null && npc.getMessage().length() > 0){
-                    p.sendMessage(MiniMessage.miniMessage().deserialize(npc.getMessage()));
+                if(npc.getMessage() != null && npc.getMessage().length() > 0) {
+                    String msg = npc.getMessage();
+                    if(FancyNpcs.getInstance().isUsingPlaceholderAPI()) {
+                        msg = PlaceholderAPI.setPlaceholders(p, msg);
+                    }
+
+                    p.sendMessage(MiniMessage.miniMessage().deserialize(msg));
                 }
 
                 // serverCommand
                 if (npc.getServerCommand() != null && npc.getServerCommand().length() > 0) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), npc.getServerCommand().replace("{player}", p.getName()));
+                    String command = npc.getServerCommand();
+                    command = command.replace("{player}", p.getName());
+
+                    if(FancyNpcs.getInstance().isUsingPlaceholderAPI()) {
+                        command = PlaceholderAPI.setPlaceholders(p, command);
+                    }
+
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
                 }
 
                 // playerCommand
                 if (npc.getPlayerCommand() != null && npc.getPlayerCommand().length() > 0) {
+                    String command;
 
-                    if (npc.getPlayerCommand().toLowerCase().startsWith("server")) {
+                    if(FancyNpcs.getInstance().isUsingPlaceholderAPI()) {
+                        command = PlaceholderAPI.setPlaceholders(p, npc.getPlayerCommand());
+                    } else {
+                        command = npc.getPlayerCommand();
+                    }
+
+                    if (command.toLowerCase().startsWith("server")) {
                         String[] args = npc.getPlayerCommand().split(" ");
                         if (args.length < 2) {
                             return;
@@ -76,7 +96,7 @@ public class PacketReceivedListener implements Listener {
 
                     FancyNpcs.getInstance().getScheduler().runTask(
                             p.getLocation(),
-                            () -> p.performCommand(npc.getPlayerCommand())
+                            () -> p.performCommand(command)
                     );
                 }
             }

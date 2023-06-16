@@ -9,6 +9,7 @@ import de.oliver.fancynpcs.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -145,12 +146,17 @@ public class Npc {
 
         List<Packet<ClientGamePacketListener>> packets = new ArrayList<>();
 
-        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(displayName));
+        String finalDisplayName = displayName;
+        if(FancyNpcs.getInstance().isUsingPlaceholderAPI()){
+            finalDisplayName = PlaceholderAPI.setPlaceholders(serverPlayer.getBukkitEntity(), displayName);
+        }
+
+        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
         if (!displayName.equalsIgnoreCase("<empty>")) {
-            npc.setCustomName(vanillaComponent);
+            npc.setCustomName(Component.empty());
             npc.setCustomNameVisible(true);
         } else {
-            npc.setCustomName(Component.empty());
+            npc.setCustomName(vanillaComponent);
             npc.setCustomNameVisible(false);
         }
 

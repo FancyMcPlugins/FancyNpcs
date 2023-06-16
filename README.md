@@ -1,3 +1,7 @@
+![](fancynpcs_title.png)
+
+# 
+
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
 [![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
@@ -5,7 +9,7 @@
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
 [![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
-# Fancy Npcs
+
 Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
 **Only for minecraft server version 1.20 & 1.20.1**<br>

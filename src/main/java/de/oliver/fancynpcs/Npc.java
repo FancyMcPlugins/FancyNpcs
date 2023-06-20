@@ -440,6 +440,10 @@ public class Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
+    public float getEyeHeight(){
+        return npc.getEyeHeight();
+    }
+
     public String getName() {
         return name;
     }

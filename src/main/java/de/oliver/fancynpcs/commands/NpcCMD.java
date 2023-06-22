@@ -19,6 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return Stream.of("help", "message", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
+            return Stream.of("help", "message", "create", "remove", "sit", "prof", "lay", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
@@ -65,6 +66,23 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
+        else if (args.length == 3 && args[0].equalsIgnoreCase("prof")) {
+            return Arrays.stream(Villager.Profession.values())
+                    .map(Villager.Profession::name)
+                    .filter(input -> input.toUpperCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+        else if (args.length == 3 && args[0].equalsIgnoreCase("sit")) {
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+        else if (args.length == 3 && args[0].equalsIgnoreCase("lay")) {
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+
 
         return null;
     }
@@ -574,6 +592,62 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
                 }
+            }
+
+            case "prof" -> {
+                if (args.length < 3) {
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if (npc == null) {
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+                if(npc.getType() != EntityType.VILLAGER)
+                {
+                    MessageHelper.error(sender, "Villager only");
+                    return false;
+                }
+                npc.setProfession(args[2]);
+            }
+
+            case "sit" -> {
+                if (args.length < 3) {
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if (npc == null) {
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+                if(!(npc.getType() == EntityType.CAT || npc.getType() == EntityType.FOX))
+                {
+                    MessageHelper.error(sender, "Cat and Fox only");
+                    return false;
+                }
+                npc.setSit(args[2]);
+            }
+            case "lay" -> {
+                if (args.length < 3) {
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if (npc == null) {
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+                if(npc.getType() != EntityType.CAT)
+                {
+                    MessageHelper.error(sender, "Cat only");
+                    return false;
+                }
+                npc.setLay(args[2]);
             }
 
             case "type" -> {

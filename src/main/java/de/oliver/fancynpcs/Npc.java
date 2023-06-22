@@ -30,6 +30,8 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.entity.Cat;
+import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -60,6 +62,9 @@ public class Npc {
     private boolean isDirty;
     private boolean saveToFile;
     private String message;
+    private String profession;
+    private Boolean sit;
+    private Boolean lay;
 
     public Npc(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand, String message) {
         this.name = name;
@@ -131,6 +136,27 @@ public class Npc {
         } else {
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(type, "bA"); // EntityType.factory
             npc = factory.create(type, serverLevel);
+
+            if (npc instanceof net.minecraft.world.entity.npc.Villager && profession != null)
+            {
+                org.bukkit.entity.Villager villager = (org.bukkit.entity.Villager) npc.getBukkitEntity();
+                villager.setProfession(org.bukkit.entity.Villager.Profession.valueOf(profession));
+            }
+
+            if (npc.getBukkitEntity() instanceof Cat)
+            {
+                Cat cat = (Cat) npc.getBukkitEntity();
+                if(sit != null)
+                    cat.setSitting(sit);
+                if(lay != null)
+                    cat.setLyingDown(lay);
+            }
+            if (npc.getBukkitEntity() instanceof Fox)
+            {
+                Fox fox = (Fox) npc.getBukkitEntity();
+                if(sit != null)
+                    fox.setSitting(sit);
+            }
         }
     }
 
@@ -439,7 +465,7 @@ public class Npc {
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), entityData);
         serverPlayer.connection.send(setEntityDataPacket);
     }
-
+    
     public float getEyeHeight(){
         return npc.getEyeHeight();
     }
@@ -518,6 +544,33 @@ public class Npc {
         this.glowingColor = glowingColor;
         isDirty = true;
     }
+
+    public void setProfession(String profession) {
+        this.profession = profession;
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
+    public void setSit(String sit) {
+        if(sit.equals("true"))
+            this.sit = true;
+        else
+            this.sit = false;
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+    public void setLay(String lay) {
+        if(lay.equals("true"))
+            this.lay = true;
+        else
+            this.lay = false;
+        removeForAll();
+        create();
+        spawnForAll();
+    }
+
 
     public void addEquipment(EquipmentSlot equipmentSlot, ItemStack itemStack) {
         if (equipment == null) {

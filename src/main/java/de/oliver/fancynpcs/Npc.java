@@ -33,6 +33,7 @@ import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.entity.Cat;
 import org.bukkit.entity.Fox;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Sniffer;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -65,6 +66,7 @@ public class Npc {
     private String profession;
     private Boolean sit;
     private Boolean lay;
+    private Boolean baby;
 
     public Npc(String name, EntityType<?> type, String displayName, SkinFetcher skin, Location location, boolean showInTab, boolean spawnEntity, boolean glow, ChatFormatting glowColor, Map<EquipmentSlot, ItemStack> equipment, Consumer<Player> onClick, boolean turnToPlayer, String serverCommand, String playerCommand, String message) {
         this.name = name;
@@ -141,6 +143,8 @@ public class Npc {
             {
                 org.bukkit.entity.Villager villager = (org.bukkit.entity.Villager) npc.getBukkitEntity();
                 villager.setProfession(org.bukkit.entity.Villager.Profession.valueOf(profession));
+                if(baby != null && baby == true)
+                    villager.setBaby();
             }
 
             if (npc.getBukkitEntity() instanceof Cat)
@@ -150,12 +154,24 @@ public class Npc {
                     cat.setSitting(sit);
                 if(lay != null)
                     cat.setLyingDown(lay);
+                if(baby != null && baby == true)
+                    cat.setBaby();
             }
             if (npc.getBukkitEntity() instanceof Fox)
             {
                 Fox fox = (Fox) npc.getBukkitEntity();
                 if(sit != null)
                     fox.setSitting(sit);
+                if(lay != null)
+                    fox.setSleeping(lay);
+                if(baby != null && baby == true)
+                    fox.setBaby();
+            }
+            if (npc.getBukkitEntity() instanceof Sniffer)
+            {
+                Sniffer sniffer = (Sniffer) npc.getBukkitEntity();
+                if(baby != null && baby == true)
+                    sniffer.setBaby();
             }
         }
     }
@@ -465,11 +481,11 @@ public class Npc {
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), entityData);
         serverPlayer.connection.send(setEntityDataPacket);
     }
-    
-    public float getEyeHeight(){
+
+   public float getEyeHeight(){
         return npc.getEyeHeight();
     }
-
+    
     public String getName() {
         return name;
     }
@@ -547,9 +563,16 @@ public class Npc {
 
     public void setProfession(String profession) {
         this.profession = profession;
-        removeForAll();
-        create();
-        spawnForAll();
+        if(npc != null)
+        {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    public String getProfession() {
+        return profession;
     }
 
     public void setSit(String sit) {
@@ -557,18 +580,49 @@ public class Npc {
             this.sit = true;
         else
             this.sit = false;
-        removeForAll();
-        create();
-        spawnForAll();
+        if(npc != null)
+        {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    public Boolean getSit() {
+        return sit;
     }
     public void setLay(String lay) {
         if(lay.equals("true"))
             this.lay = true;
         else
             this.lay = false;
-        removeForAll();
-        create();
-        spawnForAll();
+        if(npc != null)
+        {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    public Boolean getLay() {
+        return lay;
+    }
+
+    public void setBaby(String baby) {
+        if(baby.equals("true"))
+            this.baby = true;
+        else
+            this.baby = false;
+        if(npc != null)
+        {
+            removeForAll();
+            create();
+            spawnForAll();
+        }
+    }
+
+    public Boolean getBaby() {
+        return baby;
     }
 
 

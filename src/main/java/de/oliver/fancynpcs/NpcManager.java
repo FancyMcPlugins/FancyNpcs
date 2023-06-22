@@ -5,6 +5,7 @@ import de.oliver.fancynpcs.utils.SkinFetcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.item.ItemStack;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -120,6 +121,19 @@ public class NpcManager {
                 npcConfig.set("npcs." + npc.getName() + ".playerCommand", npc.getPlayerCommand());
             }
 
+            if (npc.getProfession() != null) {
+                npcConfig.set("npcs." + npc.getName() + ".profession", npc.getProfession());
+            }
+
+            if (npc.getSit() != null) {
+                npcConfig.set("npcs." + npc.getName() + ".sit", npc.getSit());
+            }
+            if (npc.getLay() != null) {
+                npcConfig.set("npcs." + npc.getName() + ".lay", npc.getLay());
+            }
+            if (npc.getBaby() != null) {
+                npcConfig.set("npcs." + npc.getName() + ".baby", npc.getBaby());
+            }
             npc.setDirty(false);
         }
 
@@ -187,6 +201,10 @@ public class NpcManager {
             String serverCommand = npcConfig.getString("npcs." + name + ".serverCommand");
             String playerCommand = npcConfig.getString("npcs." + name + ".playerCommand");
             String message = npcConfig.getString("npcs." + name + ".message");
+            String profession = npcConfig.getString("npcs." + name + ".profession");
+            boolean sit = npcConfig.getBoolean("npcs." + name + ".sit");
+            boolean lay = npcConfig.getBoolean("npcs." + name + ".lay");
+            boolean baby = npcConfig.getBoolean("npcs." + name + ".baby");
 
             Npc npc = new Npc(name, location);
             if (npcConfig.isConfigurationSection("npcs." + name + ".equipment")) {
@@ -204,6 +222,11 @@ public class NpcManager {
             npc.setGlowingColor(glowingColor);
             npc.setTurnToPlayer(turnToPlayer);
             npc.setMessage(message);
+            if(profession != null)
+                npc.setProfession(profession);
+            npc.setSit(String.valueOf(sit));
+            npc.setLay(String.valueOf(lay));
+            npc.setBaby(String.valueOf(baby));
 
             if (displayName != null && displayName.length() > 0) {
                 npc.setDisplayName(displayName);

@@ -37,7 +37,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return Stream.of("help", "message", "create", "remove", "sit", "prof", "lay", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
+            return Stream.of("help", "message", "create", "remove", "sit", "prof", "lay", "baby", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
@@ -78,6 +78,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .toList();
         }
         else if (args.length == 3 && args[0].equalsIgnoreCase("lay")) {
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+        else if (args.length == 3 && args[0].equalsIgnoreCase("baby")) {
             return Stream.of("true", "false")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
@@ -138,7 +143,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 for (Npc npc : allNpcs) {
                     MessageHelper.info(sender, "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
                             .replace("{name}", npc.getName())
-                            .replace("{x}", df.format(npc.getLocation().x()))
+                            .replace("{x}", df.format(npc.getLocation().getX()))
                             .replace("{y}", df.format(npc.getLocation().y()))
                             .replace("{z}", df.format(npc.getLocation().z()))
                             .replace("{tp_cmd}", "/tp " + npc.getLocation().x() + " " + npc.getLocation().y() + " " + npc.getLocation().z())
@@ -631,6 +636,26 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 npc.setSit(args[2]);
             }
+
+            case "baby" -> {
+                if (args.length < 3) {
+                    MessageHelper.error(sender, "Wrong usage: /npc help");
+                    return false;
+                }
+
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if (npc == null) {
+                    MessageHelper.error(sender, "Could not find npc");
+                    return false;
+                }
+                if(!(npc.getType() == EntityType.CAT || npc.getType() == EntityType.FOX || npc.getType() == EntityType.VILLAGER || npc.getType() == EntityType.SNIFFER))
+                {
+                    MessageHelper.error(sender, "Cat/villager/fox/sniffer only");
+                    return false;
+                }
+                npc.setBaby(args[2]);
+            }
+
             case "lay" -> {
                 if (args.length < 3) {
                     MessageHelper.error(sender, "Wrong usage: /npc help");
@@ -642,9 +667,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     MessageHelper.error(sender, "Could not find npc");
                     return false;
                 }
-                if(npc.getType() != EntityType.CAT)
+                if(!(npc.getType() == EntityType.CAT || npc.getType() == EntityType.FOX))
                 {
-                    MessageHelper.error(sender, "Cat only");
+                    MessageHelper.error(sender, "Cat and Fox only");
                     return false;
                 }
                 npc.setLay(args[2]);
@@ -682,6 +707,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                             npc.getEquipment().clear();
                         }
                     }
+
 
                     npc.removeForAll();
                     npc.create();

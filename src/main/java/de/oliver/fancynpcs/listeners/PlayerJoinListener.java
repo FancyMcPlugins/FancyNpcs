@@ -1,9 +1,8 @@
 package de.oliver.fancynpcs.listeners;
 
-import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
-import de.oliver.fancynpcs.PacketReader;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.Npc;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,9 +12,7 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        PacketReader packetReader = new PacketReader(event.getPlayer());
-        boolean injected = packetReader.inject();
-
+        boolean injected = FancyNpcs.getInstance().getNpcInteractionListener().injectPlayer(event.getPlayer());
         if (!injected) {
             MessageHelper.warning(event.getPlayer(), "Something went wrong. Interacting with NPCs will not work for you.");
             MessageHelper.warning(event.getPlayer(), "Rejoin might fix this bug");

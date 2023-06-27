@@ -3,6 +3,7 @@
 ## Using as dependency
 
 Include the following in your plugin's gradle project:
+
 ```gradle
 repositories {
     maven("https://repo.fancyplugins.de/releases")
@@ -20,6 +21,7 @@ You find the current version in the `README.md` file.
 ## Creating and modifying NPCs
 
 ### Getting an existing NPC
+
 ```java
 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(npcName);
 ```
@@ -142,5 +144,6 @@ Contains the player who interacted, the NPC and all actions.
 
 ### NpcSpawnEvent
 
-Is fired when a NPC is being spawned. This can happen when a player joins, a player switches the world or the NPC is being modified.<br>
+Is fired when a NPC is being spawned. This can happen when a player joins, a player switches the world or the NPC is
+being modified.<br>
 Contains the NPC that is being spawned and the player to whom the spawn packets are being sent.

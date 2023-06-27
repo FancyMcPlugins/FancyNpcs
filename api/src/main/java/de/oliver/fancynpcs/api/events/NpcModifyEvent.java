@@ -1,6 +1,6 @@
-package de.oliver.fancynpcs.events;
+package de.oliver.fancynpcs.api.events;
 
-import de.oliver.fancynpcs.Npc;
+import de.oliver.fancynpcs.api.Npc;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -49,7 +49,6 @@ public class NpcModifyEvent extends Event implements Cancellable {
     }
 
     /**
-     *
      * @return the value that is being set
      */
     public @NotNull Object getNewValue() {

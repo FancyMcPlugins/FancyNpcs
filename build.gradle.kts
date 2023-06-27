@@ -1,33 +1,51 @@
 plugins {
-    id("java")
-    id("io.papermc.paperweight.userdev") version "1.5.5"
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("java-library")
     id("maven-publish")
-    id ("com.github.johnrengelman.shadow") version "8.1.1"
+
+    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+allprojects {
+    group = "de.oliver"
+    version = "1.2.1"
+    description = "Simple, lightweight and fast NPC plugin using packets"
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://repo.fancyplugins.de/snapshots")
+//        maven("https://repo.fancyplugins.de/releases")
+        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+    }
 }
 
 group = "de.oliver"
 description = "Simple, lightweight and fast NPC plugin using packets"
 version = "1.2.2-beta1"
+
 val mcVersion = "1.20.1"
 
-repositories{
-    mavenLocal()
-    maven("https://repo.fancyplugins.de/releases")
-    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
-}
-
 dependencies {
-    paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
 
-    implementation("de.oliver:FancyLib:1.0.2")
+    implementation(project(":api"))
+    implementation(project(":implementation_1_20_1", configuration = "reobf"))
+    implementation(project(":implementation_1_19_4", configuration = "reobf"))
+
+    implementation("de.oliver:FancyLib:1.0.3-beta11")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
 }
 
 tasks {
-    runServer{
+    runServer {
         minecraftVersion(mcVersion)
+    }
+
+    shadowJar {
+        archiveAppendix.set("")
     }
 
     publishing {
@@ -60,11 +78,6 @@ tasks {
                 from(project.components["java"])
             }
         }
-    }
-
-    // Configure reobfJar to run when invoking the build task
-    assemble {
-        dependsOn(reobfJar)
     }
 
     compileJava {

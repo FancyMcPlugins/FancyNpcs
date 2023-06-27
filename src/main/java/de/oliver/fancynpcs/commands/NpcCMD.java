@@ -3,21 +3,20 @@ package de.oliver.fancynpcs.commands;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.Npc;
-import de.oliver.fancynpcs.events.NpcCreateEvent;
-import de.oliver.fancynpcs.events.NpcModifyEvent;
-import de.oliver.fancynpcs.events.NpcRemoveEvent;
-import de.oliver.fancynpcs.utils.EntityTypes;
-import de.oliver.fancynpcs.utils.SkinFetcher;
-import net.minecraft.ChatFormatting;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.events.NpcCreateEvent;
+import de.oliver.fancynpcs.api.events.NpcModifyEvent;
+import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
+import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
+import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -42,12 +41,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
             return FancyNpcs.getInstance().getNpcManager().getAllNpcs()
                     .stream()
-                    .map(Npc::getName)
+                    .map(npc -> npc.getData().getName())
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("equipment")) {
-            return Arrays.stream(EquipmentSlot.values())
-                    .map(EquipmentSlot::getName)
+            return Arrays.stream(NpcEquipmentSlot.values())
+                    .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))) {
@@ -55,13 +54,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")) {
-            return Arrays.stream(ChatFormatting.values())
-                    .filter(ChatFormatting::isColor)
-                    .map(ChatFormatting::getName)
+            return NamedTextColor.NAMES.keys().stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         } else if (args.length == 3 && args[0].equalsIgnoreCase("type")) {
-            return EntityTypes.TYPES.keySet().stream()
+            return Arrays.stream(EntityType.values())
+                    .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
@@ -78,7 +76,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
-            if(!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")){
+            if (!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")) {
                 MessageHelper.error(p, "You don't have permission for this subcommand");
                 return false;
             }
@@ -104,7 +102,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
-            if(!p.hasPermission("fancynpcs.npc.list") && !p.hasPermission("fancynpcs.npc.*")){
+            if (!p.hasPermission("fancynpcs.npc.list") && !p.hasPermission("fancynpcs.npc.*")) {
                 MessageHelper.error(p, "You don't have permission for this subcommand");
                 return false;
             }
@@ -119,11 +117,11 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 final DecimalFormat df = new DecimalFormat("#########.##");
                 for (Npc npc : allNpcs) {
                     MessageHelper.info(sender, "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
-                            .replace("{name}", npc.getName())
-                            .replace("{x}", df.format(npc.getLocation().x()))
-                            .replace("{y}", df.format(npc.getLocation().y()))
-                            .replace("{z}", df.format(npc.getLocation().z()))
-                            .replace("{tp_cmd}", "/tp " + npc.getLocation().x() + " " + npc.getLocation().y() + " " + npc.getLocation().z())
+                            .replace("{name}", npc.getData().getName())
+                            .replace("{x}", df.format(npc.getData().getLocation().x()))
+                            .replace("{y}", df.format(npc.getData().getLocation().y()))
+                            .replace("{z}", df.format(npc.getData().getLocation().z()))
+                            .replace("{tp_cmd}", "/tp " + npc.getData().getLocation().x() + " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z())
                     );
                 }
             }
@@ -139,7 +137,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         String subcommand = args[0];
         String name = args[1];
 
-        if(!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")){
+        if (!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")) {
             MessageHelper.error(p, "You don't have permission for this subcommand");
             return false;
         }
@@ -151,12 +149,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                Npc npc = new Npc(name, p.getLocation());
+                Npc npc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, p.getLocation()));
+                npc.getData().setLocation(p.getLocation());
+
                 NpcCreateEvent npcCreateEvent = new NpcCreateEvent(npc, p);
                 npcCreateEvent.callEvent();
                 if (!npcCreateEvent.isCancelled()) {
                     npc.create();
-                    npc.register();
+                    FancyNpcs.getInstance().getNpcManager().registerNpc(npc);
                     npc.spawnForAll();
 
                     MessageHelper.success(sender, "Created new NPC");
@@ -176,7 +176,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcRemoveEvent.callEvent();
                 if (!npcRemoveEvent.isCancelled()) {
                     npc.removeForAll();
-                    npc.unregister();
+                    FancyNpcs.getInstance().getNpcManager().removeNpc(npc);
                     MessageHelper.success(sender, "Removed NPC");
                 } else {
                     MessageHelper.error(sender, "Removing has been cancelled");
@@ -196,7 +196,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.moveForAll(location);
+                    npc.getData().setLocation(location);
+                    npc.update(p);
                     MessageHelper.success(sender, "Moved NPC to your location");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -220,13 +221,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     message += args[i] + " ";
                 }
 
-                message = message.substring(0, message.length()-1);
+                message = message.substring(0, message.length() - 1);
 
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setMessage(message);
+                    npc.getData().setMessage(message);
                     MessageHelper.success(sender, "Updated Message");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -247,7 +248,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getType() != EntityType.PLAYER) {
+                if (npc.getData().getType() != EntityType.PLAYER) {
                     MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
@@ -273,7 +274,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.updateSkin(skinFetcher);
+                    npc.getData().setSkin(skinFetcher);
+                    npc.updateForAll();
                     MessageHelper.success(sender, "Updated skin");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -302,7 +304,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.updateDisplayName(displayName.toString());
+                    npc.getData().setDisplayName(displayName.toString());
+                    npc.updateForAll();
                     MessageHelper.success(sender, "Updated display name");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -321,17 +324,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getType() != EntityType.PLAYER) {
+                if (npc.getData().getType() != EntityType.PLAYER) {
                     MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 
                 String slot = args[2];
 
-                EquipmentSlot equipmentSlot = null;
-                try {
-                    equipmentSlot = EquipmentSlot.byName(slot);
-                } catch (IllegalArgumentException e) {
+                NpcEquipmentSlot equipmentSlot = NpcEquipmentSlot.parse(slot);
+                if (equipmentSlot == null) {
                     MessageHelper.error(sender, "Invalid equipment slot");
                     return false;
                 }
@@ -342,10 +343,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
-                    npc.removeForAll();
-                    npc.create();
-                    npc.spawnForAll();
+                    npc.getData().addEquipment(equipmentSlot, item);
+                    npc.updateForAll();
                     MessageHelper.success(sender, "Updated equipment");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -374,7 +373,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setServerCommand(cmd);
+                    npc.getData().setServerCommand(cmd);
                     MessageHelper.success(sender, "Updated server command to be executed");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -403,7 +402,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setPlayerCommand(cmd);
+                    npc.getData().setPlayerCommand(cmd);
                     MessageHelper.success(sender, "Updated player command to be executed");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -422,7 +421,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getType() != EntityType.PLAYER) {
+                if (npc.getData().getType() != EntityType.PLAYER) {
                     MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
@@ -440,13 +439,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, p);
                 npcModifyEvent.callEvent();
 
-                if (showInTab == npc.isShowInTab()) {
+                if (showInTab == npc.getData().isShowInTab()) {
                     MessageHelper.warning(sender, "Nothing has changed");
                     return false;
                 }
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.updateShowInTab(showInTab);
+                    npc.getData().setShowInTab(showInTab);
+                    npc.updateForAll();
 
                     if (showInTab) {
                         MessageHelper.success(sender, "NPC will now be shown in tab");
@@ -470,7 +470,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getType() != EntityType.PLAYER) {
+                if (npc.getData().getType() != EntityType.PLAYER) {
                     MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
@@ -487,7 +487,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.updateGlowing(glowing);
+                    npc.getData().setGlowing(glowing);
+                    npc.updateForAll();
 
                     if (glowing) {
                         MessageHelper.success(sender, "NPC will now glow");
@@ -511,19 +512,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getType() != EntityType.PLAYER) {
+                if (npc.getData().getType() != EntityType.PLAYER) {
                     MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 
-                ChatFormatting color = ChatFormatting.getByName(args[2]);
+                NamedTextColor color = NamedTextColor.NAMES.value(args[2]);
                 if (color == null) {
-                    MessageHelper.error(sender, "Wrong usage: /npc help");
-                    return false;
-                }
-
-                if (!color.isColor()) {
-                    MessageHelper.error(sender, "Glowing color must be a color");
+                    MessageHelper.error(sender, "Invalid color");
                     return false;
                 }
 
@@ -531,7 +527,8 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.updateGlowingColor(color);
+                    npc.getData().setGlowingColor(color);
+                    npc.updateForAll();
                     MessageHelper.success(sender, "Updated glowing color");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -563,13 +560,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setTurnToPlayer(turnToPlayer);
+                    npc.getData().setTurnToPlayer(turnToPlayer);
 
                     if (turnToPlayer) {
                         MessageHelper.success(sender, "NPC will now turn to the players");
                     } else {
                         MessageHelper.success(sender, "NPC will no longer turn to the players");
-                        npc.moveForAll(npc.getLocation()); // move to default pos
+                        npc.updateForAll(); // move to default pos
                     }
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");
@@ -588,24 +585,24 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (!EntityTypes.TYPES.containsKey(args[2].toLowerCase())) {
+                EntityType type = EntityType.fromName(args[2].toLowerCase());
+
+                if (type == null) {
                     MessageHelper.error(sender, "Invalid type");
                     return false;
                 }
-
-                EntityType<?> type = EntityTypes.TYPES.get(args[2].toLowerCase());
 
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, type, p);
                 npcModifyEvent.callEvent();
 
                 if (!npcModifyEvent.isCancelled()) {
-                    npc.setType(type);
+                    npc.getData().setType(type);
 
                     if (type != EntityType.PLAYER) {
-                        npc.setGlowing(false);
-                        npc.setShowInTab(false);
-                        if (npc.getEquipment() != null) {
-                            npc.getEquipment().clear();
+                        npc.getData().setGlowing(false);
+                        npc.getData().setShowInTab(false);
+                        if (npc.getData().getEquipment() != null) {
+                            npc.getData().getEquipment().clear();
                         }
                     }
 

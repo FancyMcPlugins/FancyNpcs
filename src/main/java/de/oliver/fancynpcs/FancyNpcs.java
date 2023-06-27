@@ -3,34 +3,39 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
-import de.oliver.fancylib.serverSoftware.FoliaScheduler;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
+import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
+import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.NpcCMD;
-import de.oliver.fancynpcs.listeners.PacketReceivedListener;
 import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerMoveListener;
-import de.oliver.fancynpcs.utils.EntityTypes;
-import net.minecraft.server.dedicated.DedicatedServer;
+import de.oliver.fancynpcs.v1_19_4.NpcInteractionListener_1_19_4;
+import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
+import de.oliver.fancynpcs.v1_20_1.NpcInteractionListener_1_20_1;
+import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class FancyNpcs extends JavaPlugin {
+import java.util.function.Function;
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.20", "1.20.1"};
+public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
+
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
-    private final NpcManager npcManager;
     private final FancyNpcConfig config;
     private final VersionFetcher versionFetcher;
+    private NpcManager npcManager;
+    private Function<NpcData, Npc> npcAdapter;
+    private NpcInteractionListener npcInteractionListener;
     private boolean usingPlaceholderAPI;
 
     public FancyNpcs() {
@@ -38,7 +43,6 @@ public class FancyNpcs extends JavaPlugin {
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
-        this.npcManager = new NpcManager();
         this.config = new FancyNpcConfig();
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
@@ -48,7 +52,47 @@ public class FancyNpcs extends JavaPlugin {
     }
 
     @Override
+    public void onLoad() {
+        String mcVersion = Bukkit.getMinecraftVersion();
+
+        switch (mcVersion) {
+            case "1.20.1" -> {
+                npcAdapter = Npc_1_20_1::new;
+                npcInteractionListener = new NpcInteractionListener_1_20_1();
+            }
+
+            case "1.19.4" -> {
+                npcAdapter = Npc_1_19_4::new;
+                npcInteractionListener = new NpcInteractionListener_1_19_4();
+            }
+
+            default -> {
+                npcAdapter = null;
+                npcInteractionListener = null;
+            }
+        }
+
+        PluginManager pluginManager = Bukkit.getPluginManager();
+
+        if (npcAdapter == null || npcInteractionListener == null) {
+            getLogger().warning("--------------------------------------------------");
+            getLogger().warning("Unsupported minecraft server version.");
+            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
+            getLogger().warning("Disabling the FancyNpcs plugin.");
+            getLogger().warning("--------------------------------------------------");
+            pluginManager.disablePlugin(this);
+            return;
+        }
+
+        npcManager = new NpcManager(this, npcAdapter);
+    }
+
+    @Override
     public void onEnable() {
+        if (npcAdapter == null || npcInteractionListener == null) {
+            return;
+        }
+
         FancyLib.setPlugin(instance);
         config.reload();
 
@@ -66,28 +110,6 @@ public class FancyNpcs extends JavaPlugin {
             }
         }).start();
 
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        DedicatedServer nmsServer = ((CraftServer) Bukkit.getServer()).getServer();
-        String serverVersion = nmsServer.getServerVersion();
-
-        boolean isSupportedVersion = false;
-        for (String supportedVersion : SUPPORTED_VERSIONS) {
-            if(serverVersion.equals(supportedVersion)){
-                isSupportedVersion = true;
-                break;
-            }
-        }
-
-        if (!isSupportedVersion) {
-            getLogger().warning("--------------------------------------------------");
-            getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
-            getLogger().warning("Disabling the FancyNpcs plugin.");
-            getLogger().warning("--------------------------------------------------");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
@@ -99,6 +121,7 @@ public class FancyNpcs extends JavaPlugin {
         // register bStats
         Metrics metrics = new Metrics(this, 17543);
 
+        PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
 
         // register commands
@@ -109,19 +132,15 @@ public class FancyNpcs extends JavaPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerMoveListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
-        pluginManager.registerEvents(new PacketReceivedListener(), instance);
+        npcInteractionListener.register();
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
-        // load entity type mappings
-        EntityTypes.loadTypes();
-
         // load config
         scheduler.runTaskLater(null, 20L * 5, () -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                PacketReader packetReader = new PacketReader(onlinePlayer);
-                packetReader.inject();
+                npcInteractionListener.injectPlayer(onlinePlayer);
             }
 
             npcManager.loadNpcs();
@@ -137,13 +156,27 @@ public class FancyNpcs extends JavaPlugin {
     public void onDisable() {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
 
-        npcManager.saveNpcs(true);
+        if (npcManager != null) {
+            npcManager.saveNpcs(true);
+        }
     }
 
+    @Override
+    public Function<NpcData, Npc> getNpcAdapter() {
+        return npcAdapter;
+    }
+
+    @Override
+    public NpcInteractionListener getNpcInteractionListener() {
+        return npcInteractionListener;
+    }
+
+    @Override
     public FancyScheduler getScheduler() {
         return scheduler;
     }
 
+    @Override
     public NpcManager getNpcManager() {
         return npcManager;
     }
@@ -156,7 +189,13 @@ public class FancyNpcs extends JavaPlugin {
         return versionFetcher;
     }
 
+    @Override
     public boolean isUsingPlaceholderAPI() {
         return usingPlaceholderAPI;
+    }
+
+    @Override
+    public JavaPlugin getPlugin() {
+        return instance;
     }
 }

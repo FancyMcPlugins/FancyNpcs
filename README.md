@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-# 
+#    
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -9,13 +9,13 @@
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
 [![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
-
 Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.20 & 1.20.1**<br>
+**Only for minecraft server version 1.19.4 and 1.20.1**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
+
 You can download the latest versions at the following places:
 
 - https://hangar.papermc.io/Oliver/FancyNpcs
@@ -25,6 +25,7 @@ You can download the latest versions at the following places:
 - Build from source
 
 ## Commands
+
 /npc create (name) - _Creates a new npc at your location_<br>
 /npc remove (name) - _Removes an npc_<br>
 /npc list - _Summary of all npcs_<br>
@@ -34,7 +35,8 @@ You can download the latest versions at the following places:
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
 /npc message (name) (message) - _Set NPC message_<br>
-/npc serverCommand (name) (command ...) - _The command will be executed by the console when someone interacts with the npc_<br>
+/npc serverCommand (name) (command ...) - _The command will be executed by the console when someone interacts with the
+npc_<br>
 /npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
 /npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
@@ -45,11 +47,13 @@ You can download the latest versions at the following places:
 <br>
 Using `<empty>` as displayName will make the whole name tag invisible.
 
-For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who interacted with the npc.
+For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who
+interacted with the npc.
 
 You can also use any placeholder from PlaceholderAPI.
 
 ## Permissions
+
 For the /fancynpcs command - ``FancyNpcs.admin``<br>
 For the /npc command - ``FancyNpcs.npc``<br>
 For all subcommands of /npc - ``FancyNpcs.npc.*``<br>
@@ -58,6 +62,7 @@ Permission for a subcommand of /npc - ``FancyNpcs.npc.<subcommand>``
 ## Entity types
 
 When using any entity type other than Player, the following features are disabled:
+
 - Changing the skin
 - Changing the equipment
 - Showing in tab
@@ -67,7 +72,8 @@ When using any entity type other than Player, the following features are disable
 
 To have multiple lines as the display name of an NPC follow the following steps:
 
-1. download the [FancyHolograms](https://modrinth.com/plugin/fancyholograms/versions) plugin and put it in the plugins folder
+1. download the [FancyHolograms](https://modrinth.com/plugin/fancyholograms/versions) plugin and put it in the plugins
+   folder
 2. start your server and make sure the FancyNpcs and FancyHolograms plugin have both loaded
 3. create a hologram with multiple lines
 4. create a npc
@@ -76,5 +82,6 @@ To have multiple lines as the display name of an NPC follow the following steps:
 7. to unlink simply run `/hologram edit <hologram> unlinkWithNpc`
 
 ## Build from source
+
 1. Clone this repo and run `gradlew reobfJar`
 2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`

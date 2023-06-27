@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.commands;
 
-import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.FancyNpcs;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -40,9 +40,9 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                     MessageHelper.error(sender, "Could not find latest version");
                 } else if (newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(sender, """
-                                                      You are using an outdated version of the FancyHolograms Plugin
-                                                      [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
-                                                      """.formatted(newestVersion, plugin.getVersionFetcher().getDownloadUrl()));
+                            You are using an outdated version of the FancyHolograms Plugin
+                            [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
+                            """.formatted(newestVersion, plugin.getVersionFetcher().getDownloadUrl()));
                 } else {
                     MessageHelper.success(sender, "You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ")");
                 }

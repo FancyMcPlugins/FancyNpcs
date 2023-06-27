@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.utils;
+package de.oliver.fancynpcs.api.utils;
 
 
 import com.google.gson.JsonObject;

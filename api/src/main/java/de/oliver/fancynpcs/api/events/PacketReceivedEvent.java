@@ -1,22 +1,18 @@
-package de.oliver.fancynpcs.events;
+package de.oliver.fancynpcs.api.events;
 
-import net.minecraft.network.protocol.Packet;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Currently only works for the ServerboundInteractPacket packet
- */
 public class PacketReceivedEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
 
-    private final Packet<?> packet;
+    private final Object packet;
     private final Player player;
 
-    public PacketReceivedEvent(Packet<?> packet, Player player) {
+    public PacketReceivedEvent(Object packet, Player player) {
         this.packet = packet;
         this.player = player;
     }
@@ -25,7 +21,7 @@ public class PacketReceivedEvent extends Event {
         return handlerList;
     }
 
-    public Packet<?> getPacket() {
+    public Object getPacket() {
         return packet;
     }
 

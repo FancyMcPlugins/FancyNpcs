@@ -61,6 +61,11 @@ public class Npc_1_20_1 extends Npc {
         if (data.getType() == org.bukkit.entity.EntityType.PLAYER) {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""));
             ((ServerPlayer) npc).gameProfile = gameProfile;
+
+            if (data.getSkin() != null && data.getSkin().isLoaded()) {
+                // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
+                ((ServerPlayer) npc).getGameProfile().getProperties().put("textures", new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature()));
+            }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, "bA"); // EntityType.factory
@@ -113,11 +118,9 @@ public class Npc_1_20_1 extends Npc {
     public void remove(Player player) {
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        if (data.isShowInTab() && npc instanceof ServerPlayer) {
-            // remove from tab
-            ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket = new ClientboundPlayerInfoUpdatePacket(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED, (ServerPlayer) npc);
-            removeListed(playerInfoUpdatePacket);
-            serverPlayer.connection.send(playerInfoUpdatePacket);
+        if (npc instanceof ServerPlayer npcPlayer) {
+            ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of((npcPlayer.getUUID())));
+            serverPlayer.connection.send(playerInfoRemovePacket);
         }
 
         // remove entity
@@ -154,12 +157,12 @@ public class Npc_1_20_1 extends Npc {
         }
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
-        if (!data.getDisplayName().equalsIgnoreCase("<empty>")) {
+        if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
             npc.setCustomName(Component.empty());
-            npc.setCustomNameVisible(true);
+            npc.setCustomNameVisible(false);
         } else {
             npc.setCustomName(vanillaComponent);
-            npc.setCustomNameVisible(false);
+            npc.setCustomNameVisible(true);
         }
 
         if (npc instanceof ServerPlayer npcPlayer) {

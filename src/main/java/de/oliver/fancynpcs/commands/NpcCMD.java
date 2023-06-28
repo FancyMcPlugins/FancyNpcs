@@ -275,7 +275,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setSkin(skinFetcher);
-                    npc.updateForAll();
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
                     MessageHelper.success(sender, "Updated skin");
                 } else {
                     MessageHelper.error(sender, "Modification has been cancelled");

@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#    
+#        
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -85,3 +85,12 @@ To have multiple lines as the display name of an NPC follow the following steps:
 
 1. Clone this repo and run `gradlew reobfJar`
 2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
+
+## Examples
+
+![](exampleImages/example1.png)
+
+![](exampleImages/example3.png)
+
+![](exampleImages/example2.png)
+

@@ -8,7 +8,7 @@ plugins {
 
 allprojects {
     group = "de.oliver"
-    version = "1.2.1"
+    version = "2.0.0"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -20,10 +20,6 @@ allprojects {
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     }
 }
-
-group = "de.oliver"
-description = "Simple, lightweight and fast NPC plugin using packets"
-version = "1.2.2-beta1"
 
 val mcVersion = "1.20.1"
 
@@ -45,7 +41,7 @@ tasks {
     }
 
     shadowJar {
-        archiveAppendix.set("")
+        archiveClassifier.set("")
     }
 
     publishing {
@@ -95,8 +91,8 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
         val props = mapOf(
-            "version" to project.version,
-            "description" to project.description,
+                "version" to project.version,
+                "description" to project.description,
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {

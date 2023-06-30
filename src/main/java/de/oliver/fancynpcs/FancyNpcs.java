@@ -10,9 +10,8 @@ import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.NpcCMD;
-import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
-import de.oliver.fancynpcs.listeners.PlayerMoveListener;
+import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.NpcInteractionListener_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.NpcInteractionListener_1_20_1;
@@ -130,8 +129,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
-        pluginManager.registerEvents(new PlayerMoveListener(), instance);
-        pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
         npcInteractionListener.register();
 
         // using bungee plugin channel
@@ -146,6 +143,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             npcManager.loadNpcs();
         });
 
+        scheduler.runTaskTimerAsynchronously(0, 1, new NpcTracker());
+
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave()) {
             scheduler.runTaskTimerAsynchronously(autosaveInterval * 60L, autosaveInterval * 60L, () -> npcManager.saveNpcs(false));
@@ -155,7 +154,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public void onDisable() {
         getServer().getMessenger().unregisterOutgoingPluginChannel(this);
-
         if (npcManager != null) {
             npcManager.saveNpcs(true);
         }

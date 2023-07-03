@@ -30,7 +30,7 @@ dependencies {
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.3-beta11")
+    implementation("de.oliver:FancyLib:1.0.3-beta12")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
 }
@@ -91,8 +91,8 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
         val props = mapOf(
-                "version" to project.version,
-                "description" to project.description,
+            "version" to project.version,
+            "description" to project.description,
         )
         inputs.properties(props)
         filesMatching("plugin.yml") {

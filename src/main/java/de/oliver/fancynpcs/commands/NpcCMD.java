@@ -472,11 +472,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, "Npc's type must be Player to do this");
-                    return false;
-                }
-
                 boolean glowing;
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
@@ -511,11 +506,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
                     MessageHelper.error(sender, "Could not find npc");
-                    return false;
-                }
-
-                if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, "Npc's type must be Player to do this");
                     return false;
                 }
 

@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.commands;
 
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancynpcs.FancyNpcMessagesConfig;
 import de.oliver.fancynpcs.FancyNpcs;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
@@ -14,6 +15,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
+
+    private final FancyNpcMessagesConfig config = FancyNpcs.getInstance().getMessagesConfig();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -32,30 +35,32 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         FancyNpcs plugin = FancyNpcs.getInstance();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
-            MessageHelper.info(sender, "<i>Checking version, please wait...</i>");
+            MessageHelper.info(sender, config.getString("commands.version.checking"));
             new Thread(() -> {
                 ComparableVersion newestVersion = plugin.getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion == null) {
-                    MessageHelper.error(sender, "Could not find latest version");
+                    MessageHelper.error(sender, config.getString("commands.version.failed"));
                 } else if (newestVersion.compareTo(currentVersion) > 0) {
-                    MessageHelper.warning(sender, """
-                            You are using an outdated version of the FancyHolograms Plugin
-                            [!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>
-                            """.formatted(newestVersion, plugin.getVersionFetcher().getDownloadUrl()));
+                    MessageHelper.warning(sender, (
+                            config.getString("commands.version.outdated")
+                            + "\n"
+                            + config.getString("commands.version.download")
+                    ).formatted(newestVersion, plugin.getVersionFetcher().getDownloadUrl()));
                 } else {
-                    MessageHelper.success(sender, "You are using the latest version of the FancyNpcs Plugin (" + currentVersion + ")");
+                    MessageHelper.success(sender, config.getString("commands.version.latest").replace("$current_version", currentVersion.toString()));
                 }
             }).start();
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
+            plugin.getMessagesConfig().reload();
             plugin.getFancyNpcConfig().reload();
             plugin.getNpcManager().reloadNpcs();
-            MessageHelper.success(sender, "Reloaded the config");
+            MessageHelper.success(sender, config.getString("commands.reload"));
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
             plugin.getNpcManager().saveNpcs(true);
-            MessageHelper.success(sender, "Saved all NPCs");
+            MessageHelper.success(sender, config.getString("commands.save"));
         } else {
-            MessageHelper.info(sender, "/FancyNpcs <version|reload|save>");
+            MessageHelper.info(sender, config.getString("commands.help"));
             return false;
         }
 

@@ -1,0 +1,99 @@
+join:
+  inject:
+    failed: "Something went wrong. Interacting with NPCs will not work for you."
+    rejoin: "Rejoin might fix this bug"
+  update:
+    outdated: "You are using an outdated version of the FancyNpcs Plugin"
+    new_version: "[!] Please download the newest version ($new_version): <click:open_url:'$download_url'><u>click here</u></click>"
+commands:
+  version:
+    checking: "<i>Checking version, please wait...</i>"
+    failed: "Could not find latest version"
+    outdated: "You are using an outdated version of the FancyHolograms Plugin"
+    download: "[!] Please download the newest version (%s): <click:open_url:'%s'><u>click here</u></click>"
+    latest: "You are using the latest version of the FancyNpcs Plugin ($current_version)"
+  reload: "Reloaded the config"
+  save: "Saved all NPCs"
+  help: "/FancyNpcs <version|reload|save>"
+npc_commands:
+  only_player: "Only players can execute this command"
+  no_permission: "You don't have permission for this subcommand"
+  wrong_usage: "Wrong usage: /npc help"
+  not_found: "Could not find NPC"
+  must_player: "Npc's type must be Player to do this"
+  help:
+    header: "<b>FancyNpcs Plugin help:"
+    create: " - /npc create (name) <dark_gray>- <white>Creates a new npc at your location"
+    remove: " - /npc remove (name) <dark_gray>- <white>Removes an npc"
+    list: " - /npc list <dark_gray>- <white>Summary of all npcs"
+    skin: " - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc"
+    type: " - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc"
+    moveHere: " - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location"
+    displayName: " - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc"
+    equipment: " - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding"
+    message: " - /npc message (name) (message) <dark_gray>- <white>Set NPC message"
+    playerCommand: " - /npc playerCommand (name) (command ...) <dark_gray>- <white>Executes the command on a player when interacting"
+    serverCommand: " - /npc serverCommand (name) (command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc"
+    showInTab: " - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not"
+    glowing: " - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not"
+    glowingColor: " - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect"
+    turnToPlayer: " - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not"
+  list:
+    header: "<b>All NPCs:</b>"
+    no_npcs: "There are no NPCs. Use '/npc create' to create one"
+    info: "<hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>"
+  create:
+    exist: "An npc with that name already exists"
+    created: "Created new NPC"
+    failed: "Creation has been cancelled"
+  remove:
+    removed: "Removed NPC"
+    failed: "Removing has been cancelled"
+  moveHere:
+    moved: "Moved NPC to your location"
+    failed: "Modification has been cancelled"
+  message:
+    updated: "Updated Message"
+    failed: "Modification has been cancelled"
+  skin:
+    invalid: "Invalid username"
+    failed_header: "Could not load skin. Possible causes:"
+    failed_url: " - Invalid URL (check the url)"
+    failed_limited: " - Rate limit reached (try again later)"
+    updated: "Updated skin"
+    failed: "Modification has been cancelled"
+  displayName:
+    updated: "Updated display name"
+    failed: "Modification has been cancelled"
+  equipment:
+    invalid: "Invalid equipment slot"
+    updated: "Updated equipment"
+    failed: "Modification has been cancelled"
+  serverCommand:
+    updated: "Updated server command to be executed"
+    failed: "Modification has been cancelled"
+  playerCommand:
+    updated: "Updated player command to be executed"
+    failed: "Modification has been cancelled"
+  showInTab:
+    invalid: "Invalid argument (expected: 'true' or 'false')"
+    same: "Nothing has changed"
+    on: "NPC will now be shown in tab"
+    off: "NPC will no longer be shown in tab"
+    failed: "Modification has been cancelled"
+  glowing:
+    on: "NPC will now glow"
+    off: "NPC will no longer glow"
+    failed: "Modification has been cancelled"
+  glowingColor:
+    invalid: "Invalid color"
+    updated: "Updated glowing color"
+    failed: "Modification has been cancelled"
+  turnToPlayer:
+    on: "NPC will now turn to the players"
+    off: "NPC will no longer turn to the players"
+    failed: "Modification has been cancelled"
+  type:
+    invalid: "Invalid type"
+    updated: "Updated entity type"
+    failed: "Modification has been cancelled"

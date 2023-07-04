@@ -169,12 +169,11 @@ public class Npc_1_20_1 extends Npc {
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
+        npc.setCustomName(Component.empty());
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
-            npc.setCustomName(Component.empty());
             npc.setCustomNameVisible(false);
             team.setNameTagVisibility(Team.Visibility.NEVER);
         } else {
-            npc.setCustomName(vanillaComponent);
             npc.setCustomNameVisible(true);
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }

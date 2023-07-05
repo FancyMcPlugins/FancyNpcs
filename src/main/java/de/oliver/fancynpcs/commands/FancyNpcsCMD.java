@@ -48,7 +48,7 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                             + config.get("commands-version-download", "new_version", newestVersion.toString(), "download_url", plugin.getVersionFetcher().getDownloadUrl())
                     ));
                 } else {
-                    MessageHelper.success(sender, config.get("commands-version.latest", "current_version", currentVersion.toString()));
+                    MessageHelper.success(sender, config.get("commands-version-latest", "current_version", currentVersion.toString()));
                 }
             }).start();
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {

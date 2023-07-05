@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancynpcs.FancyNpcMessagesConfig;
 import de.oliver.fancynpcs.FancyNpcs;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.command.Command;
@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
 
-    private final FancyNpcMessagesConfig config = FancyNpcs.getInstance().getMessagesConfig();
+    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -35,32 +35,32 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         FancyNpcs plugin = FancyNpcs.getInstance();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
-            MessageHelper.info(sender, config.getString("commands.version.checking"));
+            MessageHelper.info(sender, config.get("commands-version-checking"));
             new Thread(() -> {
                 ComparableVersion newestVersion = plugin.getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion == null) {
-                    MessageHelper.error(sender, config.getString("commands.version.failed"));
+                    MessageHelper.error(sender, config.get("commands-version-failed"));
                 } else if (newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(sender, (
-                            config.getString("commands.version.outdated")
+                            config.get("commands-version-outdated")
                             + "\n"
-                            + config.getString("commands.version.download")
-                    ).formatted(newestVersion, plugin.getVersionFetcher().getDownloadUrl()));
+                            + config.get("commands-version-download", "new_version", newestVersion.toString(), "download_url", plugin.getVersionFetcher().getDownloadUrl())
+                    ));
                 } else {
-                    MessageHelper.success(sender, config.getString("commands.version.latest").replace("$current_version", currentVersion.toString()));
+                    MessageHelper.success(sender, config.get("commands-version.latest", "current_version", currentVersion.toString()));
                 }
             }).start();
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
-            plugin.getMessagesConfig().reload();
+            plugin.getLanguageConfig().load();
             plugin.getFancyNpcConfig().reload();
             plugin.getNpcManager().reloadNpcs();
-            MessageHelper.success(sender, config.getString("commands.reload"));
+            MessageHelper.success(sender, config.get("commands-reload"));
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
             plugin.getNpcManager().saveNpcs(true);
-            MessageHelper.success(sender, config.getString("commands.save"));
+            MessageHelper.success(sender, config.get("commands-save"));
         } else {
-            MessageHelper.info(sender, config.getString("commands.help"));
+            MessageHelper.info(sender, config.get("commands-help"));
             return false;
         }
 

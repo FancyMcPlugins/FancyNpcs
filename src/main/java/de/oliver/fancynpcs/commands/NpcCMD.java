@@ -1,8 +1,8 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.UUIDFetcher;
-import de.oliver.fancynpcs.FancyNpcMessagesConfig;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
 
-    private final FancyNpcMessagesConfig config = FancyNpcs.getInstance().getMessagesConfig();
+    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -74,57 +74,61 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (!(sender instanceof Player p)) {
-            MessageHelper.error(sender, config.getString("npc_commands.only_player"));
+            MessageHelper.error(sender, config.get("npc_commands.only_player"));
             return false;
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")) {
-                MessageHelper.error(p, config.getString("npc_commands.no_permission"));
+                MessageHelper.error(p, config.get("npc_commands-no_permission"));
                 return false;
             }
 
-            MessageHelper.info(sender, config.getString("npc_commands.help.header"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.create"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.remove"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.list"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.skin"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.type"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.moveHere"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.displayName"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.equipment"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.message"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.playerCommand"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.serverCommand"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.showInTab"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.glowing"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.glowingColor"));
-            MessageHelper.info(sender, config.getString("npc_commands.help.turnToPlayer"));
+            MessageHelper.info(sender, config.get("npc_commands-help-header"));
+            MessageHelper.info(sender, config.get("npc_commands-help-create"));
+            MessageHelper.info(sender, config.get("npc_commands-help-remove"));
+            MessageHelper.info(sender, config.get("npc_commands-help-list"));
+            MessageHelper.info(sender, config.get("npc_commands-help-skin"));
+            MessageHelper.info(sender, config.get("npc_commands-help-type"));
+            MessageHelper.info(sender, config.get("npc_commands-help-moveHere"));
+            MessageHelper.info(sender, config.get("npc_commands-help-displayName"));
+            MessageHelper.info(sender, config.get("npc_commands-help-equipment"));
+            MessageHelper.info(sender, config.get("npc_commands-help-message"));
+            MessageHelper.info(sender, config.get("npc_commands-help-playerCommand"));
+            MessageHelper.info(sender, config.get("npc_commands-help-serverCommand"));
+            MessageHelper.info(sender, config.get("npc_commands-help-showInTab"));
+            MessageHelper.info(sender, config.get("npc_commands-help-glowing"));
+            MessageHelper.info(sender, config.get("npc_commands-help-glowingColor"));
+            MessageHelper.info(sender, config.get("npc_commands-help-turnToPlayer"));
 
             return true;
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
             if (!p.hasPermission("fancynpcs.npc.list") && !p.hasPermission("fancynpcs.npc.*")) {
-                MessageHelper.error(p, config.getString("npc_commands.no_permission"));
+                MessageHelper.error(p, config.get("npc_commands-no_permission"));
                 return false;
             }
 
-            MessageHelper.info(sender, config.getString("npc_commands.list.header"));
+            MessageHelper.info(sender, config.get("npc_commands-list-header"));
 
             Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
 
             if (allNpcs.isEmpty()) {
-                MessageHelper.warning(sender, config.getString("npc_commands.list.no_npcs"));
+                MessageHelper.warning(sender, config.get("npc_commands-list-no_npcs"));
             } else {
                 final DecimalFormat df = new DecimalFormat("#########.##");
                 for (Npc npc : allNpcs) {
-                    MessageHelper.info(sender, config.getString("npc_commands.list.info")
-                            .replace("{name}", npc.getData().getName())
-                            .replace("{x}", df.format(npc.getData().getLocation().x()))
-                            .replace("{y}", df.format(npc.getData().getLocation().y()))
-                            .replace("{z}", df.format(npc.getData().getLocation().z()))
-                            .replace("{tp_cmd}", "/tp " + npc.getData().getLocation().x() + " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z())
+                    MessageHelper.info(sender, config.get(
+                            "npc_commands-list-info",
+                                    "{name}",
+                                    npc.getData().getName(),
+                                    "{x}", df.format(npc.getData().getLocation().x()),
+                                    "{y}", df.format(npc.getData().getLocation().y()),
+                                    "{z}", df.format(npc.getData().getLocation().z()),
+                            "{tp_cmd}", "/tp " + npc.getData().getLocation().x() +
+                                    " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z()
+                                    )
                     );
                 }
             }
@@ -133,7 +137,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 2) {
-            MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+            MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
             return false;
         }
 
@@ -141,14 +145,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         String name = args[1];
 
         if (!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(p, config.getString("npc_commands.no_permission"));
+            MessageHelper.error(p, config.get("npc_commands-no_permission"));
             return false;
         }
 
         switch (subcommand.toLowerCase()) {
             case "create" -> {
                 if (FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.create.exist"));
+                    MessageHelper.error(sender, config.get("npc_commands-create-exist"));
                     return false;
                 }
 
@@ -162,16 +166,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     FancyNpcs.getInstance().getNpcManager().registerNpc(npc);
                     npc.spawnForAll();
 
-                    MessageHelper.success(sender, config.getString("npc_commands.create.created"));
+                    MessageHelper.success(sender, config.get("npc_commands-create-created"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.create.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-create-failed"));
                 }
             }
 
             case "remove" -> {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -180,16 +184,16 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcRemoveEvent.isCancelled()) {
                     npc.removeForAll();
                     FancyNpcs.getInstance().getNpcManager().removeNpc(npc);
-                    MessageHelper.success(sender, config.getString("npc_commands.remove.removed"));
+                    MessageHelper.success(sender, config.get("npc_commands-remove-removed"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.remove.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-remove-failed"));
                 }
             }
 
             case "movehere" -> {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -201,21 +205,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setLocation(location);
                     npc.update(p);
-                    MessageHelper.success(sender, config.getString("npc_commands.moveHere.moved"));
+                    MessageHelper.success(sender, config.get("npc_commands-moveHere-moved"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.moveHere.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-moveHere-failed"));
                 }
             }
 
             case "message" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -231,15 +235,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setMessage(message);
-                    MessageHelper.success(sender, config.getString("npc_commands.message.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-message-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.message.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-message-failed"));
                 }
             }
 
             case "skin" -> {
                 if (args.length != 3 && args.length != 2) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
@@ -247,19 +251,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.getString("npc_commands.must_player"));
+                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 
                 if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
                     UUID uuid = UUIDFetcher.getUUID(skinName);
                     if (uuid == null) {
-                        MessageHelper.error(sender, config.getString("npc_commands.skin.invalid"));
+                        MessageHelper.error(sender, config.get("npc_commands-skin-invalid"));
                         return false;
                     }
                     skinName = uuid.toString();
@@ -267,9 +271,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 SkinFetcher skinFetcher = new SkinFetcher(skinName);
                 if (!skinFetcher.isLoaded()) {
-                    MessageHelper.error(sender, config.getString("npc_commands.message.failed_header"));
-                    MessageHelper.error(sender, config.getString("npc_commands.skin.failed_url"));
-                    MessageHelper.error(sender, config.getString("npc_commands.skin.failed_limited"));
+                    MessageHelper.error(sender, config.get("npc_commands-message-failed_header"));
+                    MessageHelper.error(sender, config.get("npc_commands-skin-failed_url"));
+                    MessageHelper.error(sender, config.get("npc_commands-skin-failed_limited"));
                     return false;
                 }
 
@@ -281,21 +285,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();
-                    MessageHelper.success(sender, config.getString("npc_commands.skin.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-skin-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.skin.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-skin-failed"));
                 }
             }
 
             case "displayname" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -311,26 +315,26 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setDisplayName(displayName.toString());
                     npc.updateForAll();
-                    MessageHelper.success(sender, config.getString("npc_commands.displayName.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-displayName-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.displayName.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-displayName-failed"));
                 }
             }
 
             case "equipment" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.getString("npc_commands.must_player"));
+                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 
@@ -338,7 +342,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 NpcEquipmentSlot equipmentSlot = NpcEquipmentSlot.parse(slot);
                 if (equipmentSlot == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.equipment.invalid"));
+                    MessageHelper.error(sender, config.get("npc_commands-equipment-invalid"));
                     return false;
                 }
 
@@ -350,21 +354,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().addEquipment(equipmentSlot, item);
                     npc.updateForAll();
-                    MessageHelper.success(sender, config.getString("npc_commands.equipment.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-equipment-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.equipment.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-equipment-failed"));
                 }
             }
 
             case "servercommand" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -379,21 +383,21 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setServerCommand(cmd);
-                    MessageHelper.success(sender, config.getString("npc_commands.serverCommand.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-serverCommand-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.serverCommand.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-serverCommand-failed"));
                 }
             }
 
             case "playercommand" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -408,26 +412,26 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setPlayerCommand(cmd);
-                    MessageHelper.success(sender, config.getString("npc_commands.playerCommand.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-playerCommand-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.playerCommand.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-playerCommand-failed"));
                 }
             }
 
             case "showintab" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.getString("npc_commands.must_player"));
+                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 
@@ -436,7 +440,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     case "true" -> showInTab = true;
                     case "false" -> showInTab = false;
                     default -> {
-                        MessageHelper.error(sender, config.getString("npc_commands.showInTab.invalid"));
+                        MessageHelper.error(sender, config.get("npc_commands-showInTab-invalid"));
                         return false;
                     }
                 }
@@ -445,7 +449,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 npcModifyEvent.callEvent();
 
                 if (showInTab == npc.getData().isShowInTab()) {
-                    MessageHelper.warning(sender, config.getString("npc_commands.showInTab.same"));
+                    MessageHelper.warning(sender, config.get("npc_commands-showInTab-same"));
                     return false;
                 }
 
@@ -454,29 +458,29 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.updateForAll();
 
                     if (showInTab) {
-                        MessageHelper.success(sender, config.getString("npc_commands.showInTab.on"));
+                        MessageHelper.success(sender, config.get("npc_commands-showInTab-on"));
                     } else {
-                        MessageHelper.success(sender, config.getString("npc_commands.showInTab.off"));
+                        MessageHelper.success(sender, config.get("npc_commands-showInTab-off"));
                     }
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.showInTab.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-showInTab-failed"));
                 }
             }
 
             case "glowing" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.getString("npc_commands.must_player"));
+                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 
@@ -484,7 +488,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
                 } catch (Exception e) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
@@ -496,35 +500,35 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.updateForAll();
 
                     if (glowing) {
-                        MessageHelper.success(sender, config.getString("npc_commands.glowing.on"));
+                        MessageHelper.success(sender, config.get("npc_commands-glowing-on"));
                     } else {
-                        MessageHelper.success(sender, config.getString("npc_commands.glowing.off"));
+                        MessageHelper.success(sender, config.get("npc_commands-glowing-off"));
                     }
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.glowing.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-glowing-failed"));
                 }
             }
 
             case "glowingcolor" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.getString("npc_commands.must_player"));
+                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 
                 NamedTextColor color = NamedTextColor.NAMES.value(args[2]);
                 if (color == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.glowingColor.invalid"));
+                    MessageHelper.error(sender, config.get("npc_commands-glowingColor-invalid"));
                     return false;
                 }
 
@@ -534,22 +538,22 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 if (!npcModifyEvent.isCancelled()) {
                     npc.getData().setGlowingColor(color);
                     npc.updateForAll();
-                    MessageHelper.success(sender, config.getString("npc_commands.glowingColor.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-glowingColor-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.glowingColor.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-glowingColor-failed"));
                 }
 
             }
 
             case "turntoplayer" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
@@ -557,7 +561,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 try {
                     turnToPlayer = Boolean.parseBoolean(args[2]);
                 } catch (Exception e) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
@@ -568,32 +572,32 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.getData().setTurnToPlayer(turnToPlayer);
 
                     if (turnToPlayer) {
-                        MessageHelper.success(sender, config.getString("npc_commands.turnToPlayer.on"));
+                        MessageHelper.success(sender, config.get("npc_commands-turnToPlayer-on"));
                     } else {
-                        MessageHelper.success(sender, config.getString("npc_commands.turnToPlayer.off"));
+                        MessageHelper.success(sender, config.get("npc_commands-turnToPlayer-off"));
                         npc.updateForAll(); // move to default pos
                     }
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.turnToPlayer.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-turnToPlayer-failed"));
                 }
             }
 
             case "type" -> {
                 if (args.length < 3) {
-                    MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                     return false;
                 }
 
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.not_found"));
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
                     return false;
                 }
 
                 EntityType type = EntityType.fromName(args[2].toLowerCase());
 
                 if (type == null) {
-                    MessageHelper.error(sender, config.getString("npc_commands.type.invalid"));
+                    MessageHelper.error(sender, config.get("npc_commands-type-invalid"));
                     return false;
                 }
 
@@ -614,14 +618,14 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     npc.removeForAll();
                     npc.create();
                     npc.spawnForAll();
-                    MessageHelper.success(sender, config.getString("npc_commands.type.updated"));
+                    MessageHelper.success(sender, config.get("npc_commands-type-updated"));
                 } else {
-                    MessageHelper.error(sender, config.getString("npc_commands.type.failed"));
+                    MessageHelper.error(sender, config.get("npc_commands-type-failed"));
                 }
             }
 
             default -> {
-                MessageHelper.error(sender, config.getString("npc_commands.wrong_usage"));
+                MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
                 return false;
             }
         }

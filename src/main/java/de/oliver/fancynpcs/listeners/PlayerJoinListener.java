@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.listeners;
 
+import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancynpcs.FancyNpcMessagesConfig;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import org.apache.maven.artifact.versioning.ComparableVersion;
@@ -11,14 +11,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private final FancyNpcMessagesConfig config = FancyNpcs.getInstance().getMessagesConfig();
+    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         boolean injected = FancyNpcs.getInstance().getNpcInteractionListener().injectPlayer(event.getPlayer());
         if (!injected) {
-            MessageHelper.warning(event.getPlayer(), config.getString("join.inject.failed"));
-            MessageHelper.warning(event.getPlayer(), config.getString("join.inject.rejoin"));
+            MessageHelper.warning(event.getPlayer(), config.get("join-inject-failed"));
+            MessageHelper.warning(event.getPlayer(), config.get("join-inject-rejoin"));
         }
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
@@ -31,11 +31,12 @@ public class PlayerJoinListener implements Listener {
                 ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion != null && newestVersion.compareTo(currentVersion) > 0) {
-                    MessageHelper.warning(event.getPlayer(), config.getString("join.update.outdated"));
-                    MessageHelper.warning(event.getPlayer(), config.getString("join.update.new_version")
-                            .replace("$new_version", newestVersion.toString())
-                            .replace("$download_url", FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl())
-                    );
+                    MessageHelper.warning(event.getPlayer(), config.get("join-update-outdated"));
+                    MessageHelper.warning(event.getPlayer(), config.get(
+                            "join-update-new_version",
+                            "new_version", newestVersion.toString(),
+                            "download_url", FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl()
+                    ));
                 }
             }).start();
         }

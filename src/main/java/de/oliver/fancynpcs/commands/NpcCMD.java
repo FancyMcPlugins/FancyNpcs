@@ -121,12 +121,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 for (Npc npc : allNpcs) {
                     MessageHelper.info(sender, config.get(
                             "npc_commands-list-info",
-                                    "{name}",
+                                    "name",
                                     npc.getData().getName(),
-                                    "{x}", df.format(npc.getData().getLocation().x()),
-                                    "{y}", df.format(npc.getData().getLocation().y()),
-                                    "{z}", df.format(npc.getData().getLocation().z()),
-                            "{tp_cmd}", "/tp " + npc.getData().getLocation().x() +
+                                    "x", df.format(npc.getData().getLocation().x()),
+                                    "y", df.format(npc.getData().getLocation().y()),
+                                    "z", df.format(npc.getData().getLocation().z()),
+                            "tp_cmd", "/tp " + npc.getData().getLocation().x() +
                                     " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z()
                                     )
                     );

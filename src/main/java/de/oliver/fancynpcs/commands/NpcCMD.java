@@ -479,11 +479,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     return false;
                 }
 
-                if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
-                    return false;
-                }
-
                 boolean glowing;
                 try {
                     glowing = Boolean.parseBoolean(args[2]);
@@ -518,11 +513,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
                 if (npc == null) {
                     MessageHelper.error(sender, config.get("npc_commands-not_found"));
-                    return false;
-                }
-
-                if (npc.getData().getType() != EntityType.PLAYER) {
-                    MessageHelper.error(sender, config.get("npc_commands-must_player"));
                     return false;
                 }
 

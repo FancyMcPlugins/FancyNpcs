@@ -156,14 +156,28 @@ public class Npc_1_19_4 extends Npc {
             finalDisplayName = PlaceholderAPI.setPlaceholders(serverPlayer.getBukkitEntity(), finalDisplayName);
         }
 
-        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
-        if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
-            npc.setCustomName(Component.empty());
-            npc.setCustomNameVisible(false);
-        } else {
-            npc.setCustomName(vanillaComponent);
-            npc.setCustomNameVisible(true);
+        PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
+        team.getPlayers().clear();
+        team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
+
+        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
+        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
+
+        if (!isTeamCreatedForPlayer) {
+            isTeamCreated.put(serverPlayer.getUUID(), true);
         }
+        team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
+
+        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
+        npc.setCustomName(Component.empty());
+        if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
+            npc.setCustomNameVisible(false);
+            team.setNameTagVisibility(Team.Visibility.NEVER);
+        } else {
+            npc.setCustomNameVisible(true);
+            team.setNameTagVisibility(Team.Visibility.ALWAYS);
+        }
+        team.setPlayerPrefix(vanillaComponent);
 
         if (npc instanceof ServerPlayer npcPlayer) {
             npcPlayer.listName = vanillaComponent;
@@ -179,29 +193,6 @@ public class Npc_1_19_4 extends Npc {
                 removeListed(playerInfoPacket);
             }
             serverPlayer.connection.send(playerInfoPacket);
-
-            // set custom name
-            String teamName = "npc-" + localName;
-
-            PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), teamName);
-            team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
-            if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
-                team.setNameTagVisibility(Team.Visibility.NEVER);
-            } else {
-                team.setNameTagVisibility(Team.Visibility.ALWAYS);
-            }
-            team.getPlayers().clear();
-            team.getPlayers().add(npcPlayer.getGameProfile().getName());
-            team.setPlayerPrefix(vanillaComponent);
-
-            boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
-
-            ClientboundSetPlayerTeamPacket setPlayerTeamPacket = ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer);
-            serverPlayer.connection.send(setPlayerTeamPacket);
-
-            if (!isTeamCreatedForPlayer) {
-                isTeamCreated.put(serverPlayer.getUUID(), true);
-            }
         }
 
         npc.setGlowingTag(data.isGlowing());

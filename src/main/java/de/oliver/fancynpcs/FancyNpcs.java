@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancylib.FancyLib;
+import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
@@ -19,10 +20,20 @@ import de.oliver.fancynpcs.v1_20_1.NpcInteractionListener_1_20_1;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
@@ -32,6 +43,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
     private final FancyNpcConfig config;
+    private final LanguageConfig languageConfig;
     private final VersionFetcher versionFetcher;
     private NpcManager npcManager;
     private Function<NpcData, Npc> npcAdapter;
@@ -44,6 +56,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcConfig();
+        this.languageConfig = new LanguageConfig(this);
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
 
@@ -85,6 +98,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
 
         npcManager = new NpcManager(this, npcAdapter);
+        saveFile("lang.yml");
     }
 
     @Override
@@ -95,6 +109,33 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         FancyLib.setPlugin(instance);
         config.reload();
+
+        // Load language file
+        String defaultLang = readResource("lang.yml");
+        if (defaultLang != null) {
+            // Update language file
+            try {
+                FileConfiguration defaultLangConfig = new YamlConfiguration();
+                defaultLangConfig.loadFromString(defaultLang);
+                for (String key : defaultLangConfig.getKeys(false)) {
+                    languageConfig.addDefaultLang(key, defaultLangConfig.getString(key));
+                }
+            } catch (InvalidConfigurationException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        languageConfig.load();
+
+        getLogger().info("-------------------------------------------------------");
+        getLogger().info("FancyNpcs now supports multiple languages");
+        getLogger().info("");
+        getLogger().info("If you want to provide your native language translation for FancyNpcs, ");
+        getLogger().info("welcome to Pull Request your translation file");
+        getLogger().info("");
+        getLogger().info("If we already support your native language, you need to use this translation file");
+        getLogger().info("Download it from https://github.com/FancyMcPlugins/FancyNpcs/tree/main/languages");
+        getLogger().info("and replace the default 'lang.yml' file");
+        getLogger().info("-------------------------------------------------------");
 
         new Thread(() -> {
             ComparableVersion newestVersion = versionFetcher.getNewestVersion();
@@ -161,6 +202,60 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
     }
 
+    private String readResource(String name) {
+        URL url = getClass().getClassLoader().getResource(name);
+        if (url == null) {
+            getLogger().severe(name + " not found");
+            return null;
+        }
+        URLConnection connection = null;
+        try {
+            connection = url.openConnection();
+        } catch (IOException e) {
+            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
+        }
+        connection.setUseCaches(false);
+        try (InputStream inputStream = connection.getInputStream()) {
+            byte[] file_raw = new byte[inputStream.available()];
+            inputStream.read(file_raw);
+            inputStream.close();
+            return new String(file_raw, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            getLogger().severe("Failed read file " + name + ":" + e.getMessage());
+        }
+        return null;
+    }
+
+    private void saveFile(String name) {
+        URL url = getClass().getClassLoader().getResource(name);
+        if (url == null) {
+            getLogger().severe(name + " not found");
+            return;
+        }
+        File file = new File(getDataFolder() + "/" + name);
+        if (file.exists()) return;
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+        URLConnection connection = null;
+        try {
+            connection = url.openConnection();
+        } catch (IOException e) {
+            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
+        }
+        connection.setUseCaches(false);
+        try (FileOutputStream outputStream = new FileOutputStream(file)) {
+            int read;
+            InputStream inputStream = connection.getInputStream();
+            byte[] bytes = new byte[1024];
+            while ((read = inputStream.read(bytes)) != -1) {
+                outputStream.write(bytes, 0, read);
+            }
+        } catch (IOException e) {
+            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
+        }
+    }
+
     @Override
     public Function<NpcData, Npc> getNpcAdapter() {
         return npcAdapter;
@@ -183,6 +278,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public FancyNpcConfig getFancyNpcConfig() {
         return config;
+    }
+
+    public LanguageConfig getLanguageConfig() {
+        return languageConfig;
     }
 
     public VersionFetcher getVersionFetcher() {

@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.listeners;
 
+import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
@@ -10,12 +11,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
+    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         boolean injected = FancyNpcs.getInstance().getNpcInteractionListener().injectPlayer(event.getPlayer());
         if (!injected) {
-            MessageHelper.warning(event.getPlayer(), "Something went wrong. Interacting with NPCs will not work for you.");
-            MessageHelper.warning(event.getPlayer(), "Rejoin might fix this bug");
+            MessageHelper.warning(event.getPlayer(), config.get("join-inject-failed"));
+            MessageHelper.warning(event.getPlayer(), config.get("join-inject-rejoin"));
         }
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
@@ -28,8 +31,12 @@ public class PlayerJoinListener implements Listener {
                 ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().getNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion != null && newestVersion.compareTo(currentVersion) > 0) {
-                    MessageHelper.warning(event.getPlayer(), "You are using an outdated version of the FancyNpcs Plugin");
-                    MessageHelper.warning(event.getPlayer(), "[!] Please download the newest version (" + newestVersion + "): <click:open_url:'" + FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl() + "'><u>click here</u></click>");
+                    MessageHelper.warning(event.getPlayer(), config.get("join-update-outdated"));
+                    MessageHelper.warning(event.getPlayer(), config.get(
+                            "join-update-new_version",
+                            "new_version", newestVersion.toString(),
+                            "download_url", FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl()
+                    ));
                 }
             }).start();
         }

@@ -32,6 +32,7 @@ messages:
   npc-command-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not'
   npc-command-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>- <white>Set certain npc attributes'
   npc-command-help-interactionCooldown: ' - /npc interactionCooldown (name) (seconds) <dark_gray>- <white>Set the interaction cooldown (0 = disabled)'
+  npc_command-help-mirrorSkin: ' - /npc mirrorSkin (name) (true|false) <dark_gray>- <white>Whether the NPC will mirror the skin of the viewing player'
   npc-command-list-header: <b>All NPCs:</b>
   npc-command-list-no-npcs: There are no NPCs. Use '/npc create' to create one
   npc-command-list-tp-hover: <hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>
@@ -76,3 +77,6 @@ messages:
   npc-command-attribute-success: Successfully set the attribute
   npc-command-interactioncooldown-updated: Successfully updated the interaction cooldown
   npc-command-teleport-success: Successfully teleported npc
+  npc_command-mirrorSkin-true: NPC will now mirror the skin of the viewer
+  npc_command-mirrorSkin-false: NPC will no longer mirror the skin of the viewer
+  npc_command-mirrorSkin-cancelled: Modification has been cancelled

@@ -14,13 +14,16 @@ import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -104,7 +107,7 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -210,7 +213,7 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             if (!data.isShowInTab()) {
                 removeListed(playerInfoPacket);
             }
@@ -320,6 +323,25 @@ public class Npc_1_20_1 extends Npc {
 
         ClientboundSetPassengersPacket packet = new ClientboundSetPassengersPacket(sittingVehicle);
         serverPlayer.connection.send(packet);
+    }
+
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
+        GameProfile profile = npcPlayer.getGameProfile();
+        if (data.isMirrorSkin() && ServerLoginPacketListenerImpl.isValidUsername(viewer.getGameProfile().getName())) {
+            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+            profile = newProfile;
+        }
+
+        return new ClientboundPlayerInfoUpdatePacket.Entry(
+                npcPlayer.getUUID(),
+                profile,
+                data.isShowInTab(),
+                69,
+                npcPlayer.gameMode.getGameModeForPlayer(),
+                npcPlayer.getTabListDisplayName(),
+                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
+        );
     }
 
     @Override

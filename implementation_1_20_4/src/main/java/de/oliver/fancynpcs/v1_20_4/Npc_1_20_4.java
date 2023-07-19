@@ -107,7 +107,7 @@ public class Npc_1_20_4 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -211,7 +211,7 @@ public class Npc_1_20_4 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -284,10 +284,17 @@ public class Npc_1_20_4 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
+        GameProfile profile = npcPlayer.getGameProfile();
+        if (data.isMirrorSkin() && net.minecraft.world.entity.player.Player.isValidUsername(viewer.getGameProfile().getName())) {
+            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+            profile = newProfile;
+        }
+
         return new ClientboundPlayerInfoUpdatePacket.Entry(
                 npcPlayer.getUUID(),
-                npcPlayer.getGameProfile(),
+                profile,
                 data.isShowInTab(),
                 69,
                 npcPlayer.gameMode.getGameModeForPlayer(),

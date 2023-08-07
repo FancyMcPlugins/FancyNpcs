@@ -15,8 +15,7 @@ allprojects {
         mavenLocal()
         mavenCentral()
         maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://repo.fancyplugins.de/snapshots")
-//        maven("https://repo.fancyplugins.de/releases")
+        maven("https://repo.fancyplugins.de/releases")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     }
 }
@@ -30,7 +29,7 @@ dependencies {
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.3-beta13")
+    implementation("de.oliver:FancyLib:1.0.3")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
 }

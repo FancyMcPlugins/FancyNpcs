@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#          
+#           
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -35,10 +35,11 @@ You can download the latest versions at the following places:
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
-/npc message (name) (message) - _Set NPC message_<br>
-/npc serverCommand (name) (command ...) - _The command will be executed by the console when someone interacts with the
+/npc message (name) ('none'|message) - _Set NPC message_<br>
+/npc serverCommand (name) ('none'|command ...) - _The command will be executed by the console when someone interacts
+with the
 npc_<br>
-/npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
+/npc playerCommand (name) ('none'|command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
 /npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
 /npc glowing (name) (true|false) - _Whether the NPC will glow or not_<br>

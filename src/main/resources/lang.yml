@@ -39,11 +39,11 @@ messages:
     <white>Sets the displayname for an npc'
   npc_commands-help-equipment: ' - /npc equipment (name) (slot) <dark_gray>- <white>Equips
     the npc with the item you are holding'
-  npc_commands-help-message: ' - /npc message (name) (message) <dark_gray>- <white>Set
+  npc_commands-help-message: ' - /npc message (name) (none|message) <dark_gray>- <white>Set
     NPC message'
-  npc_commands-help-playerCommand: ' - /npc playerCommand (name) (command ...) <dark_gray>-
+  npc_commands-help-playerCommand: ' - /npc playerCommand (name) (none|command ...) <dark_gray>-
     <white>Executes the command on a player when interacting'
-  npc_commands-help-serverCommand: ' - /npc serverCommand (name) (command ...) <dark_gray>-
+  npc_commands-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>-
     <white>The command will be executed by the console when someone interacts with
     the npc'
   npc_commands-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>-

@@ -65,6 +65,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
+        } else if (args.length == 3 && (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("playerCommand") || args[0].equalsIgnoreCase("serverCommand"))) {
+            return Stream.of("none")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
         }
 
         return null;
@@ -276,6 +280,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
                 message = message.substring(0, message.length() - 1);
 
+                if (message.equalsIgnoreCase("none")) {
+                    message = "";
+                }
+
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, p);
                 npcModifyEvent.callEvent();
 
@@ -424,6 +432,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 }
                 cmd = cmd.substring(0, cmd.length() - 1);
 
+                if (cmd.equalsIgnoreCase("none")) {
+                    cmd = "";
+                }
+
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SERVER_COMMAND, cmd, p);
                 npcModifyEvent.callEvent();
 
@@ -452,6 +464,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     cmd += args[i] + " ";
                 }
                 cmd = cmd.substring(0, cmd.length() - 1);
+
+                if (cmd.equalsIgnoreCase("none")) {
+                    cmd = "";
+                }
 
                 NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, cmd, p);
                 npcModifyEvent.callEvent();

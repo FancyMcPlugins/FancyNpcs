@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#        
+#          
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -28,6 +28,7 @@ You can download the latest versions at the following places:
 
 /npc create (name) - _Creates a new npc at your location_<br>
 /npc remove (name) - _Removes an npc_<br>
+/npc copy (name) (new name) - _Copies an npc_<br>
 /npc list - _Summary of all npcs_<br>
 /npc skin (name) [(skin)] - _Sets the skin for an npc_<br>
 /npc type (name) (type) - _Sets the entity type for an npc_<br>
@@ -40,6 +41,8 @@ npc_<br>
 /npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
 /npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
 /npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
+/npc glowing (name) (true|false) - _Whether the NPC will glow or not_<br>
+/npc glowingColor (name) (color) - _Changes the color of the glowing effect_<br>
 /fancynpcs version - _Shows you the current plugin version_<br>
 /fancynpcs save - _Saves all npcs_<br>
 /fancynpcs reload - _Reloads the config and npcs_

@@ -116,8 +116,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             try {
                 FileConfiguration defaultLangConfig = new YamlConfiguration();
                 defaultLangConfig.loadFromString(defaultLang);
-                for (String key : defaultLangConfig.getKeys(false)) {
-                    languageConfig.addDefaultLang(key, defaultLangConfig.getString(key));
+                for (String key : defaultLangConfig.getConfigurationSection("messages").getKeys(false)) {
+                    languageConfig.addDefaultLang(key, defaultLangConfig.getString("messages." + key));
                 }
             } catch (InvalidConfigurationException e) {
                 throw new RuntimeException(e);

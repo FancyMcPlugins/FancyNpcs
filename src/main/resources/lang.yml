@@ -26,6 +26,8 @@ messages:
     npc at your location'
   npc_commands-help-remove: ' - /npc remove (name) <dark_gray>- <white>Removes an
     npc'
+  npc_commands-help-copy: ' - /npc copy (name) (new name) <dark_gray>- <white>Copies an
+      npc'
   npc_commands-help-list: ' - /npc list <dark_gray>- <white>Summary of all npcs'
   npc_commands-help-skin: ' - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the
     skin for an npc'
@@ -59,6 +61,8 @@ messages:
   npc_commands-create-exist: An npc with that name already exists
   npc_commands-create-created: Created new NPC
   npc_commands-create-failed: Creation has been cancelled
+  npc_commands-copy-success: Copied NPC
+  npc_commands-copy-failed: Copying has been cancelled
   npc_commands-remove-removed: Removed NPC
   npc_commands-remove-failed: Removing has been cancelled
   npc_commands-moveHere-moved: Moved NPC to your location

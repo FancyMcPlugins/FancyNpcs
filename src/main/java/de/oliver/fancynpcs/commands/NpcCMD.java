@@ -38,7 +38,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return Stream.of("help", "message", "create", "remove", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
+            return Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
@@ -87,6 +87,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, config.get("npc_commands-help-header"));
             MessageHelper.info(sender, config.get("npc_commands-help-create"));
             MessageHelper.info(sender, config.get("npc_commands-help-remove"));
+            MessageHelper.info(sender, config.get("npc_commands-help-copy"));
             MessageHelper.info(sender, config.get("npc_commands-help-list"));
             MessageHelper.info(sender, config.get("npc_commands-help-skin"));
             MessageHelper.info(sender, config.get("npc_commands-help-type"));
@@ -120,15 +121,15 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 final DecimalFormat df = new DecimalFormat("#########.##");
                 for (Npc npc : allNpcs) {
                     MessageHelper.info(sender, config.get(
-                            "npc_commands-list-info",
+                                    "npc_commands-list-info",
                                     "name",
                                     npc.getData().getName(),
                                     "x", df.format(npc.getData().getLocation().x()),
                                     "y", df.format(npc.getData().getLocation().y()),
                                     "z", df.format(npc.getData().getLocation().z()),
-                            "tp_cmd", "/tp " + npc.getData().getLocation().x() +
-                                    " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z()
-                                    )
+                                    "tp_cmd", "/tp " + npc.getData().getLocation().x() +
+                                            " " + npc.getData().getLocation().y() + " " + npc.getData().getLocation().z()
+                            )
                     );
                 }
             }
@@ -187,6 +188,51 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     MessageHelper.success(sender, config.get("npc_commands-remove-removed"));
                 } else {
                     MessageHelper.error(sender, config.get("npc_commands-remove-failed"));
+                }
+            }
+
+            case "copy" -> {
+                Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+                if (npc == null) {
+                    MessageHelper.error(sender, config.get("npc_commands-not_found"));
+                    return false;
+                }
+
+                if (args.length < 3) {
+                    MessageHelper.error(sender, config.get("npc_commands-wrong_usage"));
+                    return false;
+                }
+
+                String newName = args[2];
+
+                Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(
+                        newName,
+                        npc.getData().getDisplayName(),
+                        npc.getData().getSkin(),
+                        p.getLocation(),
+                        npc.getData().isShowInTab(),
+                        npc.getData().isSpawnEntity(),
+                        npc.getData().isGlowing(),
+                        npc.getData().getGlowingColor(),
+                        npc.getData().getType(),
+                        npc.getData().getEquipment(),
+                        npc.getData().isTurnToPlayer(),
+                        npc.getData().getOnClick(),
+                        npc.getData().getMessage(),
+                        npc.getData().getServerCommand(),
+                        npc.getData().getPlayerCommand()
+                ));
+
+                NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, p);
+                npcCreateEvent.callEvent();
+                if (!npcCreateEvent.isCancelled()) {
+                    copied.create();
+                    FancyNpcs.getInstance().getNpcManager().registerNpc(copied);
+                    copied.spawnForAll();
+
+                    MessageHelper.success(sender, config.get("npc_commands-copy-success"));
+                } else {
+                    MessageHelper.error(sender, config.get("npc_commands-copy-failed"));
                 }
             }
 

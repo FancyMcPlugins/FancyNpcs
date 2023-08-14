@@ -10,7 +10,7 @@ import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
-import de.oliver.fancynpcs.commands.NpcCMD;
+import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.NpcInteractionListener_1_19_4;

@@ -120,21 +120,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                     languageConfig.addDefaultLang(key, defaultLangConfig.getString("messages." + key));
                 }
             } catch (InvalidConfigurationException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
         languageConfig.load();
-
-        getLogger().info("-------------------------------------------------------");
-        getLogger().info("FancyNpcs now supports multiple languages");
-        getLogger().info("");
-        getLogger().info("If you want to provide your native language translation for FancyNpcs, ");
-        getLogger().info("welcome to Pull Request your translation file");
-        getLogger().info("");
-        getLogger().info("If we already support your native language, you need to use this translation file");
-        getLogger().info("Download it from https://github.com/FancyMcPlugins/FancyNpcs/tree/main/languages");
-        getLogger().info("and replace the default 'lang.yml' file");
-        getLogger().info("-------------------------------------------------------");
 
         new Thread(() -> {
             ComparableVersion newestVersion = versionFetcher.getNewestVersion();

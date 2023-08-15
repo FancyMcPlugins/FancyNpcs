@@ -144,7 +144,7 @@ public class NpcManager {
 
         for (String name : npcConfig.getConfigurationSection("npcs").getKeys(false)) {
             String displayName = npcConfig.getString("npcs." + name + ".displayName");
-            EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + name + ".type", "player"));
+            EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + name + ".type", "PLAYER"));
 
             Location location = null;
 

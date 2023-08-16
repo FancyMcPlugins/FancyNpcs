@@ -59,6 +59,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             return Stream.of("none")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("displayName")) {
+            return Stream.of("<empty>")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
         }
 
         return null;

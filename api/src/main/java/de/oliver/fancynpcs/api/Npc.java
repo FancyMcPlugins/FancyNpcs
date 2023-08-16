@@ -133,7 +133,7 @@ public abstract class Npc {
 
             FancyNpcsPlugin.get().getScheduler().runTask(
                     player.getLocation(),
-                    () -> player.performCommand(command)
+                    () -> player.chat("/" + command)
             );
         }
     }

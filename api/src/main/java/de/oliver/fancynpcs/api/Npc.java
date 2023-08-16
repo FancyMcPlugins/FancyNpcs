@@ -68,71 +68,73 @@ public abstract class Npc {
         }
     }
 
-    public void interact(Player player, String hand, String action, boolean isSneaking) {
-        if (action.equalsIgnoreCase("ATTACK") || action.equalsIgnoreCase("INTERACT") && hand.equalsIgnoreCase("MAIN_HAND")) {
-            NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommand(), data.getServerCommand(), data.getOnClick(), player);
-            npcInteractEvent.callEvent();
+    public void interact(Player player, boolean isAttack) {
+        if (!isAttack) {
+            return;
+        }
 
-            if (npcInteractEvent.isCancelled()) {
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommand(), data.getServerCommand(), data.getOnClick(), player);
+        npcInteractEvent.callEvent();
+
+        if (npcInteractEvent.isCancelled()) {
+            return;
+        }
+
+        // onClick
+        if (data.getOnClick() != null) {
+            data.getOnClick().accept(player);
+        }
+
+        // message
+        if (data.getMessage() != null && data.getMessage().length() > 0) {
+            String msg = data.getMessage();
+            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
+                msg = PlaceholderAPI.setPlaceholders(player, msg);
+            }
+
+            player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+        }
+
+        // serverCommand
+        if (data.getServerCommand() != null && data.getServerCommand().length() > 0) {
+            String command = data.getServerCommand();
+            command = command.replace("{player}", player.getName());
+
+            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
+                command = PlaceholderAPI.setPlaceholders(player, command);
+            }
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+        }
+
+        // playerCommand
+        if (data.getPlayerCommand() != null && data.getPlayerCommand().length() > 0) {
+            String command;
+
+            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
+                command = PlaceholderAPI.setPlaceholders(player, data.getPlayerCommand());
+            } else {
+                command = data.getPlayerCommand();
+            }
+
+            if (command.toLowerCase().startsWith("server")) {
+                String[] args = data.getPlayerCommand().split(" ");
+                if (args.length < 2) {
+                    return;
+                }
+                String server = args[1];
+
+                ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                out.writeUTF("Connect");
+                out.writeUTF(server);
+                player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
                 return;
             }
 
-            // onClick
-            if (data.getOnClick() != null) {
-                data.getOnClick().accept(player);
-            }
-
-            // message
-            if (data.getMessage() != null && data.getMessage().length() > 0) {
-                String msg = data.getMessage();
-                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    msg = PlaceholderAPI.setPlaceholders(player, msg);
-                }
-
-                player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
-            }
-
-            // serverCommand
-            if (data.getServerCommand() != null && data.getServerCommand().length() > 0) {
-                String command = data.getServerCommand();
-                command = command.replace("{player}", player.getName());
-
-                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    command = PlaceholderAPI.setPlaceholders(player, command);
-                }
-
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
-            }
-
-            // playerCommand
-            if (data.getPlayerCommand() != null && data.getPlayerCommand().length() > 0) {
-                String command;
-
-                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    command = PlaceholderAPI.setPlaceholders(player, data.getPlayerCommand());
-                } else {
-                    command = data.getPlayerCommand();
-                }
-
-                if (command.toLowerCase().startsWith("server")) {
-                    String[] args = data.getPlayerCommand().split(" ");
-                    if (args.length < 2) {
-                        return;
-                    }
-                    String server = args[1];
-
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Connect");
-                    out.writeUTF(server);
-                    player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
-                    return;
-                }
-
-                FancyNpcsPlugin.get().getScheduler().runTask(
-                        player.getLocation(),
-                        () -> player.performCommand(command)
-                );
-            }
+            FancyNpcsPlugin.get().getScheduler().runTask(
+                    player.getLocation(),
+                    () -> player.performCommand(command)
+            );
         }
     }
 

@@ -1,7 +1,4 @@
 messages:
-  join-inject-failed: Something went wrong. Interacting with NPCs will not work for
-    you.
-  join-inject-rejoin: Rejoin might fix this bug
   join-update-outdated: You are using an outdated version of the FancyNpcs Plugin
   join-update-new_version: '[!] Please download the newest version ({new_version}):
     <click:open_url:''{download_url}''><u>click here</u></click>'

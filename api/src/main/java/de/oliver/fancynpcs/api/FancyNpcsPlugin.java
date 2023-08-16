@@ -28,7 +28,4 @@ public interface FancyNpcsPlugin {
     NpcManager getNpcManager();
 
     Function<NpcData, Npc> getNpcAdapter();
-
-    NpcInteractionListener getNpcInteractionListener();
-
 }

@@ -8,21 +8,22 @@ import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
-import de.oliver.fancynpcs.api.*;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
+import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
-import de.oliver.fancynpcs.v1_19_4.NpcInteractionListener_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
-import de.oliver.fancynpcs.v1_20_1.NpcInteractionListener_1_20_1;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -46,7 +47,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final VersionFetcher versionFetcher;
     private NpcManager npcManager;
     private Function<NpcData, Npc> npcAdapter;
-    private NpcInteractionListener npcInteractionListener;
     private boolean usingPlaceholderAPI;
 
     public FancyNpcs() {
@@ -68,25 +68,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
-            case "1.20.1" -> {
-                npcAdapter = Npc_1_20_1::new;
-                npcInteractionListener = new NpcInteractionListener_1_20_1();
-            }
-
-            case "1.19.4" -> {
-                npcAdapter = Npc_1_19_4::new;
-                npcInteractionListener = new NpcInteractionListener_1_19_4();
-            }
-
-            default -> {
-                npcAdapter = null;
-                npcInteractionListener = null;
-            }
+            case "1.20.1" -> npcAdapter = Npc_1_20_1::new;
+            case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
+            default -> npcAdapter = null;
         }
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
-        if (npcAdapter == null || npcInteractionListener == null) {
+        if (npcAdapter == null) {
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
@@ -102,7 +91,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public void onEnable() {
-        if (npcAdapter == null || npcInteractionListener == null) {
+        if (npcAdapter == null) {
             return;
         }
 
@@ -159,19 +148,13 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
-        npcInteractionListener.register();
+        pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 
         // load config
-        scheduler.runTaskLater(null, 20L * 5, () -> {
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                npcInteractionListener.injectPlayer(onlinePlayer);
-            }
-
-            npcManager.loadNpcs();
-        });
+        scheduler.runTaskLater(null, 20L * 5, () -> npcManager.loadNpcs());
 
         scheduler.runTaskTimerAsynchronously(0, 1, new NpcTracker());
 
@@ -246,11 +229,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public Function<NpcData, Npc> getNpcAdapter() {
         return npcAdapter;
-    }
-
-    @Override
-    public NpcInteractionListener getNpcInteractionListener() {
-        return npcInteractionListener;
     }
 
     @Override

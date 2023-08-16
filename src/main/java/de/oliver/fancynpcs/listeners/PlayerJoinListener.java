@@ -15,12 +15,6 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        boolean injected = FancyNpcs.getInstance().getNpcInteractionListener().injectPlayer(event.getPlayer());
-        if (!injected) {
-            MessageHelper.warning(event.getPlayer(), config.get("join-inject-failed"));
-            MessageHelper.warning(event.getPlayer(), config.get("join-inject-rejoin"));
-        }
-
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             npc.spawn(event.getPlayer());

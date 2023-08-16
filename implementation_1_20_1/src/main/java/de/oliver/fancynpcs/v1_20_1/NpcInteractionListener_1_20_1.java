@@ -25,12 +25,12 @@ public class NpcInteractionListener_1_20_1 extends NpcInteractionListener {
         Player p = event.getPlayer();
 
         String hand = "";
-        if (interactPacket.getActionType() != ServerboundInteractPacket.ActionType.ATTACK) {
+        if (!interactPacket.isAttack()) {
             hand = ReflectionUtils.getValue(ReflectionUtils.getValue(interactPacket, "b"), "a").toString(); // ServerboundInteractPacket.InteractionAction.hand
         }
 
         int entityId = interactPacket.getEntityId();
-        ServerboundInteractPacket.ActionType action = interactPacket.getActionType();
+        String action = ReflectionUtils.getValue(interactPacket, "b").toString(); // ServerboundInteractPacket.action
         boolean isSneaking = interactPacket.isUsingSecondaryAction();
 
         Npc npc = FancyNpcsPlugin.get().getNpcManager().getNpc(entityId);
@@ -38,7 +38,7 @@ public class NpcInteractionListener_1_20_1 extends NpcInteractionListener {
             return;
         }
 
-        npc.interact(p, hand, action.name(), isSneaking);
+        npc.interact(p, hand, action, isSneaking);
     }
 
     @Override

@@ -31,6 +31,10 @@ public class CreateCMD implements Subcommand {
             return false;
         }
 
+        if (name.contains(".")) {
+            name = name.replace('.', '_');
+        }
+
         Npc createdNpc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, player.getLocation()));
         createdNpc.getData().setLocation(player.getLocation());
 

@@ -26,7 +26,7 @@ public class CreateCMD implements Subcommand {
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         String name = args[1];
 
-        if (FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
+        if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
             MessageHelper.error(player, lang.get("npc_commands-create-exist"));
             return false;
         }
@@ -42,7 +42,7 @@ public class CreateCMD implements Subcommand {
         npcCreateEvent.callEvent();
         if (!npcCreateEvent.isCancelled()) {
             createdNpc.create();
-            FancyNpcs.getInstance().getNpcManager().registerNpc(createdNpc);
+            FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(createdNpc);
             createdNpc.spawnForAll();
 
             MessageHelper.success(player, lang.get("npc_commands-create-created"));

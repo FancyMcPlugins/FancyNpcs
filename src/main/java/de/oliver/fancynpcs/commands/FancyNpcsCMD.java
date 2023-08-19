@@ -44,8 +44,8 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                 } else if (newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(sender, (
                             config.get("commands-version-outdated")
-                            + "\n"
-                            + config.get("commands-version-download", "new_version", newestVersion.toString(), "download_url", plugin.getVersionFetcher().getDownloadUrl())
+                                    + "\n"
+                                    + config.get("commands-version-download", "new_version", newestVersion.toString(), "download_url", plugin.getVersionFetcher().getDownloadUrl())
                     ));
                 } else {
                     MessageHelper.success(sender, config.get("commands-version-latest", "current_version", currentVersion.toString()));
@@ -54,10 +54,10 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
             plugin.getLanguageConfig().load();
             plugin.getFancyNpcConfig().reload();
-            plugin.getNpcManager().reloadNpcs();
+            plugin.getNpcManagerImpl().reloadNpcs();
             MessageHelper.success(sender, config.get("commands-reload"));
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
-            plugin.getNpcManager().saveNpcs(true);
+            plugin.getNpcManagerImpl().saveNpcs(true);
             MessageHelper.success(sender, config.get("commands-save"));
         } else {
             MessageHelper.info(sender, config.get("commands-help"));

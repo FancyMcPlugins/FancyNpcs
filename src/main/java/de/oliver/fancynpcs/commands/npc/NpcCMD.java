@@ -32,7 +32,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
-            return FancyNpcs.getInstance().getNpcManager().getAllNpcs()
+            return FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()
                     .stream()
                     .map(npc -> npc.getData().getName())
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
@@ -114,7 +114,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         String subcommand = args[0];
         String name = args[1];
-        Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(name);
+        Npc npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
 
         if (!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")) {
             MessageHelper.error(p, config.get("npc_commands-no_permission"));

@@ -14,7 +14,7 @@ public class NpcTracker extends BukkitRunnable {
 
     @Override
     public void run() {
-        Collection<Npc> npcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
+        Collection<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
         int visibilityDistance = FancyNpcs.getInstance().getFancyNpcConfig().getVisibilityDistance();
         int turnToPlayerDistance = FancyNpcs.getInstance().getFancyNpcConfig().getTurnToPlayerDistance();
 

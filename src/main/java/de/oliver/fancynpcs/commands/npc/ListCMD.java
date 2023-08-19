@@ -31,7 +31,7 @@ public class ListCMD implements Subcommand {
 
         MessageHelper.info(player, lang.get("npc_commands-list-header"));
 
-        Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManager().getAllNpcs();
+        Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
 
         if (allNpcs.isEmpty()) {
             MessageHelper.warning(player, lang.get("npc_commands-list-no_npcs"));

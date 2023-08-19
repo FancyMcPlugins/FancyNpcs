@@ -32,7 +32,7 @@ public class RemoveCMD implements Subcommand {
         npcRemoveEvent.callEvent();
         if (!npcRemoveEvent.isCancelled()) {
             npc.removeForAll();
-            FancyNpcs.getInstance().getNpcManager().removeNpc(npc);
+            FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
             MessageHelper.success(player, lang.get("npc_commands-remove-removed"));
         } else {
             MessageHelper.error(player, lang.get("npc_commands-remove-failed"));

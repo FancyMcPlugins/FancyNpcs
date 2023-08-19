@@ -45,7 +45,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final FancyNpcConfig config;
     private final LanguageConfig languageConfig;
     private final VersionFetcher versionFetcher;
-    private NpcManager npcManager;
+    private NpcManagerImpl npcManager;
     private Function<NpcData, Npc> npcAdapter;
     private boolean usingPlaceholderAPI;
 
@@ -85,7 +85,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        npcManager = new NpcManager(this, npcAdapter);
+        npcManager = new NpcManagerImpl(this, npcAdapter);
         saveFile("lang.yml");
     }
 
@@ -234,6 +234,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public FancyScheduler getScheduler() {
         return scheduler;
+    }
+
+    public NpcManagerImpl getNpcManagerImpl() {
+        return npcManager;
     }
 
     @Override

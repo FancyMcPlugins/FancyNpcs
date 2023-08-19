@@ -10,6 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,8 +70,8 @@ public abstract class Npc {
         }
     }
 
-    public void interact(Player player, boolean isAttack) {
-        if (!isAttack) {
+    public void interact(Player player, boolean isAttack, EquipmentSlot hand, Vector clickLoc) {
+        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
             return;
         }
 

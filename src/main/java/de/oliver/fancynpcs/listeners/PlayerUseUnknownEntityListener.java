@@ -15,7 +15,7 @@ public class PlayerUseUnknownEntityListener implements Listener {
             return;
         }
 
-        npc.interact(event.getPlayer(), event.isAttack());
+        npc.interact(event.getPlayer(), event.isAttack(), event.getHand(), event.getClickedRelativePosition());
     }
 
 }

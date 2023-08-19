@@ -90,6 +90,7 @@ public class NpcManager {
                 continue;
             }
 
+            npcConfig.set("npcs." + npc.getData().getName() + ".name", npc.getData().getName());
             npcConfig.set("npcs." + npc.getData().getName() + ".displayName", npc.getData().getDisplayName());
             npcConfig.set("npcs." + npc.getData().getName() + ".type", npc.getData().getType().name());
             npcConfig.set("npcs." + npc.getData().getName() + ".location.world", npc.getData().getLocation().getWorld().getName());

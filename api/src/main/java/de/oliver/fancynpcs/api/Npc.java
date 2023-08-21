@@ -22,6 +22,7 @@ public abstract class Npc {
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
     protected final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
     protected final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
+    protected final Map<UUID, Boolean> isLookingAtPlayer = new HashMap<>();
     protected NpcData data;
     protected boolean saveToFile;
 
@@ -156,6 +157,10 @@ public abstract class Npc {
 
     public Map<UUID, Boolean> getIsVisibleForPlayer() {
         return isVisibleForPlayer;
+    }
+
+    public Map<UUID, Boolean> getIsLookingAtPlayer() {
+        return isLookingAtPlayer;
     }
 
     public boolean isDirty() {

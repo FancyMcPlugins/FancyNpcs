@@ -111,6 +111,8 @@ public class Npc_1_20_1 extends Npc {
             serverPlayer.connection.send(addEntityPacket);
         }
 
+        isVisibleForPlayer.put(player.getUniqueId(), true);
+
         update(player);
     }
 
@@ -149,6 +151,11 @@ public class Npc_1_20_1 extends Npc {
 
     @Override
     public void update(Player player) {
+        if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
+            System.out.println("skip for " + player.getName());
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         String finalDisplayName = data.getDisplayName();
@@ -218,12 +225,14 @@ public class Npc_1_20_1 extends Npc {
         if (data.isSpawnEntity() && data.getLocation() != null) {
             move(serverPlayer);
         }
-
-        isVisibleForPlayer.put(serverPlayer.getUUID(), true);
     }
 
     @Override
     protected void refreshEntityData(Player player) {
+        if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), "e"); // itemsById

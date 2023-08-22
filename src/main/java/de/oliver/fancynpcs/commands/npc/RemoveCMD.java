@@ -5,7 +5,9 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
+import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +34,15 @@ public class RemoveCMD implements Subcommand {
         npcRemoveEvent.callEvent();
         if (!npcRemoveEvent.isCancelled()) {
             npc.removeForAll();
+            // Iterating over all online players that the NPC is currently looking at.
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (npc.getIsLookingAtPlayer().getOrDefault(onlinePlayer.getUniqueId(), false)) {
+                    // Changing state as Npc#getIsLookingAtPlayer#get(...) called within the event listener should return false now.
+                    npc.getIsLookingAtPlayer().put(onlinePlayer.getUniqueId(), false);
+                    // Calling the NpcStopLookingEvent event.
+                    new NpcStopLookingEvent(npc, onlinePlayer).callEvent();
+                }
+            }
             FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
             MessageHelper.success(player, lang.get("npc_commands-remove-removed"));
         } else {

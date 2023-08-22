@@ -3,7 +3,8 @@ package de.oliver.fancynpcs.tracker;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
-import de.oliver.fancynpcs.api.events.NpcLookEvent;
+import de.oliver.fancynpcs.api.events.NpcStartLookingEvent;
+import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -50,14 +51,18 @@ public class NpcTracker extends BukkitRunnable {
                     Boolean wasPreviouslyLooking = npc.getIsLookingAtPlayer().put(player.getUniqueId(), true);
                     // Comparing the previous state with current state to prevent event from being called continuously.
                     if (wasPreviouslyLooking == null || !wasPreviouslyLooking) {
-                        // Calling the event from the main thread.
+                        // Calling NpcStartLookingEvent from the main thread.
                         Bukkit.getScheduler().runTask(FancyNpcs.getInstance(), () -> {
-                            Bukkit.getPluginManager().callEvent(new NpcLookEvent(npc, player));
+                            Bukkit.getPluginManager().callEvent(new NpcStartLookingEvent(npc, player));
                         });
                     }
                 // Updating state if changed.
-                } else if (npc.getIsLookingAtPlayer().getOrDefault(player.getUniqueId(), false)) {
+                } else if (npcData.isTurnToPlayer() && npc.getIsLookingAtPlayer().getOrDefault(player.getUniqueId(), false)) {
                     npc.getIsLookingAtPlayer().put(player.getUniqueId(), false);
+                    // Calling NpcStopLookingEvent from the main thread.
+                    Bukkit.getScheduler().runTask(FancyNpcs.getInstance(), () -> {
+                        Bukkit.getPluginManager().callEvent(new NpcStopLookingEvent(npc, player));
+                    });
                 }
             }
         }

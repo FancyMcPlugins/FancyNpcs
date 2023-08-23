@@ -20,6 +20,7 @@ public class Attributes_1_20_1 {
         attributes.addAll(HorseAttributes.getAllAttributes());
         attributes.addAll(ParrotAttributes.getAllAttributes());
         attributes.addAll(AxolotlAttributes.getAllAttributes());
+        attributes.addAll(TropicalFishAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

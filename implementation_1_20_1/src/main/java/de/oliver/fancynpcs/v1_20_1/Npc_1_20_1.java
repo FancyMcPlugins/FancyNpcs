@@ -220,6 +220,8 @@ public class Npc_1_20_1 extends Npc {
             npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         }
 
+        data.applyAllAttributes(this);
+
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
@@ -290,5 +292,9 @@ public class Npc_1_20_1 extends Npc {
     @Override
     public int getEntityId() {
         return npc.getId();
+    }
+
+    public Entity getNpc() {
+        return npc;
     }
 }

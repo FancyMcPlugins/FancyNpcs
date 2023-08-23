@@ -51,6 +51,8 @@ messages:
     <white>The color of the glowing effect'
   npc_commands-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>-
     <white>Whether the NPC will turn to you or not'
+  npc_commands-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>-
+      <white>Set certain npc attributes'
   npc_commands-list-header: <b>All NPCs:</b>
   npc_commands-list-no_npcs: There are no NPCs. Use '/npc create' to create one
   npc_commands-list-info: <hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'>
@@ -98,3 +100,7 @@ messages:
   npc_commands-type-invalid: Invalid type
   npc_commands-type-updated: Updated entity type
   npc_commands-type-failed: Modification has been cancelled
+  npc_commands-attribute-attribute-not-found: Could not find attribute
+  npc_commands-attribute-wrong-entity-type: This attribute can not be applied to this entity type
+  npc_commands-attribute-invalid-value: Invalid attribute value
+  npc_commands-attribute-success: Successfully set the attribute

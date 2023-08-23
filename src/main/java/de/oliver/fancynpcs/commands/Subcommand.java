@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface Subcommand {
 
-    List<String> tabcompletion(@NotNull Player player, @NotNull String[] args);
+    List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args);
 
     boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args);
 

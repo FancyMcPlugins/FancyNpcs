@@ -29,6 +29,7 @@ public class NpcData {
     private String serverCommand;
     private String playerCommand;
     private String message;
+    private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
 
     public NpcData(
@@ -46,7 +47,8 @@ public class NpcData {
             Consumer<Player> onClick,
             String message,
             String serverCommand,
-            String playerCommand
+            String playerCommand,
+            Map<NpcAttribute, String> attributes
     ) {
         this.name = name;
         this.displayName = displayName;
@@ -63,6 +65,7 @@ public class NpcData {
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         this.message = message;
+        this.attributes = attributes;
         this.isDirty = true;
     }
 
@@ -80,6 +83,7 @@ public class NpcData {
         this.turnToPlayer = false;
         this.message = "";
         this.equipment = new HashMap<>();
+        this.attributes = new HashMap<>();
         this.isDirty = true;
     }
 
@@ -163,6 +167,7 @@ public class NpcData {
 
     public NpcData setType(EntityType type) {
         this.type = type;
+        attributes.clear();
         isDirty = true;
         return this;
     }
@@ -231,6 +236,20 @@ public class NpcData {
         this.message = message;
         isDirty = true;
         return this;
+    }
+
+    public Map<NpcAttribute, String> getAttributes() {
+        return attributes;
+    }
+
+    public void addAttribute(NpcAttribute attribute, String value) {
+        attributes.put(attribute, value);
+    }
+
+    public void applyAllAttributes(Npc npc) {
+        for (NpcAttribute attribute : attributes.keySet()) {
+            attribute.apply(npc, attributes.get(attribute));
+        }
     }
 
     public boolean isDirty() {

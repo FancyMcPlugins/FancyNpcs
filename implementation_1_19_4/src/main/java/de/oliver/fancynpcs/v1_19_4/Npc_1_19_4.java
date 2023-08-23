@@ -290,4 +290,8 @@ public class Npc_1_19_4 extends Npc {
     public int getEntityId() {
         return npc.getId();
     }
+
+    public Entity getNpc() {
+        return npc;
+    }
 }

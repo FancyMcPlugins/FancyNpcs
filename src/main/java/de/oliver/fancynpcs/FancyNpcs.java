@@ -4,6 +4,8 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
+import de.oliver.fancylib.featureFlags.FeatureFlag;
+import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -39,14 +41,17 @@ import java.util.function.Function;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
+    public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
     private final FancyNpcConfig config;
     private final LanguageConfig languageConfig;
+    private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
-    private NpcManagerImpl npcManager;
     private Function<NpcData, Npc> npcAdapter;
+    private NpcManagerImpl npcManager;
+    private AttributeManagerImpl attributeManager;
     private boolean usingPlaceholderAPI;
 
     public FancyNpcs() {
@@ -56,6 +61,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcConfig();
         this.languageConfig = new LanguageConfig(this);
+        this.featureFlagConfig = new FeatureFlagConfig(this);
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
 
@@ -65,6 +71,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public void onLoad() {
+        // Load feature flags
+        featureFlagConfig.addFeatureFlag(NPC_ATTRIBUTES_FEATURE_FLAG);
+        featureFlagConfig.load();
+
+
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
@@ -72,6 +83,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
             default -> npcAdapter = null;
         }
+
+        npcManager = new NpcManagerImpl(this, npcAdapter);
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -85,7 +98,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        npcManager = new NpcManagerImpl(this, npcAdapter);
         saveFile("lang.yml");
     }
 
@@ -97,6 +109,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         FancyLib.setPlugin(instance);
         config.reload();
+
+        if (NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+            System.out.println("init attribute manager");
+            attributeManager = new AttributeManagerImpl();
+        }
 
         // Load language file
         String defaultLang = readResource("lang.yml");
@@ -245,12 +262,21 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return npcManager;
     }
 
+    @Override
+    public AttributeManagerImpl getAttributeManager() {
+        return attributeManager;
+    }
+
     public FancyNpcConfig getFancyNpcConfig() {
         return config;
     }
 
     public LanguageConfig getLanguageConfig() {
         return languageConfig;
+    }
+
+    public FeatureFlagConfig getFeatureFlagConfig() {
+        return featureFlagConfig;
     }
 
     public VersionFetcher getVersionFetcher() {

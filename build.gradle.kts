@@ -29,7 +29,7 @@ dependencies {
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.3")
+    implementation("de.oliver:FancyLib:1.0.3.1")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
 }

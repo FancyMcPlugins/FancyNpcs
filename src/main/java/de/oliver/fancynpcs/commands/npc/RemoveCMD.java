@@ -17,7 +17,7 @@ public class RemoveCMD implements Subcommand {
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 

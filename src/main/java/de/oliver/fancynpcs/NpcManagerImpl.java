@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
@@ -93,40 +94,47 @@ public class NpcManagerImpl implements NpcManager {
                 continue;
             }
 
-            npcConfig.set("npcs." + npc.getData().getName() + ".name", npc.getData().getName());
-            npcConfig.set("npcs." + npc.getData().getName() + ".displayName", npc.getData().getDisplayName());
-            npcConfig.set("npcs." + npc.getData().getName() + ".type", npc.getData().getType().name());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.world", npc.getData().getLocation().getWorld().getName());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.x", npc.getData().getLocation().getX());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.y", npc.getData().getLocation().getY());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.z", npc.getData().getLocation().getZ());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.yaw", npc.getData().getLocation().getYaw());
-            npcConfig.set("npcs." + npc.getData().getName() + ".location.pitch", npc.getData().getLocation().getPitch());
-            npcConfig.set("npcs." + npc.getData().getName() + ".showInTab", npc.getData().isShowInTab());
-            npcConfig.set("npcs." + npc.getData().getName() + ".spawnEntity", npc.getData().isSpawnEntity());
-            npcConfig.set("npcs." + npc.getData().getName() + ".glowing", npc.getData().isGlowing());
-            npcConfig.set("npcs." + npc.getData().getName() + ".glowingColor", npc.getData().getGlowingColor().toString());
-            npcConfig.set("npcs." + npc.getData().getName() + ".turnToPlayer", npc.getData().isTurnToPlayer());
-            npcConfig.set("npcs." + npc.getData().getName() + ".message", npc.getData().getMessage());
+            NpcData data = npc.getData();
 
-            if (npc.getData().getSkin() != null) {
-                npcConfig.set("npcs." + npc.getData().getName() + ".skin.identifier", npc.getData().getSkin().getIdentifier());
-                npcConfig.set("npcs." + npc.getData().getName() + ".skin.value", npc.getData().getSkin().getValue());
-                npcConfig.set("npcs." + npc.getData().getName() + ".skin.signature", npc.getData().getSkin().getSignature());
+            npcConfig.set("npcs." + data.getName() + ".name", data.getName());
+            npcConfig.set("npcs." + data.getName() + ".displayName", data.getDisplayName());
+            npcConfig.set("npcs." + data.getName() + ".type", data.getType().name());
+            npcConfig.set("npcs." + data.getName() + ".location.world", data.getLocation().getWorld().getName());
+            npcConfig.set("npcs." + data.getName() + ".location.x", data.getLocation().getX());
+            npcConfig.set("npcs." + data.getName() + ".location.y", data.getLocation().getY());
+            npcConfig.set("npcs." + data.getName() + ".location.z", data.getLocation().getZ());
+            npcConfig.set("npcs." + data.getName() + ".location.yaw", data.getLocation().getYaw());
+            npcConfig.set("npcs." + data.getName() + ".location.pitch", data.getLocation().getPitch());
+            npcConfig.set("npcs." + data.getName() + ".showInTab", data.isShowInTab());
+            npcConfig.set("npcs." + data.getName() + ".spawnEntity", data.isSpawnEntity());
+            npcConfig.set("npcs." + data.getName() + ".glowing", data.isGlowing());
+            npcConfig.set("npcs." + data.getName() + ".glowingColor", data.getGlowingColor().toString());
+            npcConfig.set("npcs." + data.getName() + ".turnToPlayer", data.isTurnToPlayer());
+            npcConfig.set("npcs." + data.getName() + ".message", data.getMessage());
+
+            if (data.getSkin() != null) {
+                npcConfig.set("npcs." + data.getName() + ".skin.identifier", data.getSkin().getIdentifier());
+                npcConfig.set("npcs." + data.getName() + ".skin.value", data.getSkin().getValue());
+                npcConfig.set("npcs." + data.getName() + ".skin.signature", data.getSkin().getSignature());
             }
 
-            if (npc.getData().getEquipment() != null) {
-                for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : npc.getData().getEquipment().entrySet()) {
-                    npcConfig.set("npcs." + npc.getData().getName() + ".equipment." + entry.getKey().name(), entry.getValue());
+            if (data.getEquipment() != null) {
+                for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : data.getEquipment().entrySet()) {
+                    npcConfig.set("npcs." + data.getName() + ".equipment." + entry.getKey().name(), entry.getValue());
                 }
             }
 
-            if (npc.getData().getServerCommand() != null) {
-                npcConfig.set("npcs." + npc.getData().getName() + ".serverCommand", npc.getData().getServerCommand());
+            if (data.getServerCommand() != null) {
+                npcConfig.set("npcs." + data.getName() + ".serverCommand", data.getServerCommand());
             }
 
-            if (npc.getData().getPlayerCommand() != null) {
-                npcConfig.set("npcs." + npc.getData().getName() + ".playerCommand", npc.getData().getPlayerCommand());
+            if (data.getPlayerCommand() != null) {
+                npcConfig.set("npcs." + data.getName() + ".playerCommand", data.getPlayerCommand());
+            }
+
+            for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
+                String value = data.getAttributes().getOrDefault(attribute, null);
+                npcConfig.set("npcs." + data.getName() + ".attributes." + attribute.getName(), value);
             }
 
             npc.setDirty(false);
@@ -197,7 +205,26 @@ public class NpcManagerImpl implements NpcManager {
             String playerCommand = npcConfig.getString("npcs." + name + ".playerCommand");
             String message = npcConfig.getString("npcs." + name + ".message");
 
-            NpcData data = new NpcData(name, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand);
+            Map<NpcAttribute, String> attributes = new HashMap<>();
+            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                if (npcConfig.isConfigurationSection("npcs." + name + ".attributes")) {
+                    for (String attrName : npcConfig.getConfigurationSection("npcs." + name + ".attributes").getKeys(false)) {
+                        NpcAttribute attribute = FancyNpcs.getInstance().getAttributeManager().getAttributeByName(type, attrName);
+                        if (attribute == null) {
+                            continue;
+                        }
+
+                        String value = npcConfig.getString("npcs." + name + ".attributes." + attrName);
+                        if (!attribute.isValidValue(value)) {
+                            continue;
+                        }
+
+                        attributes.put(attribute, value);
+                    }
+                }
+            }
+
+            NpcData data = new NpcData(name, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + name + ".equipment")) {

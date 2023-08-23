@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -22,47 +23,77 @@ import java.util.stream.Stream;
 public class NpcCMD implements CommandExecutor, TabCompleter {
 
     private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
+    private final AttributeCMD attributeCMD = new AttributeCMD();
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender p, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         // TODO: move all of this into the subcommands
 
+        if (!(sender instanceof Player p)) {
+            return null;
+        }
+
+        List<String> suggestions = new ArrayList<>();
+
         if (args.length == 1) {
-            return Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
+            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
-                    .toList();
+                    .toList());
+
+            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                suggestions.add("attribute");
+            }
+
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
-            return FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()
+            suggestions.addAll(FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()
                     .stream()
                     .map(npc -> npc.getData().getName())
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && args[0].equalsIgnoreCase("equipment")) {
-            return Arrays.stream(NpcEquipmentSlot.values())
+            suggestions.addAll(Arrays.stream(NpcEquipmentSlot.values())
                     .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))) {
-            return Stream.of("true", "false")
+            suggestions.addAll(Stream.of("true", "false")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")) {
-            return NamedTextColor.NAMES.keys().stream()
+            suggestions.addAll(NamedTextColor.NAMES.keys().stream()
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && args[0].equalsIgnoreCase("type")) {
-            return Arrays.stream(EntityType.values())
+            suggestions.addAll(Arrays.stream(EntityType.values())
                     .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("playerCommand") || args[0].equalsIgnoreCase("serverCommand"))) {
-            return Stream.of("none")
+            suggestions.addAll(Stream.of("none")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
         } else if (args.length == 3 && args[0].equalsIgnoreCase("displayName")) {
-            return Stream.of("<empty>")
+            suggestions.addAll(Stream.of("<empty>")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+                    .toList());
+        }
+
+        if (!suggestions.isEmpty()) return suggestions;
+
+        if (args.length < 3) {
+            return null;
+        }
+
+        String subcommand = args[0];
+        String name = args[1];
+        Npc npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
+
+        switch (subcommand.toLowerCase()) {
+            case "attribute" -> {
+                if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                    return attributeCMD.tabcompletion(p, npc, args);
+                }
+            }
         }
 
         return null;
@@ -99,6 +130,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(p, config.get("npc_commands-help-glowing"));
             MessageHelper.info(p, config.get("npc_commands-help-glowingColor"));
             MessageHelper.info(p, config.get("npc_commands-help-turnToPlayer"));
+            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                MessageHelper.info(p, config.get("npc_commands-help-attribute"));
+            }
 
             return true;
         }
@@ -182,10 +216,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 return new TypeCMD().run(p, npc, args);
             }
 
+            case "attribute" -> {
+                if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                    return attributeCMD.run(p, npc, args);
+                }
+            }
+
             default -> {
                 MessageHelper.error(p, config.get("npc_commands-wrong_usage"));
                 return false;
             }
         }
+
+        MessageHelper.error(p, config.get("npc_commands-wrong_usage"));
+        return false;
     }
 }

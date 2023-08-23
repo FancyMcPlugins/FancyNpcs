@@ -18,6 +18,7 @@ public class Attributes_1_20_1 {
         attributes.addAll(VillagerAttributes.getAllAttributes());
         attributes.addAll(FrogAttributes.getAllAttributes());
         attributes.addAll(HorseAttributes.getAllAttributes());
+        attributes.addAll(ParrotAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

@@ -111,7 +111,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         if (NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-            System.out.println("init attribute manager");
             attributeManager = new AttributeManagerImpl();
         }
 

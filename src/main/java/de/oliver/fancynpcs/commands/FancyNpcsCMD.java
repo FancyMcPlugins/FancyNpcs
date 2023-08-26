@@ -52,7 +52,6 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                 }
             }).start();
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
-            plugin.getFeatureFlagConfig().load();
             plugin.getLanguageConfig().load();
             plugin.getFancyNpcConfig().reload();
             plugin.getNpcManagerImpl().reloadNpcs();

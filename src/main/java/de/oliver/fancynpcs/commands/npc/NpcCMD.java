@@ -41,7 +41,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .toList());
 
             if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                suggestions.add("attribute");
+                suggestions.addAll(Stream.of("attribute")
+                        .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
+                        .toList());
             }
 
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {

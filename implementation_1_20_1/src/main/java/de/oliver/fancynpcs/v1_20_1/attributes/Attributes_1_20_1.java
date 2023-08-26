@@ -24,6 +24,10 @@ public class Attributes_1_20_1 {
         attributes.addAll(FoxAttributes.getAllAttributes());
         attributes.addAll(PandaAttributes.getAllAttributes());
         attributes.addAll(GoatAttributes.getAllAttributes());
+        attributes.addAll(AllayAttributes.getAllAttributes());
+        attributes.addAll(CamelAttributes.getAllAttributes());
+        attributes.addAll(RabbitAttributes.getAllAttributes());
+        attributes.addAll(PiglinAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

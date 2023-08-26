@@ -3,12 +3,16 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.ConfigHelper;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class FancyNpcConfig {
     private boolean muteVersionNotification;
     private boolean enableAutoSave;
     private int autoSaveInterval;
     private int turnToPlayerDistance;
     private int visibilityDistance;
+    private List<String> blockedCommands;
 
     public void reload() {
         FancyNpcs.getInstance().reloadConfig();
@@ -19,6 +23,7 @@ public class FancyNpcConfig {
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
+        blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
 
         FancyNpcs.getInstance().saveConfig();
     }
@@ -41,5 +46,9 @@ public class FancyNpcConfig {
 
     public int getVisibilityDistance() {
         return visibilityDistance;
+    }
+
+    public List<String> getBlockedCommands() {
+        return blockedCommands;
     }
 }

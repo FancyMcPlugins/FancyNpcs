@@ -8,7 +8,7 @@ plugins {
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.2"
+    version = "2.0.2.1"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {

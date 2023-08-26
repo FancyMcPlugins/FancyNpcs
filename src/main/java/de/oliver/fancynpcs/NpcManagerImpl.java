@@ -132,9 +132,11 @@ public class NpcManagerImpl implements NpcManager {
                 npcConfig.set("npcs." + data.getName() + ".playerCommand", data.getPlayerCommand());
             }
 
-            for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
-                String value = data.getAttributes().getOrDefault(attribute, null);
-                npcConfig.set("npcs." + data.getName() + ".attributes." + attribute.getName(), value);
+            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+                for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
+                    String value = data.getAttributes().getOrDefault(attribute, null);
+                    npcConfig.set("npcs." + data.getName() + ".attributes." + attribute.getName(), value);
+                }
             }
 
             npc.setDirty(false);

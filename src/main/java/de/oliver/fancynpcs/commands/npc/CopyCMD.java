@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CopyCMD implements Subcommand {
 
@@ -37,7 +38,9 @@ public class CopyCMD implements Subcommand {
         String newName = args[2];
 
         Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(
+                UUID.randomUUID().toString(),
                 newName,
+                player.getUniqueId(),
                 npc.getData().getDisplayName(),
                 npc.getData().getSkin(),
                 player.getLocation(),

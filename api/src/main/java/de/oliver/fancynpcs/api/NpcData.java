@@ -10,11 +10,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class NpcData {
 
+    private final String id;
     private final String name;
+    private final UUID creator;
     private String displayName;
     private SkinFetcher skin;
     private Location location;
@@ -33,7 +36,9 @@ public class NpcData {
     private boolean isDirty;
 
     public NpcData(
+            String id,
             String name,
+            UUID creator,
             String displayName,
             SkinFetcher skin,
             Location location,
@@ -50,7 +55,9 @@ public class NpcData {
             String playerCommand,
             Map<NpcAttribute, String> attributes
     ) {
+        this.id = id;
         this.name = name;
+        this.creator = creator;
         this.displayName = displayName;
         this.skin = skin;
         this.location = location;
@@ -69,8 +76,13 @@ public class NpcData {
         this.isDirty = true;
     }
 
-    public NpcData(String name, Location location) {
+    /**
+     * Creates a default npc with random id
+     */
+    public NpcData(String name, UUID creator, Location location) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
+        this.creator = creator;
         this.location = location;
         this.displayName = name;
         this.type = EntityType.PLAYER;
@@ -87,8 +99,16 @@ public class NpcData {
         this.isDirty = true;
     }
 
+    public String getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public UUID getCreator() {
+        return creator == null ? UUID.fromString("00000000-0000-0000-0000-000000000000") : creator;
     }
 
     public String getDisplayName() {

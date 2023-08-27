@@ -10,14 +10,16 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class MessageCMD implements Subcommand {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 
@@ -45,6 +47,11 @@ public class MessageCMD implements Subcommand {
             message = "";
         }
 
+        if (hasIllegalCommand(message.toLowerCase())) {
+            MessageHelper.error(player, lang.get("illegal-command"));
+            return false;
+        }
+
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, player);
         npcModifyEvent.callEvent();
 
@@ -56,5 +63,49 @@ public class MessageCMD implements Subcommand {
         }
 
         return true;
+    }
+
+    // <click:run_command:"/op">TEST
+    private boolean hasIllegalCommand(String message) {
+        message = message.replace("/", "");
+
+        char[] chars = message.toCharArray();
+        Queue<String> tokens = new LinkedList<>();
+        List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
+        String currentWord = "";
+        for (int i = 0; i < chars.length; i++) {
+            char c = chars[i];
+            if (c == ' ') {
+                if (!currentWord.equals(" ") && !currentWord.equals(""))
+                    tokens.add(currentWord);
+                currentWord = "";
+            } else if (c == '<' || c == '>' || c == ':') {
+                if (!currentWord.equals(" ") && !currentWord.equals(""))
+                    tokens.add(currentWord);
+                tokens.add(String.valueOf(c));
+                currentWord = "";
+            } else {
+                currentWord = currentWord + c;
+            }
+        }
+        if (currentWord.length() > 0 && !currentWord.equals(" "))
+            tokens.add(currentWord);
+
+        while (!tokens.isEmpty()) {
+            if (((String) tokens.poll()).equalsIgnoreCase("run_command") && ((String) tokens.poll()).equalsIgnoreCase(":")) {
+                String command = tokens.poll();
+                command = command.replace("\"", "");
+                command = command.replace("'", "");
+                command = command.replace("´", "");
+                command = command.replace("`", "");
+                for (String blockedCommand : blockedCommands) {
+                    if (command.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

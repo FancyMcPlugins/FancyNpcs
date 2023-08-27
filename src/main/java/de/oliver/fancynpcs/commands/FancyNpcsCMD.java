@@ -22,7 +22,7 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
-            return Stream.of("version", "reload", "save")
+            return Stream.of("version", "reload", "save", "featureFlags")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList();
         }
@@ -59,6 +59,10 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
             plugin.getNpcManagerImpl().saveNpcs(true);
             MessageHelper.success(sender, config.get("commands-save"));
+        } else if (args.length >= 1 && args[0].equalsIgnoreCase("featureFlags")) {
+            MessageHelper.info(sender, "<b>Feature flags:</b>");
+            MessageHelper.info(sender, " - npc-attributes: " + FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled());
+            MessageHelper.info(sender, " - player-npcs: " + FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled());
         } else {
             MessageHelper.info(sender, config.get("commands-help"));
             return false;

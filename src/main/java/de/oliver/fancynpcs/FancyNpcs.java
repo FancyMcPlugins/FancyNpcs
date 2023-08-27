@@ -4,6 +4,8 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionFetcher;
+import de.oliver.fancylib.featureFlags.FeatureFlag;
+import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -16,6 +18,7 @@ import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerQuitListener;
+import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
@@ -40,15 +43,20 @@ import java.util.function.Function;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
+    public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", false);
+    public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
     private final FancyNpcConfig config;
     private final LanguageConfig languageConfig;
+    private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
-    private NpcManagerImpl npcManager;
     private Function<NpcData, Npc> npcAdapter;
+    private NpcManagerImpl npcManager;
+    private AttributeManagerImpl attributeManager;
     private boolean usingPlaceholderAPI;
+    private boolean usingPlotSquared;
 
     public FancyNpcs() {
         instance = this;
@@ -57,6 +65,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcConfig();
         this.languageConfig = new LanguageConfig(this);
+        this.featureFlagConfig = new FeatureFlagConfig(this);
         this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
     }
 
@@ -66,6 +75,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public void onLoad() {
+        // Load feature flags
+        featureFlagConfig.addFeatureFlag(NPC_ATTRIBUTES_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
+        featureFlagConfig.load();
+
+
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
@@ -73,6 +88,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
             default -> npcAdapter = null;
         }
+
+        npcManager = new NpcManagerImpl(this, npcAdapter);
 
         PluginManager pluginManager = Bukkit.getPluginManager();
 
@@ -86,7 +103,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        npcManager = new NpcManagerImpl(this, npcAdapter);
         saveFile("lang.yml");
     }
 
@@ -98,6 +114,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         FancyLib.setPlugin(instance);
         config.reload();
+
+        if (NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
+            attributeManager = new AttributeManagerImpl();
+        }
 
         // Load language file
         String defaultLang = readResource("lang.yml");
@@ -142,6 +162,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
+        usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
         getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
@@ -151,6 +172,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerQuitListener(), instance);
         pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+        if (PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+            pluginManager.registerEvents(new PlayerNpcsListener(), instance);
+        }
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -247,12 +271,21 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return npcManager;
     }
 
+    @Override
+    public AttributeManagerImpl getAttributeManager() {
+        return attributeManager;
+    }
+
     public FancyNpcConfig getFancyNpcConfig() {
         return config;
     }
 
     public LanguageConfig getLanguageConfig() {
         return languageConfig;
+    }
+
+    public FeatureFlagConfig getFeatureFlagConfig() {
+        return featureFlagConfig;
     }
 
     public VersionFetcher getVersionFetcher() {
@@ -262,6 +295,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public boolean isUsingPlaceholderAPI() {
         return usingPlaceholderAPI;
+    }
+
+    public boolean isUsingPlotSquared() {
+        return usingPlotSquared;
     }
 
     @Override

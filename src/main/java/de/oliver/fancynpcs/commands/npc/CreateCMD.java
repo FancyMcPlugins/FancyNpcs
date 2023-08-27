@@ -18,7 +18,7 @@ public class CreateCMD implements Subcommand {
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 
@@ -26,16 +26,24 @@ public class CreateCMD implements Subcommand {
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         String name = args[1];
 
-        if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
-            MessageHelper.error(player, lang.get("npc_commands-create-exist"));
-            return false;
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+            if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId()) != null) {
+                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                return false;
+            }
+        } else {
+            if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
+                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                return false;
+            }
         }
+
 
         if (name.contains(".")) {
             name = name.replace('.', '_');
         }
 
-        Npc createdNpc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, player.getLocation()));
+        Npc createdNpc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, player.getUniqueId(), player.getLocation()));
         createdNpc.getData().setLocation(player.getLocation());
 
         NpcCreateEvent npcCreateEvent = new NpcCreateEvent(createdNpc, player);

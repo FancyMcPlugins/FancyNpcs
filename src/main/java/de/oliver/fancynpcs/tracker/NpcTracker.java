@@ -27,7 +27,15 @@ public class NpcTracker extends BukkitRunnable {
                 NpcData npcData = npc.getData();
                 Location npcLocation = npcData.getLocation();
 
-                if (!npcData.isSpawnEntity() || playerLocation.getWorld() != npcLocation.getWorld()) {
+                if (!npcData.isSpawnEntity()) {
+                    continue;
+                }
+
+                boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(player.getUniqueId(), false);
+                if (playerLocation.getWorld() != npcLocation.getWorld()) {
+                    if (isCurrentlyVisible) {
+                        npc.remove(player);
+                    }
                     continue;
                 }
 
@@ -36,7 +44,6 @@ public class NpcTracker extends BukkitRunnable {
                     continue;
                 }
 
-                boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(player.getUniqueId(), false);
                 if (distance > visibilityDistance && isCurrentlyVisible) {
                     npc.remove(player);
                 } else if (distance < visibilityDistance && !isCurrentlyVisible) {

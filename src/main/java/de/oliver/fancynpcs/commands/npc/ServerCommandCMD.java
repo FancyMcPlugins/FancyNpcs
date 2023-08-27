@@ -17,7 +17,7 @@ public class ServerCommandCMD implements Subcommand {
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 
@@ -42,6 +42,13 @@ public class ServerCommandCMD implements Subcommand {
 
         if (cmd.equalsIgnoreCase("none")) {
             cmd = "";
+        }
+
+        for (String blockedCommand : FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands()) {
+            if (cmd.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
+                MessageHelper.error(player, lang.get("illegal-command"));
+                return false;
+            }
         }
 
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SERVER_COMMAND, cmd, player);

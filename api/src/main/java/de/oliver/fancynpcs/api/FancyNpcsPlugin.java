@@ -25,7 +25,9 @@ public interface FancyNpcsPlugin {
 
     FancyScheduler getScheduler();
 
+    Function<NpcData, Npc> getNpcAdapter();
+
     NpcManager getNpcManager();
 
-    Function<NpcData, Npc> getNpcAdapter();
+    AttributeManager getAttributeManager();
 }

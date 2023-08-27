@@ -10,11 +10,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class NpcData {
 
+    private final String id;
     private final String name;
+    private final UUID creator;
     private String displayName;
     private SkinFetcher skin;
     private Location location;
@@ -29,10 +32,13 @@ public class NpcData {
     private String serverCommand;
     private String playerCommand;
     private String message;
+    private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
 
     public NpcData(
+            String id,
             String name,
+            UUID creator,
             String displayName,
             SkinFetcher skin,
             Location location,
@@ -46,9 +52,12 @@ public class NpcData {
             Consumer<Player> onClick,
             String message,
             String serverCommand,
-            String playerCommand
+            String playerCommand,
+            Map<NpcAttribute, String> attributes
     ) {
+        this.id = id;
         this.name = name;
+        this.creator = creator;
         this.displayName = displayName;
         this.skin = skin;
         this.location = location;
@@ -63,11 +72,17 @@ public class NpcData {
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         this.message = message;
+        this.attributes = attributes;
         this.isDirty = true;
     }
 
-    public NpcData(String name, Location location) {
+    /**
+     * Creates a default npc with random id
+     */
+    public NpcData(String name, UUID creator, Location location) {
+        this.id = UUID.randomUUID().toString();
         this.name = name;
+        this.creator = creator;
         this.location = location;
         this.displayName = name;
         this.type = EntityType.PLAYER;
@@ -80,11 +95,20 @@ public class NpcData {
         this.turnToPlayer = false;
         this.message = "";
         this.equipment = new HashMap<>();
+        this.attributes = new HashMap<>();
         this.isDirty = true;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public UUID getCreator() {
+        return creator == null ? UUID.fromString("00000000-0000-0000-0000-000000000000") : creator;
     }
 
     public String getDisplayName() {
@@ -163,6 +187,7 @@ public class NpcData {
 
     public NpcData setType(EntityType type) {
         this.type = type;
+        attributes.clear();
         isDirty = true;
         return this;
     }
@@ -231,6 +256,20 @@ public class NpcData {
         this.message = message;
         isDirty = true;
         return this;
+    }
+
+    public Map<NpcAttribute, String> getAttributes() {
+        return attributes;
+    }
+
+    public void addAttribute(NpcAttribute attribute, String value) {
+        attributes.put(attribute, value);
+    }
+
+    public void applyAllAttributes(Npc npc) {
+        for (NpcAttribute attribute : attributes.keySet()) {
+            attribute.apply(npc, attributes.get(attribute));
+        }
     }
 
     public boolean isDirty() {

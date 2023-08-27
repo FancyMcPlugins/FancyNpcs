@@ -12,13 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.UUID;
 
 public class CopyCMD implements Subcommand {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull Player player, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 
@@ -37,7 +38,9 @@ public class CopyCMD implements Subcommand {
         String newName = args[2];
 
         Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(
+                UUID.randomUUID().toString(),
                 newName,
+                player.getUniqueId(),
                 npc.getData().getDisplayName(),
                 npc.getData().getSkin(),
                 player.getLocation(),
@@ -51,7 +54,8 @@ public class CopyCMD implements Subcommand {
                 npc.getData().getOnClick(),
                 npc.getData().getMessage(),
                 npc.getData().getServerCommand(),
-                npc.getData().getPlayerCommand()
+                npc.getData().getPlayerCommand(),
+                npc.getData().getAttributes()
         ));
 
         NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, player);

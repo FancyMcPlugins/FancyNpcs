@@ -44,6 +44,13 @@ public class PlayerCommandCMD implements Subcommand {
             cmd = "";
         }
 
+        for (String blockedCommand : FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands()) {
+            if (cmd.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
+                MessageHelper.error(player, lang.get("illegal-command"));
+                return false;
+            }
+        }
+
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, cmd, player);
         npcModifyEvent.callEvent();
 

@@ -13,6 +13,7 @@ messages:
   commands-reload: Reloaded the config
   commands-save: Saved all NPCs
   commands-help: /FancyNpcs <version|reload|save>
+  illegal-command: This command is not allowed to use in playerCommand, serverCommand and message
   npc_commands-only_player: Only players can execute this command
   npc_commands-no_permission: You don't have permission for this subcommand
   npc_commands-wrong_usage: 'Wrong usage: /npc help'

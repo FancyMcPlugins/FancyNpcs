@@ -49,6 +49,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
             suggestions.addAll(FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()
                     .stream()
+                    .filter(npc -> !FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() || npc.getData().getCreator().equals(p.getUniqueId()))
                     .map(npc -> npc.getData().getName())
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList());

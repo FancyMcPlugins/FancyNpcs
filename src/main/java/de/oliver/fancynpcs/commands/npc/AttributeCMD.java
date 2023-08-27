@@ -6,6 +6,7 @@ import de.oliver.fancynpcs.AttributeManagerImpl;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
+import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -82,6 +83,14 @@ public class AttributeCMD implements Subcommand {
 
         if (!attribute.isValidValue(value)) {
             MessageHelper.error(player, lang.get("npc_commands-attribute-invalid-value"));
+            return false;
+        }
+
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.ATTRIBUTE, new Object[]{attribute, value}, player);
+        npcModifyEvent.callEvent();
+
+        if (npcModifyEvent.isCancelled()) {
+            MessageHelper.error(player, lang.get("npc_commands-attribute-failed"));
             return false;
         }
 

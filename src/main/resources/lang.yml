@@ -104,3 +104,4 @@ messages:
   npc_commands-attribute-wrong-entity-type: This attribute can not be applied to this entity type
   npc_commands-attribute-invalid-value: Invalid attribute value
   npc_commands-attribute-success: Successfully set the attribute
+  npc_commands-attribute-failed: Modification has been cancelled

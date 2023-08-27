@@ -90,5 +90,6 @@ public class NpcModifyEvent extends Event implements Cancellable {
         TURN_TO_PLAYER,
         CUSTOM_MESSAGE,
         TYPE,
+        ATTRIBUTE,
     }
 }

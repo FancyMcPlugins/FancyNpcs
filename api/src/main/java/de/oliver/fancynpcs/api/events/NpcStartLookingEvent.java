@@ -27,14 +27,14 @@ public class NpcStartLookingEvent extends Event {
     }
 
     /**
-     * @return the modified npc
+     * @return the npc that started looking at a player
      */
     public @NotNull Npc getNpc() {
         return npc;
     }
 
     /**
-     * @return the player who interacted with the npc
+     * @return the player who npc started looking at
      */
     public @NotNull Player getPlayer() {
         return player;

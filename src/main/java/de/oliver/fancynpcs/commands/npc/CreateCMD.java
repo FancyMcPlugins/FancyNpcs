@@ -26,10 +26,18 @@ public class CreateCMD implements Subcommand {
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         String name = args[1];
 
-        if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
-            MessageHelper.error(player, lang.get("npc_commands-create-exist"));
-            return false;
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+            if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId()) != null) {
+                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                return false;
+            }
+        } else {
+            if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
+                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                return false;
+            }
         }
+
 
         if (name.contains(".")) {
             name = name.replace('.', '_');

@@ -13,6 +13,7 @@ public class FancyNpcConfig {
     private int turnToPlayerDistance;
     private int visibilityDistance;
     private List<String> blockedCommands;
+    private int maxNpcsPerPlayer;
 
     public void reload() {
         FancyNpcs.getInstance().reloadConfig();
@@ -24,6 +25,7 @@ public class FancyNpcConfig {
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
+        maxNpcsPerPlayer = (int) ConfigHelper.getOrDefault(config, "max_npcs_per_player", -1);
 
         FancyNpcs.getInstance().saveConfig();
     }
@@ -50,5 +52,9 @@ public class FancyNpcConfig {
 
     public List<String> getBlockedCommands() {
         return blockedCommands;
+    }
+
+    public int getMaxNpcsPerPlayer() {
+        return maxNpcsPerPlayer == -1 ? Integer.MAX_VALUE : maxNpcsPerPlayer;
     }
 }

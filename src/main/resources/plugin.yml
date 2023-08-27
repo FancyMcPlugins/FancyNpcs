@@ -8,6 +8,7 @@ folia-supported: true
 load: POSTWORLD
 softdepend:
   - PlaceholderAPI
+  - PlotSquared
 commands:
   FancyNpcs:
     permission: FancyNpcs.admin

@@ -32,6 +32,11 @@ public class ListCMD implements Subcommand {
         MessageHelper.info(player, lang.get("npc_commands-list-header"));
 
         Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+            allNpcs = allNpcs.stream()
+                    .filter(n -> n.getData().getCreator().equals(player.getUniqueId()))
+                    .toList();
+        }
 
         if (allNpcs.isEmpty()) {
             MessageHelper.warning(player, lang.get("npc_commands-list-no_npcs"));
@@ -40,13 +45,11 @@ public class ListCMD implements Subcommand {
             for (Npc n : allNpcs) {
                 MessageHelper.info(player, lang.get(
                                 "npc_commands-list-info",
-                                "name",
-                                n.getData().getName(),
+                                "name", n.getData().getName(),
                                 "x", df.format(n.getData().getLocation().x()),
                                 "y", df.format(n.getData().getLocation().y()),
                                 "z", df.format(n.getData().getLocation().z()),
-                                "tp_cmd", "/tp " + n.getData().getLocation().x() +
-                                        " " + n.getData().getLocation().y() + " " + n.getData().getLocation().z()
+                                "tp_cmd", "/tp " + n.getData().getLocation().x() + " " + n.getData().getLocation().y() + " " + n.getData().getLocation().z()
                         )
                 );
             }

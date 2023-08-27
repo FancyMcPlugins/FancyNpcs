@@ -26,7 +26,7 @@ public class NpcManagerImpl implements NpcManager {
     private final JavaPlugin plugin;
     private final Function<NpcData, Npc> npcAdapter;
     private final File npcConfigFile;
-    private final HashMap<String, Npc> npcs; // npc name -> npc
+    private final HashMap<String, Npc> npcs; // npc id -> npc
 
     public NpcManagerImpl(JavaPlugin plugin, Function<NpcData, Npc> npcAdapter) {
         this.plugin = plugin;
@@ -36,11 +36,11 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void registerNpc(Npc npc) {
-        npcs.put(npc.getData().getName(), npc);
+        npcs.put(npc.getData().getId(), npc);
     }
 
     public void removeNpc(Npc npc) {
-        npcs.remove(npc.getData().getName());
+        npcs.remove(npc.getData().getId());
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
         npcConfig.set("npcs." + npc.getData().getName(), null);
@@ -61,8 +61,26 @@ public class NpcManagerImpl implements NpcManager {
         return null;
     }
 
+    @Override
     public Npc getNpc(String name) {
-        return npcs.getOrDefault(name, null);
+        for (Npc npc : npcs.values()) {
+            if (npc.getData().getName().equalsIgnoreCase(name)) {
+                return npc;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Npc getNpc(String name, UUID creator) {
+        for (Npc npc : npcs.values()) {
+            if (npc.getData().getCreator().equals(creator) && npc.getData().getName().equalsIgnoreCase(name)) {
+                return npc;
+            }
+        }
+
+        return null;
     }
 
     public Collection<Npc> getAllNpcs() {
@@ -162,7 +180,7 @@ public class NpcManagerImpl implements NpcManager {
             UUID creator = creatorStr == null ? null : UUID.fromString(creatorStr);
 
             String displayName = npcConfig.getString("npcs." + id + ".displayName");
-            EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + id + ".type", "PLAYER"));
+            EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + id + ".type", "PLAYER").toUpperCase());
 
             Location location = null;
 

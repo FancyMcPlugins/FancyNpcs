@@ -32,6 +32,7 @@ dependencies {
     implementation("de.oliver:FancyLib:1.0.3.1")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
 }
 
 tasks {

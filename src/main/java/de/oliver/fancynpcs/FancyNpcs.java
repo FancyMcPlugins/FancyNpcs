@@ -17,6 +17,7 @@ import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
+import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
@@ -42,6 +43,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
     public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", false);
+    public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
@@ -53,6 +55,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
     private boolean usingPlaceholderAPI;
+    private boolean usingPlotSquared;
 
     public FancyNpcs() {
         instance = this;
@@ -73,6 +76,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(NPC_ATTRIBUTES_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
         featureFlagConfig.load();
 
 
@@ -157,6 +161,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
+        usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
         getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
@@ -165,6 +170,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+        if (PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+            pluginManager.registerEvents(new PlayerNpcsListener(), instance);
+        }
 
         // using bungee plugin channel
         getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -285,6 +293,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public boolean isUsingPlaceholderAPI() {
         return usingPlaceholderAPI;
+    }
+
+    public boolean isUsingPlotSquared() {
+        return usingPlotSquared;
     }
 
     @Override

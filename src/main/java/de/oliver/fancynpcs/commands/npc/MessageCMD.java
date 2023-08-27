@@ -91,10 +91,6 @@ public class MessageCMD implements Subcommand {
         if (currentWord.length() > 0 && !currentWord.equals(" "))
             tokens.add(currentWord);
 
-        for (String token : tokens) {
-            System.out.println("TOKEN: " + token);
-        }
-
         while (!tokens.isEmpty()) {
             if (((String) tokens.poll()).equalsIgnoreCase("run_command") && ((String) tokens.poll()).equalsIgnoreCase(":")) {
                 String command = tokens.poll();

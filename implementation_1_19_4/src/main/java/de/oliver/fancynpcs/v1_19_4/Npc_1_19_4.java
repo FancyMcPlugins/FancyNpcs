@@ -174,7 +174,10 @@ public class Npc_1_19_4 extends Npc {
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
-        npc.setCustomName(Component.empty());
+        if (!(npc instanceof ServerPlayer)) {
+            npc.setCustomName(vanillaComponent);
+        }
+
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
             npc.setCustomNameVisible(false);
             team.setNameTagVisibility(Team.Visibility.NEVER);
@@ -182,9 +185,9 @@ public class Npc_1_19_4 extends Npc {
             npc.setCustomNameVisible(true);
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }
-        team.setPlayerPrefix(vanillaComponent);
 
         if (npc instanceof ServerPlayer npcPlayer) {
+            team.setPlayerPrefix(vanillaComponent);
             npcPlayer.listName = vanillaComponent;
 
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);

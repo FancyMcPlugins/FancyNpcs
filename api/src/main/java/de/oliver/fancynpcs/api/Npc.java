@@ -13,15 +13,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
 
 public abstract class Npc {
 
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
-    protected final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
-    protected final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
+    protected final Set<Player> isTeamCreated = Collections.newSetFromMap(new WeakHashMap<>());
+    protected final Set<Player> isVisibleForPlayer = Collections.newSetFromMap(new WeakHashMap<>());
     protected NpcData data;
     protected boolean saveToFile;
 
@@ -150,11 +150,11 @@ public abstract class Npc {
 
     public abstract float getEyeHeight();
 
-    public Map<UUID, Boolean> getIsTeamCreated() {
+    public Set<Player> getIsTeamCreated() {
         return isTeamCreated;
     }
 
-    public Map<UUID, Boolean> getIsVisibleForPlayer() {
+    public Set<Player> getIsVisibleForPlayer() {
         return isVisibleForPlayer;
     }
 

@@ -29,7 +29,7 @@ public class NpcTracker extends BukkitRunnable {
                     continue;
                 }
 
-                boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(player.getUniqueId(), false);
+                boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().contains(player);
                 if (playerLocation.getWorld() != npcLocation.getWorld()) {
                     if (isCurrentlyVisible) {
                         npc.remove(player);

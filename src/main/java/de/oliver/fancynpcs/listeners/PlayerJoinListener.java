@@ -16,7 +16,6 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {
-            npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             npc.spawn(event.getPlayer());
         }
 

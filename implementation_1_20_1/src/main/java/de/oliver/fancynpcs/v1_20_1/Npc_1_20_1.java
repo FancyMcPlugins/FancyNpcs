@@ -111,7 +111,7 @@ public class Npc_1_20_1 extends Npc {
             serverPlayer.connection.send(addEntityPacket);
         }
 
-        isVisibleForPlayer.put(player.getUniqueId(), true);
+        isVisibleForPlayer.add(player);
 
         update(player);
     }
@@ -129,7 +129,7 @@ public class Npc_1_20_1 extends Npc {
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
 
-        isVisibleForPlayer.put(serverPlayer.getUUID(), false);
+        isVisibleForPlayer.remove(player);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class Npc_1_20_1 extends Npc {
 
     @Override
     public void update(Player player) {
-        if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
+        if (!isVisibleForPlayer.contains(player)) {
             return;
         }
 
@@ -166,11 +166,11 @@ public class Npc_1_20_1 extends Npc {
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
 
-        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
+        boolean isTeamCreatedForPlayer = isTeamCreated.contains(player);
         serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
 
         if (!isTeamCreatedForPlayer) {
-            isTeamCreated.put(serverPlayer.getUUID(), true);
+            isTeamCreated.add(player);
         }
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
@@ -233,7 +233,7 @@ public class Npc_1_20_1 extends Npc {
 
     @Override
     protected void refreshEntityData(Player player) {
-        if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
+        if (!isVisibleForPlayer.contains(player)) {
             return;
         }
 

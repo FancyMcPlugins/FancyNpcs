@@ -5,9 +5,11 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import org.apache.maven.artifact.versioning.ComparableVersion;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerJoinListener implements Listener {
 
@@ -32,6 +34,15 @@ public class PlayerJoinListener implements Listener {
                     ));
                 }
             }).start();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {
+            npc.getIsTeamCreated().remove(player);
+            npc.remove(player);
         }
     }
 }

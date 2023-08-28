@@ -22,7 +22,7 @@ public class PlayerJoinListener implements Listener {
 
         if (!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")) {
             new Thread(() -> {
-                ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().getNewestVersion();
+                ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().fetchNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion != null && newestVersion.compareTo(currentVersion) > 0) {
                     MessageHelper.warning(event.getPlayer(), config.get("join-update-outdated"));

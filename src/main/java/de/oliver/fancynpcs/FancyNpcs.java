@@ -158,6 +158,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // register bStats
         Metrics metrics = new Metrics(this, 17543);
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");

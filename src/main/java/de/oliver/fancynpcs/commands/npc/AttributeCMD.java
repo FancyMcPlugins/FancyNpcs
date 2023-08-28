@@ -38,7 +38,6 @@ public class AttributeCMD implements Subcommand {
             String attributeName = args[2];
             NpcAttribute attribute = attributeManager.getAttributeByName(npc.getData().getType(), attributeName);
             if (attribute == null) {
-                System.out.println("not found attr");
                 return null;
             }
 

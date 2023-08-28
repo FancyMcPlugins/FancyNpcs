@@ -151,7 +151,6 @@ public class Npc_1_19_4 extends Npc {
     @Override
     public void update(Player player) {
         if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
-            System.out.println("skip for " + player.getName());
             return;
         }
 

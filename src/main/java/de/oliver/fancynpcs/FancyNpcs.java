@@ -3,13 +3,14 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.Metrics;
-import de.oliver.fancylib.VersionFetcher;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
 import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
+import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
+import de.oliver.fancylib.versionFetcher.VersionFetcher;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
@@ -22,6 +23,7 @@ import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
+import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -43,8 +45,8 @@ import java.util.function.Function;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
-    public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", false);
-    public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", false);
+    public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", "Ability to modify several attributes of the npc entity", false);
+    public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
@@ -66,7 +68,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         this.config = new FancyNpcConfig();
         this.languageConfig = new LanguageConfig(this);
         this.featureFlagConfig = new FeatureFlagConfig(this);
-        this.versionFetcher = new VersionFetcher("https://api.modrinth.com/v2/project/fancynpcs/version", "https://modrinth.com/plugin/fancynpcs/versions");
+        this.versionFetcher = new MasterVersionFetcher(getName());
     }
 
     public static FancyNpcs getInstance() {
@@ -112,6 +114,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
+        String mcVersion = Bukkit.getMinecraftVersion();
+
         FancyLib.setPlugin(instance);
         config.reload();
 
@@ -136,7 +140,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         languageConfig.load();
 
         new Thread(() -> {
-            ComparableVersion newestVersion = versionFetcher.getNewestVersion();
+            ComparableVersion newestVersion = versionFetcher.fetchNewestVersion();
             ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
             if (newestVersion == null) {
                 getLogger().warning("Could not fetch latest plugin version");
@@ -159,6 +163,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // register bStats
         Metrics metrics = new Metrics(this, 17543);
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
@@ -171,7 +177,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerQuitListener(), instance);
-        pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+
+        if (mcVersion.equals("1.19.4")) // use packet injection method
+            pluginManager.registerEvents(new PacketReader_1_19_4(), instance);
+        else
+            pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+
         if (PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
             pluginManager.registerEvents(new PlayerNpcsListener(), instance);
         }

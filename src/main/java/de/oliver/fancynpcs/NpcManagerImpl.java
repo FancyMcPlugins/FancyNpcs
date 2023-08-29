@@ -98,6 +98,7 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
+        npcConfig.set("npcs", null);
 
         for (Npc npc : npcs.values()) {
             if (!npc.isSaveToFile()) {

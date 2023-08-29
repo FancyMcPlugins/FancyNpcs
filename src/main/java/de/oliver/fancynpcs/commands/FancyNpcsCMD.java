@@ -37,7 +37,7 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
             MessageHelper.info(sender, config.get("commands-version-checking"));
             new Thread(() -> {
-                ComparableVersion newestVersion = plugin.getVersionFetcher().getNewestVersion();
+                ComparableVersion newestVersion = plugin.getVersionFetcher().fetchNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion == null) {
                     MessageHelper.error(sender, config.get("commands-version-failed"));

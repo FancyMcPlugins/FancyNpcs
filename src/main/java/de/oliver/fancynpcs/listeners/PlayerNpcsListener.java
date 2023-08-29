@@ -13,6 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
+import java.util.Comparator;
+import java.util.Map;
+
 public class PlayerNpcsListener implements Listener {
 
     private static final boolean isUsingPlotSquared = FancyNpcs.getInstance().isUsingPlotSquared();
@@ -29,7 +32,13 @@ public class PlayerNpcsListener implements Listener {
                 return;
             }
         }
-        int maxNpcs = FancyNpcs.getInstance().getFancyNpcConfig().getMaxNpcsPerPlayer();
+        int maxNpcs = FancyNpcs.getInstance().getFancyNpcConfig().getMaxNpcsPerPermission()
+                .entrySet().stream()
+                .filter(entry -> p.hasPermission(entry.getKey()))
+                .max(Comparator.comparingInt(Map.Entry::getValue))
+                .map(Map.Entry::getValue)
+                .orElse(Integer.MAX_VALUE);
+
         int npcAmount = 0;
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             if (npc.getData().getCreator().equals(p.getUniqueId()))

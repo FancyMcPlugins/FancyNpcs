@@ -3,8 +3,8 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.ConfigHelper;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FancyNpcConfig {
     private boolean muteVersionNotification;
@@ -13,7 +13,7 @@ public class FancyNpcConfig {
     private int turnToPlayerDistance;
     private int visibilityDistance;
     private List<String> blockedCommands;
-    private int maxNpcsPerPlayer;
+    private Map<String, Integer> maxNpcsPerPermission;
 
     public void reload() {
         FancyNpcs.getInstance().reloadConfig();
@@ -25,7 +25,20 @@ public class FancyNpcConfig {
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
-        maxNpcsPerPlayer = (int) ConfigHelper.getOrDefault(config, "max_npcs_per_player", -1);
+
+        if (!config.isSet("max-npcs")) {
+            List<Map<String, Integer>> entries = new ArrayList<>();
+            entries.add(Map.of("fancynpcs.max-npcs.5", 5));
+            entries.add(Map.of("fancynpcs.max-npcs.10", 10));
+            config.set("max-npcs", entries);
+            this.maxNpcsPerPermission = new HashMap<>();
+            this.maxNpcsPerPermission.put("fancynpcs.max-npcs.5", 5);
+            this.maxNpcsPerPermission.put("fancynpcs.max-npcs.10", 10);
+        } else {
+            this.maxNpcsPerPermission = config.getMapList("max-npcs").stream()
+                    .flatMap(map -> map.entrySet().stream())
+                    .collect(Collectors.toMap(entry -> (String) entry.getKey(), entry -> (Integer) entry.getValue()));
+        }
 
         FancyNpcs.getInstance().saveConfig();
     }
@@ -54,7 +67,7 @@ public class FancyNpcConfig {
         return blockedCommands;
     }
 
-    public int getMaxNpcsPerPlayer() {
-        return maxNpcsPerPlayer == -1 ? Integer.MAX_VALUE : maxNpcsPerPlayer;
+    public Map<String, Integer> getMaxNpcsPerPermission() {
+        return maxNpcsPerPermission;
     }
 }

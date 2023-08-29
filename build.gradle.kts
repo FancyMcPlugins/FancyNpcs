@@ -29,7 +29,7 @@ dependencies {
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.3.1")
+    implementation("de.oliver:FancyLib:1.0.4")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")

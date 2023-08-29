@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.v1_19_4;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
@@ -63,7 +64,7 @@ public class Npc_1_19_4 extends Npc {
 
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().put("textures", new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature()));
+                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
             }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
@@ -87,7 +88,7 @@ public class Npc_1_19_4 extends Npc {
         if (npc instanceof ServerPlayer npcPlayer) {
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                npcPlayer.getGameProfile().getProperties().put("textures", new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature()));
+                npcPlayer.getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
             }
 
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
@@ -151,7 +152,6 @@ public class Npc_1_19_4 extends Npc {
     @Override
     public void update(Player player) {
         if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
-            System.out.println("skip for " + player.getName());
             return;
         }
 
@@ -175,7 +175,10 @@ public class Npc_1_19_4 extends Npc {
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
-        npc.setCustomName(Component.empty());
+        if (!(npc instanceof ServerPlayer)) {
+            npc.setCustomName(vanillaComponent);
+        }
+
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
             npc.setCustomNameVisible(false);
             team.setNameTagVisibility(Team.Visibility.NEVER);
@@ -183,9 +186,9 @@ public class Npc_1_19_4 extends Npc {
             npc.setCustomNameVisible(true);
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }
-        team.setPlayerPrefix(vanillaComponent);
 
         if (npc instanceof ServerPlayer npcPlayer) {
+            team.setPlayerPrefix(vanillaComponent);
             npcPlayer.listName = vanillaComponent;
 
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);

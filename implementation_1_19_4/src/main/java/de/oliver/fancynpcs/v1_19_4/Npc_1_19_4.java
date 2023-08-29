@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.v1_19_4;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
@@ -63,7 +64,7 @@ public class Npc_1_19_4 extends Npc {
 
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().put("textures", new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature()));
+                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
             }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
@@ -87,7 +88,7 @@ public class Npc_1_19_4 extends Npc {
         if (npc instanceof ServerPlayer npcPlayer) {
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                npcPlayer.getGameProfile().getProperties().put("textures", new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature()));
+                npcPlayer.getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
             }
 
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);

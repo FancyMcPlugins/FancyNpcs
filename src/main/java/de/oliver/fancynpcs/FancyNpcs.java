@@ -22,6 +22,7 @@ import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
+import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -112,6 +113,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
+        String mcVersion = Bukkit.getMinecraftVersion();
+
         FancyLib.setPlugin(instance);
         config.reload();
 
@@ -172,7 +175,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
-        pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+
+        if (mcVersion.equals("1.19.4")) // use packet injection method
+            pluginManager.registerEvents(new PacketReader_1_19_4(), instance);
+        else
+            pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+
         if (PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
             pluginManager.registerEvents(new PlayerNpcsListener(), instance);
         }

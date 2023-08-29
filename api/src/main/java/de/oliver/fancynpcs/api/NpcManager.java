@@ -9,6 +9,8 @@ public interface NpcManager {
 
     void removeNpc(Npc npc);
 
+    Npc getNpc(int entityId);
+
     Npc getNpc(String name);
 
     Npc getNpc(String name, UUID creator);

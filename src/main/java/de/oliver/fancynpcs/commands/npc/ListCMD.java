@@ -25,11 +25,11 @@ public class ListCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (!player.hasPermission("fancynpcs.npc.list") && !player.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(player, lang.get("npc_commands-no_permission"));
+            MessageHelper.error(player, lang.get("no-permission-subcommand"));
             return false;
         }
 
-        MessageHelper.info(player, lang.get("npc_commands-list-header"));
+        MessageHelper.info(player, lang.get("npc-command-list-header"));
 
         Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
@@ -39,12 +39,12 @@ public class ListCMD implements Subcommand {
         }
 
         if (allNpcs.isEmpty()) {
-            MessageHelper.warning(player, lang.get("npc_commands-list-no_npcs"));
+            MessageHelper.warning(player, lang.get("npc-command-list-no-npcs"));
         } else {
             final DecimalFormat df = new DecimalFormat("#########.##");
             for (Npc n : allNpcs) {
                 MessageHelper.info(player, lang.get(
-                                "npc_commands-list-info",
+                                "npc-command-list-tp-hover",
                                 "name", n.getData().getName(),
                                 "x", df.format(n.getData().getLocation().x()),
                                 "y", df.format(n.getData().getLocation().y()),

@@ -28,12 +28,12 @@ public class CreateCMD implements Subcommand {
 
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
             if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId()) != null) {
-                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                MessageHelper.error(player, lang.get("npc-command-create-name-already-exists"));
                 return false;
             }
         } else {
             if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
-                MessageHelper.error(player, lang.get("npc_commands-create-exist"));
+                MessageHelper.error(player, lang.get("npc-command-create-name-already-exists"));
                 return false;
             }
         }
@@ -53,9 +53,9 @@ public class CreateCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(createdNpc);
             createdNpc.spawnForAll();
 
-            MessageHelper.success(player, lang.get("npc_commands-create-created"));
+            MessageHelper.success(player, lang.get("npc-command-create-created"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-create-failed"));
+            MessageHelper.error(player, lang.get("npc-command-create-cancelled"));
         }
 
         return true;

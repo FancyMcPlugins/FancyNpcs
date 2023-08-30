@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
 
-    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
+    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
     private final AttributeCMD attributeCMD = new AttributeCMD();
 
     @Override
@@ -30,6 +30,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         // TODO: move all of this into the subcommands
 
         if (!(sender instanceof Player p)) {
+            MessageHelper.error(sender, lang.get("only-players"));
             return null;
         }
 
@@ -108,35 +109,35 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if (!(sender instanceof Player p)) {
-            MessageHelper.error(sender, config.get("npc_commands.only_player"));
+            MessageHelper.error(sender, lang.get("npc-command.only_player"));
             return false;
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")) {
-                MessageHelper.error(p, config.get("npc_commands-no_permission"));
+                MessageHelper.error(p, lang.get("no-permission-subcommand"));
                 return false;
             }
 
-            MessageHelper.info(p, config.get("npc_commands-help-header"));
-            MessageHelper.info(p, config.get("npc_commands-help-create"));
-            MessageHelper.info(p, config.get("npc_commands-help-remove"));
-            MessageHelper.info(p, config.get("npc_commands-help-copy"));
-            MessageHelper.info(p, config.get("npc_commands-help-list"));
-            MessageHelper.info(p, config.get("npc_commands-help-skin"));
-            MessageHelper.info(p, config.get("npc_commands-help-type"));
-            MessageHelper.info(p, config.get("npc_commands-help-moveHere"));
-            MessageHelper.info(p, config.get("npc_commands-help-displayName"));
-            MessageHelper.info(p, config.get("npc_commands-help-equipment"));
-            MessageHelper.info(p, config.get("npc_commands-help-message"));
-            MessageHelper.info(p, config.get("npc_commands-help-playerCommand"));
-            MessageHelper.info(p, config.get("npc_commands-help-serverCommand"));
-            MessageHelper.info(p, config.get("npc_commands-help-showInTab"));
-            MessageHelper.info(p, config.get("npc_commands-help-glowing"));
-            MessageHelper.info(p, config.get("npc_commands-help-glowingColor"));
-            MessageHelper.info(p, config.get("npc_commands-help-turnToPlayer"));
+            MessageHelper.info(p, lang.get("npc-command-help-header"));
+            MessageHelper.info(p, lang.get("npc-command-help-create"));
+            MessageHelper.info(p, lang.get("npc-command-help-remove"));
+            MessageHelper.info(p, lang.get("npc-command-help-copy"));
+            MessageHelper.info(p, lang.get("npc-command-help-list"));
+            MessageHelper.info(p, lang.get("npc-command-help-skin"));
+            MessageHelper.info(p, lang.get("npc-command-help-type"));
+            MessageHelper.info(p, lang.get("npc-command-help-moveHere"));
+            MessageHelper.info(p, lang.get("npc-command-help-displayName"));
+            MessageHelper.info(p, lang.get("npc-command-help-equipment"));
+            MessageHelper.info(p, lang.get("npc-command-help-message"));
+            MessageHelper.info(p, lang.get("npc-command-help-playerCommand"));
+            MessageHelper.info(p, lang.get("npc-command-help-serverCommand"));
+            MessageHelper.info(p, lang.get("npc-command-help-showInTab"));
+            MessageHelper.info(p, lang.get("npc-command-help-glowing"));
+            MessageHelper.info(p, lang.get("npc-command-help-glowingColor"));
+            MessageHelper.info(p, lang.get("npc-command-help-turnToPlayer"));
             if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                MessageHelper.info(p, config.get("npc_commands-help-attribute"));
+                MessageHelper.info(p, lang.get("npc-command-help-attribute"));
             }
 
             return true;
@@ -147,7 +148,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         }
 
         if (args.length < 2) {
-            MessageHelper.error(p, config.get("npc_commands-wrong_usage"));
+            MessageHelper.error(p, lang.get("wrong-usage"));
             return false;
         }
 
@@ -158,7 +159,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
 
         if (!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(p, config.get("npc_commands-no_permission"));
+            MessageHelper.error(p, lang.get("no-permission-subcommand"));
             return false;
         }
 
@@ -230,12 +231,12 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             default -> {
-                MessageHelper.error(p, config.get("npc_commands-wrong_usage"));
+                MessageHelper.error(p, lang.get("wrong-usage"));
                 return false;
             }
         }
 
-        MessageHelper.error(p, config.get("npc_commands-wrong_usage"));
+        MessageHelper.error(p, lang.get("wrong-usage"));
         return false;
     }
 }

@@ -25,19 +25,19 @@ public class TypeCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         EntityType type = EntityType.fromName(args[2].toLowerCase());
 
         if (type == null) {
-            MessageHelper.error(player, lang.get("npc_commands-type-invalid"));
+            MessageHelper.error(player, lang.get("npc-command-type-invalid"));
             return false;
         }
 
@@ -58,9 +58,9 @@ public class TypeCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            MessageHelper.success(player, lang.get("npc_commands-type-updated"));
+            MessageHelper.success(player, lang.get("npc-command-type-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-type-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

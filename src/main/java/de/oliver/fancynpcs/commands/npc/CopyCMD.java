@@ -26,12 +26,12 @@ public class CopyCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
@@ -65,9 +65,9 @@ public class CopyCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
 
-            MessageHelper.success(player, lang.get("npc_commands-copy-success"));
+            MessageHelper.success(player, lang.get("npc-command-copy-success"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-copy-failed"));
+            MessageHelper.error(player, lang.get("npc-command-copy-cancelled"));
         }
 
         return true;

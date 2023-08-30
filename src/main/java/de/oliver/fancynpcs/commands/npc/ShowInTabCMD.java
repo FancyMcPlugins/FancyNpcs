@@ -25,18 +25,18 @@ public class ShowInTabCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(player, lang.get("npc_commands-must_player"));
+            MessageHelper.error(player, lang.get("npc-must-be-player"));
             return false;
         }
 
@@ -45,7 +45,7 @@ public class ShowInTabCMD implements Subcommand {
             case "true" -> showInTab = true;
             case "false" -> showInTab = false;
             default -> {
-                MessageHelper.error(player, lang.get("npc_commands-showInTab-invalid"));
+                MessageHelper.error(player, lang.get("npc-command-showInTab-invalid-argument"));
                 return false;
             }
         }
@@ -54,7 +54,7 @@ public class ShowInTabCMD implements Subcommand {
         npcModifyEvent.callEvent();
 
         if (showInTab == npc.getData().isShowInTab()) {
-            MessageHelper.warning(player, lang.get("npc_commands-showInTab-same"));
+            MessageHelper.warning(player, lang.get("npc-command-showInTab-same"));
             return false;
         }
 
@@ -63,12 +63,12 @@ public class ShowInTabCMD implements Subcommand {
             npc.updateForAll();
 
             if (showInTab) {
-                MessageHelper.success(player, lang.get("npc_commands-showInTab-true"));
+                MessageHelper.success(player, lang.get("npc-command-showInTab-true"));
             } else {
-                MessageHelper.success(player, lang.get("npc_commands-showInTab-false"));
+                MessageHelper.success(player, lang.get("npc-command-showInTab-false"));
             }
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-showInTab-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

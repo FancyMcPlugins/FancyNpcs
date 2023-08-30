@@ -24,12 +24,12 @@ public class DisplayNameCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
@@ -45,9 +45,9 @@ public class DisplayNameCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setDisplayName(displayName.toString());
             npc.updateForAll();
-            MessageHelper.success(player, lang.get("npc_commands-displayName-updated"));
+            MessageHelper.success(player, lang.get("npc-command-displayName-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-displayName-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

@@ -25,19 +25,19 @@ public class GlowingColorCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         NamedTextColor color = NamedTextColor.NAMES.value(args[2]);
         if (color == null) {
-            MessageHelper.error(player, lang.get("npc_commands-glowingColor-invalid"));
+            MessageHelper.error(player, lang.get("npc-command-glowingColor-invalid"));
             return false;
         }
 
@@ -47,9 +47,9 @@ public class GlowingColorCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setGlowingColor(color);
             npc.updateForAll();
-            MessageHelper.success(player, lang.get("npc_commands-glowingColor-updated"));
+            MessageHelper.success(player, lang.get("npc-command-glowingColor-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-glowingColor-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

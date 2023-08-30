@@ -28,7 +28,7 @@ public class SkinCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length != 3 && args.length != 2) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
@@ -36,19 +36,19 @@ public class SkinCMD implements Subcommand {
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(player, lang.get("npc_commands-must_player"));
+            MessageHelper.error(player, lang.get("npc-must-be-player"));
             return false;
         }
 
         if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
             UUID uuid = UUIDFetcher.getUUID(skinName);
             if (uuid == null) {
-                MessageHelper.error(player, lang.get("npc_commands-skin-invalid"));
+                MessageHelper.error(player, lang.get("npc-command-skin-invalid"));
                 return false;
             }
             skinName = uuid.toString();
@@ -56,9 +56,9 @@ public class SkinCMD implements Subcommand {
 
         SkinFetcher skinFetcher = new SkinFetcher(skinName);
         if (!skinFetcher.isLoaded()) {
-            MessageHelper.error(player, lang.get("npc_commands-message-failed_header"));
-            MessageHelper.error(player, lang.get("npc_commands-skin-failed_url"));
-            MessageHelper.error(player, lang.get("npc_commands-skin-failed_limited"));
+            MessageHelper.error(player, lang.get("npc-command-message-failed_header"));
+            MessageHelper.error(player, lang.get("npc-command-skin-failed_url"));
+            MessageHelper.error(player, lang.get("npc-command-skin-failed_limited"));
             return false;
         }
 
@@ -70,9 +70,9 @@ public class SkinCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            MessageHelper.success(player, lang.get("npc_commands-skin-updated"));
+            MessageHelper.success(player, lang.get("npc-command-skin-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-skin-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

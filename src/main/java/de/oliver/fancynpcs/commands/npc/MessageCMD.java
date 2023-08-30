@@ -26,13 +26,13 @@ public class MessageCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
@@ -57,9 +57,9 @@ public class MessageCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setMessage(message);
-            MessageHelper.success(player, lang.get("npc_commands-message-updated"));
+            MessageHelper.success(player, lang.get("npc-command-message-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-message-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

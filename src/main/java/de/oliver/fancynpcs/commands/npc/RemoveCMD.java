@@ -24,7 +24,7 @@ public class RemoveCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
@@ -33,9 +33,9 @@ public class RemoveCMD implements Subcommand {
         if (!npcRemoveEvent.isCancelled()) {
             npc.removeForAll();
             FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
-            MessageHelper.success(player, lang.get("npc_commands-remove-removed"));
+            MessageHelper.success(player, lang.get("npc-command-remove-removed"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-remove-failed"));
+            MessageHelper.error(player, lang.get("npc-command-remove-cancelled"));
         }
 
         return false;

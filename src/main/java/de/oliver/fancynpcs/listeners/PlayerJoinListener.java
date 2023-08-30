@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerJoinListener implements Listener {
 
-    private final LanguageConfig config = FancyNpcs.getInstance().getLanguageConfig();
+    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -32,9 +32,9 @@ public class PlayerJoinListener implements Listener {
                 ComparableVersion newestVersion = FancyNpcs.getInstance().getVersionFetcher().fetchNewestVersion();
                 ComparableVersion currentVersion = new ComparableVersion(FancyNpcs.getInstance().getDescription().getVersion());
                 if (newestVersion != null && newestVersion.compareTo(currentVersion) > 0) {
-                    MessageHelper.warning(event.getPlayer(), config.get("join-update-outdated"));
-                    MessageHelper.warning(event.getPlayer(), config.get(
-                            "join-update-new_version",
+                    MessageHelper.warning(event.getPlayer(), lang.get("outdated-version"));
+                    MessageHelper.warning(event.getPlayer(), lang.get(
+                            "download-newest-version",
                             "new_version", newestVersion.toString(),
                             "download_url", FancyNpcs.getInstance().getVersionFetcher().getDownloadUrl()
                     ));

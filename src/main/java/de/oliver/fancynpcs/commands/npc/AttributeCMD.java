@@ -52,12 +52,12 @@ public class AttributeCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
         if (args.length < 4) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
@@ -71,17 +71,17 @@ public class AttributeCMD implements Subcommand {
 
         NpcAttribute attribute = attributeManager.getAttributeByName(npc.getData().getType(), attributeName);
         if (attribute == null) {
-            MessageHelper.error(player, lang.get("npc_commands-attribute-attribute-not-found"));
+            MessageHelper.error(player, lang.get("npc-command-attribute-attribute-not-found"));
             return false;
         }
 
         if (!attribute.getTypes().contains(npc.getData().getType())) {
-            MessageHelper.error(player, lang.get("npc_commands-attribute-wrong-entity-type"));
+            MessageHelper.error(player, lang.get("npc-command-attribute-wrong-entity-type"));
             return false;
         }
 
         if (!attribute.isValidValue(value)) {
-            MessageHelper.error(player, lang.get("npc_commands-attribute-invalid-value"));
+            MessageHelper.error(player, lang.get("npc-command-attribute-invalid-value"));
             return false;
         }
 
@@ -89,14 +89,14 @@ public class AttributeCMD implements Subcommand {
         npcModifyEvent.callEvent();
 
         if (npcModifyEvent.isCancelled()) {
-            MessageHelper.error(player, lang.get("npc_commands-attribute-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
             return false;
         }
 
         npc.getData().addAttribute(attribute, value);
         npc.updateForAll();
 
-        MessageHelper.success(player, lang.get("npc_commands-attribute-success"));
+        MessageHelper.success(player, lang.get("npc-command-attribute-success"));
 
         return false;
     }

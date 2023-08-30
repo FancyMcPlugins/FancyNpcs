@@ -25,7 +25,7 @@ public class MoveHereCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
@@ -37,9 +37,9 @@ public class MoveHereCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setLocation(location);
             npc.update(player);
-            MessageHelper.success(player, lang.get("npc_commands-moveHere-moved"));
+            MessageHelper.success(player, lang.get("npc-command-moveHere-moved"));
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-moveHere-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

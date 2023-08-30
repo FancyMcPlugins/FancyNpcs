@@ -1,108 +1,71 @@
 messages:
-  join-update-outdated: You are using an outdated version of the FancyNpcs Plugin
-  join-update-new_version: '[!] Please download the newest version ({new_version}):
-    <click:open_url:''{download_url}''><u>click here</u></click>'
-  commands-version-checking: <i>Checking version, please wait...</i>
-  commands-version-failed: Could not find latest version
-  commands-version-outdated: You are using an outdated version of the FancyHolograms
-    Plugin
-  commands-version-download: '[!] Please download the newest version ({new_version}): <click:open_url:''{download_url}''><u>click
-    here</u></click>'
-  commands-version-latest: You are using the latest version of the FancyNpcs Plugin
-    ({current_version})
-  commands-reload: Reloaded the config
-  commands-save: Saved all NPCs
-  commands-help: /FancyNpcs <version|reload|save>
+  outdated-version: You are using an outdated version of the FancyNpcs Plugin
+  download-newest-version: '[!] Please download the newest version ({new_version}): <click:open_url:''{download_url}''><u>click here</u></click>'
+  fetching-version: <i>Checking version, please wait...</i>
+  fetching-version-cancelled: Could not find latest version
+  fetching-version-success: You are using the latest version of the FancyNpcs Plugin ({current_version})
+  reloaded-config: Reloaded the config
+  saved-npcs: Saved all NPCs
+  fancynpcs-syntax: /FancyNpcs <version|reload|save>
   illegal-command: This command is not allowed to use in playerCommand, serverCommand and message
-  npc_commands-only_player: Only players can execute this command
-  npc_commands-no_permission: You don't have permission for this subcommand
-  npc_commands-wrong_usage: 'Wrong usage: /npc help'
-  npc_commands-not_found: Could not find NPC
-  npc_commands-must_player: Npc's type must be Player to do this
-  npc_commands-help-header: '<b>FancyNpcs Plugin help:'
-  npc_commands-help-create: ' - /npc create (name) <dark_gray>- <white>Creates a new
-    npc at your location'
-  npc_commands-help-remove: ' - /npc remove (name) <dark_gray>- <white>Removes an
-    npc'
-  npc_commands-help-copy: ' - /npc copy (name) (new name) <dark_gray>- <white>Copies an
-      npc'
-  npc_commands-help-list: ' - /npc list <dark_gray>- <white>Summary of all npcs'
-  npc_commands-help-skin: ' - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the
-    skin for an npc'
-  npc_commands-help-type: ' - /npc type (name) (type) <dark_gray>- <white>Sets the
-    entity type for an npc'
-  npc_commands-help-moveHere: ' - /npc movehere (name) <dark_gray>- <white>Teleports
-    an npc to your location'
-  npc_commands-help-displayName: ' - /npc displayName (name) (displayName ...) <dark_gray>-
-    <white>Sets the displayname for an npc'
-  npc_commands-help-equipment: ' - /npc equipment (name) (slot) <dark_gray>- <white>Equips
-    the npc with the item you are holding'
-  npc_commands-help-message: ' - /npc message (name) (none|message) <dark_gray>- <white>Set
-    NPC message'
-  npc_commands-help-playerCommand: ' - /npc playerCommand (name) (none|command ...) <dark_gray>-
-    <white>Executes the command on a player when interacting'
-  npc_commands-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>-
-    <white>The command will be executed by the console when someone interacts with
-    the npc'
-  npc_commands-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>-
-    <white>Whether the NPC will be shown in tab-list or not'
-  npc_commands-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether
-    the NPC will glow or not'
-  npc_commands-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>-
-    <white>The color of the glowing effect'
-  npc_commands-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>-
-    <white>Whether the NPC will turn to you or not'
-  npc_commands-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>-
-      <white>Set certain npc attributes'
-  npc_commands-list-header: <b>All NPCs:</b>
-  npc_commands-list-no_npcs: There are no NPCs. Use '/npc create' to create one
-  npc_commands-list-info: <hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'>
-    - {name} ({x}/{y}/{z})</click></hover>
-  npc_commands-create-exist: An npc with that name already exists
-  npc_commands-create-created: Created new NPC
-  npc_commands-create-failed: Creation has been cancelled
-  npc_commands-copy-success: Copied NPC
-  npc_commands-copy-failed: Copying has been cancelled
-  npc_commands-remove-removed: Removed NPC
-  npc_commands-remove-failed: Removing has been cancelled
-  npc_commands-moveHere-moved: Moved NPC to your location
-  npc_commands-moveHere-failed: Modification has been cancelled
-  npc_commands-message-updated: Updated Message
-  npc_commands-message-failed: Modification has been cancelled
-  npc_commands-skin-invalid: Invalid username
-  npc_commands-skin-failed_header: 'Could not load skin. Possible causes:'
-  npc_commands-skin-failed_url: ' - Invalid URL (check the url)'
-  npc_commands-skin-failed_limited: ' - Rate limit reached (try again later)'
-  npc_commands-skin-updated: Updated skin
-  npc_commands-skin-failed: Modification has been cancelled
-  npc_commands-displayName-updated: Updated display name
-  npc_commands-displayName-failed: Modification has been cancelled
-  npc_commands-equipment-invalid: Invalid equipment slot
-  npc_commands-equipment-updated: Updated equipment
-  npc_commands-equipment-failed: Modification has been cancelled
-  npc_commands-serverCommand-updated: Updated server command to be executed
-  npc_commands-serverCommand-failed: Modification has been cancelled
-  npc_commands-playerCommand-updated: Updated player command to be executed
-  npc_commands-playerCommand-failed: Modification has been cancelled
-  npc_commands-showInTab-invalid: 'Invalid argument (expected: ''true'' or ''false'')'
-  npc_commands-showInTab-same: Nothing has changed
-  npc_commands-showInTab-true: NPC will now be shown in tab
-  npc_commands-showInTab-false: NPC will no longer be shown in tab
-  npc_commands-showInTab-failed: Modification has been cancelled
-  npc_commands-glowing-true: NPC will now glow
-  npc_commands-glowing-false: NPC will no longer glow
-  npc_commands-glowing-failed: Modification has been cancelled
-  npc_commands-glowingColor-invalid: Invalid color
-  npc_commands-glowingColor-updated: Updated glowing color
-  npc_commands-glowingColor-failed: Modification has been cancelled
-  npc_commands-turnToPlayer-true: NPC will now turn to the players
-  npc_commands-turnToPlayer-false: NPC will no longer turn to the players
-  npc_commands-turnToPlayer-failed: Modification has been cancelled
-  npc_commands-type-invalid: Invalid type
-  npc_commands-type-updated: Updated entity type
-  npc_commands-type-failed: Modification has been cancelled
-  npc_commands-attribute-attribute-not-found: Could not find attribute
-  npc_commands-attribute-wrong-entity-type: This attribute can not be applied to this entity type
-  npc_commands-attribute-invalid-value: Invalid attribute value
-  npc_commands-attribute-success: Successfully set the attribute
-  npc_commands-attribute-failed: Modification has been cancelled
+  only-players: Only players can execute this command
+  no-permission-subcommand: You don't have permission for this subcommand
+  wrong-usage: 'Wrong usage: /npc help'
+  npc-not-found: Could not find NPC
+  npc-must-be-player: Npc's type must be Player to do this
+  npc-command-help-header: '<b>FancyNpcs Plugin help:'
+  npc-command-help-create: ' - /npc create (name) <dark_gray>- <white>Creates a new npc at your location'
+  npc-command-help-remove: ' - /npc remove (name) <dark_gray>- <white>Removes an npc'
+  npc-command-help-copy: ' - /npc copy (name) (new name) <dark_gray>- <white>Copies an npc'
+  npc-command-help-list: ' - /npc list <dark_gray>- <white>Summary of all npcs'
+  npc-command-help-skin: ' - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc'
+  npc-command-help-type: ' - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc'
+  npc-command-help-moveHere: ' - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location'
+  npc-command-help-displayName: ' - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc'
+  npc-command-help-equipment: ' - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding'
+  npc-command-help-message: ' - /npc message (name) (none|message) <dark_gray>- <white>Set NPC message'
+  npc-command-help-playerCommand: ' - /npc playerCommand (name) (none|command ...) <dark_gray>- <white>Executes the command on a player when interacting'
+  npc-command-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc'
+  npc-command-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not'
+  npc-command-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not'
+  npc-command-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect'
+  npc-command-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not'
+  npc-command-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>- <white>Set certain npc attributes'
+  npc-command-list-header: <b>All NPCs:</b>
+  npc-command-list-no-npcs: There are no NPCs. Use '/npc create' to create one
+  npc-command-list-tp-hover: <hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>
+  npc-command-create-name-already-exists: An npc with that name already exists
+  npc-command-create-created: Created new NPC
+  npc-command-create-cancelled: Creation has been cancelled
+  npc-command-copy-success: Copied NPC
+  npc-command-copy-cancelled: Copying has been cancelled
+  npc-command-remove-removed: Removed NPC
+  npc-command-remove-cancelled: Removing has been cancelled
+  npc-command-moveHere-moved: Moved NPC to your location
+  npc-command-message-updated: Updated Message
+  npc-command-skin-invalid: Invalid username or url
+  npc-command-skin-failed_header: 'Could not load skin. Possible causes:'
+  npc-command-skin-failed_url: ' - Invalid URL (check the url)'
+  npc-command-skin-failed_limited: ' - Rate limit reached (try again later)'
+  npc-command-skin-updated: Updated skin
+  npc-command-displayName-updated: Updated display name
+  npc-command-equipment-invalid-slot: Invalid equipment slot
+  npc-command-equipment-updated: Updated equipment
+  npc-command-serverCommand-updated: Updated server command to be executed
+  npc-command-playerCommand-updated: Updated player command to be executed
+  npc-command-showInTab-invalid-argument: 'Invalid argument (expected: ''true'' or ''false'')'
+  npc-command-showInTab-same: Nothing has changed
+  npc-command-showInTab-true: NPC will now be shown in tab
+  npc-command-showInTab-false: NPC will no longer be shown in tab
+  npc-command-glowing-true: NPC will now glow
+  npc-command-glowing-false: NPC will no longer glow
+  npc-command-glowingColor-invalid: Invalid color
+  npc-command-glowingColor-updated: Updated glowing color
+  npc-command-turnToPlayer-true: NPC will now turn to the players
+  npc-command-turnToPlayer-false: NPC will no longer turn to the players
+  npc-command-type-invalid: Invalid type
+  npc-command-type-updated: Updated entity type
+  npc-command-attribute-attribute-not-found: Could not find attribute
+  npc-command-attribute-wrong-entity-type: This attribute can not be applied to this entity type
+  npc-command-attribute-invalid-value: Invalid attribute value
+  npc-command-attribute-success: Successfully set the attribute

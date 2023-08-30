@@ -24,13 +24,13 @@ public class GlowingCMD implements Subcommand {
     @Override
     public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc_commands-not_found"));
+            MessageHelper.error(player, lang.get("npc-not-found"));
             return false;
         }
 
@@ -38,7 +38,7 @@ public class GlowingCMD implements Subcommand {
         try {
             glowing = Boolean.parseBoolean(args[2]);
         } catch (Exception e) {
-            MessageHelper.error(player, lang.get("npc_commands-wrong_usage"));
+            MessageHelper.error(player, lang.get("wrong-usage"));
             return false;
         }
 
@@ -50,12 +50,12 @@ public class GlowingCMD implements Subcommand {
             npc.updateForAll();
 
             if (glowing) {
-                MessageHelper.success(player, lang.get("npc_commands-glowing-true"));
+                MessageHelper.success(player, lang.get("npc-command-glowing-true"));
             } else {
-                MessageHelper.success(player, lang.get("npc_commands-glowing-false"));
+                MessageHelper.success(player, lang.get("npc-command-glowing-false"));
             }
         } else {
-            MessageHelper.error(player, lang.get("npc_commands-glowing-failed"));
+            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

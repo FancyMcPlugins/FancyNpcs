@@ -26,7 +26,7 @@ public class TropicalFishAttributes {
         ));
 
         attributes.add(new NpcAttribute(
-                "baseColor",
+                "base_color",
                 Arrays.stream(DyeColor.values())
                         .map(Enum::name)
                         .toList(),
@@ -35,7 +35,7 @@ public class TropicalFishAttributes {
         ));
 
         attributes.add(new NpcAttribute(
-                "patternColor",
+                "pattern_color",
                 Arrays.stream(DyeColor.values())
                         .map(Enum::name)
                         .toList(),

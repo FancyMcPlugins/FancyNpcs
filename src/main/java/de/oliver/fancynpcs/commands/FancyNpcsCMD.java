@@ -61,7 +61,6 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
             MessageHelper.success(sender, lang.get("saved-npcs"));
         } else if (args.length >= 1 && args[0].equalsIgnoreCase("featureFlags")) {
             MessageHelper.info(sender, "<b>Feature flags:</b>");
-            MessageHelper.info(sender, " - npc-attributes: " + FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled());
             MessageHelper.info(sender, " - player-npcs: " + FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled());
         } else {
             MessageHelper.info(sender, lang.get("fancynpcs-syntax"));

@@ -37,15 +37,9 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type")
+            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type", "attribute")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
-
-            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                suggestions.addAll(Stream.of("attribute")
-                        .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
-                        .toList());
-            }
 
         } else if (args.length == 2 && !args[0].equalsIgnoreCase("create")) {
             suggestions.addAll(FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()
@@ -96,9 +90,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         switch (subcommand.toLowerCase()) {
             case "attribute" -> {
-                if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                    return attributeCMD.tabcompletion(p, npc, args);
-                }
+                return attributeCMD.tabcompletion(p, npc, args);
             }
         }
 
@@ -136,9 +128,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(p, lang.get("npc-command-help-glowing"));
             MessageHelper.info(p, lang.get("npc-command-help-glowingColor"));
             MessageHelper.info(p, lang.get("npc-command-help-turnToPlayer"));
-            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                MessageHelper.info(p, lang.get("npc-command-help-attribute"));
-            }
+            MessageHelper.info(p, lang.get("npc-command-help-attribute"));
 
             return true;
         }
@@ -225,9 +215,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "attribute" -> {
-                if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                    return attributeCMD.run(p, npc, args);
-                }
+                return attributeCMD.run(p, npc, args);
             }
 
             default -> {
@@ -235,8 +223,5 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 return false;
             }
         }
-
-        MessageHelper.error(p, lang.get("wrong-usage"));
-        return false;
     }
 }

@@ -149,11 +149,9 @@ public class NpcManagerImpl implements NpcManager {
                 npcConfig.set("npcs." + data.getId() + ".playerCommand", data.getPlayerCommand());
             }
 
-            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
-                    String value = data.getAttributes().getOrDefault(attribute, null);
-                    npcConfig.set("npcs." + data.getId() + ".attributes." + attribute.getName(), value);
-                }
+            for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
+                String value = data.getAttributes().getOrDefault(attribute, null);
+                npcConfig.set("npcs." + data.getId() + ".attributes." + attribute.getName(), value);
             }
 
             npc.setDirty(false);
@@ -231,21 +229,19 @@ public class NpcManagerImpl implements NpcManager {
             String message = npcConfig.getString("npcs." + id + ".message");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
-            if (FancyNpcs.NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-                if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
-                    for (String attrName : npcConfig.getConfigurationSection("npcs." + id + ".attributes").getKeys(false)) {
-                        NpcAttribute attribute = FancyNpcs.getInstance().getAttributeManager().getAttributeByName(type, attrName);
-                        if (attribute == null) {
-                            continue;
-                        }
-
-                        String value = npcConfig.getString("npcs." + id + ".attributes." + attrName);
-                        if (!attribute.isValidValue(value)) {
-                            continue;
-                        }
-
-                        attributes.put(attribute, value);
+            if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
+                for (String attrName : npcConfig.getConfigurationSection("npcs." + id + ".attributes").getKeys(false)) {
+                    NpcAttribute attribute = FancyNpcs.getInstance().getAttributeManager().getAttributeByName(type, attrName);
+                    if (attribute == null) {
+                        continue;
                     }
+
+                    String value = npcConfig.getString("npcs." + id + ".attributes." + attrName);
+                    if (!attribute.isValidValue(value)) {
+                        continue;
+                    }
+
+                    attributes.put(attribute, value);
                 }
             }
 

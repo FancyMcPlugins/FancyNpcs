@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#                     
+#                      
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -44,6 +44,7 @@ The content below might be out-dated, please use the website above.
 /npc list - _Summary of all npcs_<br>
 /npc skin (name) [(skin)] - _Sets the skin for an npc_<br>
 /npc type (name) (type) - _Sets the entity type for an npc_<br>
+/npc attribute (name) (attribute) (value)- _Set certain npc attributes_<br>
 /npc movehere (name) - _Teleports an npc to your location_<br>
 /npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
 /npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>

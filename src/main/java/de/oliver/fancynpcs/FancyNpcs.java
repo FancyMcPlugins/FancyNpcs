@@ -46,7 +46,6 @@ import java.util.function.Function;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1"};
-    public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", "Ability to modify several attributes of the npc entity", false);
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
     private static FancyNpcs instance;
@@ -79,7 +78,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public void onLoad() {
         // Load feature flags
-        featureFlagConfig.addFeatureFlag(NPC_ATTRIBUTES_FEATURE_FLAG);
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
         featureFlagConfig.load();
 
@@ -120,9 +118,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         FancyLib.setPlugin(instance);
         config.reload();
 
-        if (NPC_ATTRIBUTES_FEATURE_FLAG.isEnabled()) {
-            attributeManager = new AttributeManagerImpl();
-        }
+        attributeManager = new AttributeManagerImpl();
 
         // Load language file
         String defaultLang = readResource("lang.yml");

@@ -18,12 +18,13 @@ import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
-import de.oliver.fancynpcs.listeners.PlayerQuitListener;
 import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
+import de.oliver.fancynpcs.listeners.PlayerQuitListener;
 import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
+import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
@@ -44,7 +45,7 @@ import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20.1"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1"};
     public static final FeatureFlag NPC_ATTRIBUTES_FEATURE_FLAG = new FeatureFlag("npc-attributes", "Ability to modify several attributes of the npc entity", false);
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
@@ -86,7 +87,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
-            case "1.20.1" -> npcAdapter = Npc_1_20_1::new;
+            case "1.20.1", "1.20" -> npcAdapter = Npc_1_20_1::new;
             case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
             default -> npcAdapter = null;
         }
@@ -180,6 +181,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         if (mcVersion.equals("1.19.4")) // use packet injection method
             pluginManager.registerEvents(new PacketReader_1_19_4(), instance);
+        else if (mcVersion.equals("1.20"))
+            pluginManager.registerEvents(new PacketReader_1_20(), instance);
         else
             pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
 

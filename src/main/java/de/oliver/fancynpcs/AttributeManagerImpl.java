@@ -22,7 +22,7 @@ public class AttributeManagerImpl implements AttributeManager {
     private void init() {
         String mcVersion = Bukkit.getMinecraftVersion();
         switch (mcVersion) {
-            case "1.20.1" -> attributes = Attributes_1_20_1.getAllAttributes();
+            case "1.20.1", "1.20" -> attributes = Attributes_1_20_1.getAllAttributes();
             case "1.19.4" -> attributes = Attributes_1_19_4.getAllAttributes();
         }
     }

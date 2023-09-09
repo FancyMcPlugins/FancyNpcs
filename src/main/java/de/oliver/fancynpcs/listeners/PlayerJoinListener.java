@@ -5,6 +5,7 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
+import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,8 @@ public class PlayerJoinListener implements Listener {
         String mcVersion = Bukkit.getMinecraftVersion();
         if (mcVersion.equals("1.19.4")) {
             PacketReader_1_19_4.inject(event.getPlayer());
+        } else if (mcVersion.equals("1.20")) {
+            PacketReader_1_20.inject(event.getPlayer());
         }
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {

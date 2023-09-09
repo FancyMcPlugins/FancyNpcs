@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#           
+#                     
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -11,18 +11,30 @@
 
 Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.19.4 and 1.20.1**<br>
+**Only for minecraft server version 1.19.4 - 1.20.1**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
 
-You can download the latest versions at the following places:
+### Stable versions
 
 - https://hangar.papermc.io/Oliver/FancyNpcs
 - https://modrinth.com/plugin/fancynpcs/
 - https://github.com/FancyMcPlugins/FancyNpcs/releases
 - https://www.spigotmc.org/resources/fancy-npcs-1-20.107306/
-- Build from source
+
+### Development builds
+
+- https://fancyplugins.de/fancynpcs/download/
+- [Build from source](Build%20from%20source)
+
+# Documentation
+
+The official documentation is being moved from here to the official website.
+
+Link: https://fancyplugins.de/fancynpcs/docs/
+
+The content below might be out-dated, please use the website above.
 
 ## Commands
 
@@ -70,7 +82,6 @@ When using any entity type other than Player, the following features are disable
 - Changing the skin
 - Changing the equipment
 - Showing in tab
-- Glowing and changing the glowing-color
 
 ## Multiple lines
 
@@ -87,7 +98,7 @@ To have multiple lines as the display name of an NPC follow the following steps:
 
 ## Build from source
 
-1. Clone this repo and run `gradlew reobfJar`
+1. Clone this repo and run `gradlew shadowJar`
 2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
 
 ## Examples

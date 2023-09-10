@@ -1,8 +1,6 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancylib.FancyLib;
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.Metrics;
+import de.oliver.fancylib.*;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
 import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
@@ -34,13 +32,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
@@ -52,6 +43,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final FancyScheduler scheduler;
     private final FancyNpcConfig config;
     private final LanguageConfig languageConfig;
+    private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
     private Function<NpcData, Npc> npcAdapter;
@@ -66,9 +58,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcConfig();
-        this.languageConfig = new LanguageConfig(this);
-        this.featureFlagConfig = new FeatureFlagConfig(this);
         this.versionFetcher = new MasterVersionFetcher(getName());
+        this.languageConfig = new LanguageConfig(this);
+        this.versionConfig = new VersionConfig(this, versionFetcher);
+        this.featureFlagConfig = new FeatureFlagConfig(this);
     }
 
     public static FancyNpcs getInstance() {
@@ -104,7 +97,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        saveFile("lang.yml");
+        new FileUtils().saveFile(this, "lang.yml");
     }
 
     @Override
@@ -121,7 +114,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         attributeManager = new AttributeManagerImpl();
 
         // Load language file
-        String defaultLang = readResource("lang.yml");
+        String defaultLang = new FileUtils().readResource("lang.yml");
         if (defaultLang != null) {
             // Update language file
             try {
@@ -135,6 +128,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             }
         }
         languageConfig.load();
+
+        versionConfig.load();
 
         new Thread(() -> {
             ComparableVersion newestVersion = versionFetcher.fetchNewestVersion();
@@ -208,60 +203,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
     }
 
-    private String readResource(String name) {
-        URL url = getClass().getClassLoader().getResource(name);
-        if (url == null) {
-            getLogger().severe(name + " not found");
-            return null;
-        }
-        URLConnection connection = null;
-        try {
-            connection = url.openConnection();
-        } catch (IOException e) {
-            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
-        }
-        connection.setUseCaches(false);
-        try (InputStream inputStream = connection.getInputStream()) {
-            byte[] file_raw = new byte[inputStream.available()];
-            inputStream.read(file_raw);
-            inputStream.close();
-            return new String(file_raw, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            getLogger().severe("Failed read file " + name + ":" + e.getMessage());
-        }
-        return null;
-    }
-
-    private void saveFile(String name) {
-        URL url = getClass().getClassLoader().getResource(name);
-        if (url == null) {
-            getLogger().severe(name + " not found");
-            return;
-        }
-        File file = new File(getDataFolder() + "/" + name);
-        if (file.exists()) return;
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        URLConnection connection = null;
-        try {
-            connection = url.openConnection();
-        } catch (IOException e) {
-            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
-        }
-        connection.setUseCaches(false);
-        try (FileOutputStream outputStream = new FileOutputStream(file)) {
-            int read;
-            InputStream inputStream = connection.getInputStream();
-            byte[] bytes = new byte[1024];
-            while ((read = inputStream.read(bytes)) != -1) {
-                outputStream.write(bytes, 0, read);
-            }
-        } catch (IOException e) {
-            getLogger().severe("Failed unpack file " + name + ":" + e.getMessage());
-        }
-    }
-
     @Override
     public Function<NpcData, Npc> getNpcAdapter() {
         return npcAdapter;
@@ -292,6 +233,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public LanguageConfig getLanguageConfig() {
         return languageConfig;
+    }
+
+    public VersionConfig getVersionConfig() {
+        return versionConfig;
     }
 
     public FeatureFlagConfig getFeatureFlagConfig() {

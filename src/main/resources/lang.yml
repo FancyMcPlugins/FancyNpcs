@@ -1,9 +1,4 @@
 messages:
-  outdated-version: You are using an outdated version of the FancyNpcs Plugin
-  download-newest-version: '[!] Please download the newest version ({new_version}): <click:open_url:''{download_url}''><u>click here</u></click>'
-  fetching-version: <i>Checking version, please wait...</i>
-  fetching-version-cancelled: Could not find latest version
-  fetching-version-success: You are using the latest version of the FancyNpcs Plugin ({current_version})
   reloaded-config: Reloaded the config
   saved-npcs: Saved all NPCs
   fancynpcs-syntax: /FancyNpcs <version|reload|save>

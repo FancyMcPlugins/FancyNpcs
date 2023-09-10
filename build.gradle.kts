@@ -1,3 +1,6 @@
+import java.io.BufferedReader
+import java.io.InputStreamReader
+
 plugins {
     id("java-library")
     id("maven-publish")
@@ -30,7 +33,7 @@ dependencies {
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.4")
+    implementation("de.oliver:FancyLib:1.0.5.1")
 
     compileOnly("me.clip:placeholderapi:2.11.3")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
@@ -91,12 +94,21 @@ tasks {
 
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
+
         val props = mapOf(
-            "version" to project.version,
             "description" to project.description,
+            "version" to project.version,
+            "hash" to getCurrentCommitHash(),
+            "build" to (System.getenv("BUILD_ID") ?: "").ifEmpty { "undefined" }
         )
+
         inputs.properties(props)
+
         filesMatching("plugin.yml") {
+            expand(props)
+        }
+
+        filesMatching("version.yml") {
             expand(props)
         }
     }
@@ -104,4 +116,17 @@ tasks {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+fun getCurrentCommitHash(): String {
+    val process = ProcessBuilder("git", "rev-parse", "HEAD").start()
+    val reader = BufferedReader(InputStreamReader(process.inputStream))
+    val commitHash = reader.readLine()
+    reader.close()
+    process.waitFor()
+    if (process.exitValue() == 0) {
+        return commitHash ?: ""
+    } else {
+        throw IllegalStateException("Failed to retrieve the commit hash.")
+    }
 }

@@ -22,6 +22,13 @@ public class EntityAttributes {
                 EntityAttributes::setOnFire
         ));
 
+        attributes.add(new NpcAttribute(
+                "invisible",
+                List.of("true", "false"),
+                Arrays.stream(EntityType.values()).toList(),
+                EntityAttributes::setInvisible
+        ));
+
 
         return attributes;
     }
@@ -33,5 +40,13 @@ public class EntityAttributes {
 
         entity.setSharedFlagOnFire(onFire);
 
+    }
+
+    private static void setInvisible(Npc npc, String value) {
+        Entity entity = ReflectionHelper.getEntity(npc);
+
+        boolean invisible = Boolean.parseBoolean(value);
+
+        entity.setInvisible(invisible);
     }
 }

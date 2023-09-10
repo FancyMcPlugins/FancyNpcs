@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.commands.Subcommand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -34,11 +33,6 @@ public class EquipmentCMD implements Subcommand {
 
         if (npc == null) {
             MessageHelper.error(player, lang.get("npc-not-found"));
-            return false;
-        }
-
-        if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(player, lang.get("npc-must-be-player"));
             return false;
         }
 

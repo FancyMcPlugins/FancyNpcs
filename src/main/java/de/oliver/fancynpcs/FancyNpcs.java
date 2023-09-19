@@ -24,6 +24,7 @@ import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
+import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -36,7 +37,7 @@ import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
     private static FancyNpcs instance;
@@ -78,6 +79,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
+            case "1.20.2" -> npcAdapter = Npc_1_20_2::new;
             case "1.20.1", "1.20" -> npcAdapter = Npc_1_20_1::new;
             case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
             default -> npcAdapter = null;

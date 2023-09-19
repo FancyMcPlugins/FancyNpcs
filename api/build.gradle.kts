@@ -7,7 +7,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyLib:1.0.5.1")
 
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
 }
 
 tasks {

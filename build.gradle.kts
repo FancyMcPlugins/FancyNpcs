@@ -29,13 +29,14 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.5.1")
+    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
 }
 

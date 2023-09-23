@@ -23,7 +23,7 @@ allprojects {
     }
 }
 
-val mcVersion = "1.20.1"
+val mcVersion = "1.20.2"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")

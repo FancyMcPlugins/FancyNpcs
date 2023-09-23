@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -28,11 +29,11 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_20_R1.util.CraftNamespacedKey;
+import org.bukkit.craftbukkit.v1_20_R2.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class Npc_1_20_2 extends Npc {
         GameProfile gameProfile = new GameProfile(uuid, localName);
 
         if (data.getType() == org.bukkit.entity.EntityType.PLAYER) {
-            npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""));
+            npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""), ClientInformation.createDefault());
             ((ServerPlayer) npc).gameProfile = gameProfile;
 
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
@@ -104,13 +105,11 @@ public class Npc_1_20_2 extends Npc {
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
-                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
-                serverPlayer.connection.send(spawnPlayerPacket);
             }
-        } else {
-            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-            serverPlayer.connection.send(addEntityPacket);
         }
+        
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+        serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 

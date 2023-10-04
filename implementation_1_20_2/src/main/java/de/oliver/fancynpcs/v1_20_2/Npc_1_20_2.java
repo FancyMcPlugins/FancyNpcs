@@ -13,8 +13,10 @@ import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
@@ -64,6 +66,26 @@ public class Npc_1_20_2 extends Npc {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""), ClientInformation.createDefault());
             ((ServerPlayer) npc).gameProfile = gameProfile;
 
+//            Connection con = new Connection(PacketFlow.SERVERBOUND);
+
+//            con.channel = serverLevel.players().get(0).connection.connection.channel;
+//            con.channel = new NioSocketChannel(SelectorProvider.provider());
+//            con.channel = Connection.connect(new InetSocketAddress("localhost", 1234), false, con).channel();
+//            con.channel = new LocalChannel();
+
+//            con.channel = new LocalServerChannel();
+//
+//            con.channel.attr(Connection.ATTRIBUTE_SERVERBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.SERVERBOUND));
+//            con.channel.attr(Connection.ATTRIBUTE_CLIENTBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.CLIENTBOUND));
+//
+//            ((ServerPlayer) npc).connection = new ServerGamePacketListenerImpl(
+//                    minecraftServer,
+//                    con,
+//                    (ServerPlayer) npc,
+//                    new CommonListenerCookie(((ServerPlayer) npc).gameProfile, 10, ((ServerPlayer) npc).clientInformation()));
+//            System.out.println("fuck you");
+
+
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
                 ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
@@ -100,14 +122,14 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
             }
         }
-        
+
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
         serverPlayer.connection.send(addEntityPacket);
 
@@ -197,10 +219,7 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
-            if (!data.isShowInTab()) {
-                removeListed(playerInfoPacket);
-            }
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -266,24 +285,16 @@ public class Npc_1_20_2 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {
-        playerInfoUpdatePacket.actions().add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
-
-        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
-        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
-                entry.profileId(),
-                entry.profile(),
-                false,
-                entry.latency(),
-                entry.gameMode(),
-                entry.displayName(),
-                entry.chatSession()
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
+        return new ClientboundPlayerInfoUpdatePacket.Entry(
+                npcPlayer.getUUID(),
+                npcPlayer.getGameProfile(),
+                data.isShowInTab(),
+                69,
+                npcPlayer.gameMode.getGameModeForPlayer(),
+                npcPlayer.getTabListDisplayName(),
+                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
         );
-
-        // replace the old entry with the new entry
-        ReflectionUtils.setValue(playerInfoUpdatePacket, "b", List.of(newEntry)); // 'entries'
-
-        return playerInfoUpdatePacket;
     }
 
     @Override

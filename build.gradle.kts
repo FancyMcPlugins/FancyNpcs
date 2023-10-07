@@ -11,7 +11,7 @@ plugins {
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.3"
+    version = "2.1.0"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -23,19 +23,20 @@ allprojects {
     }
 }
 
-val mcVersion = "1.20.1"
+val mcVersion = "1.20.2"
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:1.0.5.1")
+    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
 }
 

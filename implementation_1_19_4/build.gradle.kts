@@ -9,8 +9,8 @@ dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation("de.oliver:FancyLib:1.0.5.1")
-    compileOnly("me.clip:placeholderapi:2.11.3")
+    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
 }
 
 

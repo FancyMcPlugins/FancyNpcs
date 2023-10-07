@@ -66,26 +66,6 @@ public class Npc_1_20_2 extends Npc {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""), ClientInformation.createDefault());
             ((ServerPlayer) npc).gameProfile = gameProfile;
 
-//            Connection con = new Connection(PacketFlow.SERVERBOUND);
-
-//            con.channel = serverLevel.players().get(0).connection.connection.channel;
-//            con.channel = new NioSocketChannel(SelectorProvider.provider());
-//            con.channel = Connection.connect(new InetSocketAddress("localhost", 1234), false, con).channel();
-//            con.channel = new LocalChannel();
-
-//            con.channel = new LocalServerChannel();
-//
-//            con.channel.attr(Connection.ATTRIBUTE_SERVERBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.SERVERBOUND));
-//            con.channel.attr(Connection.ATTRIBUTE_CLIENTBOUND_PROTOCOL).set(ConnectionProtocol.PLAY.codec(PacketFlow.CLIENTBOUND));
-//
-//            ((ServerPlayer) npc).connection = new ServerGamePacketListenerImpl(
-//                    minecraftServer,
-//                    con,
-//                    (ServerPlayer) npc,
-//                    new CommonListenerCookie(((ServerPlayer) npc).gameProfile, 10, ((ServerPlayer) npc).clientInformation()));
-//            System.out.println("fuck you");
-
-
             if (data.getSkin() != null && data.getSkin().isLoaded()) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
                 ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));

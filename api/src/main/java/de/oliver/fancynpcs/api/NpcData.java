@@ -8,9 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class NpcData {
@@ -34,6 +32,8 @@ public class NpcData {
     private String playerCommand;
     private String message;
     private Map<NpcAttribute, String> attributes;
+    private boolean onlyVisibleToEnabled;
+    private final List<String> onlyVisibleTo;
     private boolean isDirty;
 
     public NpcData(
@@ -55,7 +55,9 @@ public class NpcData {
             String message,
             String serverCommand,
             String playerCommand,
-            Map<NpcAttribute, String> attributes
+            Map<NpcAttribute, String> attributes,
+            boolean onlyVisibleToEnabled,
+            List<String> onlyVisibleTo
     ) {
         this.id = id;
         this.name = name;
@@ -76,6 +78,8 @@ public class NpcData {
         this.playerCommand = playerCommand;
         this.message = message;
         this.attributes = attributes;
+        this.onlyVisibleToEnabled = onlyVisibleToEnabled;
+        this.onlyVisibleTo = onlyVisibleTo;
         this.isDirty = true;
     }
 
@@ -100,6 +104,8 @@ public class NpcData {
         this.message = "";
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
+        this.onlyVisibleToEnabled = false;
+        this.onlyVisibleTo = new ArrayList<>();
         this.isDirty = true;
     }
 
@@ -285,6 +291,34 @@ public class NpcData {
         for (NpcAttribute attribute : attributes.keySet()) {
             attribute.apply(npc, attributes.get(attribute));
         }
+    }
+
+    public boolean isOnlyVisibleToEnabled() {
+        return onlyVisibleToEnabled;
+    }
+
+    public NpcData setOnlyVisibleTo(boolean isEnabled) {
+        this.onlyVisibleToEnabled = isEnabled;
+        if (!isEnabled) onlyVisibleTo.clear();
+        isDirty = true;
+        return this;
+    }
+
+    public List<String> getOnlyVisibleToPlayers() {
+        return onlyVisibleTo;
+    }
+
+    public void showToPlayer(UUID uuid) {
+        if (!onlyVisibleToEnabled) setOnlyVisibleTo(true);
+        if (!onlyVisibleTo.contains(uuid.toString())) {
+            onlyVisibleTo.add(uuid.toString());
+            isDirty = true;
+        }
+    }
+
+    public void hideFromPlayer(UUID uuid) {
+        if (onlyVisibleTo.remove(uuid.toString())) isDirty = true;
+        if (onlyVisibleTo.isEmpty()) setOnlyVisibleTo(false);
     }
 
     public boolean isDirty() {

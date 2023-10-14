@@ -62,7 +62,9 @@ public class CopyCMD implements Subcommand {
                 npc.getData().getMessage(),
                 npc.getData().getServerCommand(),
                 npc.getData().getPlayerCommand(),
-                npc.getData().getAttributes()
+                npc.getData().getAttributes(),
+                npc.getData().isOnlyVisibleToEnabled(),
+                npc.getData().getOnlyVisibleToPlayers()
         ));
 
         NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, player);

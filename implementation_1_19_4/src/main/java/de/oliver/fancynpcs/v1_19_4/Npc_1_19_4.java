@@ -81,6 +81,10 @@ public class Npc_1_19_4 extends Npc {
             return;
         }
 
+        if (data.isOnlyVisibleToEnabled() && !data.getOnlyVisibleToPlayers().contains(player.getUniqueId().toString())) {
+            return;
+        }
+
         if (!data.getLocation().getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())) {
             return;
         }
@@ -129,7 +133,7 @@ public class Npc_1_19_4 extends Npc {
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
 
-        isVisibleForPlayer.put(serverPlayer.getUUID(), false);
+        isVisibleForPlayer.remove(player.getUniqueId());
     }
 
     @Override

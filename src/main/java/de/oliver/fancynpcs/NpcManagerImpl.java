@@ -134,6 +134,8 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".message", data.getMessage());
+            npcConfig.set("npcs." + data.getId() + ".onlyVisibleToEnabled", data.isOnlyVisibleToEnabled());
+            npcConfig.set("npcs." + data.getId() + ".onlyVisibleTo", data.getOnlyVisibleToPlayers());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
@@ -251,7 +253,17 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes);
+            boolean spawnToAll = true;
+            if (npcConfig.isConfigurationSection("npcs." + id + ".spawnToAll")) {
+                spawnToAll = npcConfig.getBoolean("npcs." + id + ".spawnToAll");
+            }
+
+            List<String> visibleToPlayers = new ArrayList<>();
+            if (npcConfig.isConfigurationSection("npcs." + id + ".visibleToPlayers")) {
+                visibleToPlayers = npcConfig.getStringList("npcs." + id + ".visibleToPlayers");
+            }
+
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes, spawnToAll, visibleToPlayers);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

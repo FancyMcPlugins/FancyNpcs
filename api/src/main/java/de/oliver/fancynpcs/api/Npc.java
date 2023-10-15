@@ -71,6 +71,14 @@ public abstract class Npc {
         }
     }
 
+    public abstract void move(Player player);
+
+    public void moveForAll() {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            move(onlinePlayer);
+        }
+    }
+
     public void interact(Player player, boolean isAttack, EquipmentSlot hand, Vector clickLoc) {
         if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
             return;

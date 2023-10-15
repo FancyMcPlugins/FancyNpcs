@@ -231,7 +231,7 @@ public class Npc_1_20_2 extends Npc {
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
-            move(serverPlayer);
+            move(player);
         }
     }
 
@@ -252,7 +252,9 @@ public class Npc_1_20_2 extends Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
-    private void move(ServerPlayer serverPlayer) {
+    public void move(Player player) {
+        ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
+
         npc.setPosRaw(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
         npc.setRot(data.getLocation().getYaw(), data.getLocation().getPitch());
         npc.setYHeadRot(data.getLocation().getYaw());

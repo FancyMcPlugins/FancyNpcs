@@ -48,15 +48,15 @@ public class FoxAttributes {
             case "standing" -> {
                 fox.setIsCrouching(false);
                 fox.setSleeping(false);
-                fox.setSitting(false);
+                fox.setSitting(false, false);
             }
             case "sleeping" -> {
                 fox.setSleeping(true);
-                fox.setSitting(false);
+                fox.setSitting(false, false);
                 fox.setIsCrouching(false);
             }
             case "sitting" -> {
-                fox.setSitting(true);
+                fox.setSitting(true, false);
                 fox.setSleeping(false);
                 fox.setIsCrouching(false);
             }

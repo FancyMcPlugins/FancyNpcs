@@ -173,6 +173,11 @@ public class Npc_1_20_1 extends Npc {
         if (!isTeamCreatedForPlayer) {
             isTeamCreated.put(serverPlayer.getUUID(), true);
         }
+
+        if (!data.isCollidable()) {
+            team.setCollisionRule(Team.CollisionRule.NEVER);
+        }
+
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
         Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));

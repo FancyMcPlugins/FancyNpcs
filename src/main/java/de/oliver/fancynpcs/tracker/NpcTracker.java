@@ -59,15 +59,15 @@ public class NpcTracker extends BukkitRunnable {
                     // Comparing the previous state with current state to prevent event from being called continuously.
                     if (wasPreviouslyLooking == null || !wasPreviouslyLooking) {
                         // Calling NpcStartLookingEvent from the main thread.
-                        Bukkit.getScheduler().runTask(FancyNpcs.getInstance(), () -> {
+                        FancyNpcs.getInstance().getScheduler().runTask(null, () -> {
                             Bukkit.getPluginManager().callEvent(new NpcStartLookingEvent(npc, player));
                         });
                     }
-                // Updating state if changed.
+                    // Updating state if changed.
                 } else if (npcData.isTurnToPlayer() && npc.getIsLookingAtPlayer().getOrDefault(player.getUniqueId(), false)) {
                     npc.getIsLookingAtPlayer().put(player.getUniqueId(), false);
                     // Calling NpcStopLookingEvent from the main thread.
-                    Bukkit.getScheduler().runTask(FancyNpcs.getInstance(), () -> {
+                    FancyNpcs.getInstance().getScheduler().runTask(null, () -> {
                         Bukkit.getPluginManager().callEvent(new NpcStopLookingEvent(npc, player));
                     });
                 }

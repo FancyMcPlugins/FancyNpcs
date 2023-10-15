@@ -91,5 +91,6 @@ public class NpcModifyEvent extends Event implements Cancellable {
         CUSTOM_MESSAGE,
         TYPE,
         ATTRIBUTE,
+        COLLIDABLE,
     }
 }

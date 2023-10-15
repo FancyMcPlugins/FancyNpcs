@@ -130,6 +130,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".location.pitch", data.getLocation().getPitch());
             npcConfig.set("npcs." + data.getId() + ".showInTab", data.isShowInTab());
             npcConfig.set("npcs." + data.getId() + ".spawnEntity", data.isSpawnEntity());
+            npcConfig.set("npcs." + data.getId() + ".collidable", data.isCollidable());
             npcConfig.set("npcs." + data.getId() + ".glowing", data.isGlowing());
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
@@ -227,6 +228,7 @@ public class NpcManagerImpl implements NpcManager {
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + id + ".spawnEntity");
+            boolean collidable = npcConfig.getBoolean("npcs." + id + ".collidable", true);
             boolean glowing = npcConfig.getBoolean("npcs." + id + ".glowing");
             NamedTextColor glowingColor = NamedTextColor.NAMES.value(npcConfig.getString("npcs." + id + ".glowingColor", "white"));
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
@@ -251,7 +253,7 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes);
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

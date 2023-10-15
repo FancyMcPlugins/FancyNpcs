@@ -24,6 +24,7 @@ messages:
   npc-command-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not'
   npc-command-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not'
   npc-command-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect'
+  npc-command-help-collidable: ' - /npc collidable (name) (true|false) <dark_gray>- <white>Whether the NPC will be collidable or not'
   npc-command-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not'
   npc-command-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>- <white>Set certain npc attributes'
   npc-command-list-header: <b>All NPCs:</b>

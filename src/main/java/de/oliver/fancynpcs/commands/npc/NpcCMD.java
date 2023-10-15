@@ -37,7 +37,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "list", "turnToPlayer", "type", "attribute")
+            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -53,7 +53,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .map(Enum::name)
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList());
-        } else if (args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer"))) {
+        } else if (args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer") || args[0].equalsIgnoreCase("collidable"))) {
             suggestions.addAll(Stream.of("true", "false")
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList());
@@ -127,6 +127,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(p, lang.get("npc-command-help-showInTab"));
             MessageHelper.info(p, lang.get("npc-command-help-glowing"));
             MessageHelper.info(p, lang.get("npc-command-help-glowingColor"));
+            MessageHelper.info(p, lang.get("npc-command-help-collidable"));
             MessageHelper.info(p, lang.get("npc-command-help-turnToPlayer"));
             MessageHelper.info(p, lang.get("npc-command-help-attribute"));
 
@@ -204,6 +205,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
             case "glowingcolor" -> {
                 return new GlowingColorCMD().run(p, npc, args);
+            }
+
+            case "collidable" -> {
+                return new CollidableCMD().run(p, npc, args);
             }
 
             case "turntoplayer" -> {

@@ -23,6 +23,7 @@ public class NpcData {
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
+    private boolean collidable;
     private boolean glowing;
     private NamedTextColor glowingColor;
     private EntityType type;
@@ -44,6 +45,7 @@ public class NpcData {
             Location location,
             boolean showInTab,
             boolean spawnEntity,
+            boolean collidable,
             boolean glowing,
             NamedTextColor glowingColor,
             EntityType type,
@@ -63,6 +65,7 @@ public class NpcData {
         this.location = location;
         this.showInTab = showInTab;
         this.spawnEntity = spawnEntity;
+        this.collidable = collidable;
         this.glowing = glowing;
         this.glowingColor = glowingColor;
         this.type = type;
@@ -88,6 +91,7 @@ public class NpcData {
         this.type = EntityType.PLAYER;
         this.showInTab = false;
         this.spawnEntity = true;
+        this.collidable = true;
         this.glowing = false;
         this.glowingColor = NamedTextColor.WHITE;
         this.onClick = p -> {
@@ -157,6 +161,16 @@ public class NpcData {
 
     public NpcData setSpawnEntity(boolean spawnEntity) {
         this.spawnEntity = spawnEntity;
+        isDirty = true;
+        return this;
+    }
+
+    public boolean isCollidable() {
+        return collidable;
+    }
+
+    public NpcData setCollidable(boolean collidable) {
+        this.collidable = collidable;
         isDirty = true;
         return this;
     }

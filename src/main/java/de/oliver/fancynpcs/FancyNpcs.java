@@ -192,8 +192,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         scheduler.runTaskTimerAsynchronously(0, 1, new NpcTracker());
 
         int autosaveInterval = config.getAutoSaveInterval();
-        if (config.isEnableAutoSave()) {
-            scheduler.runTaskTimerAsynchronously(autosaveInterval * 60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
+        if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
+            scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
     }
 

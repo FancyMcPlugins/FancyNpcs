@@ -278,6 +278,7 @@ public class NpcData {
 
     public void addAttribute(NpcAttribute attribute, String value) {
         attributes.put(attribute, value);
+        isDirty = true;
     }
 
     public void applyAllAttributes(Npc npc) {

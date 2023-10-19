@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +43,7 @@ public class NpcManagerImpl implements NpcManager {
         npcs.remove(npc.getData().getId());
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
-        npcConfig.set("npcs." + npc.getData().getName(), null);
+        npcConfig.set("npcs." + npc.getData().getId(), null);
         try {
             npcConfig.save(npcConfigFile);
         } catch (IOException e) {
@@ -99,12 +98,6 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
-        ConfigurationSection section = npcConfig.getConfigurationSection("npcs");
-        if (section != null) {
-            for (String key : section.getKeys(false)) {
-                if (!npcs.containsKey(key)) section.set(key, null);
-            }
-        }
 
         for (Npc npc : npcs.values()) {
             if (!npc.isSaveToFile()) {

@@ -35,6 +35,7 @@ public class NpcData {
     private String message;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
+    private boolean isHidden;
 
     public NpcData(
             String id,
@@ -77,6 +78,7 @@ public class NpcData {
         this.message = message;
         this.attributes = attributes;
         this.isDirty = true;
+        this.isHidden = false;
     }
 
     /**
@@ -101,6 +103,14 @@ public class NpcData {
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.isDirty = true;
+    }
+
+    public boolean isHidden() {
+        return isHidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        isHidden = hidden;
     }
 
     public String getId() {

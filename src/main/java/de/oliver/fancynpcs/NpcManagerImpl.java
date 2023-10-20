@@ -128,6 +128,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".message", data.getMessage());
+            npcConfig.set("npcs." + data.getId() + ".hidden", data.isHidden());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());

@@ -23,6 +23,7 @@ messages:
   npc-command-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc'
   npc-command-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not'
   npc-command-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not'
+  npc-command-help-hide: ' - /npc hide (name) (true|false) <dark_gray>- <white>Whether the NPC will hide or not'
   npc-command-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect'
   npc-command-help-collidable: ' - /npc collidable (name) (true|false) <dark_gray>- <white>Whether the NPC will be collidable or not'
   npc-command-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not'
@@ -55,6 +56,8 @@ messages:
   npc-command-showInTab-false: NPC will no longer be shown in tab
   npc-command-glowing-true: NPC will now glow
   npc-command-glowing-false: NPC will no longer glow
+  npc-command-hide-true: NPC will now hidden
+  npc-command-hide-false: NPC will no longer hidden
   npc-command-glowingColor-invalid: Invalid color
   npc-command-glowingColor-updated: Updated glowing color
   npc-command-turnToPlayer-true: NPC will now turn to the players

@@ -86,6 +86,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         PLAYER_COMMAND,
         SHOW_IN_TAB,
         GLOWING,
+        HIDE,
         GLOWING_COLOR,
         TURN_TO_PLAYER,
         CUSTOM_MESSAGE,

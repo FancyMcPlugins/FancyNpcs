@@ -6,6 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,15 @@ public class HideCMD implements Subcommand {
             return false;
         }
 
+        Player playerToHide = null;
+        if (args.length > 3) {
+            playerToHide = Bukkit.getPlayer(args[3]);
+            if (playerToHide == null) {
+                MessageHelper.error(player, lang.get("npc-command-hide-player-not-found"));
+                return false;
+            }
+        }
+
         boolean hide;
         try {
             hide = Boolean.parseBoolean(args[2]);
@@ -49,13 +59,24 @@ public class HideCMD implements Subcommand {
             npc.getData().setHidden(hide);
             npc.updateForAll();
 
-            if (hide) {
-                npc.removeForAll();
-                MessageHelper.success(player, lang.get("npc-command-hide-true"));
+            if (playerToHide != null) {
+                if (hide) {
+                    npc.remove(playerToHide);
+                    MessageHelper.success(player, lang.get("npc-command-hide-true"));
+                } else {
+                    npc.create();
+                    npc.spawn(playerToHide);
+                    MessageHelper.success(player, lang.get("npc-command-hide-false"));
+                }
             } else {
-                npc.create();
-                npc.spawnForAll();
-                MessageHelper.success(player, lang.get("npc-command-hide-false"));
+                if (hide) {
+                    npc.removeForAll();
+                    MessageHelper.success(player, lang.get("npc-command-hide-true"));
+                } else {
+                    npc.create();
+                    npc.spawnForAll();
+                    MessageHelper.success(player, lang.get("npc-command-hide-false"));
+                }
             }
         } else {
             MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));

@@ -126,6 +126,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(p, lang.get("npc-command-help-serverCommand"));
             MessageHelper.info(p, lang.get("npc-command-help-showInTab"));
             MessageHelper.info(p, lang.get("npc-command-help-glowing"));
+            MessageHelper.info(p, lang.get("npc-command-help-hide"));
             MessageHelper.info(p, lang.get("npc-command-help-glowingColor"));
             MessageHelper.info(p, lang.get("npc-command-help-collidable"));
             MessageHelper.info(p, lang.get("npc-command-help-turnToPlayer"));
@@ -221,6 +222,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
             case "attribute" -> {
                 return attributeCMD.run(p, npc, args);
+            }
+
+            case "hide" -> {
+                return new HideCMD().run(p, npc, args);
             }
 
             default -> {

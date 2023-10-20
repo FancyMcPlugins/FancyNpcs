@@ -179,6 +179,10 @@ public abstract class Npc {
         data.setDirty(dirty);
     }
 
+    public boolean isHidden() {
+        return data.isHidden();
+    }
+
     public boolean isSaveToFile() {
         return saveToFile;
     }

@@ -1,8 +1,11 @@
 package de.oliver.fancynpcs.v1_20_2.attributes;
 
+import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_20_2.ReflectionHelper;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import org.bukkit.entity.EntityType;
@@ -29,7 +32,9 @@ public class PlayerAttributes {
         Player player = ReflectionHelper.getEntity(npc);
 
         Pose pose = Pose.valueOf(value.toUpperCase());
-        player.setPose(pose);
+
+        EntityDataAccessor<Pose> DATA_POSE = (EntityDataAccessor<Pose>) ReflectionUtils.getStaticValue(Entity.class, "as"); // DATA_POSE
+        player.getEntityData().set(DATA_POSE, pose);
     }
 
 }

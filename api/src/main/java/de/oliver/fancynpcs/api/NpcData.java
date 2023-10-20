@@ -8,9 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class NpcData {
@@ -34,6 +32,7 @@ public class NpcData {
     private String playerCommand;
     private String message;
     private Map<NpcAttribute, String> attributes;
+    private List<String> hiddenPerPlayer;
     private boolean isDirty;
     private boolean isHidden;
 
@@ -79,6 +78,7 @@ public class NpcData {
         this.attributes = attributes;
         this.isDirty = true;
         this.isHidden = false;
+        this.hiddenPerPlayer = new ArrayList<>();
     }
 
     /**
@@ -103,6 +103,12 @@ public class NpcData {
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.isDirty = true;
+        this.isHidden = false;
+        this.hiddenPerPlayer = new ArrayList<>();
+    }
+
+    public List<String> getHiddenPerPlayer() {
+        return hiddenPerPlayer;
     }
 
     public boolean isHidden() {

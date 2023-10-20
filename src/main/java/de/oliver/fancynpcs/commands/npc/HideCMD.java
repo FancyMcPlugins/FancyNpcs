@@ -56,19 +56,19 @@ public class HideCMD implements Subcommand {
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
-            npc.getData().setHidden(hide);
-            npc.updateForAll();
-
             if (playerToHide != null) {
                 if (hide) {
+                    npc.getData().getHiddenPerPlayer().add(playerToHide.getName());
                     npc.remove(playerToHide);
                     MessageHelper.success(player, lang.get("npc-command-hide-true"));
                 } else {
+                    npc.getData().getHiddenPerPlayer().remove(playerToHide.getName());
                     npc.create();
                     npc.spawn(playerToHide);
                     MessageHelper.success(player, lang.get("npc-command-hide-false"));
                 }
             } else {
+                npc.getData().setHidden(hide);
                 if (hide) {
                     npc.removeForAll();
                     MessageHelper.success(player, lang.get("npc-command-hide-true"));
@@ -78,6 +78,7 @@ public class HideCMD implements Subcommand {
                     MessageHelper.success(player, lang.get("npc-command-hide-false"));
                 }
             }
+            npc.updateForAll();
         } else {
             MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
         }

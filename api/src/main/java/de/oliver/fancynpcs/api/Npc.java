@@ -175,12 +175,12 @@ public abstract class Npc {
         return data.isDirty();
     }
 
-    public boolean isHidden() {
-        return data.isHidden();
-    }
-
     public void setDirty(boolean dirty) {
         data.setDirty(dirty);
+    }
+
+    public boolean isHidden() {
+        return data.isHidden();
     }
 
     public boolean isSaveToFile() {

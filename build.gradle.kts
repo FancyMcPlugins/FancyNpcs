@@ -5,13 +5,13 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "2.2.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.4"
+    version = "2.1.0"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -37,7 +37,7 @@ dependencies {
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
     compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.1.0")
 }
 
 tasks {

@@ -27,12 +27,14 @@ public class NpcManagerImpl implements NpcManager {
     private final Function<NpcData, Npc> npcAdapter;
     private final File npcConfigFile;
     private final HashMap<String, Npc> npcs; // npc id -> npc
+    private boolean isLoaded;
 
     public NpcManagerImpl(JavaPlugin plugin, Function<NpcData, Npc> npcAdapter) {
         this.plugin = plugin;
         this.npcAdapter = npcAdapter;
         npcs = new HashMap<>();
         npcConfigFile = new File("plugins/FancyNpcs/npcs.yml");
+        isLoaded = false;
     }
 
     public void registerNpc(Npc npc) {
@@ -88,6 +90,10 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void saveNpcs(boolean force) {
+        if (!isLoaded) {
+            return;
+        }
+
         if (!npcConfigFile.exists()) {
             try {
                 npcConfigFile.createNewFile();
@@ -261,6 +267,8 @@ public class NpcManagerImpl implements NpcManager {
             registerNpc(npc);
             npc.spawnForAll();
         }
+
+        isLoaded = true;
     }
 
     public void reloadNpcs() {

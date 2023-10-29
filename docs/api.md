@@ -1,4 +1,4 @@
-# API usage
+# API usage (might be outdated!)
 
 ## Using as dependency
 
@@ -23,15 +23,15 @@ You find the current version in the `README.md` file.
 ### Getting an existing NPC
 
 ```java
-Npc npc = FancyNpcs.getInstance().getNpcManager().getNpc(npcName);
+Npc npc=FancyNpcs.getInstance().getNpcManager().getNpc(npcName);
 ```
 
 ### Creating a NPC
 
 ```java
-Npc npc = new Npc(npcName, location);
-npc.create();
-npc.spawnForAll();
+Npc npc=new Npc(npcName,location);
+        npc.create();
+        npc.spawnForAll();
 ```
 
 ### Removing
@@ -50,8 +50,8 @@ npc.moveForAll(location);
 
 ```java
 
-SkinFetcher skin = new SkinFetcher(UUIDFetcher.getUUID(playerName).toString());
-npc.updateSkin(skin);
+SkinFetcher skin=new SkinFetcher(UUIDFetcher.getUUID(playerName).toString());
+        npc.updateSkin(skin);
 ```
 
 ### Display name
@@ -63,10 +63,10 @@ npc.updateDisplayName(displayName);
 ### Equipment
 
 ```java
-npc.addEquipment(equipmentSlot, CraftItemStack.asNMSCopy(item));
-npc.removeForAll();
-npc.create();
-npc.spawnForAll();
+npc.addEquipment(equipmentSlot,CraftItemStack.asNMSCopy(item));
+        npc.removeForAll();
+        npc.create();
+        npc.spawnForAll();
 ```
 
 ### Server command
@@ -96,28 +96,28 @@ npc.updateGlowing(shouldGlow);
 ### Glowing color
 
 ```java
-ChatFormatting color = ChatFormatting.getByName("color name");
-npc.updateGlowingColor(color);
+ChatFormatting color=ChatFormatting.getByName("color name");
+        npc.updateGlowingColor(color);
 ```
 
 ```java
-ChatFormatting color = ChatFormatting.getByName("color name");
-npc.updateGlowingColor(ChatFormatting.RED);
+ChatFormatting color=ChatFormatting.getByName("color name");
+        npc.updateGlowingColor(ChatFormatting.RED);
 ```
 
 ### Turn to player
 
 ```java
 npc.setTurnToPlayer(shouldTurnToPlayer);
-npc.moveForAll(npc.getLocation()); // initially refreshing (optional)
+        npc.moveForAll(npc.getLocation()); // initially refreshing (optional)
 ```
 
 ### Custom interact
 
 ```java
-npc.setOnClick(player -> {
-    // do something with the player
-});
+npc.setOnClick(player->{
+        // do something with the player
+        });
 ```
 
 ## Events

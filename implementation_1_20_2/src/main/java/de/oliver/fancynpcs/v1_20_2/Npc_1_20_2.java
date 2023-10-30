@@ -8,6 +8,7 @@ import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -88,6 +89,13 @@ public class Npc_1_20_2 extends Npc {
         if (!data.getLocation().getWorld().getName().equalsIgnoreCase(serverPlayer.level().getWorld().getName())) {
             return;
         }
+
+        NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);
+        spawnEvent.callEvent();
+        if (spawnEvent.isCancelled()) {
+            return;
+        }
+
 
         if (npc instanceof ServerPlayer npcPlayer) {
             if (data.getSkin() != null && data.getSkin().isLoaded()) {

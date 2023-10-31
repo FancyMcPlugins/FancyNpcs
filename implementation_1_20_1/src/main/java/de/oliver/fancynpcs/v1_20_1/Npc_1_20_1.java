@@ -88,7 +88,10 @@ public class Npc_1_20_1 extends Npc {
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);
-        FancyNpcsPlugin.get().getScheduler().runTask(null, spawnEvent::callEvent);
+        spawnEvent.callEvent();
+        if (spawnEvent.isCancelled()) {
+            return;
+        }
 
         if (npc instanceof ServerPlayer npcPlayer) {
             if (data.getSkin() != null && data.getSkin().isLoaded()) {

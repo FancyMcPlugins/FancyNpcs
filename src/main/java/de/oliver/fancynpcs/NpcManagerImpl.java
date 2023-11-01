@@ -264,7 +264,7 @@ public class NpcManagerImpl implements NpcManager {
                 onlyVisibleTo = npcConfig.getStringList("npcs." + id + ".onlyVisibleTo");
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes, onlyVisibleToEnabled, onlyVisibleTo);
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes, onlyVisibleToEnabled, onlyVisibleTo);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

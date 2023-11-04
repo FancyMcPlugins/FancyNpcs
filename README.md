@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#   
+#                
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -21,16 +21,36 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 - https://hangar.papermc.io/Oliver/FancyNpcs
 - https://modrinth.com/plugin/fancynpcs/
 - https://github.com/FancyMcPlugins/FancyNpcs/releases
-- https://www.spigotmc.org/resources/fancy-npcs-1-20.107306/
+- https://www.spigotmc.org/resources/fancy-npcs.107306/
 
 ### Development builds
 
 - https://fancyplugins.de/fancynpcs/download/
-- [Build from source](Build%20from%20source)
+- Build from source
+
+## Features
+
+With FancyNpcs you can create NPCs that look like real players. You can edit a bunch of properties like the display name
+or skin.
+
+All properties:
+
+- display name
+- skin (username or url)
+- entity type (cow, pig, blaze etc.)
+- equipment (e.g. holding something in the hand)
+- glowing (in all colors)
+- and many more properties that are entity specific
+
+You can also define some actions that will be executed when a player interacts with the npc:
+
+- message: sends a simple message to the player
+- player command: forces the player to execute a command
+- server command: executes a command in the console
+
+Explore more features on the official website: https://fancyplugins.de/
 
 ## Documentation
-
-Website (unfinished): https://fancyplugins.de/fancynpcs/docs/
 
 ### Plugin
 
@@ -42,16 +62,27 @@ Multiple lines: [multiple-lines.md](docs/misc/multiple-lines.md)<br>
 Getting started: [getting-started.md](docs/api/getting-started.md)<br>
 Events: [events.md](docs/api/events.md)<br>
 
-## Build from source
+### Build from source
 
 1. Clone this repo and run `gradlew shadowJar`
 2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
 
 ## Examples
 
-![](exampleImages/example1.png)
+The following images are by https://explorerseden.eu/
+![](exampleImages/niceron2.png)
 
-![](exampleImages/example3.png)
+![](exampleImages/niceron1.png)
 
-![](exampleImages/example2.png)
+![](exampleImages/niceron3.png)
+
+The following image is by Beacon's Quest
+![](exampleImages/dave1.png)
+
+The following images are by oliver (main dev of this plugin)
+![](exampleImages/oliver1.png)
+
+![](exampleImages/oliver2.png)
+
+![](exampleImages/oliver3.png)
 

@@ -93,11 +93,6 @@ public class Npc_1_19_4 extends Npc {
         }
 
         if (npc instanceof ServerPlayer npcPlayer) {
-            if (data.getSkin() != null && data.getSkin().isLoaded()) {
-                // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                npcPlayer.getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
-            }
-
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
             actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
             actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME);

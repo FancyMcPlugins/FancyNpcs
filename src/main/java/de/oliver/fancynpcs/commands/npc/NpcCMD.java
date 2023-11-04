@@ -100,131 +100,130 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
-        if (!(sender instanceof Player p)) {
-            MessageHelper.error(sender, lang.get("npc-command.only_player"));
-            return false;
-        }
-
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
-            if (!p.hasPermission("fancynpcs.npc.help") && !p.hasPermission("fancynpcs.npc.*")) {
-                MessageHelper.error(p, lang.get("no-permission-subcommand"));
+            if (!sender.hasPermission("fancynpcs.npc.help") && !sender.hasPermission("fancynpcs.npc.*")) {
+                MessageHelper.error(sender, lang.get("no-permission-subcommand"));
                 return false;
             }
 
-            MessageHelper.info(p, lang.get("npc-command-help-header"));
-            MessageHelper.info(p, lang.get("npc-command-help-create"));
-            MessageHelper.info(p, lang.get("npc-command-help-remove"));
-            MessageHelper.info(p, lang.get("npc-command-help-copy"));
-            MessageHelper.info(p, lang.get("npc-command-help-list"));
-            MessageHelper.info(p, lang.get("npc-command-help-skin"));
-            MessageHelper.info(p, lang.get("npc-command-help-type"));
-            MessageHelper.info(p, lang.get("npc-command-help-moveHere"));
-            MessageHelper.info(p, lang.get("npc-command-help-displayName"));
-            MessageHelper.info(p, lang.get("npc-command-help-equipment"));
-            MessageHelper.info(p, lang.get("npc-command-help-message"));
-            MessageHelper.info(p, lang.get("npc-command-help-playerCommand"));
-            MessageHelper.info(p, lang.get("npc-command-help-serverCommand"));
-            MessageHelper.info(p, lang.get("npc-command-help-showInTab"));
-            MessageHelper.info(p, lang.get("npc-command-help-glowing"));
-            MessageHelper.info(p, lang.get("npc-command-help-glowingColor"));
-            MessageHelper.info(p, lang.get("npc-command-help-collidable"));
-            MessageHelper.info(p, lang.get("npc-command-help-turnToPlayer"));
-            MessageHelper.info(p, lang.get("npc-command-help-attribute"));
+            MessageHelper.info(sender, lang.get("npc-command-help-header"));
+            MessageHelper.info(sender, lang.get("npc-command-help-create"));
+            MessageHelper.info(sender, lang.get("npc-command-help-remove"));
+            MessageHelper.info(sender, lang.get("npc-command-help-copy"));
+            MessageHelper.info(sender, lang.get("npc-command-help-list"));
+            MessageHelper.info(sender, lang.get("npc-command-help-skin"));
+            MessageHelper.info(sender, lang.get("npc-command-help-type"));
+            MessageHelper.info(sender, lang.get("npc-command-help-moveHere"));
+            MessageHelper.info(sender, lang.get("npc-command-help-displayName"));
+            MessageHelper.info(sender, lang.get("npc-command-help-equipment"));
+            MessageHelper.info(sender, lang.get("npc-command-help-message"));
+            MessageHelper.info(sender, lang.get("npc-command-help-playerCommand"));
+            MessageHelper.info(sender, lang.get("npc-command-help-serverCommand"));
+            MessageHelper.info(sender, lang.get("npc-command-help-showInTab"));
+            MessageHelper.info(sender, lang.get("npc-command-help-glowing"));
+            MessageHelper.info(sender, lang.get("npc-command-help-glowingColor"));
+            MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
+            MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
+            MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
 
             return true;
         }
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("list")) {
-            return new ListCMD().run(p, null, args);
+            return new ListCMD().run(sender, null, args);
         }
 
         if (args.length < 2) {
-            MessageHelper.error(p, lang.get("wrong-usage"));
+            MessageHelper.error(sender, lang.get("wrong-usage"));
             return false;
         }
 
         String subcommand = args[0];
         String name = args[1];
-        Npc npc = FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() ?
-                FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, p.getUniqueId()) :
-                FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
+        Npc npc;
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && sender instanceof Player player) {
+            npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId());
+        } else {
+            npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
+        }
 
-        if (!p.hasPermission("fancynpcs.npc." + subcommand) && !p.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(p, lang.get("no-permission-subcommand"));
+
+        if (!sender.hasPermission("fancynpcs.npc." + subcommand) && !sender.hasPermission("fancynpcs.npc.*")) {
+            MessageHelper.error(sender, lang.get("no-permission-subcommand"));
             return false;
         }
 
         switch (subcommand.toLowerCase()) {
             case "create" -> {
-                return new CreateCMD().run(p, null, args);
+                return new CreateCMD().run(sender, null, args);
             }
 
             case "remove" -> {
-                return new RemoveCMD().run(p, npc, args);
+                return new RemoveCMD().run(sender, npc, args);
             }
 
             case "copy" -> {
-                return new CopyCMD().run(p, npc, args);
+                return new CopyCMD().run(sender, npc, args);
             }
 
             case "movehere" -> {
-                return new MoveHereCMD().run(p, npc, args);
+                return new MoveHereCMD().run(sender, npc, args);
             }
 
             case "message" -> {
-                return new MessageCMD().run(p, npc, args);
+                return new MessageCMD().run(sender, npc, args);
             }
 
             case "skin" -> {
-                return new SkinCMD().run(p, npc, args);
+                return new SkinCMD().run(sender, npc, args);
             }
 
             case "displayname" -> {
-                return new DisplayNameCMD().run(p, npc, args);
+                return new DisplayNameCMD().run(sender, npc, args);
             }
 
             case "equipment" -> {
-                return new EquipmentCMD().run(p, npc, args);
+                return new EquipmentCMD().run(sender, npc, args);
             }
 
             case "servercommand" -> {
-                return new ServerCommandCMD().run(p, npc, args);
+                return new ServerCommandCMD().run(sender, npc, args);
             }
 
             case "playercommand" -> {
-                return new PlayerCommandCMD().run(p, npc, args);
+                return new PlayerCommandCMD().run(sender, npc, args);
             }
 
             case "showintab" -> {
-                return new ShowInTabCMD().run(p, npc, args);
+                return new ShowInTabCMD().run(sender, npc, args);
             }
 
             case "glowing" -> {
-                return new GlowingCMD().run(p, npc, args);
+                return new GlowingCMD().run(sender, npc, args);
             }
 
             case "glowingcolor" -> {
-                return new GlowingColorCMD().run(p, npc, args);
+                return new GlowingColorCMD().run(sender, npc, args);
             }
 
             case "collidable" -> {
-                return new CollidableCMD().run(p, npc, args);
+                return new CollidableCMD().run(sender, npc, args);
             }
 
             case "turntoplayer" -> {
-                return new TurnToPlayerCMD().run(p, npc, args);
+                return new TurnToPlayerCMD().run(sender, npc, args);
             }
 
             case "type" -> {
-                return new TypeCMD().run(p, npc, args);
+                return new TypeCMD().run(sender, npc, args);
             }
 
             case "attribute" -> {
-                return attributeCMD.run(p, npc, args);
+                return attributeCMD.run(sender, npc, args);
             }
 
             default -> {
-                MessageHelper.error(p, lang.get("wrong-usage"));
+                MessageHelper.error(sender, lang.get("wrong-usage"));
                 return false;
             }
         }

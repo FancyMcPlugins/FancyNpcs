@@ -6,6 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,14 +23,14 @@ public class CollidableCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -37,11 +38,11 @@ public class CollidableCMD implements Subcommand {
         try {
             collidable = Boolean.parseBoolean(args[2]);
         } catch (Exception e) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, collidable, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, collidable, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
@@ -49,12 +50,12 @@ public class CollidableCMD implements Subcommand {
             npc.updateForAll();
 
             if (collidable) {
-                MessageHelper.success(player, lang.get("npc-command-collidable-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-collidable-true"));
             } else {
-                MessageHelper.success(player, lang.get("npc-command-collidable-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-collidable-false"));
             }
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

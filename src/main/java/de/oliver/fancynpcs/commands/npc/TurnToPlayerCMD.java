@@ -6,6 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,15 +23,15 @@ public class TurnToPlayerCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -38,24 +39,24 @@ public class TurnToPlayerCMD implements Subcommand {
         try {
             turnToPlayer = Boolean.parseBoolean(args[2]);
         } catch (Exception e) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, turnToPlayer, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, turnToPlayer, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setTurnToPlayer(turnToPlayer);
 
             if (turnToPlayer) {
-                MessageHelper.success(player, lang.get("npc-command-turnToPlayer-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-true"));
             } else {
-                MessageHelper.success(player, lang.get("npc-command-turnToPlayer-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-false"));
                 npc.updateForAll(); // move to default pos
             }
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

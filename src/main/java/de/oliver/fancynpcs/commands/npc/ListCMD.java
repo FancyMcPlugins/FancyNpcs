@@ -5,6 +5,7 @@ import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,27 +24,27 @@ public class ListCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        if (!player.hasPermission("fancynpcs.npc.list") && !player.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(player, lang.get("no-permission-subcommand"));
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!receiver.hasPermission("fancynpcs.npc.list") && !receiver.hasPermission("fancynpcs.npc.*")) {
+            MessageHelper.error(receiver, lang.get("no-permission-subcommand"));
             return false;
         }
 
-        MessageHelper.info(player, lang.get("npc-command-list-header"));
+        MessageHelper.info(receiver, lang.get("npc-command-list-header"));
 
         Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && receiver instanceof Player player) {
             allNpcs = allNpcs.stream()
                     .filter(n -> n.getData().getCreator().equals(player.getUniqueId()))
                     .toList();
         }
 
         if (allNpcs.isEmpty()) {
-            MessageHelper.warning(player, lang.get("npc-command-list-no-npcs"));
+            MessageHelper.warning(receiver, lang.get("npc-command-list-no-npcs"));
         } else {
             final DecimalFormat df = new DecimalFormat("#########.##");
             for (Npc n : allNpcs) {
-                MessageHelper.info(player, lang.get(
+                MessageHelper.info(receiver, lang.get(
                                 "npc-command-list-tp-hover",
                                 "name", n.getData().getName(),
                                 "x", df.format(n.getData().getLocation().x()),

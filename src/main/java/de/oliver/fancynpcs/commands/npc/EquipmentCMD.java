@@ -7,6 +7,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +25,20 @@ public class EquipmentCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(receiver instanceof Player player)) {
+            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
+            return false;
+        }
+
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -40,21 +46,21 @@ public class EquipmentCMD implements Subcommand {
 
         NpcEquipmentSlot equipmentSlot = NpcEquipmentSlot.parse(slot);
         if (equipmentSlot == null) {
-            MessageHelper.error(player, lang.get("npc-command-equipment-invalid-slot"));
+            MessageHelper.error(receiver, lang.get("npc-command-equipment-invalid-slot"));
             return false;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().addEquipment(equipmentSlot, item);
             npc.updateForAll();
-            MessageHelper.success(player, lang.get("npc-command-equipment-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-equipment-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

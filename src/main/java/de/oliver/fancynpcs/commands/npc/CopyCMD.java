@@ -7,6 +7,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,14 +25,19 @@ public class CopyCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(receiver instanceof Player player)) {
+            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
+            return false;
+        }
+
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
@@ -66,9 +72,9 @@ public class CopyCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
 
-            MessageHelper.success(player, lang.get("npc-command-copy-success"));
+            MessageHelper.success(receiver, lang.get("npc-command-copy-success"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-copy-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-copy-cancelled"));
         }
 
         return true;

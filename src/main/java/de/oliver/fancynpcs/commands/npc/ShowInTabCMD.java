@@ -6,6 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -23,20 +24,20 @@ public class ShowInTabCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(player, lang.get("npc-must-be-player"));
+            MessageHelper.error(receiver, lang.get("npc-must-be-player"));
             return false;
         }
 
@@ -45,16 +46,16 @@ public class ShowInTabCMD implements Subcommand {
             case "true" -> showInTab = true;
             case "false" -> showInTab = false;
             default -> {
-                MessageHelper.error(player, lang.get("npc-command-showInTab-invalid-argument"));
+                MessageHelper.error(receiver, lang.get("npc-command-showInTab-invalid-argument"));
                 return false;
             }
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, receiver);
         npcModifyEvent.callEvent();
 
         if (showInTab == npc.getData().isShowInTab()) {
-            MessageHelper.warning(player, lang.get("npc-command-showInTab-same"));
+            MessageHelper.warning(receiver, lang.get("npc-command-showInTab-same"));
             return false;
         }
 
@@ -63,12 +64,12 @@ public class ShowInTabCMD implements Subcommand {
             npc.updateForAll();
 
             if (showInTab) {
-                MessageHelper.success(player, lang.get("npc-command-showInTab-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-showInTab-true"));
             } else {
-                MessageHelper.success(player, lang.get("npc-command-showInTab-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-showInTab-false"));
             }
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

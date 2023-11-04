@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.api.events;
 
 import de.oliver.fancynpcs.api.Npc;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -16,12 +17,12 @@ public class NpcCreateEvent extends Event implements Cancellable {
     @NotNull
     private final Npc npc;
     @NotNull
-    private final Player player;
+    private final CommandSender creator;
     private boolean isCancelled;
 
-    public NpcCreateEvent(@NotNull Npc npc, @NotNull Player player) {
+    public NpcCreateEvent(@NotNull Npc npc, @NotNull CommandSender creator) {
         this.npc = npc;
-        this.player = player;
+        this.creator = creator;
     }
 
     public static HandlerList getHandlerList() {
@@ -38,8 +39,8 @@ public class NpcCreateEvent extends Event implements Cancellable {
     /**
      * @return the player who created the npc
      */
-    public @NotNull Player getPlayer() {
-        return player;
+    public @NotNull CommandSender getCreator() {
+        return creator;
     }
 
     @Override

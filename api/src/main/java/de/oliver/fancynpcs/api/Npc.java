@@ -48,9 +48,11 @@ public abstract class Npc {
 
     public void spawnForAll() {
         // TODO: check for each player if NPC should be visible (see distance thing - PlayerMoveListener)
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> spawn(onlinePlayer));
-        }
+        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                spawn(onlinePlayer);
+            }
+        });
     }
 
     public abstract void remove(Player player);

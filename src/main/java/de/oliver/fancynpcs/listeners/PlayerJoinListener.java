@@ -20,12 +20,12 @@ public class PlayerJoinListener implements Listener {
             PacketReader_1_20.inject(event.getPlayer());
         }
 
-        for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {
-            FancyNpcs.getInstance().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcs.getInstance().getScheduler().runTaskAsynchronously(() -> {
+            for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {
                 npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
                 npc.spawn(event.getPlayer());
-            });
-        }
+            }
+        });
 
         if (!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")) {
             FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);

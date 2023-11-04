@@ -27,7 +27,7 @@ public class EquipmentCMD implements Subcommand {
     @Override
     public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only_player"));
+            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
             return false;
         }
 

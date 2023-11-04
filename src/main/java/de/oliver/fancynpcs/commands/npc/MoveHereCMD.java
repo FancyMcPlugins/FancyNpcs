@@ -7,6 +7,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,9 +24,9 @@ public class MoveHereCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -37,9 +38,9 @@ public class MoveHereCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setLocation(location);
             npc.update(player);
-            MessageHelper.success(player, lang.get("npc-command-moveHere-moved"));
+            MessageHelper.success(receiver, lang.get("npc-command-moveHere-moved"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

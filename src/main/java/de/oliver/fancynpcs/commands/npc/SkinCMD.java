@@ -8,6 +8,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +27,9 @@ public class SkinCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length != 3 && args.length != 2) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
@@ -36,19 +37,19 @@ public class SkinCMD implements Subcommand {
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(player, lang.get("npc-must-be-player"));
+            MessageHelper.error(receiver, lang.get("npc-must-be-player"));
             return false;
         }
 
         if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
             UUID uuid = UUIDFetcher.getUUID(skinName);
             if (uuid == null) {
-                MessageHelper.error(player, lang.get("npc-command-skin-invalid"));
+                MessageHelper.error(receiver, lang.get("npc-command-skin-invalid"));
                 return false;
             }
             skinName = uuid.toString();
@@ -56,9 +57,9 @@ public class SkinCMD implements Subcommand {
 
         SkinFetcher skinFetcher = new SkinFetcher(skinName);
         if (!skinFetcher.isLoaded()) {
-            MessageHelper.error(player, lang.get("npc-command-message-failed_header"));
-            MessageHelper.error(player, lang.get("npc-command-skin-failed_url"));
-            MessageHelper.error(player, lang.get("npc-command-skin-failed_limited"));
+            MessageHelper.error(receiver, lang.get("npc-command-message-failed_header"));
+            MessageHelper.error(receiver, lang.get("npc-command-skin-failed_url"));
+            MessageHelper.error(receiver, lang.get("npc-command-skin-failed_limited"));
             return false;
         }
 
@@ -70,9 +71,9 @@ public class SkinCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            MessageHelper.success(player, lang.get("npc-command-skin-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-skin-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

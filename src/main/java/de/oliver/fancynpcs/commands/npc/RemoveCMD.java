@@ -8,6 +8,7 @@ import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
 import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,9 +25,9 @@ public class RemoveCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -44,9 +45,9 @@ public class RemoveCMD implements Subcommand {
                 }
             }
             FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
-            MessageHelper.success(player, lang.get("npc-command-remove-removed"));
+            MessageHelper.success(receiver, lang.get("npc-command-remove-removed"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-remove-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-remove-cancelled"));
         }
 
         return false;

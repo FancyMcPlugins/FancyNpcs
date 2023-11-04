@@ -33,7 +33,7 @@ public class SkinCMD implements Subcommand {
             return false;
         }
 
-        String skinName = args.length == 3 ? args[2] : player.getName();
+        String skinName = args.length == 3 ? args[2] : receiver instanceof Player player ? player.getName() : "Steve";
 
 
         if (npc == null) {
@@ -63,7 +63,7 @@ public class SkinCMD implements Subcommand {
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

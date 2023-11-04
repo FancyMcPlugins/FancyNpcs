@@ -31,7 +31,7 @@ public class RemoveCMD implements Subcommand {
             return false;
         }
 
-        NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, player);
+        NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, receiver);
         npcRemoveEvent.callEvent();
         if (!npcRemoveEvent.isCancelled()) {
             npc.removeForAll();

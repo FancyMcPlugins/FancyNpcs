@@ -43,7 +43,7 @@ public class TurnToPlayerCMD implements Subcommand {
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, turnToPlayer, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, turnToPlayer, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

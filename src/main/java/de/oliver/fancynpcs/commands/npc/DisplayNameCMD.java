@@ -40,7 +40,7 @@ public class DisplayNameCMD implements Subcommand {
         }
         displayName = displayName.substring(0, displayName.length() - 1);
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, displayName, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, displayName, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

@@ -43,7 +43,7 @@ public class GlowingCMD implements Subcommand {
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, glowing, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, glowing, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

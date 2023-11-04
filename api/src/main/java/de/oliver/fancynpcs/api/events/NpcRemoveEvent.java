@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.api.events;
 
 import de.oliver.fancynpcs.api.Npc;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -16,12 +16,12 @@ public class NpcRemoveEvent extends Event implements Cancellable {
     @NotNull
     private final Npc npc;
     @NotNull
-    private final Player player;
+    private final CommandSender receiver;
     private boolean isCancelled;
 
-    public NpcRemoveEvent(@NotNull Npc npc, @NotNull Player player) {
+    public NpcRemoveEvent(@NotNull Npc npc, @NotNull CommandSender receiver) {
         this.npc = npc;
-        this.player = player;
+        this.receiver = receiver;
     }
 
     public static HandlerList getHandlerList() {
@@ -38,8 +38,8 @@ public class NpcRemoveEvent extends Event implements Cancellable {
     /**
      * @return the player who removed the npc
      */
-    public @NotNull Player getPlayer() {
-        return player;
+    public @NotNull CommandSender getSender() {
+        return receiver;
     }
 
     @Override

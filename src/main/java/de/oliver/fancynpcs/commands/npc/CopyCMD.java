@@ -26,6 +26,11 @@ public class CopyCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(receiver instanceof Player player)) {
+            MessageHelper.error(receiver, lang.get("npc-command.only_player"));
+            return false;
+        }
+
         if (npc == null) {
             MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;

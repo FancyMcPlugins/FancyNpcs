@@ -140,9 +140,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         String subcommand = args[0];
         String name = args[1];
-        Npc npc = FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() ?
-                FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, p.getUniqueId()) :
-                FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
+        Npc npc;
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && sender instanceof Player player) {
+            npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId());
+        } else {
+            npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
+        }
+
 
         if (!sender.hasPermission("fancynpcs.npc." + subcommand) && !sender.hasPermission("fancynpcs.npc.*")) {
             MessageHelper.error(sender, lang.get("no-permission-subcommand"));
@@ -151,12 +155,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
         switch (subcommand.toLowerCase()) {
             case "create" -> {
-                if (!(sender instanceof Player p)) {
-                    MessageHelper.error(sender, lang.get("npc-command.only_player"));
-                    return false;
-                }
-
-                return new CreateCMD().run(p, null, args);
+                return new CreateCMD().run(sender, null, args);
             }
 
             case "remove" -> {

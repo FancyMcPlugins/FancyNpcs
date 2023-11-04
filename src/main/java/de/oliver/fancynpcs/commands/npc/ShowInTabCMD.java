@@ -51,7 +51,7 @@ public class ShowInTabCMD implements Subcommand {
             }
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, receiver);
         npcModifyEvent.callEvent();
 
         if (showInTab == npc.getData().isShowInTab()) {

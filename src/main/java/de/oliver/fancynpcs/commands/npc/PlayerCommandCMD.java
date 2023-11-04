@@ -18,20 +18,20 @@ public class PlayerCommandCMD implements Subcommand {
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
     @Override
-    public List<String> tabcompletion(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public List<String> tabcompletion(@NotNull Player playedr, @Nullable Npc npc, @NotNull String[] args) {
         return null;
     }
 
     @Override
-    public boolean run(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(player, lang.get("wrong-usage"));
+            MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(player, lang.get("npc-not-found"));
+            MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
         }
 
@@ -47,19 +47,19 @@ public class PlayerCommandCMD implements Subcommand {
 
         for (String blockedCommand : FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands()) {
             if (cmd.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
-                MessageHelper.error(player, lang.get("illegal-command"));
+                MessageHelper.error(receiver, lang.get("illegal-command"));
                 return false;
             }
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, cmd, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, cmd, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setPlayerCommand(cmd);
-            MessageHelper.success(player, lang.get("npc-command-playerCommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-playerCommand-updated"));
         } else {
-            MessageHelper.error(player, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

@@ -33,7 +33,7 @@ public class ListCMD implements Subcommand {
         MessageHelper.info(receiver, lang.get("npc-command-list-header"));
 
         Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && receiver instanceof Player player) {
             allNpcs = allNpcs.stream()
                     .filter(n -> n.getData().getCreator().equals(player.getUniqueId()))
                     .toList();

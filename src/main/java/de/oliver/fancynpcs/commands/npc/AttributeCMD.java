@@ -86,7 +86,7 @@ public class AttributeCMD implements Subcommand {
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.ATTRIBUTE, new Object[]{attribute, value}, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.ATTRIBUTE, new Object[]{attribute, value}, receiver);
         npcModifyEvent.callEvent();
 
         if (npcModifyEvent.isCancelled()) {

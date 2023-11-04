@@ -25,6 +25,11 @@ public class MoveHereCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(receiver instanceof Player player)) {
+            MessageHelper.error(receiver, lang.get("npc-command.only_player"));
+            return false;
+        }
+
         if (npc == null) {
             MessageHelper.error(receiver, lang.get("npc-not-found"));
             return false;
@@ -32,7 +37,7 @@ public class MoveHereCMD implements Subcommand {
 
         Location location = player.getLocation();
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

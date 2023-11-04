@@ -26,6 +26,11 @@ public class EquipmentCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(receiver instanceof Player player)) {
+            MessageHelper.error(receiver, lang.get("npc-command.only_player"));
+            return false;
+        }
+
         if (args.length < 3) {
             MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
@@ -47,7 +52,7 @@ public class EquipmentCMD implements Subcommand {
 
         ItemStack item = player.getInventory().getItemInMainHand();
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, player);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, receiver);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {

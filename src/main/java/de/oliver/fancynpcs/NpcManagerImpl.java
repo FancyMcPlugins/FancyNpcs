@@ -174,6 +174,7 @@ public class NpcManagerImpl implements NpcManager {
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         if (!npcConfig.isConfigurationSection("npcs")) {
+            isLoaded = true;
             return;
         }
 

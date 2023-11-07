@@ -117,7 +117,8 @@ public abstract class Npc {
                 command = PlaceholderAPI.setPlaceholders(player, command);
             }
 
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command);
+            String finalCommand = command;
+            FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
         }
 
         // playerCommand

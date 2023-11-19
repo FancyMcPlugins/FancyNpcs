@@ -1,4 +1,4 @@
-# Commands
+# FancyNpcs Commands
 
 This section procides detailed information about the various commands available in FancyNpcs, allowing you to make the
 most out of its features.

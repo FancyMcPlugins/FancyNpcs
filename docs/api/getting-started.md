@@ -1,4 +1,4 @@
-# Getting Started
+# FancyNpcs Api
 
 ## Gradle
 

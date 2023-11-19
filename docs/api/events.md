@@ -1,17 +1,4 @@
-# Events
-
-<!-- TOC -->
-
-* [Events](#events)
-    * [NpcCreateEvent](#npccreateevent)
-    * [NpcRemoveEvent](#npcremoveevent)
-    * [NpcSpawnEvent](#npcspawnevent)
-    * [NpcModifyEvent](#npcmodifyevent)
-    * [NpcInteractEvent](#npcinteractevent)
-    * [NpcStartLookingEvent](#npcstartlookingevent)
-    * [NpcStopLookingEvent](#npcstoplookingevent)
-
-<!-- TOC -->
+# FancyNpcs Events
 
 ## NpcCreateEvent
 

@@ -1,35 +1,7 @@
 # Commands
 
-<!-- TOC -->
-
-* [Commands](#commands)
-    * [/FancNpcs ...](#fancnpcs-)
-        * [version](#version)
-        * [reload](#reload)
-        * [save](#save)
-        * [featureFlags](#featureflags)
-    * [/Npc ...](#npc-)
-        * [help](#help)
-        * [create](#create)
-        * [remove](#remove)
-        * [copy](#copy)
-        * [list](#list)
-        * [type](#type)
-        * [attribute](#attribute)
-        * [displayName](#displayname)
-        * [showInTab](#showintab)
-        * [skin](#skin)
-        * [equipment](#equipment)
-        * [glowing](#glowing)
-        * [glowingColor](#glowingcolor)
-        * [collidable](#collidable)
-        * [turnToPlayer](#turntoplayer)
-        * [message](#message)
-        * [playerCommand](#playercommand)
-        * [serverCommand](#servercommand)
-        * [moveHere](#movehere)
-
-<!-- TOC -->
+This section procides detailed information about the various commands available in FancyNpcs, allowing you to make the
+most out of its features.
 
 ## /FancNpcs ...
 

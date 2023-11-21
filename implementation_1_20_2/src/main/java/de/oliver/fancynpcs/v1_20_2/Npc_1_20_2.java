@@ -73,7 +73,7 @@ public class Npc_1_20_2 extends Npc {
             }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
-            EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, "bA"); // EntityType.factory
+            EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, MappingKeys1_20_2.ENTITY_TYPE__FACTORY.getMapping()); // EntityType.factory
             npc = factory.create(nmsType, serverLevel);
         }
     }
@@ -246,7 +246,7 @@ public class Npc_1_20_2 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), "e"); // itemsById
+        Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), MappingKeys1_20_2.SYNCHED_ENTITY_DATA__ITEMS_BY_ID.getMapping()); // itemsById
         List<SynchedEntityData.DataValue<?>> entityData = new ArrayList<>();
         for (SynchedEntityData.DataItem<?> dataItem : itemsById.values()) {
             entityData.add(dataItem.value());
@@ -265,9 +265,9 @@ public class Npc_1_20_2 extends Npc {
         npc.setYRot(data.getLocation().getYaw());
 
         ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
-        ReflectionUtils.setValue(teleportEntityPacket, "b", data.getLocation().x()); // 'x'
-        ReflectionUtils.setValue(teleportEntityPacket, "c", data.getLocation().y()); // 'y'
-        ReflectionUtils.setValue(teleportEntityPacket, "d", data.getLocation().z()); // 'z'
+        ReflectionUtils.setValue(teleportEntityPacket, MappingKeys1_20_2.CLIENTBOUND_TELEPORT_ENTITY_PACKET__X.getMapping(), data.getLocation().x()); // 'x'
+        ReflectionUtils.setValue(teleportEntityPacket, MappingKeys1_20_2.CLIENTBOUND_TELEPORT_ENTITY_PACKET__Y.getMapping(), data.getLocation().y()); // 'y'
+        ReflectionUtils.setValue(teleportEntityPacket, MappingKeys1_20_2.CLIENTBOUND_TELEPORT_ENTITY_PACKET__Z.getMapping(), data.getLocation().z()); // 'z'
         serverPlayer.connection.send(teleportEntityPacket);
 
         float angelMultiplier = 256f / 360f;

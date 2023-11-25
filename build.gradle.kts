@@ -5,7 +5,7 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.1.0"
+    id("xyz.jpenilla.run-paper") version "2.2.2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -39,7 +39,7 @@ dependencies {
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
     compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.0.0")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.2.0")
 }
 
 tasks {

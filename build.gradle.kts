@@ -9,6 +9,8 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+runPaper.folia.registerTask()
+
 allprojects {
     group = "de.oliver"
     version = "2.0.5"

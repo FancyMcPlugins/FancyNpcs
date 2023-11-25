@@ -25,10 +25,8 @@ allprojects {
     }
 }
 
-val mcVersion = "1.20.2"
-
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
@@ -39,12 +37,12 @@ dependencies {
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
     compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.2.0")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
 
 tasks {
     runServer {
-        minecraftVersion(mcVersion)
+        minecraftVersion(findProperty("minecraftVersion").toString())
     }
 
     shadowJar {

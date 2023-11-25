@@ -4,9 +4,9 @@ plugins {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
-    compileOnly("de.oliver:FancyLib:1.0.5.1")
+    compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
     compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
 }

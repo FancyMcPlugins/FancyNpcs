@@ -134,6 +134,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".message", data.getMessage());
+            npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
@@ -235,6 +236,7 @@ public class NpcManagerImpl implements NpcManager {
             String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
             String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand");
             String message = npcConfig.getString("npcs." + id + ".message");
+            float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -253,7 +255,7 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes);
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, interactionCooldown, attributes);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

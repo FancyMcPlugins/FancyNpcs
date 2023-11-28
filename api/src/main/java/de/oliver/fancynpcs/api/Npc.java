@@ -2,6 +2,8 @@ package de.oliver.fancynpcs.api;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import de.oliver.fancylib.LanguageConfig;
+import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -13,16 +15,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 public abstract class Npc {
 
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
     protected final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
     protected final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
     protected final Map<UUID, Boolean> isLookingAtPlayer = new HashMap<>();
+    protected final Map<UUID, Long> lastPlayerInteraction = new HashMap<>();
+    private final LanguageConfig lang = FancyNpcsPlugin.get().getLanguageConfig();
     protected NpcData data;
     protected boolean saveToFile;
 
@@ -84,6 +90,21 @@ public abstract class Npc {
     public void interact(Player player, boolean isAttack, EquipmentSlot hand, Vector clickLoc) {
         if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
             return;
+        }
+
+        if (data.getInteractionCooldown() > 0) {
+            if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
+                long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
+                if (nextAllowedInteraction > System.currentTimeMillis()) {
+                    float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
+                    MessageHelper.warning(player, lang.get("on-interaction-cooldown",
+                            "time", DECIMAL_FORMAT.format(timeLeft)
+                    ));
+                    return;
+                }
+            }
+
+            lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
         NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommand(), data.getServerCommand(), data.getOnClick(), player);
@@ -172,6 +193,10 @@ public abstract class Npc {
 
     public Map<UUID, Boolean> getIsLookingAtPlayer() {
         return isLookingAtPlayer;
+    }
+
+    public Map<UUID, Long> getLastPlayerInteraction() {
+        return lastPlayerInteraction;
     }
 
     public boolean isDirty() {

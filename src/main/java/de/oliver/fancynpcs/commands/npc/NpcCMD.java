@@ -37,7 +37,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute")
+            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -125,6 +125,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
             MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
             MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
+            MessageHelper.info(sender, lang.get("npc-command-help-interactionCooldown"));
 
             return true;
         }
@@ -192,6 +193,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
             case "playercommand" -> {
                 return new PlayerCommandCMD().run(sender, npc, args);
+            }
+
+            case "interactioncooldown" -> {
+                return new InteractionCooldownCMD().run(sender, npc, args);
             }
 
             case "showintab" -> {

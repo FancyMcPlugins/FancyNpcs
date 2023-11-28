@@ -43,27 +43,29 @@ public class CopyCMD implements Subcommand {
 
         String newName = args[2];
 
-        Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(
-                UUID.randomUUID().toString(),
-                newName,
-                player.getUniqueId(),
-                npc.getData().getDisplayName(),
-                npc.getData().getSkin(),
-                player.getLocation(),
-                npc.getData().isShowInTab(),
-                npc.getData().isSpawnEntity(),
-                npc.getData().isCollidable(),
-                npc.getData().isGlowing(),
-                npc.getData().getGlowingColor(),
-                npc.getData().getType(),
-                npc.getData().getEquipment(),
-                npc.getData().isTurnToPlayer(),
-                npc.getData().getOnClick(),
-                npc.getData().getMessage(),
-                npc.getData().getServerCommand(),
-                npc.getData().getPlayerCommand(),
-                npc.getData().getAttributes()
-        ));
+        Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(
+                new NpcData(
+                        UUID.randomUUID().toString(),
+                        newName,
+                        player.getUniqueId(),
+                        npc.getData().getDisplayName(),
+                        npc.getData().getSkin(),
+                        player.getLocation(),
+                        npc.getData().isShowInTab(),
+                        npc.getData().isSpawnEntity(),
+                        npc.getData().isCollidable(),
+                        npc.getData().isGlowing(),
+                        npc.getData().getGlowingColor(),
+                        npc.getData().getType(),
+                        npc.getData().getEquipment(),
+                        npc.getData().isTurnToPlayer(),
+                        npc.getData().getOnClick(),
+                        npc.getData().getMessage(),
+                        npc.getData().getServerCommand(),
+                        npc.getData().getPlayerCommand(),
+                        npc.getData().getInteractionCooldown(),
+                        npc.getData().getAttributes()
+                ));
 
         NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, player);
         npcCreateEvent.callEvent();

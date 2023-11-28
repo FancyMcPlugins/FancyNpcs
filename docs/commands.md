@@ -166,6 +166,12 @@ Placeholders:
 - all placeholders from PlaceholderAPI
 - ``{player}`` - the player's username
 
+### interactionCooldown
+
+Description: Changes the cooldown for player interactions with the npc<br>
+Syntax: ``/Npc interactionCooldown (npc name) (time in seconds)``<br>
+Permission: ``FancyNpcs.npc.interactionCooldown`` or ``FancyNpcs.npc.*``<br>
+
 ### moveHere
 
 Description: Teleports the npc to you<br>

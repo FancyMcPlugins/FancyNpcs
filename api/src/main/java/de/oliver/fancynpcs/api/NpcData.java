@@ -33,6 +33,7 @@ public class NpcData {
     private String serverCommand;
     private String playerCommand;
     private String message;
+    private float interactionCooldown;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
 
@@ -55,6 +56,7 @@ public class NpcData {
             String message,
             String serverCommand,
             String playerCommand,
+            float interactionCooldown,
             Map<NpcAttribute, String> attributes
     ) {
         this.id = id;
@@ -75,6 +77,7 @@ public class NpcData {
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         this.message = message;
+        this.interactionCooldown = interactionCooldown;
         this.attributes = attributes;
         this.isDirty = true;
     }
@@ -98,6 +101,7 @@ public class NpcData {
         };
         this.turnToPlayer = false;
         this.message = "";
+        this.interactionCooldown = 0;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.isDirty = true;
@@ -269,6 +273,15 @@ public class NpcData {
     public NpcData setMessage(String message) {
         this.message = message;
         isDirty = true;
+        return this;
+    }
+
+    public float getInteractionCooldown() {
+        return interactionCooldown;
+    }
+
+    public NpcData setInteractionCooldown(float interactionCooldown) {
+        this.interactionCooldown = interactionCooldown;
         return this;
     }
 

@@ -186,7 +186,7 @@ public class NpcManagerImpl implements NpcManager {
             String creatorStr = npcConfig.getString("npcs." + id + ".creator");
             UUID creator = creatorStr == null ? null : UUID.fromString(creatorStr);
 
-            String displayName = npcConfig.getString("npcs." + id + ".displayName");
+            String displayName = npcConfig.getString("npcs." + id + ".displayName", "<empty>");
             EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + id + ".type", "PLAYER").toUpperCase());
 
             Location location = null;

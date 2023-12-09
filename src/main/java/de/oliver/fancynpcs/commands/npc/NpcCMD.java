@@ -107,6 +107,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             MessageHelper.info(sender, lang.get("npc-command-help-skin"));
             MessageHelper.info(sender, lang.get("npc-command-help-type"));
             MessageHelper.info(sender, lang.get("npc-command-help-moveHere"));
+            MessageHelper.info(sender, lang.get("npc-command-help-teleport"));
             MessageHelper.info(sender, lang.get("npc-command-help-displayName"));
             MessageHelper.info(sender, lang.get("npc-command-help-equipment"));
             MessageHelper.info(sender, lang.get("npc-command-help-message"));

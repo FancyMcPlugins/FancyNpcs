@@ -19,6 +19,7 @@ messages:
   npc-command-help-skin: ' - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc'
   npc-command-help-type: ' - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc'
   npc-command-help-moveHere: ' - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location'
+  npc-command-help-teleport: ' - /npc teleport (name) (x) (y) (z) [world] <dark_gray>- <white>Teleports the npc to the provided location'
   npc-command-help-displayName: ' - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc'
   npc-command-help-equipment: ' - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding'
   npc-command-help-message: ' - /npc message (name) (none|message) <dark_gray>- <white>Set NPC message'

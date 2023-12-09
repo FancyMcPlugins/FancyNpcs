@@ -3,7 +3,7 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.5.11"
 }
 
-val minecraftVersion = "1.20.1"
+val minecraftVersion = "1.20.4"
 
 dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")

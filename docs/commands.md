@@ -178,3 +178,9 @@ Description: Teleports the npc to you<br>
 Syntax: ``/Npc moveHere (npc name)``<br>
 Permission: ``FancyNpcs.npc.moveHere`` or ``FancyNpcs.npc.*``
 
+### teleport
+
+Description: Teleports the npc to the provided location<br>
+Syntax: ``/Npc teleport (npc name) (x) (y) (z) [world]``<br>
+_The ``world`` parameter is optional._<br>
+Permission: ``FancyNpcs.npc.teleport`` or ``FancyNpcs.npc.*``

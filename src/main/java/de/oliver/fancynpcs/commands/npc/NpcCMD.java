@@ -24,6 +24,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
     private final AttributeCMD attributeCMD = new AttributeCMD();
+    private final TeleportCMD teleportCMD = new TeleportCMD();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
@@ -37,7 +38,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
+            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -91,6 +92,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         switch (subcommand.toLowerCase()) {
             case "attribute" -> {
                 return attributeCMD.tabcompletion(p, npc, args);
+            }
+
+            case "teleport" -> {
+                return teleportCMD.tabcompletion(p, npc, args);
             }
         }
 
@@ -169,6 +174,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
             case "movehere" -> {
                 return new MoveHereCMD().run(sender, npc, args);
+            }
+
+            case "teleport" -> {
+                return teleportCMD.run(sender, npc, args);
             }
 
             case "message" -> {

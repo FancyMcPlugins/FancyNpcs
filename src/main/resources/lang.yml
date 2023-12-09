@@ -7,6 +7,7 @@ messages:
   no-permission-subcommand: You don't have permission for this subcommand
   wrong-usage: 'Wrong usage: /npc help'
   could-not-parse-number: Could not parse number
+  world-not-found: Could not find world
   npc-not-found: Could not find NPC
   npc-must-be-player: Npc's type must be Player to do this
   on-interaction-cooldown: You need to wait {time} seconds until you can interact with this npc again
@@ -69,3 +70,4 @@ messages:
   npc-command-attribute-invalid-value: Invalid attribute value
   npc-command-attribute-success: Successfully set the attribute
   npc-command-interactioncooldown-updated: Successfully updated the interaction cooldown
+  npc-command-teleport-success: Successfully teleported npc

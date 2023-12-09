@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TypeCMD implements Subcommand {
@@ -20,6 +21,13 @@ public class TypeCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+        if (args.length == 3) {
+            return Arrays.stream(EntityType.values())
+                    .map(Enum::name)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+
         return null;
     }
 

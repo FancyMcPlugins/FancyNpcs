@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class GlowingCMD implements Subcommand {
 
@@ -19,6 +20,12 @@ public class GlowingCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+        if (args.length == 3) {
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+        
         return null;
     }
 

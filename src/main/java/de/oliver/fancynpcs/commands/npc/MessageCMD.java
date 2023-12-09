@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.stream.Stream;
 
 public class MessageCMD implements Subcommand {
 
@@ -21,6 +22,12 @@ public class MessageCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+        if (args.length == 3) {
+            return Stream.of("none")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+        
         return null;
     }
 

@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class EquipmentCMD implements Subcommand {
@@ -21,6 +22,12 @@ public class EquipmentCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+        if (args.length == 3) {
+            return Arrays.stream(NpcEquipmentSlot.values())
+                    .map(Enum::name)
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
         return null;
     }
 

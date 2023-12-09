@@ -4,32 +4,40 @@ import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import net.kyori.adventure.text.format.NamedTextColor;
+import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class NpcCMD implements CommandExecutor, TabCompleter {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
-    private final AttributeCMD attributeCMD = new AttributeCMD();
-    private final TeleportCMD teleportCMD = new TeleportCMD();
+
+    private final Subcommand attributeCMD = new AttributeCMD();
+    private final Subcommand collidableCMD = new CollidableCMD();
+    private final Subcommand displayNameCMD = new DisplayNameCMD();
+    private final Subcommand equipmentCMD = new EquipmentCMD();
+    private final Subcommand glowingCMD = new GlowingCMD();
+    private final Subcommand glowingColorCMD = new GlowingCMD();
+    private final Subcommand messageCMD = new MessageCMD();
+    private final Subcommand playerCommandCMD = new PlayerCommandCMD();
+    private final Subcommand serverCommandCMD = new ServerCommandCMD();
+    private final Subcommand showInTabCMD = new ShowInTabCMD();
+    private final Subcommand teleportCMD = new TeleportCMD();
+    private final Subcommand turnToPlayerCMD = new TurnToPlayerCMD();
+    private final Subcommand typeCMD = new TypeCMD();
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        // TODO: move all of this into the subcommands
-
         if (!(sender instanceof Player p)) {
             MessageHelper.error(sender, lang.get("only-players"));
             return null;
@@ -49,32 +57,6 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                     .map(npc -> npc.getData().getName())
                     .filter(input -> input.toLowerCase().startsWith(args[1].toLowerCase()))
                     .toList());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("equipment")) {
-            suggestions.addAll(Arrays.stream(NpcEquipmentSlot.values())
-                    .map(Enum::name)
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
-        } else if (args.length == 3 && (args[0].equalsIgnoreCase("showInTab") || args[0].equalsIgnoreCase("glowing") || args[0].equalsIgnoreCase("turnToPlayer") || args[0].equalsIgnoreCase("collidable"))) {
-            suggestions.addAll(Stream.of("true", "false")
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("glowingcolor")) {
-            suggestions.addAll(NamedTextColor.NAMES.keys().stream()
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("type")) {
-            suggestions.addAll(Arrays.stream(EntityType.values())
-                    .map(Enum::name)
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
-        } else if (args.length == 3 && (args[0].equalsIgnoreCase("message") || args[0].equalsIgnoreCase("playerCommand") || args[0].equalsIgnoreCase("serverCommand"))) {
-            suggestions.addAll(Stream.of("none")
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
-        } else if (args.length == 3 && args[0].equalsIgnoreCase("displayName")) {
-            suggestions.addAll(Stream.of("<empty>")
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList());
         }
 
         if (!suggestions.isEmpty()) return suggestions;
@@ -89,17 +71,23 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
                 FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, p.getUniqueId()) :
                 FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name);
 
-        switch (subcommand.toLowerCase()) {
-            case "attribute" -> {
-                return attributeCMD.tabcompletion(p, npc, args);
-            }
+        return switch (subcommand.toLowerCase()) {
+            case "attribute" -> attributeCMD.tabcompletion(p, npc, args);
+            case "collidable" -> collidableCMD.tabcompletion(p, npc, args);
+            case "displayname" -> displayNameCMD.tabcompletion(p, npc, args);
+            case "equipment" -> equipmentCMD.tabcompletion(p, npc, args);
+            case "glowing" -> glowingCMD.tabcompletion(p, npc, args);
+            case "glowingcolor" -> glowingColorCMD.tabcompletion(p, npc, args);
+            case "message" -> messageCMD.tabcompletion(p, npc, args);
+            case "playercommand" -> playerCommandCMD.tabcompletion(p, npc, args);
+            case "servercommand" -> serverCommandCMD.tabcompletion(p, npc, args);
+            case "showintab" -> showInTabCMD.tabcompletion(p, npc, args);
+            case "teleport" -> teleportCMD.tabcompletion(p, npc, args);
+            case "turntoplayer" -> turnToPlayerCMD.tabcompletion(p, npc, args);
+            case "type" -> typeCMD.tabcompletion(p, npc, args);
 
-            case "teleport" -> {
-                return teleportCMD.tabcompletion(p, npc, args);
-            }
-        }
-
-        return null;
+            default -> Collections.emptyList();
+        };
     }
 
     @Override
@@ -181,7 +169,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "message" -> {
-                return new MessageCMD().run(sender, npc, args);
+                return messageCMD.run(sender, npc, args);
             }
 
             case "skin" -> {
@@ -189,19 +177,19 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "displayname" -> {
-                return new DisplayNameCMD().run(sender, npc, args);
+                return displayNameCMD.run(sender, npc, args);
             }
 
             case "equipment" -> {
-                return new EquipmentCMD().run(sender, npc, args);
+                return equipmentCMD.run(sender, npc, args);
             }
 
             case "servercommand" -> {
-                return new ServerCommandCMD().run(sender, npc, args);
+                return serverCommandCMD.run(sender, npc, args);
             }
 
             case "playercommand" -> {
-                return new PlayerCommandCMD().run(sender, npc, args);
+                return playerCommandCMD.run(sender, npc, args);
             }
 
             case "interactioncooldown" -> {
@@ -209,27 +197,27 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
             }
 
             case "showintab" -> {
-                return new ShowInTabCMD().run(sender, npc, args);
+                return showInTabCMD.run(sender, npc, args);
             }
 
             case "glowing" -> {
-                return new GlowingCMD().run(sender, npc, args);
+                return glowingCMD.run(sender, npc, args);
             }
 
             case "glowingcolor" -> {
-                return new GlowingColorCMD().run(sender, npc, args);
+                return glowingColorCMD.run(sender, npc, args);
             }
 
             case "collidable" -> {
-                return new CollidableCMD().run(sender, npc, args);
+                return collidableCMD.run(sender, npc, args);
             }
 
             case "turntoplayer" -> {
-                return new TurnToPlayerCMD().run(sender, npc, args);
+                return turnToPlayerCMD.run(sender, npc, args);
             }
 
             case "type" -> {
-                return new TypeCMD().run(sender, npc, args);
+                return typeCMD.run(sender, npc, args);
             }
 
             case "attribute" -> {

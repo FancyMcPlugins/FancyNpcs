@@ -43,7 +43,8 @@ dependencies {
 
 tasks {
     runServer {
-        minecraftVersion(findProperty("minecraftVersion").toString())
+        minecraftVersion("1.20.2")
+//        minecraftVersion(findProperty("minecraftVersion").toString())
     }
 
     shadowJar {

@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.6-rc1"
+    version = "2.0.6"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -44,6 +44,11 @@ dependencies {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
+
+        downloadPlugins {
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+148")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+89")
+        }
     }
 
     shadowJar {

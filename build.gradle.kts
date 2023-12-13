@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.6"
+    version = "2.0.6.1"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {

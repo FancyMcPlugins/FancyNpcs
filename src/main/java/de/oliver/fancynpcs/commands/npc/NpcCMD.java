@@ -27,7 +27,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     private final Subcommand displayNameCMD = new DisplayNameCMD();
     private final Subcommand equipmentCMD = new EquipmentCMD();
     private final Subcommand glowingCMD = new GlowingCMD();
-    private final Subcommand glowingColorCMD = new GlowingCMD();
+    private final Subcommand glowingColorCMD = new GlowingColorCMD();
     private final Subcommand messageCMD = new MessageCMD();
     private final Subcommand playerCommandCMD = new PlayerCommandCMD();
     private final Subcommand serverCommandCMD = new ServerCommandCMD();

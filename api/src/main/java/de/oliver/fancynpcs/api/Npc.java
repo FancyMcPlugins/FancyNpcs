@@ -97,9 +97,10 @@ public abstract class Npc {
                 long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
                 if (nextAllowedInteraction > System.currentTimeMillis()) {
                     float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
-                    MessageHelper.warning(player, lang.get("on-interaction-cooldown",
-                            "time", DECIMAL_FORMAT.format(timeLeft)
-                    ));
+                    String cooldownMessage = lang.get("on-interaction-cooldown", "time", DECIMAL_FORMAT.format(timeLeft));
+
+                    if (cooldownMessage == "none") return;
+                    MessageHelper.warning(player, cooldownMessage);
                     return;
                 }
             }

@@ -26,7 +26,7 @@ public class ShowInTabCMD implements Subcommand {
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
-        
+
         return null;
     }
 
@@ -68,7 +68,13 @@ public class ShowInTabCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setShowInTab(showInTab);
-            npc.updateForAll();
+
+            if (showInTab) {
+                npc.updateForAll();
+            } else {
+                npc.removeForAll();
+                npc.spawnForAll();
+            }
 
             if (showInTab) {
                 MessageHelper.success(receiver, lang.get("npc-command-showInTab-true"));

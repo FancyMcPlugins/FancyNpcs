@@ -120,13 +120,14 @@ public abstract class Npc {
         }
 
         // message
-        if (data.getMessage() != null && data.getMessage().length() > 0) {
-            String msg = data.getMessage();
-            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                msg = PlaceholderAPI.setPlaceholders(player, msg);
-            }
+        if (data.getMessages() != null && !data.getMessages().isEmpty()) {
+            for (String msg : data.getMessages()) {
+                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
+                    msg = PlaceholderAPI.setPlaceholders(player, msg);
+                }
 
-            player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+            }
         }
 
         // serverCommand

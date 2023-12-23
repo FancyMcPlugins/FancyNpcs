@@ -8,9 +8,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class NpcData {
@@ -32,7 +30,7 @@ public class NpcData {
     private boolean turnToPlayer;
     private String serverCommand;
     private String playerCommand;
-    private String message;
+    private List<String> messages;
     private float interactionCooldown;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
@@ -53,7 +51,7 @@ public class NpcData {
             Map<NpcEquipmentSlot, ItemStack> equipment,
             boolean turnToPlayer,
             Consumer<Player> onClick,
-            String message,
+            List<String> messages,
             String serverCommand,
             String playerCommand,
             float interactionCooldown,
@@ -76,7 +74,7 @@ public class NpcData {
         this.turnToPlayer = turnToPlayer;
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
-        this.message = message;
+        this.messages = messages;
         this.interactionCooldown = interactionCooldown;
         this.attributes = attributes;
         this.isDirty = true;
@@ -100,7 +98,7 @@ public class NpcData {
         this.onClick = p -> {
         };
         this.turnToPlayer = false;
-        this.message = "";
+        this.messages = new ArrayList<>();
         this.interactionCooldown = 0;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
@@ -266,14 +264,23 @@ public class NpcData {
         return this;
     }
 
-    public String getMessage() {
-        return message;
+    public List<String> getMessages() {
+        return messages;
     }
 
-    public NpcData setMessage(String message) {
-        this.message = message;
-        isDirty = true;
+    public NpcData setMessages(List<String> messages) {
+        this.messages = messages;
         return this;
+    }
+
+    public void addMessage(String message) {
+        messages.add(message);
+        isDirty = true;
+    }
+
+    public void removeMessage(int index) {
+        messages.remove(index);
+        isDirty = true;
     }
 
     public float getInteractionCooldown() {

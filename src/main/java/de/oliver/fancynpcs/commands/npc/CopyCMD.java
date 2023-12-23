@@ -60,7 +60,7 @@ public class CopyCMD implements Subcommand {
                         npc.getData().getEquipment(),
                         npc.getData().isTurnToPlayer(),
                         npc.getData().getOnClick(),
-                        npc.getData().getMessage(),
+                        npc.getData().getMessages(),
                         npc.getData().getServerCommand(),
                         npc.getData().getPlayerCommand(),
                         npc.getData().getInteractionCooldown(),

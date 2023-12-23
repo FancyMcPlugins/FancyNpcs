@@ -146,8 +146,11 @@ Permission: ``FancyNpcs.npc.turnToPlayer`` or ``FancyNpcs.npc.*``
 
 ### message
 
-Description: Changes the message that will be sent to the player when interacting with the npc<br>
-Syntax: ``/Npc message (npc name) ('none' | message ...)``<br>
+Description: Changes the messages that will be sent to the player when interacting with the npc<br>
+Syntax: ``/Npc message (npc name) add (message)`` - adds a new message<br>
+Syntax: ``/Npc message (npc name) set (index) (message)`` - sets a message at an index<br>
+Syntax: ``/Npc message (npc name) remove (index)`` - removes a message at an index<br>
+Syntax: ``/Npc message (npc name) clear`` - removes all messages<br>
 Permission: ``FancyNpcs.npc.message`` or ``FancyNpcs.npc.*``<br>
 Placeholders:
 

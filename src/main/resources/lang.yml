@@ -43,7 +43,11 @@ messages:
   npc-command-remove-removed: Removed NPC
   npc-command-remove-cancelled: Removing has been cancelled
   npc-command-moveHere-moved: Moved NPC to your location
-  npc-command-message-updated: Updated Message
+  npc-command-message-updated: Updated message
+  npc-command-message-removed: Removed message
+  npc-command-message-invalid: Invalid message
+  npc-command-message-invalid-index: Invalid index
+  npc-command-message-cancelled: Updating message has been cancelled
   npc-command-skin-invalid: Invalid username or url
   npc-command-skin-failed_header: 'Could not load skin. Possible causes:'
   npc-command-skin-failed_url: ' - Invalid URL (check the url)'

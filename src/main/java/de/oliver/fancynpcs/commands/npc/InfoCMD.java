@@ -43,9 +43,18 @@ public class InfoCMD implements Subcommand {
         MessageHelper.info(receiver, " - Glowing color: <gray>" + npc.getData().getGlowingColor().toString());
         MessageHelper.info(receiver, " - Is collidable: <gray>" + npc.getData().isCollidable());
         MessageHelper.info(receiver, " - Interaction cooldown: <gray>" + npc.getData().getInteractionCooldown() + " seconds");
-        MessageHelper.info(receiver, " - Message: <gray>" + npc.getData().getMessage());
         MessageHelper.info(receiver, " - Player Command: <gray>" + npc.getData().getPlayerCommand());
         MessageHelper.info(receiver, " - Server Command: <gray>" + npc.getData().getServerCommand());
+
+        if (!npc.getData().getMessages().isEmpty()) {
+            MessageHelper.info(receiver, " - Messages:");
+            for (int i = 0; i < npc.getData().getMessages().size(); i++) {
+                MessageHelper.info(receiver, " <gray>" + (i + 1) + ": " + npc.getData().getMessages().get(i));
+            }
+
+        }
+
+
         npc.getData().getEquipment().forEach((slot, item) ->
                 MessageHelper.info(receiver, " - Equipment: <gray>" + slot.name() + " -> " + item.getType().name())
         );

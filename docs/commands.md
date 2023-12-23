@@ -43,6 +43,12 @@ Description: Shows a list of all commands<br>
 Syntax: ``/Npc help``<br>
 Permission: ``FancyNpcs.npc.help`` or ``FancyNpcs.npc.*``
 
+### info
+
+Description: Shows all important information about an npc<br>
+Syntax: ``/Npc into (npc)``<br>
+Permission: ``FancyNpcs.npc.info`` or ``FancyNpcs.npc.*``
+
 ### create
 
 Description: Creates a new npc at your location<br>

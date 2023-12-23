@@ -46,7 +46,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
+            suggestions.addAll(Stream.of("help", "info", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -159,6 +159,10 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
 
             case "copy" -> {
                 return new CopyCMD().run(sender, npc, args);
+            }
+
+            case "info" -> {
+                return new InfoCMD().run(sender, npc, args);
             }
 
             case "movehere" -> {

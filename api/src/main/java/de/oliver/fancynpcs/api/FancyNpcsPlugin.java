@@ -30,6 +30,8 @@ public interface FancyNpcsPlugin {
 
     NpcManager getNpcManager();
 
+    FancyNpcsConfig getFancyNpcConfig();
+
     AttributeManager getAttributeManager();
 
     LanguageConfig getLanguageConfig();

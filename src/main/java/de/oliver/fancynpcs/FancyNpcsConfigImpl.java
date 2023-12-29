@@ -1,12 +1,13 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancylib.ConfigHelper;
+import de.oliver.fancynpcs.api.FancyNpcsConfig;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class FancyNpcConfig {
+public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private boolean disabledInteractionCooldownMessage;
     private boolean muteVersionNotification;
     private boolean enableAutoSave;
@@ -48,7 +49,7 @@ public class FancyNpcConfig {
     public boolean isInteractionCooldownMessageDisabled() {
         return disabledInteractionCooldownMessage;
     }
-    
+
     public boolean isMuteVersionNotification() {
         return muteVersionNotification;
     }

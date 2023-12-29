@@ -43,7 +43,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
-    private final FancyNpcConfig config;
+    private final FancyNpcsConfigImpl config;
     private final LanguageConfig languageConfig;
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
@@ -59,7 +59,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
-        this.config = new FancyNpcConfig();
+        this.config = new FancyNpcsConfigImpl();
         this.versionFetcher = new MasterVersionFetcher(getName());
         this.languageConfig = new LanguageConfig(this);
         this.versionConfig = new VersionConfig(this, versionFetcher);
@@ -231,7 +231,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return attributeManager;
     }
 
-    public FancyNpcConfig getFancyNpcConfig() {
+    @Override
+    public FancyNpcsConfigImpl getFancyNpcConfig() {
         return config;
     }
 

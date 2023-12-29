@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FancyNpcConfig {
+    private boolean disabledInteractionCooldownMessage;
     private boolean muteVersionNotification;
     private boolean enableAutoSave;
     private int autoSaveInterval;
@@ -19,6 +20,7 @@ public class FancyNpcConfig {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
+        disabledInteractionCooldownMessage = (boolean) ConfigHelper.getOrDefault(config, "disable_interaction_cooldown_message", false);
         muteVersionNotification = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
         enableAutoSave = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
@@ -43,6 +45,10 @@ public class FancyNpcConfig {
         FancyNpcs.getInstance().saveConfig();
     }
 
+    public boolean isInteractionCooldownMessageDisabled() {
+        return disabledInteractionCooldownMessage;
+    }
+    
     public boolean isMuteVersionNotification() {
         return muteVersionNotification;
     }

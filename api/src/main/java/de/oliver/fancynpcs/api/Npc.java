@@ -95,11 +95,10 @@ public abstract class Npc {
         if (data.getInteractionCooldown() > 0) {
             if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
                 long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
-                if (nextAllowedInteraction > System.currentTimeMillis()) {
+                if (nextAllowedInteraction > System.currentTimeMillis() && !FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
                     float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
-                    MessageHelper.warning(player, lang.get("on-interaction-cooldown",
-                            "time", DECIMAL_FORMAT.format(timeLeft)
-                    ));
+                    String cooldownMessage = lang.get("on-interaction-cooldown", "time", DECIMAL_FORMAT.format(timeLeft));
+                    MessageHelper.warning(player, cooldownMessage);
                     return;
                 }
             }

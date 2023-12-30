@@ -6,22 +6,18 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class NpcCMD implements CommandExecutor, TabCompleter {
+public class NpcCMD extends Command {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
-
     private final Subcommand attributeCMD = new AttributeCMD();
     private final Subcommand collidableCMD = new CollidableCMD();
     private final Subcommand displayNameCMD = new DisplayNameCMD();
@@ -35,9 +31,13 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     private final Subcommand teleportCMD = new TeleportCMD();
     private final Subcommand turnToPlayerCMD = new TurnToPlayerCMD();
     private final Subcommand typeCMD = new TypeCMD();
+    public NpcCMD() {
+        super("npc");
+        setPermission("fancynpcs.npc");
+    }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player p)) {
             MessageHelper.error(sender, lang.get("only-players"));
             return null;
@@ -62,7 +62,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
         if (!suggestions.isEmpty()) return suggestions;
 
         if (args.length < 3) {
-            return null;
+            return Collections.emptyList();
         }
 
         String subcommand = args[0];
@@ -91,7 +91,7 @@ public class NpcCMD implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!sender.hasPermission("fancynpcs.npc.help") && !sender.hasPermission("fancynpcs.npc.*")) {

@@ -28,12 +28,15 @@ import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
@@ -167,8 +170,13 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
-        getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
-        getCommand("npc").setExecutor(new NpcCMD());
+        final Collection<Command> commands = Arrays.asList(new FancyNpcsCMD(), new NpcCMD());
+        if (config.isRegisterCommands()) {
+            commands.forEach(command -> getServer().getCommandMap().register("fancynpcs", command));
+        } else {
+            commands.stream().filter(Command::isRegistered).forEach(command ->
+                    command.unregister(getServer().getCommandMap()));
+        }
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);

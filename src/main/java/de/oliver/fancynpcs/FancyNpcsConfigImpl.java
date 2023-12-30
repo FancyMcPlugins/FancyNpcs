@@ -29,6 +29,13 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int autoSaveInterval;
 
     /**
+     * Indicates whether commands should be registered.
+     * <p>
+     * This is useful for users who want to use the plugin's API only.
+     */
+    private boolean registerCommands;
+
+    /**
      * The distance at which NPCs turn to the player.
      */
     private int turnToPlayerDistance;
@@ -63,6 +70,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         config.setInlineComments("autosave_interval", List.of("The interval at which autosave is performed in minutes."));
+
+        registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
+        config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
 
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
         config.setInlineComments("turn_to_player_distance", List.of("The distance at which NPCs turn to the player."));
@@ -106,6 +116,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public int getAutoSaveInterval() {
         return autoSaveInterval;
+    }
+
+    public boolean isRegisterCommands() {
+        return registerCommands;
     }
 
     public int getTurnToPlayerDistance() {

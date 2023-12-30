@@ -8,13 +8,44 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FancyNpcsConfigImpl implements FancyNpcsConfig {
+    /**
+     * Indicates whether interaction cooldown messages are disabled.
+     */
     private boolean disabledInteractionCooldownMessage;
+
+    /**
+     * Indicates whether version notifications are muted.
+     */
     private boolean muteVersionNotification;
+
+    /**
+     * Indicates whether autosave is enabled.
+     */
     private boolean enableAutoSave;
+
+    /**
+     * The interval at which autosave is performed.
+     */
     private int autoSaveInterval;
+
+    /**
+     * The distance at which NPCs turn to the player.
+     */
     private int turnToPlayerDistance;
+
+    /**
+     * The distance at which NPCs are visible.
+     */
     private int visibilityDistance;
+
+    /**
+     * The commands that are blocked for NPCs in the message.
+     */
     private List<String> blockedCommands;
+
+    /**
+     * The maximum number of NPCs per permission. (for the 'player-npcs' feature flag only)
+     */
     private Map<String, Integer> maxNpcsPerPermission;
 
     public void reload() {
@@ -22,18 +53,33 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
         disabledInteractionCooldownMessage = (boolean) ConfigHelper.getOrDefault(config, "disable_interaction_cooldown_message", false);
+        config.setInlineComments("disable_interaction_cooldown_message", List.of("Whether interaction cooldown messages are disabled."));
+
         muteVersionNotification = (boolean) ConfigHelper.getOrDefault(config, "mute_version_notification", false);
+        config.setInlineComments("mute_version_notification", List.of("Whether version notifications are muted."));
+
         enableAutoSave = (boolean) ConfigHelper.getOrDefault(config, "enable_autosave", true);
+        config.setInlineComments("enable_autosave", List.of("Whether autosave is enabled."));
+
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
+        config.setInlineComments("autosave_interval", List.of("The interval at which autosave is performed in minutes."));
+
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
+        config.setInlineComments("turn_to_player_distance", List.of("The distance at which NPCs turn to the player."));
+
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
+        config.setInlineComments("visibility_distance", List.of("The distance at which NPCs are visible."));
+
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
+        config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));
+
 
         if (!config.isSet("max-npcs")) {
             List<Map<String, Integer>> entries = new ArrayList<>();
             entries.add(Map.of("fancynpcs.max-npcs.5", 5));
             entries.add(Map.of("fancynpcs.max-npcs.10", 10));
             config.set("max-npcs", entries);
+            config.setInlineComments("max-npcs", List.of("The maximum number of NPCs per permission. (for the 'player-npcs' feature flag only)"));
             this.maxNpcsPerPermission = new HashMap<>();
             this.maxNpcsPerPermission.put("fancynpcs.max-npcs.5", 5);
             this.maxNpcsPerPermission.put("fancynpcs.max-npcs.10", 10);

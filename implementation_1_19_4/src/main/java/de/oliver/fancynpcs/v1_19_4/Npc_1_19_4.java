@@ -5,17 +5,17 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import de.oliver.fancylib.ReflectionUtils;
-import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class Npc_1_19_4 extends Npc {
+
     private final String localName;
     private final UUID uuid;
     private Entity npc;
@@ -92,6 +93,7 @@ public class Npc_1_19_4 extends Npc {
             return;
         }
 
+
         if (npc instanceof ServerPlayer npcPlayer) {
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
             actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
@@ -105,13 +107,11 @@ public class Npc_1_19_4 extends Npc {
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
-                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
-                serverPlayer.connection.send(spawnPlayerPacket);
             }
-        } else {
-            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-            serverPlayer.connection.send(addEntityPacket);
         }
+
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+        serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
@@ -159,11 +159,6 @@ public class Npc_1_19_4 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        String finalDisplayName = data.getDisplayName();
-        if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-            finalDisplayName = PlaceholderAPI.setPlaceholders(serverPlayer.getBukkitEntity(), finalDisplayName);
-        }
-
         PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
@@ -181,7 +176,8 @@ public class Npc_1_19_4 extends Npc {
 
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
-        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
+        net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
+        Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
         }
@@ -205,9 +201,6 @@ public class Npc_1_19_4 extends Npc {
             }
 
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
-            if (!data.isShowInTab()) {
-                removeListed(playerInfoPacket);
-            }
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -228,6 +221,8 @@ public class Npc_1_19_4 extends Npc {
             // Enable second layer of skin (https://wiki.vg/Entity_metadata#Player)
             npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         }
+
+        data.applyAllAttributes(this);
 
         refreshEntityData(player);
 
@@ -273,24 +268,16 @@ public class Npc_1_19_4 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {
-        playerInfoUpdatePacket.actions().add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
-
-        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
-        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
-                entry.profileId(),
-                entry.profile(),
-                false,
-                entry.latency(),
-                entry.gameMode(),
-                entry.displayName(),
-                entry.chatSession()
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
+        return new ClientboundPlayerInfoUpdatePacket.Entry(
+                npcPlayer.getUUID(),
+                npcPlayer.getGameProfile(),
+                data.isShowInTab(),
+                69,
+                npcPlayer.gameMode.getGameModeForPlayer(),
+                npcPlayer.getTabListDisplayName(),
+                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
         );
-
-        // replace the old entry with the new entry
-        ReflectionUtils.setValue(playerInfoUpdatePacket, MappingKeys1_19_4.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), List.of(newEntry)); // 'entries'
-
-        return playerInfoUpdatePacket;
     }
 
     @Override

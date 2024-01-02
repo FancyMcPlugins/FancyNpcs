@@ -5,15 +5,13 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import com.mojang.datafixers.util.Pair;
 import de.oliver.fancylib.ReflectionUtils;
-import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -162,11 +160,6 @@ public class Npc_1_20_2 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        String finalDisplayName = data.getDisplayName();
-        if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-            finalDisplayName = PlaceholderAPI.setPlaceholders(serverPlayer.getBukkitEntity(), finalDisplayName);
-        }
-
         PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
@@ -184,7 +177,8 @@ public class Npc_1_20_2 extends Npc {
 
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
-        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
+        net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
+        Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
         }

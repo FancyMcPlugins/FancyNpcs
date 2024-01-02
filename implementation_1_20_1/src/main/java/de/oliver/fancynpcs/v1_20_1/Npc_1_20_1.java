@@ -12,10 +12,8 @@ import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
-import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
@@ -102,16 +100,18 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
+                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
+                serverPlayer.connection.send(spawnPlayerPacket);
             }
+        } else {
+            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+            serverPlayer.connection.send(addEntityPacket);
         }
-
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-        serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
@@ -200,7 +200,10 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            if (!data.isShowInTab()) {
+                removeListed(playerInfoPacket);
+            }
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -268,16 +271,24 @@ public class Npc_1_20_1 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
-        return new ClientboundPlayerInfoUpdatePacket.Entry(
-                npcPlayer.getUUID(),
-                npcPlayer.getGameProfile(),
-                data.isShowInTab(),
-                69,
-                npcPlayer.gameMode.getGameModeForPlayer(),
-                npcPlayer.getTabListDisplayName(),
-                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
+    private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {
+        playerInfoUpdatePacket.actions().add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
+
+        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
+        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
+                entry.profileId(),
+                entry.profile(),
+                false,
+                entry.latency(),
+                entry.gameMode(),
+                entry.displayName(),
+                entry.chatSession()
         );
+
+        // replace the old entry with the new entry
+        ReflectionUtils.setValue(playerInfoUpdatePacket, MappingKeys1_20_1.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), List.of(newEntry)); // 'entries'
+
+        return playerInfoUpdatePacket;
     }
 
     @Override

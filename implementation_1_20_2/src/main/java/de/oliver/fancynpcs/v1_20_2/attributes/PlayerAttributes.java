@@ -20,7 +20,7 @@ public class PlayerAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "crouching", "sleeping", "swimming"),
+                List.of("standing", "crouching", "sleeping", "swimming", "sitting"),
                 List.of(EntityType.PLAYER),
                 PlayerAttributes::setPose
         ));

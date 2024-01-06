@@ -14,6 +14,7 @@ import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -191,7 +192,9 @@ public class Npc_1_20_2 extends Npc {
 
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
-        net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
+        net.kyori.adventure.text.Component displayName;
+        if (data.getDisplayName().equalsIgnoreCase("<empty>")) displayName = MiniMessage.miniMessage().deserialize("<white>NPC</white>");
+        else displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
         Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);

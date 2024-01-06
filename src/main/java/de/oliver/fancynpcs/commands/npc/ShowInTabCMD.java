@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ShowInTabCMD implements Subcommand {
 
@@ -20,6 +21,12 @@ public class ShowInTabCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
+        if (args.length == 3) {
+            return Stream.of("true", "false")
+                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
+                    .toList();
+        }
+
         return null;
     }
 
@@ -61,7 +68,13 @@ public class ShowInTabCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setShowInTab(showInTab);
-            npc.updateForAll();
+
+            if (showInTab) {
+                npc.updateForAll();
+            } else {
+                npc.removeForAll();
+                npc.spawnForAll();
+            }
 
             if (showInTab) {
                 MessageHelper.success(receiver, lang.get("npc-command-showInTab-true"));

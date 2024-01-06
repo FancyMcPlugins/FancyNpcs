@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.5.5"
+    id("io.papermc.paperweight.userdev") version "1.5.11"
 }
 
 val minecraftVersion = "1.20"
@@ -8,9 +8,9 @@ val minecraftVersion = "1.20"
 dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
-    implementation(project(":api"))
-    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
+    compileOnly(project(":api"))
+    compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 

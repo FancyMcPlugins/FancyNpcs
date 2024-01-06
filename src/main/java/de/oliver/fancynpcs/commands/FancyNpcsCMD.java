@@ -4,21 +4,24 @@ import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
+public class FancyNpcsCMD extends Command {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
 
+    public FancyNpcsCMD() {
+        super("fancynpcs");
+        setPermission("fancynpcs.admin");
+    }
+
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
 
         if (args.length == 1) {
             return Stream.of("version", "reload", "save", "featureFlags")
@@ -26,11 +29,11 @@ public class FancyNpcsCMD implements CommandExecutor, TabCompleter {
                     .toList();
         }
 
-        return null;
+        return Collections.emptyList();
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         FancyNpcs plugin = FancyNpcs.getInstance();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {

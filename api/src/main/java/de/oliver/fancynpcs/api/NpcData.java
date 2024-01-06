@@ -30,7 +30,8 @@ public class NpcData {
     private boolean turnToPlayer;
     private String serverCommand;
     private String playerCommand;
-    private String message;
+    private List<String> messages;
+    private float interactionCooldown;
     private Map<NpcAttribute, String> attributes;
     private boolean onlyVisibleToEnabled;
     private final List<String> onlyVisibleTo;
@@ -52,9 +53,10 @@ public class NpcData {
             Map<NpcEquipmentSlot, ItemStack> equipment,
             boolean turnToPlayer,
             Consumer<Player> onClick,
-            String message,
+            List<String> messages,
             String serverCommand,
             String playerCommand,
+            float interactionCooldown,
             Map<NpcAttribute, String> attributes,
             boolean onlyVisibleToEnabled,
             List<String> onlyVisibleTo
@@ -76,7 +78,8 @@ public class NpcData {
         this.turnToPlayer = turnToPlayer;
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
-        this.message = message;
+        this.messages = messages;
+        this.interactionCooldown = interactionCooldown;
         this.attributes = attributes;
         this.onlyVisibleToEnabled = onlyVisibleToEnabled;
         this.onlyVisibleTo = onlyVisibleTo;
@@ -101,7 +104,8 @@ public class NpcData {
         this.onClick = p -> {
         };
         this.turnToPlayer = false;
-        this.message = "";
+        this.messages = new ArrayList<>();
+        this.interactionCooldown = 0;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.onlyVisibleToEnabled = false;
@@ -268,13 +272,31 @@ public class NpcData {
         return this;
     }
 
-    public String getMessage() {
-        return message;
+    public List<String> getMessages() {
+        return messages;
     }
 
-    public NpcData setMessage(String message) {
-        this.message = message;
+    public NpcData setMessages(List<String> messages) {
+        this.messages = messages;
+        return this;
+    }
+
+    public void addMessage(String message) {
+        messages.add(message);
         isDirty = true;
+    }
+
+    public void removeMessage(int index) {
+        messages.remove(index);
+        isDirty = true;
+    }
+
+    public float getInteractionCooldown() {
+        return interactionCooldown;
+    }
+
+    public NpcData setInteractionCooldown(float interactionCooldown) {
+        this.interactionCooldown = interactionCooldown;
         return this;
     }
 

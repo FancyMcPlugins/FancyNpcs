@@ -40,9 +40,18 @@ public class MoveHereCMD implements Subcommand {
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, receiver);
         npcModifyEvent.callEvent();
 
+        String oldWorld = npc.getData().getLocation().getWorld().getName();
+
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setLocation(location);
-            npc.update(player);
+
+            if (oldWorld.equals(location.getWorld().getName())) {
+                npc.updateForAll();
+            } else {
+                npc.removeForAll();
+                npc.spawnForAll();
+            }
+
             MessageHelper.success(receiver, lang.get("npc-command-moveHere-moved"));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));

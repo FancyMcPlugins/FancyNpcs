@@ -7,13 +7,13 @@ import com.mojang.datafixers.util.Pair;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.*;
@@ -21,6 +21,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -42,9 +43,11 @@ import java.util.List;
 import java.util.UUID;
 
 public class Npc_1_19_4 extends Npc {
+
     private final String localName;
     private final UUID uuid;
     private Entity npc;
+    private Display.TextDisplay sittingVehicle;
 
     public Npc_1_19_4(NpcData data) {
         super(data);
@@ -96,6 +99,7 @@ public class Npc_1_19_4 extends Npc {
             return;
         }
 
+
         if (npc instanceof ServerPlayer npcPlayer) {
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
             actions.add(ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER);
@@ -109,13 +113,11 @@ public class Npc_1_19_4 extends Npc {
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
-                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
-                serverPlayer.connection.send(spawnPlayerPacket);
             }
-        } else {
-            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-            serverPlayer.connection.send(addEntityPacket);
         }
+
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+        serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
@@ -134,6 +136,12 @@ public class Npc_1_19_4 extends Npc {
         // remove entity
         ClientboundRemoveEntitiesPacket removeEntitiesPacket = new ClientboundRemoveEntitiesPacket(npc.getId());
         serverPlayer.connection.send(removeEntitiesPacket);
+
+        // remove sitting vehicle
+        if (sittingVehicle != null) {
+            ClientboundRemoveEntitiesPacket removeSittingVehiclePacket = new ClientboundRemoveEntitiesPacket(sittingVehicle.getId());
+            serverPlayer.connection.send(removeSittingVehiclePacket);
+        }
 
         isVisibleForPlayer.remove(player.getUniqueId());
     }
@@ -163,11 +171,6 @@ public class Npc_1_19_4 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        String finalDisplayName = data.getDisplayName();
-        if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-            finalDisplayName = PlaceholderAPI.setPlaceholders(serverPlayer.getBukkitEntity(), finalDisplayName);
-        }
-
         PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
@@ -185,7 +188,8 @@ public class Npc_1_19_4 extends Npc {
 
         team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
-        Component vanillaComponent = PaperAdventure.asVanilla(MiniMessage.miniMessage().deserialize(finalDisplayName));
+        net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
+        Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
         }
@@ -209,9 +213,6 @@ public class Npc_1_19_4 extends Npc {
             }
 
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
-            if (!data.isShowInTab()) {
-                removeListed(playerInfoPacket);
-            }
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -233,10 +234,17 @@ public class Npc_1_19_4 extends Npc {
             npc.getEntityData().set(net.minecraft.world.entity.player.Player.DATA_PLAYER_MODE_CUSTOMISATION, (byte) (0x01 | 0x02 | 0x04 | 0x08 | 0x10 | 0x20 | 0x40));
         }
 
+        data.applyAllAttributes(this);
+
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
             move(player);
+        }
+
+        NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
+        if (data.getAttributes().containsKey(playerPoseAttr) && data.getAttributes().get(playerPoseAttr).equals("sitting")) {
+            setSitting(serverPlayer);
         }
     }
 
@@ -277,24 +285,20 @@ public class Npc_1_19_4 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {
-        playerInfoUpdatePacket.actions().add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
+    public void setSitting(ServerPlayer serverPlayer) {
+        if (sittingVehicle == null) {
+            sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
+        }
 
-        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
-        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
-                entry.profileId(),
-                entry.profile(),
-                false,
-                entry.latency(),
-                entry.gameMode(),
-                entry.displayName(),
-                entry.chatSession()
-        );
+        sittingVehicle.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
 
-        // replace the old entry with the new entry
-        ReflectionUtils.setValue(playerInfoUpdatePacket, MappingKeys1_19_4.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), List.of(newEntry)); // 'entries'
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(sittingVehicle);
+        serverPlayer.connection.send(addEntityPacket);
 
-        return playerInfoUpdatePacket;
+        sittingVehicle.passengers = ImmutableList.of(npc);
+
+        ClientboundSetPassengersPacket packet = new ClientboundSetPassengersPacket(sittingVehicle);
+        serverPlayer.connection.send(packet);
     }
 
     @Override

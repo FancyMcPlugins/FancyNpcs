@@ -13,7 +13,7 @@ runPaper.folia.registerTask()
 
 allprojects {
     group = "de.oliver"
-    version = "2.0.5"
+    version = "2.0.6.1"
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -22,6 +22,7 @@ allprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://repo.fancyplugins.de/releases")
         maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        maven(url = "https://jitpack.io")
     }
 }
 
@@ -29,12 +30,14 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    implementation("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 
     compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
@@ -43,6 +46,12 @@ dependencies {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
+
+        downloadPlugins {
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+176")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+104")
+            hangar("PlaceholderAPI", findProperty("placeholderapiVersion").toString())
+        }
     }
 
     shadowJar {

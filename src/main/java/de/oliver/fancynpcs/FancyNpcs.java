@@ -25,24 +25,28 @@ import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
+import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
-    private final FancyNpcConfig config;
+    private final FancyNpcsConfigImpl config;
     private final LanguageConfig languageConfig;
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
@@ -58,7 +62,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
-        this.config = new FancyNpcConfig();
+        this.config = new FancyNpcsConfigImpl();
         this.versionFetcher = new MasterVersionFetcher(getName());
         this.languageConfig = new LanguageConfig(this);
         this.versionConfig = new VersionConfig(this, versionFetcher);
@@ -79,6 +83,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
+            case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
             case "1.20.2" -> npcAdapter = Npc_1_20_2::new;
             case "1.20.1", "1.20" -> npcAdapter = Npc_1_20_1::new;
             case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
@@ -165,8 +170,13 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
-        getCommand("fancynpcs").setExecutor(new FancyNpcsCMD());
-        getCommand("npc").setExecutor(new NpcCMD());
+        final Collection<Command> commands = Arrays.asList(new FancyNpcsCMD(), new NpcCMD());
+        if (config.isRegisterCommands()) {
+            commands.forEach(command -> getServer().getCommandMap().register("fancynpcs", command));
+        } else {
+            commands.stream().filter(Command::isRegistered).forEach(command ->
+                    command.unregister(getServer().getCommandMap()));
+        }
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
@@ -229,7 +239,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return attributeManager;
     }
 
-    public FancyNpcConfig getFancyNpcConfig() {
+    @Override
+    public FancyNpcsConfigImpl getFancyNpcConfig() {
         return config;
     }
 

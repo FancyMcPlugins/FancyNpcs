@@ -133,7 +133,9 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowing", data.isGlowing());
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
-            npcConfig.set("npcs." + data.getId() + ".message", data.getMessage());
+            npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
+            npcConfig.set("npcs." + data.getId() + ".message", null);
+            npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".onlyVisibleToEnabled", data.isOnlyVisibleToEnabled());
             npcConfig.set("npcs." + data.getId() + ".onlyVisibleTo", data.getOnlyVisibleToPlayers());
 
@@ -187,7 +189,7 @@ public class NpcManagerImpl implements NpcManager {
             String creatorStr = npcConfig.getString("npcs." + id + ".creator");
             UUID creator = creatorStr == null ? null : UUID.fromString(creatorStr);
 
-            String displayName = npcConfig.getString("npcs." + id + ".displayName");
+            String displayName = npcConfig.getString("npcs." + id + ".displayName", "<empty>");
             EntityType type = EntityType.valueOf(npcConfig.getString("npcs." + id + ".type", "PLAYER").toUpperCase());
 
             Location location = null;
@@ -236,7 +238,12 @@ public class NpcManagerImpl implements NpcManager {
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
             String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
             String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand");
-            String message = npcConfig.getString("npcs." + id + ".message");
+
+            @Deprecated(since = "2.0.7")
+            String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.8
+
+            List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
+            float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -265,7 +272,13 @@ public class NpcManagerImpl implements NpcManager {
                 onlyVisibleTo = npcConfig.getStringList("npcs." + id + ".onlyVisibleTo");
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, message, serverCommand, playerCommand, attributes, onlyVisibleToEnabled, onlyVisibleTo);
+            // TODO: remove when the 'message' field is removed, and just pass in the 'messages'
+            if (messages.isEmpty() && message != null && !message.isEmpty()) {
+                messages = new ArrayList<>();
+                messages.add(message);
+            }
+
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, serverCommand, playerCommand, interactionCooldown, attributes, onlyVisibleToEnabled, onlyVisibleTo);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

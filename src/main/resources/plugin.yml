@@ -1,17 +1,15 @@
 name: FancyNpcs
-description: $description
+main: de.oliver.fancynpcs.FancyNpcs
+
 author: OliverHD
 version: $version
-main: de.oliver.fancynpcs.FancyNpcs
+
+description: $description
+
 api-version: 1.19
 folia-supported: true
+
 load: POSTWORLD
 softdepend:
   - PlaceholderAPI
   - PlotSquared
-commands:
-  FancyNpcs:
-    permission: FancyNpcs.admin
-  Npc:
-    permission: FancyNpcs.npc
-    description: Main command for the Npc plugin

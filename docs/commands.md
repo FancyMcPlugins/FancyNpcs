@@ -43,6 +43,12 @@ Description: Shows a list of all commands<br>
 Syntax: ``/Npc help``<br>
 Permission: ``FancyNpcs.npc.help`` or ``FancyNpcs.npc.*``
 
+### info
+
+Description: Shows all important information about an npc<br>
+Syntax: ``/Npc into (npc)``<br>
+Permission: ``FancyNpcs.npc.info`` or ``FancyNpcs.npc.*``
+
 ### create
 
 Description: Creates a new npc at your location<br>
@@ -140,8 +146,11 @@ Permission: ``FancyNpcs.npc.turnToPlayer`` or ``FancyNpcs.npc.*``
 
 ### message
 
-Description: Changes the message that will be sent to the player when interacting with the npc<br>
-Syntax: ``/Npc message (npc name) ('none' | message ...)``<br>
+Description: Changes the messages that will be sent to the player when interacting with the npc<br>
+Syntax: ``/Npc message (npc name) add (message)`` - adds a new message<br>
+Syntax: ``/Npc message (npc name) set (index) (message)`` - sets a message at an index<br>
+Syntax: ``/Npc message (npc name) remove (index)`` - removes a message at an index<br>
+Syntax: ``/Npc message (npc name) clear`` - removes all messages<br>
 Permission: ``FancyNpcs.npc.message`` or ``FancyNpcs.npc.*``<br>
 Placeholders:
 
@@ -166,9 +175,21 @@ Placeholders:
 - all placeholders from PlaceholderAPI
 - ``{player}`` - the player's username
 
+### interactionCooldown
+
+Description: Changes the cooldown for player interactions with the npc<br>
+Syntax: ``/Npc interactionCooldown (npc name) (time in seconds)``<br>
+Permission: ``FancyNpcs.npc.interactionCooldown`` or ``FancyNpcs.npc.*``<br>
+
 ### moveHere
 
 Description: Teleports the npc to you<br>
 Syntax: ``/Npc moveHere (npc name)``<br>
 Permission: ``FancyNpcs.npc.moveHere`` or ``FancyNpcs.npc.*``
 
+### teleport
+
+Description: Teleports the npc to the provided location<br>
+Syntax: ``/Npc teleport (npc name) (x) (y) (z) [world]``<br>
+_The ``world`` parameter is optional._<br>
+Permission: ``FancyNpcs.npc.teleport`` or ``FancyNpcs.npc.*``

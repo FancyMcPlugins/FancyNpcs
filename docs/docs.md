@@ -12,9 +12,6 @@ The plugin is only supported for **1.19.4 - latest version**
 
 It is highly recommended to use Paper or a fork of it - Folia is also supported.
 
-[Go to the commands](FancyNpcs/commands)<br>
-[Go to the api](FancyNpcs/api)
-
 # Features
 
 With FancyNpcs you can create NPCs that look like real players. You can edit a bunch of properties like the display name
@@ -31,6 +28,6 @@ All properties:
 
 You can also define some actions that will be executed when a player interacts with the npc:
 
-- message: sends a simple message to the player
+- message: sends simple messages to the player
 - player command: forces the player to execute a command
 - server command: executes a command in the console

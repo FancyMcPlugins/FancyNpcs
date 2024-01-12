@@ -48,6 +48,8 @@ messages:
   npc-command-message-invalid: Invalid message
   npc-command-message-invalid-index: Invalid index
   npc-command-message-cancelled: Updating message has been cancelled
+  npc-command-message-sendMessagesRandomly-true: NPC will now send messages randomly
+  npc-command-message-sendMessagesRandomly-false: NPC will no longer send messages randomly
   npc-command-skin-invalid: Invalid username or url
   npc-command-skin-failed_header: 'Could not load skin. Possible causes:'
   npc-command-skin-failed_url: ' - Invalid URL (check the url)'

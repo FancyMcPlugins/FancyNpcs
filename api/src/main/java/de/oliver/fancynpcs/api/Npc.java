@@ -18,6 +18,7 @@ import org.bukkit.util.Vector;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
 
 public abstract class Npc {
@@ -122,12 +123,20 @@ public abstract class Npc {
 
         // message
         if (data.getMessages() != null && !data.getMessages().isEmpty()) {
-            for (String msg : data.getMessages()) {
+            if (data.isSendMessagesRandomly()) {
+                String randomMessage = data.getMessages().get(new Random().nextInt(data.getMessages().size()));
                 if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    msg = PlaceholderAPI.setPlaceholders(player, msg);
+                    randomMessage = PlaceholderAPI.setPlaceholders(player, randomMessage);
                 }
+                player.sendMessage(MiniMessage.miniMessage().deserialize(randomMessage));
+            } else {
+                for (String msg : data.getMessages()) {
+                    if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
+                        msg = PlaceholderAPI.setPlaceholders(player, msg);
+                    }
 
-                player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                    player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                }
             }
         }
 

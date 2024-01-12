@@ -31,6 +31,7 @@ public class NpcCMD extends Command {
     private final Subcommand teleportCMD = new TeleportCMD();
     private final Subcommand turnToPlayerCMD = new TurnToPlayerCMD();
     private final Subcommand typeCMD = new TypeCMD();
+
     public NpcCMD() {
         super("npc");
         setPermission("fancynpcs.npc");
@@ -92,7 +93,10 @@ public class NpcCMD extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-
+        if (!testPermission(sender)) {
+            return false;
+        }
+        
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!sender.hasPermission("fancynpcs.npc.help") && !sender.hasPermission("fancynpcs.npc.*")) {
                 MessageHelper.error(sender, lang.get("no-permission-subcommand"));

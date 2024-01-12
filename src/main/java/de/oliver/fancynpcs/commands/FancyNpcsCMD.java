@@ -34,6 +34,10 @@ public class FancyNpcsCMD extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
+        if (!testPermission(sender)) {
+            return false;
+        }
+        
         FancyNpcs plugin = FancyNpcs.getInstance();
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {

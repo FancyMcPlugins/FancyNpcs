@@ -25,7 +25,7 @@ public class PlayerCommandCMD implements Subcommand {
                     .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
                     .toList();
         }
-        
+
         return null;
     }
 
@@ -53,7 +53,7 @@ public class PlayerCommandCMD implements Subcommand {
         }
 
         for (String blockedCommand : FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands()) {
-            if (cmd.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
+            if (cmd.equalsIgnoreCase(blockedCommand) || cmd.toLowerCase().startsWith(blockedCommand.toLowerCase() + " ")) {
                 MessageHelper.error(receiver, lang.get("illegal-command"));
                 return false;
             }

@@ -31,6 +31,7 @@ public class NpcData {
     private String serverCommand;
     private String playerCommand;
     private List<String> messages;
+    private boolean sendMessagesRandomly;
     private float interactionCooldown;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
@@ -53,6 +54,7 @@ public class NpcData {
             boolean turnToPlayer,
             Consumer<Player> onClick,
             List<String> messages,
+            boolean sendMessagesRandomly,
             String serverCommand,
             String playerCommand,
             float interactionCooldown,
@@ -77,6 +79,7 @@ public class NpcData {
         this.serverCommand = serverCommand;
         this.playerCommand = playerCommand;
         this.messages = messages;
+        this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
         this.attributes = attributes;
         this.mirrorSkin = mirrorSkin;
@@ -102,6 +105,7 @@ public class NpcData {
         };
         this.turnToPlayer = false;
         this.messages = new ArrayList<>();
+        this.sendMessagesRandomly = false;
         this.interactionCooldown = 0;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
@@ -275,6 +279,12 @@ public class NpcData {
     public NpcData setMessages(List<String> messages) {
         this.messages = messages;
         return this;
+    }
+    public boolean isSendMessagesRandomly() {
+        return sendMessagesRandomly;
+    }
+    public void setSendMessagesRandomly(boolean sendMessagesRandomly) {
+        this.sendMessagesRandomly = sendMessagesRandomly;
     }
 
     public void addMessage(String message) {

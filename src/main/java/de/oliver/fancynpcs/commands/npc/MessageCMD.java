@@ -25,7 +25,6 @@ public class MessageCMD implements Subcommand {
         // /npc message <id> set <index> <message> - sets a message at the given index
         // /npc message <id> remove <index> - removes a message at the given index
         // /npc message <id> clear - clears all messages
-        // /npc message <id> sendRandomly <boolean> - allows npc to send random message from list
 
 
         if (args.length == 3) {
@@ -62,7 +61,7 @@ public class MessageCMD implements Subcommand {
 
     @Override
     public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length < 2) {
+        if (args.length < 3) {
             MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }
@@ -72,16 +71,28 @@ public class MessageCMD implements Subcommand {
             return false;
         }
 
-        return switch (args[2].toLowerCase()) {
-            case "add" -> addMessage(receiver, npc, args);
-            case "set" -> setMessage(receiver, npc, args);
-            case "remove" -> removeMessage(receiver, npc, args);
-            case "clear" -> clearMessages(receiver, npc, args);
-            case "sendrandomly" -> sendMessagesRandomly(receiver, npc, args);
-            default -> false;
-        };
+        if (args.length == 3 && args[2].equalsIgnoreCase("clear")) {
+            return clearMessages(receiver, npc, args);
+        }
 
+        if (args.length == 3 && args[2].equalsIgnoreCase("sendRandomly")) {
+            return sendMessagesRandomly(receiver, npc, args);
+        }
 
+        if (args.length == 4 && args[2].equalsIgnoreCase("remove")) {
+            return removeMessage(receiver, npc, args);
+        }
+
+        if (args.length >= 4 && args[2].equalsIgnoreCase("add")) {
+            return addMessage(receiver, npc, args);
+        }
+
+        if (args.length >= 5 && args[2].equalsIgnoreCase("set")) {
+            return setMessage(receiver, npc, args);
+        }
+
+        MessageHelper.error(receiver, lang.get("wrong-usage"));
+        return false;
     }
 
     private boolean sendMessagesRandomly(CommandSender receiver, Npc npc, String[] args) {
@@ -121,6 +132,7 @@ public class MessageCMD implements Subcommand {
 
         return true;
     }
+
     private boolean addMessage(CommandSender receiver, Npc npc, String[] args) {
         if (args.length < 3) {
             MessageHelper.error(receiver, lang.get("wrong-usage"));

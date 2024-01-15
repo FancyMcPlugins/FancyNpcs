@@ -236,7 +236,7 @@ public class NpcManagerImpl implements NpcManager {
             boolean glowing = npcConfig.getBoolean("npcs." + id + ".glowing");
             NamedTextColor glowingColor = NamedTextColor.NAMES.value(npcConfig.getString("npcs." + id + ".glowingColor", "white"));
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
-            boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly");
+            boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
             String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
             String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand");
 

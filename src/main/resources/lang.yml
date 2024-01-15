@@ -79,6 +79,6 @@ messages:
   npc-command-attribute-success: Successfully set the attribute
   npc-command-interactioncooldown-updated: Successfully updated the interaction cooldown
   npc-command-teleport-success: Successfully teleported npc
-  npc_command-mirrorSkin-true: NPC will now mirror the skin of the viewer
-  npc_command-mirrorSkin-false: NPC will no longer mirror the skin of the viewer
-  npc_command-mirrorSkin-cancelled: Modification has been cancelled
+  npc-command-mirrorSkin-true: NPC will now mirror the skin of the viewer
+  npc-command-mirrorSkin-false: NPC will no longer mirror the skin of the viewer
+  npc-command-mirrorSkin-cancelled: Modification has been cancelled

@@ -137,6 +137,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".message", null);
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
+            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
@@ -244,6 +245,7 @@ public class NpcManagerImpl implements NpcManager {
 
             List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
+            boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -268,7 +270,7 @@ public class NpcManagerImpl implements NpcManager {
                 messages.add(message);
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommand, playerCommand, interactionCooldown, attributes);
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommand, playerCommand, interactionCooldown, attributes, mirrorSkin);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

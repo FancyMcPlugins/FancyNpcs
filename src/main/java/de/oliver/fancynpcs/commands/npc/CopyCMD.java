@@ -65,7 +65,8 @@ public class CopyCMD implements Subcommand {
                         npc.getData().getServerCommand(),
                         npc.getData().getPlayerCommand(),
                         npc.getData().getInteractionCooldown(),
-                        npc.getData().getAttributes()
+                        npc.getData().getAttributes(),
+                        npc.getData().isMirrorSkin()
                 ));
 
         NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, player);

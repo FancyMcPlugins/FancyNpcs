@@ -21,6 +21,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -105,6 +106,9 @@ public class Npc_1_19_4 extends Npc {
             }
 
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            if (data.isMirrorSkin()) {
+                handleMirroredSkin(playerInfoPacket, serverPlayer);
+            }
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -209,6 +213,9 @@ public class Npc_1_19_4 extends Npc {
             }
 
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            if (data.isMirrorSkin()) {
+                handleMirroredSkin(playerInfoPacket, serverPlayer);
+            }
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -295,6 +302,25 @@ public class Npc_1_19_4 extends Npc {
 
         ClientboundSetPassengersPacket packet = new ClientboundSetPassengersPacket(sittingVehicle);
         serverPlayer.connection.send(packet);
+    }
+
+    private void handleMirroredSkin(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket, ServerPlayer viewer) {
+        if (!ServerLoginPacketListenerImpl.isValidUsername(viewer.getGameProfile().getName())) return;
+        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
+        GameProfile profile = entry.profile();
+        GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+        newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
+                entry.profileId(),
+                newProfile,
+                entry.listed(),
+                entry.latency(),
+                entry.gameMode(),
+                entry.displayName(),
+                entry.chatSession()
+        );
+
+        ReflectionUtils.setValue(playerInfoUpdatePacket, "b", List.of(newEntry)); // 'entries'
     }
 
     @Override

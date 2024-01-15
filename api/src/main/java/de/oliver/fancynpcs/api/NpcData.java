@@ -35,6 +35,7 @@ public class NpcData {
     private float interactionCooldown;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
+    private boolean mirrorSkin;
 
     public NpcData(
             String id,
@@ -57,7 +58,8 @@ public class NpcData {
             String serverCommand,
             String playerCommand,
             float interactionCooldown,
-            Map<NpcAttribute, String> attributes
+            Map<NpcAttribute, String> attributes,
+            boolean mirrorSkin
     ) {
         this.id = id;
         this.name = name;
@@ -80,6 +82,7 @@ public class NpcData {
         this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
         this.attributes = attributes;
+        this.mirrorSkin = mirrorSkin;
         this.isDirty = true;
     }
 
@@ -106,6 +109,7 @@ public class NpcData {
         this.interactionCooldown = 0;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
+        this.mirrorSkin = false;
         this.isDirty = true;
     }
 
@@ -315,6 +319,16 @@ public class NpcData {
         for (NpcAttribute attribute : attributes.keySet()) {
             attribute.apply(npc, attributes.get(attribute));
         }
+    }
+
+    public boolean isMirrorSkin() {
+        return mirrorSkin;
+    }
+
+    public NpcData setMirrorSkin(boolean mirrorSkin) {
+        this.mirrorSkin = mirrorSkin;
+        isDirty = true;
+        return this;
     }
 
     public boolean isDirty() {

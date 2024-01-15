@@ -21,12 +21,6 @@ public class MessageCMD implements Subcommand {
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        // /npc message <id> add <message> - appends a message to the list
-        // /npc message <id> set <index> <message> - sets a message at the given index
-        // /npc message <id> remove <index> - removes a message at the given index
-        // /npc message <id> clear - clears all messages
-
-
         if (args.length == 3) {
             return List.of("add", "set", "remove", "clear", "sendRandomly");
         } else if (args.length == 4) {
@@ -75,7 +69,7 @@ public class MessageCMD implements Subcommand {
             return clearMessages(receiver, npc, args);
         }
 
-        if (args.length == 3 && args[2].equalsIgnoreCase("sendRandomly")) {
+        if (args.length == 4 && args[2].equalsIgnoreCase("sendRandomly")) {
             return sendMessagesRandomly(receiver, npc, args);
         }
 
@@ -96,7 +90,7 @@ public class MessageCMD implements Subcommand {
     }
 
     private boolean sendMessagesRandomly(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 3) {
+        if (args.length < 4) {
             MessageHelper.error(receiver, lang.get("wrong-usage"));
             return false;
         }

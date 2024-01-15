@@ -68,6 +68,7 @@ public class SkinCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setSkin(skinFetcher);
+            npc.getData().setMirrorSkin(false);
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();

@@ -24,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -107,7 +108,7 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -211,7 +212,7 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -284,10 +285,17 @@ public class Npc_1_20_2 extends Npc {
         serverPlayer.connection.send(rotateHeadPacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
+        GameProfile profile = npcPlayer.getGameProfile();
+        if (data.isMirrorSkin() && ServerLoginPacketListenerImpl.isValidUsername(viewer.getGameProfile().getName())) {
+            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+            profile = newProfile;
+        }
+
         return new ClientboundPlayerInfoUpdatePacket.Entry(
                 npcPlayer.getUUID(),
-                npcPlayer.getGameProfile(),
+                profile,
                 data.isShowInTab(),
                 69,
                 npcPlayer.gameMode.getGameModeForPlayer(),

@@ -31,6 +31,7 @@ public class NpcCMD extends Command {
     private final Subcommand teleportCMD = new TeleportCMD();
     private final Subcommand turnToPlayerCMD = new TurnToPlayerCMD();
     private final Subcommand typeCMD = new TypeCMD();
+    private final Subcommand mirrorSkinCMD = new MirrorSkinCMD();
 
     public NpcCMD() {
         super("npc");
@@ -47,7 +48,7 @@ public class NpcCMD extends Command {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "info", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown")
+            suggestions.addAll(Stream.of("help", "info", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown", "mirrorSkin")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -86,6 +87,7 @@ public class NpcCMD extends Command {
             case "teleport" -> teleportCMD.tabcompletion(p, npc, args);
             case "turntoplayer" -> turnToPlayerCMD.tabcompletion(p, npc, args);
             case "type" -> typeCMD.tabcompletion(p, npc, args);
+            case "mirrorskin" -> mirrorSkinCMD.tabcompletion(p, npc, args);
 
             default -> Collections.emptyList();
         };
@@ -124,6 +126,7 @@ public class NpcCMD extends Command {
             MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
             MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
             MessageHelper.info(sender, lang.get("npc-command-help-interactionCooldown"));
+            MessageHelper.info(sender, lang.get("npc-command-help-mirrorSkin"));
 
             return true;
         }
@@ -231,6 +234,10 @@ public class NpcCMD extends Command {
 
             case "attribute" -> {
                 return attributeCMD.run(sender, npc, args);
+            }
+
+            case "mirrorskin" -> {
+                return mirrorSkinCMD.run(sender, npc, args);
             }
 
             default -> {

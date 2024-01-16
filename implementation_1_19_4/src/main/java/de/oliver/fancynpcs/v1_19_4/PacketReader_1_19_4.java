@@ -11,6 +11,7 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_19_R3.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,7 +35,7 @@ public class PacketReader_1_19_4 implements Listener {
             @Override
             protected void decode(ChannelHandlerContext ctx, ServerboundInteractPacket msg, List<Object> out) {
                 out.add(msg);
-                
+
                 PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(msg, player);
                 FancyLib.getScheduler().runTaskLater(null, 1L, packetReceivedEvent::callEvent);
             }
@@ -66,13 +67,20 @@ public class PacketReader_1_19_4 implements Listener {
         }
 
         EquipmentSlot hand = handStr.equals("MAIN_HAND") ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+        boolean isAttack = action == ServerboundInteractPacket.ActionType.ATTACK;
+        boolean isInteract = action == ServerboundInteractPacket.ActionType.INTERACT_AT;
+        Vector clickLoc = isInteract ? new Vector(0, 0, 0) : null;
 
-        npc.interact(
-                p,
-                action == ServerboundInteractPacket.ActionType.ATTACK,
-                hand,
-                action == ServerboundInteractPacket.ActionType.INTERACT_AT ? new Vector(0, 0, 0) : null
-        );
+        if (npc.getData().getType() == EntityType.VILLAGER && hand == EquipmentSlot.HAND && clickLoc == null) {
+            npc.interact(event.getPlayer());
+            return;
+        }
+
+        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
+            return;
+        }
+
+        npc.interact(p);
     }
 
 }

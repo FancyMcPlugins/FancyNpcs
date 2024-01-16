@@ -11,6 +11,7 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,13 +67,20 @@ public class PacketReader_1_20 implements Listener {
         }
 
         EquipmentSlot hand = handStr.equals("MAIN_HAND") ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
+        boolean isAttack = action == ServerboundInteractPacket.ActionType.ATTACK;
+        boolean isInteract = action == ServerboundInteractPacket.ActionType.INTERACT_AT;
+        Vector clickLoc = isInteract ? new Vector(0, 0, 0) : null;
 
-        npc.interact(
-                p,
-                action == ServerboundInteractPacket.ActionType.ATTACK,
-                hand,
-                action == ServerboundInteractPacket.ActionType.INTERACT_AT ? new Vector(0, 0, 0) : null
-        );
+        if (npc.getData().getType() == EntityType.VILLAGER && hand == EquipmentSlot.HAND && clickLoc == null) {
+            npc.interact(event.getPlayer());
+            return;
+        }
+
+        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
+            return;
+        }
+
+        npc.interact(p);
     }
 
 }

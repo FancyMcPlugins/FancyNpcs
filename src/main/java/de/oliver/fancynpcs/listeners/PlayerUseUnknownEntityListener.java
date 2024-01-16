@@ -3,8 +3,10 @@ package de.oliver.fancynpcs.listeners;
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.EquipmentSlot;
 
 public class PlayerUseUnknownEntityListener implements Listener {
 
@@ -15,7 +17,16 @@ public class PlayerUseUnknownEntityListener implements Listener {
             return;
         }
 
-        npc.interact(event.getPlayer(), event.isAttack(), event.getHand(), event.getClickedRelativePosition());
+        if (npc.getData().getType() == EntityType.VILLAGER && event.getHand() == EquipmentSlot.HAND && event.getClickedRelativePosition() == null) {
+            npc.interact(event.getPlayer());
+            return;
+        }
+
+        if (!event.isAttack() && (event.getHand() == EquipmentSlot.HAND || event.getClickedRelativePosition() != null)) {
+            return;
+        }
+
+        npc.interact(event.getPlayer());
     }
 
 }

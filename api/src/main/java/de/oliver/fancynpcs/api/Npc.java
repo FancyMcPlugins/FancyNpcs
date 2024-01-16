@@ -12,8 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.util.Vector;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -88,11 +86,7 @@ public abstract class Npc {
         }
     }
 
-    public void interact(Player player, boolean isAttack, EquipmentSlot hand, Vector clickLoc) {
-        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
-            return;
-        }
-
+    public void interact(Player player) {
         if (data.getInteractionCooldown() > 0) {
             if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
                 long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);

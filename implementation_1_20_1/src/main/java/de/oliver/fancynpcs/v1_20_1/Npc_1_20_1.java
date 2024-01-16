@@ -11,19 +11,17 @@ import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
+import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
-import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -98,6 +96,20 @@ public class Npc_1_20_1 extends Npc {
             return;
         }
 
+        if (data.isMirrorSkin() && npc instanceof ServerPlayer npcPlayer) {
+            SkinFetcher playerSkin = new SkinFetcher(serverPlayer.getGameProfile().getId().toString());
+            playerSkin.load();
+            Property textures = new Property("textures", playerSkin.getValue(), playerSkin.getSignature());
+
+            if (npcPlayer.gameProfile.getProperties().containsKey("textures")) {
+                npcPlayer.gameProfile.getProperties().replaceValues("textures", ImmutableList.of(
+                        textures
+                ));
+            } else {
+                npcPlayer.gameProfile.getProperties().put("textures", textures);
+            }
+        }
+
 
         if (npc instanceof ServerPlayer npcPlayer) {
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
@@ -107,7 +119,7 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -213,7 +225,7 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
             if (!data.isShowInTab()) {
                 removeListed(playerInfoPacket);
             }
@@ -323,25 +335,6 @@ public class Npc_1_20_1 extends Npc {
 
         ClientboundSetPassengersPacket packet = new ClientboundSetPassengersPacket(sittingVehicle);
         serverPlayer.connection.send(packet);
-    }
-
-    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
-        GameProfile profile = npcPlayer.getGameProfile();
-        if (data.isMirrorSkin() && ServerLoginPacketListenerImpl.isValidUsername(viewer.getGameProfile().getName())) {
-            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
-            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
-            profile = newProfile;
-        }
-
-        return new ClientboundPlayerInfoUpdatePacket.Entry(
-                npcPlayer.getUUID(),
-                profile,
-                data.isShowInTab(),
-                69,
-                npcPlayer.gameMode.getGameModeForPlayer(),
-                npcPlayer.getTabListDisplayName(),
-                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
-        );
     }
 
     @Override

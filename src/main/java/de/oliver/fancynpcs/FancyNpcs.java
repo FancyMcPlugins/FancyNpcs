@@ -15,10 +15,7 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
-import de.oliver.fancynpcs.listeners.PlayerJoinListener;
-import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
-import de.oliver.fancynpcs.listeners.PlayerQuitListener;
-import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
+import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.NpcTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
@@ -181,6 +178,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerQuitListener(), instance);
+        pluginManager.registerEvents(new PlayerTeleportListener(), instance);
 
         if (mcVersion.equals("1.19.4")) // use packet injection method
             pluginManager.registerEvents(new PacketReader_1_19_4(), instance);

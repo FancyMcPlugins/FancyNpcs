@@ -283,7 +283,6 @@ public class NpcManagerImpl implements NpcManager {
 
             npc.create();
             registerNpc(npc);
-            npc.spawnForAll();
         }
 
         isLoaded = true;

@@ -1,7 +1,6 @@
 package de.oliver.fancynpcs.listeners;
 
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import org.bukkit.Bukkit;
@@ -20,12 +19,6 @@ public class PlayerJoinListener implements Listener {
             PacketReader_1_20.inject(event.getPlayer());
         }
 
-        FancyNpcs.getInstance().getScheduler().runTaskAsynchronously(() -> {
-            for (Npc npc : FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs()) {
-                npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
-                npc.spawn(event.getPlayer());
-            }
-        });
 
         if (!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")) {
             FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);

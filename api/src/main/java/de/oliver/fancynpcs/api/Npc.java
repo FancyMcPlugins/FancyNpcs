@@ -14,19 +14,19 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Npc {
 
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
-    protected final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
-    protected final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
-    protected final Map<UUID, Boolean> isLookingAtPlayer = new HashMap<>();
-    protected final Map<UUID, Long> lastPlayerInteraction = new HashMap<>();
+    protected final Map<UUID, Boolean> isTeamCreated = new ConcurrentHashMap<>();
+    protected final Map<UUID, Boolean> isVisibleForPlayer = new ConcurrentHashMap<>();
+    protected final Map<UUID, Boolean> isLookingAtPlayer = new ConcurrentHashMap<>();
+    protected final Map<UUID, Long> lastPlayerInteraction = new ConcurrentHashMap<>();
     private final LanguageConfig lang = FancyNpcsPlugin.get().getLanguageConfig();
     protected NpcData data;
     protected boolean saveToFile;

@@ -47,7 +47,7 @@ public class PlayerTeleportListener implements Listener {
             if (distance > visibilityDistance && isCurrentlyVisible) {
                 npc.remove(player);
             } else if (distance < visibilityDistance && !isCurrentlyVisible) {
-                npc.spawn(player);
+                FancyNpcs.getInstance().getScheduler().runTaskAsynchronously(() -> npc.spawn(player));
             }
 
             if (npcData.isTurnToPlayer() && distance < turnToPlayerDistance) {

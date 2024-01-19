@@ -243,8 +243,18 @@ public class Npc_1_20_2 extends Npc {
         }
 
         NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
-        if (data.getAttributes().containsKey(playerPoseAttr) && data.getAttributes().get(playerPoseAttr).equals("sitting")) {
-            setSitting(serverPlayer);
+        if (data.getAttributes().containsKey(playerPoseAttr)) {
+            String pose = data.getAttributes().get(playerPoseAttr);
+
+            if (pose.equals("sitting")) {
+                setSitting(serverPlayer);
+            } else {
+                if (sittingVehicle != null) {
+                    ClientboundRemoveEntitiesPacket removeSittingVehiclePacket = new ClientboundRemoveEntitiesPacket(sittingVehicle.getId());
+                    serverPlayer.connection.send(removeSittingVehiclePacket);
+                }
+            }
+
         }
     }
 

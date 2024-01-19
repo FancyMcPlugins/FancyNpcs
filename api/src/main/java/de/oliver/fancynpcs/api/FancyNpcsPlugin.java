@@ -22,8 +22,6 @@ public interface FancyNpcsPlugin {
 
     JavaPlugin getPlugin();
 
-    boolean isUsingPlaceholderAPI();
-
     FancyScheduler getScheduler();
 
     Function<NpcData, Npc> getNpcAdapter();

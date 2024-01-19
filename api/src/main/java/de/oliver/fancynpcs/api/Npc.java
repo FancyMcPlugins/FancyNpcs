@@ -6,14 +6,16 @@ import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import me.dave.chatcolorhandler.ChatColorHandler;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
+import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -119,17 +121,10 @@ public abstract class Npc {
         if (data.getMessages() != null && !data.getMessages().isEmpty()) {
             if (data.isSendMessagesRandomly()) {
                 String randomMessage = data.getMessages().get(new Random().nextInt(data.getMessages().size()));
-                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    randomMessage = PlaceholderAPI.setPlaceholders(player, randomMessage);
-                }
-                player.sendMessage(MiniMessage.miniMessage().deserialize(randomMessage));
+                player.sendMessage(ModernChatColorHandler.translate(randomMessage, player));
             } else {
                 for (String msg : data.getMessages()) {
-                    if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                        msg = PlaceholderAPI.setPlaceholders(player, msg);
-                    }
-
-                    player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
+                    player.sendMessage(ModernChatColorHandler.translate(msg, player));
                 }
             }
         }
@@ -139,23 +134,13 @@ public abstract class Npc {
             String command = data.getServerCommand();
             command = command.replace("{player}", player.getName());
 
-            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                command = PlaceholderAPI.setPlaceholders(player, command);
-            }
-
-            String finalCommand = command;
+            String finalCommand = ChatColorHandler.translate(command, player, List.of(PlaceholderAPIParser.class));
             FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
         }
 
         // playerCommand
         if (data.getPlayerCommand() != null && data.getPlayerCommand().length() > 0) {
-            String command;
-
-            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                command = PlaceholderAPI.setPlaceholders(player, data.getPlayerCommand());
-            } else {
-                command = data.getPlayerCommand();
-            }
+            String command = ChatColorHandler.translate(data.getPlayerCommand(), player, List.of(PlaceholderAPIParser.class));
 
             if (command.toLowerCase().startsWith("server")) {
                 String[] args = data.getPlayerCommand().split(" ");

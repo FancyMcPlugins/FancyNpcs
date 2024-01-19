@@ -22,7 +22,6 @@ allprojects {
         mavenCentral()
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://repo.fancyplugins.de/releases")
-        maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         maven(url = "https://jitpack.io")
     }
 }
@@ -40,7 +39,6 @@ dependencies {
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     implementation("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 
-    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
 
@@ -51,7 +49,7 @@ tasks {
         downloadPlugins {
             hangar("ViaVersion", "4.9.3-SNAPSHOT+176")
             hangar("ViaBackwards", "4.9.2-SNAPSHOT+104")
-            hangar("PlaceholderAPI", findProperty("placeholderapiVersion").toString())
+            hangar("PlaceholderAPI", "2.11.5")
         }
     }
 

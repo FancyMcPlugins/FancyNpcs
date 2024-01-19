@@ -8,7 +8,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    compileOnly("me.clip:placeholderapi:${findProperty("placeholderapiVersion")}")
+    compileOnly("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 tasks {

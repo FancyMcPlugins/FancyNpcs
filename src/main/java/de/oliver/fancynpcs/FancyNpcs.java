@@ -51,7 +51,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
-    private boolean usingPlaceholderAPI;
     private boolean usingPlotSquared;
 
     public FancyNpcs() {
@@ -163,7 +162,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
 
         PluginManager pluginManager = Bukkit.getPluginManager();
-        usingPlaceholderAPI = pluginManager.isPluginEnabled("PlaceholderAPI");
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
@@ -256,11 +254,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public VersionFetcher getVersionFetcher() {
         return versionFetcher;
-    }
-
-    @Override
-    public boolean isUsingPlaceholderAPI() {
-        return usingPlaceholderAPI;
     }
 
     public boolean isUsingPlotSquared() {

@@ -3,6 +3,7 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.*;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
 import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
+import de.oliver.fancylib.sentry.SentryLoader;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
@@ -156,10 +157,18 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             getLogger().warning("--------------------------------------------------");
         }
 
-        // register bStats
+        // register bStats and sentry
+        boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
+
         Metrics metrics = new Metrics(this, 17543);
         metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
+        metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
+
+        if (isDevelopmentBuild) {
+            SentryLoader.initSentry("https://32095848f66ff733b05ef0baf5fb6649@o4506593995849728.ingest.sentry.io/4506594072723456", instance);
+            getLogger().info("Registered sentry error reporting");
+        }
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");

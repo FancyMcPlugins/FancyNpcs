@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#                  
+#                      
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -25,8 +25,18 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ### Development builds
 
-- https://fancyplugins.de/fancynpcs/download/
+- https://fancyplugins.de/ng/FancyNpcs/download/
 - Build from source
+
+## Documentation
+
+You can find the official FancyHolograms documentation here: https://fancymcplugins.github.io/docs/fancynpcs.html
+
+- Getting started: https://fancymcplugins.github.io/docs/fn-getting-started.html
+- Commands: https://fancymcplugins.github.io/docs/fn-commands.html
+- API: https://fancymcplugins.github.io/docs/fn-api.html
+
+If you have any questions about the plugin/api, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
 
 ## Features
 
@@ -48,19 +58,7 @@ You can also define some actions that will be executed when a player interacts w
 - player command: forces the player to execute a command
 - server command: executes a command in the console
 
-Explore more features on the official website: https://fancyplugins.de/
-
-## Documentation
-
-### Plugin
-
-Commands: [commands.md](docs/commands.md)<br>
-Multiple lines: [multiple-lines.md](docs/misc/multiple-lines.md)<br>
-
-### Api
-
-Getting started: [getting-started.md](docs/api/getting-started.md)<br>
-Events: [events.md](docs/api/events.md)<br>
+Explore more features on the official website: https://fancyplugins.de/ng/
 
 ### Build from source
 

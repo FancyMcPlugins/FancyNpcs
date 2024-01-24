@@ -29,7 +29,7 @@ public class NpcData {
     private Consumer<Player> onClick;
     private boolean turnToPlayer;
     private String serverCommand;
-    private String playerCommand;
+    private List<String> playerCommands;
     private List<String> messages;
     private boolean sendMessagesRandomly;
     private float interactionCooldown;
@@ -56,7 +56,7 @@ public class NpcData {
             List<String> messages,
             boolean sendMessagesRandomly,
             String serverCommand,
-            String playerCommand,
+            List<String> playerCommands,
             float interactionCooldown,
             Map<NpcAttribute, String> attributes,
             boolean mirrorSkin
@@ -77,7 +77,7 @@ public class NpcData {
         this.onClick = onClick;
         this.turnToPlayer = turnToPlayer;
         this.serverCommand = serverCommand;
-        this.playerCommand = playerCommand;
+        this.playerCommands = playerCommands;
         this.messages = messages;
         this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
@@ -262,12 +262,12 @@ public class NpcData {
         return this;
     }
 
-    public String getPlayerCommand() {
-        return playerCommand;
+    public List<String> getPlayerCommands() {
+        return playerCommands;
     }
 
-    public NpcData setPlayerCommand(String playerCommand) {
-        this.playerCommand = playerCommand;
+    public NpcData setPlayerCommands(List<String> playerCommands) {
+        this.playerCommands = playerCommands;
         isDirty = true;
         return this;
     }
@@ -280,9 +280,21 @@ public class NpcData {
         this.messages = messages;
         return this;
     }
+
+    public void addPlayerCommand(String command) {
+        playerCommands.add(command);
+        isDirty = true;
+    }
+
+    public void removePlayerCommand(int index) {
+        playerCommands.remove(index);
+        isDirty = true;
+    }
+
     public boolean isSendMessagesRandomly() {
         return sendMessagesRandomly;
     }
+
     public void setSendMessagesRandomly(boolean sendMessagesRandomly) {
         this.sendMessagesRandomly = sendMessagesRandomly;
     }

@@ -60,7 +60,11 @@ messages:
   npc-command-equipment-invalid-slot: Invalid equipment slot
   npc-command-equipment-updated: Updated equipment
   npc-command-serverCommand-updated: Updated server command to be executed
-  npc-command-playerCommand-updated: Updated player command to be executed
+  npc-command-playercommand-updated: Updated playerCommand
+  npc-command-playercommand-removed: Removed playerCommand
+  npc-command-playercommand-invalid: Invalid playerCommand
+  npc-command-playercommand-invalid-index: Invalid index
+  npc-command-playercommand-cancelled: Updating playerCommands has been cancelled
   npc-command-showInTab-invalid-argument: 'Invalid argument (expected: ''true'' or ''false'')'
   npc-command-showInTab-same: Nothing has changed
   npc-command-showInTab-true: NPC will now be shown in tab

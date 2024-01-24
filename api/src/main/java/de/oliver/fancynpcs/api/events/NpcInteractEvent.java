@@ -8,6 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -19,7 +20,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @NotNull
     private final Npc npc;
     @Nullable
-    private final String playerCommand;
+    private final List<String> playerCommands;
     @Nullable
     private final String serverCommand;
     @NotNull
@@ -28,9 +29,9 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final Player player;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable String playerCommand, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player) {
+    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player) {
         this.npc = npc;
-        this.playerCommand = playerCommand;
+        this.playerCommands = playerCommands;
         this.serverCommand = serverCommand;
         this.onClick = onClick;
         this.player = player;
@@ -48,10 +49,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the command that the player will be forced to run
+     * @return the commands that the player will be forced to run
      */
-    public @Nullable String getPlayerCommand() {
-        return playerCommand;
+    public @Nullable List<String> getPlayerCommands() {
+        return playerCommands;
     }
 
     /**

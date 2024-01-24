@@ -134,7 +134,9 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
-            npcConfig.set("npcs." + data.getId() + ".message", null);
+            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.0.9
+            npcConfig.set("npcs." + data.getId() + ".playerCommands", data.getPlayerCommands());
+            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.0.9
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
@@ -153,10 +155,6 @@ public class NpcManagerImpl implements NpcManager {
 
             if (data.getServerCommand() != null) {
                 npcConfig.set("npcs." + data.getId() + ".serverCommand", data.getServerCommand());
-            }
-
-            if (data.getPlayerCommand() != null) {
-                npcConfig.set("npcs." + data.getId() + ".playerCommand", data.getPlayerCommand());
             }
 
             for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
@@ -238,12 +236,15 @@ public class NpcManagerImpl implements NpcManager {
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
             boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
             String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
-            String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand");
+
+            @Deprecated(since = "2.0.8")
+            String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.0.9
+            List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
 
             @Deprecated(since = "2.0.7")
-            String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.8
-
+            String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.9
             List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
+
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
             boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
@@ -270,7 +271,13 @@ public class NpcManagerImpl implements NpcManager {
                 messages.add(message);
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommand, playerCommand, interactionCooldown, attributes, mirrorSkin);
+            // TODO: remove when the 'playerCommand' field is removed, and just pass in the 'playerCommands'
+            if (playerCommands.isEmpty() && playerCommand != null && !playerCommand.isEmpty()) {
+                playerCommands = new ArrayList<>();
+                playerCommands.add(playerCommand);
+            }
+
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommand, playerCommands, interactionCooldown, attributes, mirrorSkin);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {

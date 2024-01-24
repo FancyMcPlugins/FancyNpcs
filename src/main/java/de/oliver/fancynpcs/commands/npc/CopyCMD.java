@@ -63,7 +63,7 @@ public class CopyCMD implements Subcommand {
                         npc.getData().getMessages(),
                         npc.getData().isSendMessagesRandomly(),
                         npc.getData().getServerCommand(),
-                        npc.getData().getPlayerCommand(),
+                        npc.getData().getPlayerCommands(),
                         npc.getData().getInteractionCooldown(),
                         npc.getData().getAttributes(),
                         npc.getData().isMirrorSkin()

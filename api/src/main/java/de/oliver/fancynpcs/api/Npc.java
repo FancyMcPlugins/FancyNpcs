@@ -105,7 +105,7 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommand(), data.getServerCommand(), data.getOnClick(), player);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommand(), data.getOnClick(), player);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -139,27 +139,29 @@ public abstract class Npc {
         }
 
         // playerCommand
-        if (data.getPlayerCommand() != null && data.getPlayerCommand().length() > 0) {
-            String command = ChatColorHandler.translate(data.getPlayerCommand(), player, List.of(PlaceholderAPIParser.class));
+        if (data.getPlayerCommands() != null && !data.getPlayerCommands().isEmpty()) {
+            for (String cmd : data.getPlayerCommands()) {
+                String command = ChatColorHandler.translate(cmd, player, List.of(PlaceholderAPIParser.class));
 
-            if (command.toLowerCase().startsWith("server")) {
-                String[] args = data.getPlayerCommand().split(" ");
-                if (args.length < 2) {
+                if (command.toLowerCase().startsWith("server")) {
+                    String[] args = cmd.split(" ");
+                    if (args.length < 2) {
+                        return;
+                    }
+                    String server = args[1];
+
+                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
+                    out.writeUTF("Connect");
+                    out.writeUTF(server);
+                    player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
                     return;
                 }
-                String server = args[1];
 
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
-                out.writeUTF(server);
-                player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
-                return;
+                FancyNpcsPlugin.get().getScheduler().runTask(
+                        player.getLocation(),
+                        () -> player.chat("/" + command)
+                );
             }
-
-            FancyNpcsPlugin.get().getScheduler().runTask(
-                    player.getLocation(),
-                    () -> player.chat("/" + command)
-            );
         }
     }
 

@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#                      
+#                       
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -30,7 +30,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Documentation
 
-You can find the official FancyHolograms documentation here: https://fancymcplugins.github.io/docs/fancynpcs.html
+You can find the official FancyNpcs documentation here: https://fancymcplugins.github.io/docs/fancynpcs.html
 
 - Getting started: https://fancymcplugins.github.io/docs/fn-getting-started.html
 - Commands: https://fancymcplugins.github.io/docs/fn-commands.html

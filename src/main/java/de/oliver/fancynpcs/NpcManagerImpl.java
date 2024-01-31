@@ -19,6 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class NpcManagerImpl implements NpcManager {
@@ -26,13 +27,13 @@ public class NpcManagerImpl implements NpcManager {
     private final JavaPlugin plugin;
     private final Function<NpcData, Npc> npcAdapter;
     private final File npcConfigFile;
-    private final HashMap<String, Npc> npcs; // npc id -> npc
+    private final Map<String, Npc> npcs; // npc id -> npc
     private boolean isLoaded;
 
     public NpcManagerImpl(JavaPlugin plugin, Function<NpcData, Npc> npcAdapter) {
         this.plugin = plugin;
         this.npcAdapter = npcAdapter;
-        npcs = new HashMap<>();
+        npcs = new ConcurrentHashMap<>();
         npcConfigFile = new File("plugins/FancyNpcs/npcs.yml");
         isLoaded = false;
     }

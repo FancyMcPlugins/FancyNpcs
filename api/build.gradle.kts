@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     id("maven-publish")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 dependencies {
@@ -8,7 +9,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    compileOnly("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 tasks {

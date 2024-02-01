@@ -13,6 +13,12 @@ dependencies {
 }
 
 tasks {
+    shadowJar {
+        archiveClassifier.set("")
+
+        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
+    }
+
     publishing {
         repositories {
             maven {

@@ -55,6 +55,11 @@ tasks {
 
     shadowJar {
         archiveClassifier.set("")
+
+        dependsOn(":api:shadowJar")
+
+        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
+        relocate("io.sentry", "de.oliver.fancynpcs.libs.sentry")
     }
 
     publishing {

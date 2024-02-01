@@ -17,6 +17,7 @@ public class PlayerQuitListener implements Listener {
             // This allows the NpcStartLookingEvent to be called when player joins back. (Because otherwise, state would remain true and no change would be detected)
             npc.getIsVisibleForPlayer().put(event.getPlayer().getUniqueId(), false);
             npc.getIsLookingAtPlayer().put(event.getPlayer().getUniqueId(), false);
+            npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
             // Calling NpcStopLookingEvent.
             Bukkit.getPluginManager().callEvent(new NpcStopLookingEvent(npc, event.getPlayer()));
         }

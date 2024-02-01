@@ -20,9 +20,9 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven("https://papermc.io/repo/repository/maven-public/")
-        maven("https://repo.fancyplugins.de/releases")
-        maven(url = "https://jitpack.io")
+        maven(url = "https://papermc.io/repo/repository/maven-public/")
+        maven(url = "https://repo.fancyplugins.de/releases")
+        maven(url = "https://repo.smrt-1.com/releases")
     }
 }
 
@@ -37,7 +37,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    implementation("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
@@ -47,8 +47,8 @@ tasks {
         minecraftVersion(findProperty("minecraftVersion").toString())
 
         downloadPlugins {
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+176")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+104")
+            hangar("ViaVersion", "4.9.3-SNAPSHOT+208")
+            hangar("ViaBackwards", "4.9.2-SNAPSHOT+126")
             hangar("PlaceholderAPI", "2.11.5")
         }
     }

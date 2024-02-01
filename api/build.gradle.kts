@@ -9,7 +9,7 @@ dependencies {
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
 
-    implementation("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 tasks {

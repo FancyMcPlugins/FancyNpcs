@@ -125,6 +125,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void remove(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         if (npc instanceof ServerPlayer npcPlayer) {
@@ -147,6 +151,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void lookAt(Player player, Location location) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setRot(location.getYaw(), location.getPitch());
@@ -164,6 +172,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void update(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
@@ -276,6 +288,10 @@ public class Npc_1_20_4 extends Npc {
     }
 
     public void move(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setPosRaw(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
@@ -318,6 +334,10 @@ public class Npc_1_20_4 extends Npc {
     }
 
     public void setSitting(ServerPlayer serverPlayer) {
+        if (npc == null) {
+            return;
+        }
+        
         if (sittingVehicle == null) {
             sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
         }

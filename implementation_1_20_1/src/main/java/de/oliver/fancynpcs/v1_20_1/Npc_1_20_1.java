@@ -310,6 +310,9 @@ public class Npc_1_20_1 extends Npc {
         float angelMultiplier = 256f / 360f;
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
+
+        ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
+        serverPlayer.connection.send(animatePacket);
     }
 
     private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {

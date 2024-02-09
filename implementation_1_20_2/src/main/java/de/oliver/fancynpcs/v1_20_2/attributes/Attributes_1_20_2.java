@@ -37,6 +37,7 @@ public class Attributes_1_20_2 {
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());
         attributes.addAll(BlockDisplayAttributes.getAllAttributes());
+        attributes.addAll(InteractionAttributes.getAllAttributes());
 
         return attributes;
     }

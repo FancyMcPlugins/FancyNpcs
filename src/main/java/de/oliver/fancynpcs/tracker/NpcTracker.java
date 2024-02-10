@@ -38,20 +38,13 @@ public class NpcTracker extends BukkitRunnable {
 
                 boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(player.getUniqueId(), false);
 
-                // Do not send information about invisible entities.
-                if (npcData.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "").equalsIgnoreCase("true")) {
+                // Do not send information about invisible NPCs or NPCs that are in different dimension.
+                if (npcData.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "").equalsIgnoreCase("true") || playerLocation.getWorld() != npcLocation.getWorld()) {
                     // Removing NPC if currently visible by player.
                     if (isCurrentlyVisible) {
                         npc.remove(player);
                     }
                     // Skipping execution of the rest of the logic.
-                    continue;
-                }
-
-                if (playerLocation.getWorld() != npcLocation.getWorld()) {
-                    if (isCurrentlyVisible) {
-                        npc.remove(player);
-                    }
                     continue;
                 }
 

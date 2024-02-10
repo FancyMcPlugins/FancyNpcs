@@ -39,6 +39,8 @@ messages:
   npc-command-create-name-already-exists: An npc with that name already exists
   npc-command-create-created: Created new NPC
   npc-command-create-cancelled: Creation has been cancelled
+  npc-command-collidable-true: NPC will now be collidable
+  npc-command-collidable-false: NPC will no longer be collidable
   npc-command-copy-success: Copied NPC
   npc-command-copy-cancelled: Copying has been cancelled
   npc-command-remove-removed: Removed NPC

@@ -2,17 +2,22 @@ package de.oliver.fancynpcs.tracker;
 
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcStartLookingEvent;
 import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 
 public class NpcTracker extends BukkitRunnable {
+
+    // Caching to avoid unnecessary look-ups.
+    private static final NpcAttribute INVISIBLE_ATTRIBUTE = FancyNpcs.getInstance().getAttributeManager().getAttributeByName(EntityType.PLAYER, "invisible");
 
     @Override
     public void run() {
@@ -32,6 +37,17 @@ public class NpcTracker extends BukkitRunnable {
                 }
 
                 boolean isCurrentlyVisible = npc.getIsVisibleForPlayer().getOrDefault(player.getUniqueId(), false);
+
+                // Do not send information about invisible entities.
+                if (npcData.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "").equalsIgnoreCase("true")) {
+                    // Removing NPC if currently visible by player.
+                    if (isCurrentlyVisible) {
+                        npc.remove(player);
+                    }
+                    // Skipping execution of the rest of the logic.
+                    continue;
+                }
+
                 if (playerLocation.getWorld() != npcLocation.getWorld()) {
                     if (isCurrentlyVisible) {
                         npc.remove(player);

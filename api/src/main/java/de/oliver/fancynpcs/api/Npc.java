@@ -12,6 +12,7 @@ import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.text.DecimalFormat;
@@ -23,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Npc {
 
+    private static final NpcAttribute INVISIBLE_ATTRIBUTE = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(EntityType.PLAYER, "invisible");
     private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
     protected final Map<UUID, Boolean> isTeamCreated = new ConcurrentHashMap<>();
@@ -54,7 +56,6 @@ public abstract class Npc {
     public abstract void spawn(Player player);
 
     public void spawnForAll() {
-        // TODO: check for each player if NPC should be visible (see distance thing - PlayerMoveListener)
         FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 spawn(onlinePlayer);
@@ -68,6 +69,52 @@ public abstract class Npc {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             remove(onlinePlayer);
         }
+    }
+
+    /**
+     * Checks if the NPC should be visible for the player.
+     *
+     * @param player The player to check for.
+     * @return True if the NPC should be visible for the player, otherwise false.
+     */
+    protected boolean shouldBeVisible(Player player) {
+        int visibilityDistance = FancyNpcsPlugin.get().getFancyNpcConfig().getVisibilityDistance();
+
+        if (!data.isSpawnEntity()) {
+            return false;
+        }
+
+        if (data.getLocation() == null) {
+            return false;
+        }
+
+        if (player.getLocation().getWorld() != data.getLocation().getWorld()) {
+            return false;
+        }
+
+        double distanceSquared = data.getLocation().distanceSquared(player.getLocation());
+        if (distanceSquared > visibilityDistance * visibilityDistance) {
+            return false;
+        }
+
+        if (data.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "").equalsIgnoreCase("true") && !data.isGlowing()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void checkAndUpdateVisibility(Player player) {
+        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+            boolean isVisible = shouldBeVisible(player);
+            boolean wasVisible = isVisibleForPlayer.getOrDefault(player.getUniqueId(), false);
+
+            if (isVisible && !wasVisible) {
+                spawn(player);
+            } else if (!isVisible && wasVisible) {
+                remove(player);
+            }
+        });
     }
 
     public abstract void lookAt(Player player, Location location);

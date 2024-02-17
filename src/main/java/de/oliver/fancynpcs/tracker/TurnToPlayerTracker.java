@@ -8,11 +8,10 @@ import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Collection;
 
-public class NpcTracker extends BukkitRunnable {
+public class TurnToPlayerTracker implements Runnable {
 
     @Override
     public void run() {
@@ -23,8 +22,6 @@ public class NpcTracker extends BukkitRunnable {
             Location playerLocation = player.getLocation();
 
             for (Npc npc : npcs) {
-                npc.checkAndUpdateVisibility(player);
-
                 NpcData npcData = npc.getData();
                 Location npcLocation = npcData.getLocation();
 

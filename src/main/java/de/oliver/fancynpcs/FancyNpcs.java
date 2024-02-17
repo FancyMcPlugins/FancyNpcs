@@ -17,7 +17,8 @@ import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.*;
-import de.oliver.fancynpcs.tracker.NpcTracker;
+import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
+import de.oliver.fancynpcs.tracker.VisibilityTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
@@ -205,7 +206,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // load config
         scheduler.runTaskLater(null, 20L * 5, () -> npcManager.loadNpcs());
 
-        scheduler.runTaskTimerAsynchronously(0, 1, new NpcTracker());
+        scheduler.runTaskTimerAsynchronously(0, 1, new TurnToPlayerTracker());
+        scheduler.runTaskTimerAsynchronously(0, 20, new VisibilityTracker());
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {

@@ -106,12 +106,14 @@ public abstract class Npc {
 
     public void checkAndUpdateVisibility(Player player) {
         FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
-            boolean isVisible = shouldBeVisible(player);
+            boolean shouldBeVisible = shouldBeVisible(player);
             boolean wasVisible = isVisibleForPlayer.getOrDefault(player.getUniqueId(), false);
 
-            if (isVisible && !wasVisible) {
+            if (shouldBeVisible && !wasVisible) {
                 spawn(player);
-            } else if (!isVisible && wasVisible) {
+                System.out.println("Spawned");
+            } else if (!shouldBeVisible && wasVisible) {
+                System.out.println("Removed");
                 remove(player);
             }
         });

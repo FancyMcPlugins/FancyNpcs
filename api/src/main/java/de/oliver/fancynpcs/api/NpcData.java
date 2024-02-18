@@ -105,6 +105,7 @@ public class NpcData {
         };
         this.turnToPlayer = false;
         this.messages = new ArrayList<>();
+        this.playerCommands = new ArrayList<>();
         this.sendMessagesRandomly = false;
         this.interactionCooldown = 0;
         this.equipment = new HashMap<>();

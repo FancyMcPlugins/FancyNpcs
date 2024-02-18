@@ -111,9 +111,7 @@ public abstract class Npc {
 
             if (shouldBeVisible && !wasVisible) {
                 spawn(player);
-                System.out.println("Spawned");
             } else if (!shouldBeVisible && wasVisible) {
-                System.out.println("Removed");
                 remove(player);
             }
         });

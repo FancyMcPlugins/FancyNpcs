@@ -32,6 +32,7 @@ public class NpcCMD extends Command {
     private final Subcommand turnToPlayerCMD = new TurnToPlayerCMD();
     private final Subcommand typeCMD = new TypeCMD();
     private final Subcommand mirrorSkinCMD = new MirrorSkinCMD();
+    private final Subcommand fixCMD = new FixCMD();
 
     public NpcCMD() {
         super("npc");
@@ -48,7 +49,7 @@ public class NpcCMD extends Command {
         List<String> suggestions = new ArrayList<>();
 
         if (args.length == 1) {
-            suggestions.addAll(Stream.of("help", "info", "message", "create", "remove", "copy", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown", "mirrorSkin")
+            suggestions.addAll(Stream.of("help", "info", "message", "create", "remove", "copy", "fix", "skin", "movehere", "teleport", "displayName", "equipment", "playerCommand", "serverCommand", "showInTab", "glowing", "glowingColor", "collidable", "list", "turnToPlayer", "type", "attribute", "interactionCooldown", "mirrorSkin")
                     .filter(input -> input.toLowerCase().startsWith(args[0].toLowerCase()))
                     .toList());
 
@@ -88,6 +89,7 @@ public class NpcCMD extends Command {
             case "turntoplayer" -> turnToPlayerCMD.tabcompletion(p, npc, args);
             case "type" -> typeCMD.tabcompletion(p, npc, args);
             case "mirrorskin" -> mirrorSkinCMD.tabcompletion(p, npc, args);
+            case "fix" -> fixCMD.tabcompletion(p, npc, args);
 
             default -> Collections.emptyList();
         };
@@ -98,7 +100,7 @@ public class NpcCMD extends Command {
         if (!testPermission(sender)) {
             return false;
         }
-        
+
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!sender.hasPermission("fancynpcs.npc.help") && !sender.hasPermission("fancynpcs.npc.*")) {
                 MessageHelper.error(sender, lang.get("no-permission-subcommand"));
@@ -238,6 +240,10 @@ public class NpcCMD extends Command {
 
             case "mirrorskin" -> {
                 return mirrorSkinCMD.run(sender, npc, args);
+            }
+
+            case "fix" -> {
+                return fixCMD.run(sender, npc, args);
             }
 
             default -> {

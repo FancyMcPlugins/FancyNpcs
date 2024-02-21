@@ -88,3 +88,4 @@ messages:
   npc-command-mirrorSkin-true: NPC will now mirror the skin of the viewer
   npc-command-mirrorSkin-false: NPC will no longer mirror the skin of the viewer
   npc-command-mirrorSkin-cancelled: Modification has been cancelled
+  npc-command-fix-success: Successfully tried to fixed the npc

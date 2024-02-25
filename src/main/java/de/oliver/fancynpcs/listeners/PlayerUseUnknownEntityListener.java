@@ -18,7 +18,7 @@ public class PlayerUseUnknownEntityListener implements Listener {
 
     @EventHandler
     public void onPlayerUseUnknownEntity(PlayerUseUnknownEntityEvent event) {
-        // On right click event is called twice, so we need to prevent that
+        // Right click is called twice, so we need to prevent that
         if (interacts.contains(event.getPlayer().getUniqueId())) return;
         interacts.add(event.getPlayer().getUniqueId());
         FancyNpcs.getInstance().getServer().getScheduler().runTaskLaterAsynchronously(FancyNpcs.getInstance(),
@@ -28,17 +28,6 @@ public class PlayerUseUnknownEntityListener implements Listener {
 
         Npc npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(event.getEntityId());
         if (npc == null) return;
-
-        /* This is not needed
-        if (npc.getData().getType() == EntityType.VILLAGER && event.getHand() == EquipmentSlot.HAND && event.getClickedRelativePosition() == null) {
-            npc.interact(event.getPlayer());
-            return;
-        }
-
-        if (!event.isAttack() && (event.getHand() == EquipmentSlot.HAND || event.getClickedRelativePosition() != null)) {
-            return;
-        }
-        */
 
         npc.interact(event.getPlayer());
     }

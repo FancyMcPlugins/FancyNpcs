@@ -15,6 +15,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,8 @@ public class NpcManagerImpl implements NpcManager {
         }
     }
 
+    @ApiStatus.Internal
+    @Override
     public Npc getNpc(int entityId) {
         for (Npc npc : npcs.values()) {
             if (npc.getEntityId() == entityId) {
@@ -68,6 +71,17 @@ public class NpcManagerImpl implements NpcManager {
     public Npc getNpc(String name) {
         for (Npc npc : npcs.values()) {
             if (npc.getData().getName().equalsIgnoreCase(name)) {
+                return npc;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Npc getNpcById(String id) {
+        for (Npc npc : npcs.values()) {
+            if (npc.getData().getId().equals(id)) {
                 return npc;
             }
         }

@@ -57,7 +57,7 @@ public class EquipmentCMD implements Subcommand {
             return false;
         }
 
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = player.getInventory().getItemInMainHand().clone();
 
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, receiver);
         npcModifyEvent.callEvent();

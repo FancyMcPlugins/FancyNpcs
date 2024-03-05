@@ -111,9 +111,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
+        FancyLib.setPlugin(instance);
+        MessageHelper.setPrimaryColor("#E33239");
+        MessageHelper.setSecondaryColor("#ad1d23");
+
         String mcVersion = Bukkit.getMinecraftVersion();
 
-        FancyLib.setPlugin(instance);
         config.reload();
 
         attributeManager = new AttributeManagerImpl();

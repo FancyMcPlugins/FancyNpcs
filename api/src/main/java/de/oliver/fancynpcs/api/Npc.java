@@ -97,7 +97,7 @@ public abstract class Npc {
             return false;
         }
 
-        if (data.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "").equalsIgnoreCase("true") && !data.isGlowing() && data.getEquipment().isEmpty()) {
+        if (data.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "false").equalsIgnoreCase("true") && !data.isGlowing() && data.getEquipment().isEmpty()) {
             return false;
         }
 

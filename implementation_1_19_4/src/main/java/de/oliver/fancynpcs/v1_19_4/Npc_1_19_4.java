@@ -113,6 +113,8 @@ public class Npc_1_19_4 extends Npc {
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
+                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
+                serverPlayer.connection.send(spawnPlayerPacket);
             }
         }
 

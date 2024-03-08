@@ -46,7 +46,7 @@ public class TypeCMD implements Subcommand {
         EntityType type = EntityType.fromName(args[2].toLowerCase());
 
         if (type == null) {
-            MessageHelper.error(receiver, lang.get("npc-command-type-invalid"));
+            MessageHelper.error(receiver, lang.get("npc-command-type-invalid", "input", args[2].toLowerCase()));
             return false;
         }
 
@@ -67,7 +67,7 @@ public class TypeCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-type-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-type-updated", "npc", npc.getData().getName(), "type", type.name().toLowerCase()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

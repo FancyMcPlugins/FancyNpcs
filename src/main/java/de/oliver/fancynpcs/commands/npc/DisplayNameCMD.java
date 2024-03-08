@@ -52,7 +52,7 @@ public class DisplayNameCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setDisplayName(displayName.toString());
             npc.updateForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-displayName-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-displayName-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

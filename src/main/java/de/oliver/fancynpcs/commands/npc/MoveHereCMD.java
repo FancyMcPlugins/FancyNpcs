@@ -52,9 +52,9 @@ public class MoveHereCMD implements Subcommand {
                 npc.spawnForAll();
             }
 
-            MessageHelper.success(receiver, lang.get("npc-command-moveHere-moved"));
+            MessageHelper.success(receiver, lang.get("npc-command-moveHere-moved", "npc", npc.getData().getName()));
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled", "npc", npc.getData().getName()));
         }
 
         return true;

@@ -109,7 +109,7 @@ public class PlayerCommandCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().addPlayerCommand(command);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -132,7 +132,7 @@ public class PlayerCommandCMD implements Subcommand {
         }
 
         if (index < 1 || index > npc.getData().getPlayerCommands().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index"));
+            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index", "input", String.valueOf(index)));
             return false;
         }
 
@@ -157,7 +157,7 @@ public class PlayerCommandCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().getPlayerCommands().set(index - 1, command);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -180,7 +180,7 @@ public class PlayerCommandCMD implements Subcommand {
         }
 
         if (index < 1 || index > npc.getData().getPlayerCommands().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index"));
+            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index", "input", String.valueOf(index)));
             return false;
         }
 
@@ -189,7 +189,7 @@ public class PlayerCommandCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().removePlayerCommand(index - 1);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -208,7 +208,7 @@ public class PlayerCommandCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().getPlayerCommands().clear();
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

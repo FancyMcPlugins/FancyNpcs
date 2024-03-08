@@ -57,12 +57,12 @@ public class CollidableCMD implements Subcommand {
             npc.updateForAll();
 
             if (collidable) {
-                MessageHelper.success(receiver, lang.get("npc-command-collidable-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-collidable-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-collidable-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-collidable-false", "npc", npc.getData().getName()));
             }
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled", "npc", npc.getData().getName()));
         }
 
         return true;

@@ -58,9 +58,9 @@ public class GlowingCMD implements Subcommand {
             npc.updateForAll();
 
             if (glowing) {
-                MessageHelper.success(receiver, lang.get("npc-command-glowing-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-glowing-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-glowing-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-glowing-false", "npc", npc.getData().getName()));
             }
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));

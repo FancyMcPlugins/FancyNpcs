@@ -49,7 +49,7 @@ public class SkinCMD implements Subcommand {
         if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
             UUID uuid = UUIDFetcher.getUUID(skinName);
             if (uuid == null) {
-                MessageHelper.error(receiver, lang.get("npc-command-skin-invalid"));
+                MessageHelper.error(receiver, lang.get("npc-command-skin-invalid", "input", args[2]));
                 return false;
             }
             skinName = uuid.toString();
@@ -72,7 +72,7 @@ public class SkinCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-skin-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-skin-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

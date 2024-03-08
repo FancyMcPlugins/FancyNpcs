@@ -106,30 +106,41 @@ public class NpcCMD extends Command {
                 MessageHelper.error(sender, lang.get("no-permission-subcommand"));
                 return false;
             }
-
-            MessageHelper.info(sender, lang.get("npc-command-help-header"));
-            MessageHelper.info(sender, lang.get("npc-command-help-create"));
-            MessageHelper.info(sender, lang.get("npc-command-help-remove"));
-            MessageHelper.info(sender, lang.get("npc-command-help-copy"));
-            MessageHelper.info(sender, lang.get("npc-command-help-list"));
-            MessageHelper.info(sender, lang.get("npc-command-help-skin"));
-            MessageHelper.info(sender, lang.get("npc-command-help-type"));
-            MessageHelper.info(sender, lang.get("npc-command-help-moveHere"));
-            MessageHelper.info(sender, lang.get("npc-command-help-teleport"));
-            MessageHelper.info(sender, lang.get("npc-command-help-displayName"));
-            MessageHelper.info(sender, lang.get("npc-command-help-equipment"));
-            MessageHelper.info(sender, lang.get("npc-command-help-message"));
-            MessageHelper.info(sender, lang.get("npc-command-help-playerCommand"));
-            MessageHelper.info(sender, lang.get("npc-command-help-serverCommand"));
-            MessageHelper.info(sender, lang.get("npc-command-help-showInTab"));
-            MessageHelper.info(sender, lang.get("npc-command-help-glowing"));
-            MessageHelper.info(sender, lang.get("npc-command-help-glowingColor"));
-            MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
-            MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
-            MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
-            MessageHelper.info(sender, lang.get("npc-command-help-interactionCooldown"));
-            MessageHelper.info(sender, lang.get("npc-command-help-mirrorSkin"));
-
+            // TO-DO: Replace with automatic pagination once better configuration system is in place.
+            final String maxPages = "3";
+            if (args.length == 1 || args[1].equals("1")) {
+                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "1").replace("{max_pages}", maxPages));
+                MessageHelper.info(sender, lang.get("npc-command-help-create"));
+                MessageHelper.info(sender, lang.get("npc-command-help-remove"));
+                MessageHelper.info(sender, lang.get("npc-command-help-copy"));
+                MessageHelper.info(sender, lang.get("npc-command-help-list"));
+                MessageHelper.info(sender, lang.get("npc-command-help-skin"));
+                MessageHelper.info(sender, lang.get("npc-command-help-type"));
+                MessageHelper.info(sender, lang.get("npc-command-help-moveHere"));
+                MessageHelper.info(sender, lang.get("npc-command-help-teleport"));
+                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "1").replace("{max_pages}", maxPages));
+            }
+            else if (args[1].equals("2")) {
+                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "2").replace("{max_pages}", maxPages));
+                MessageHelper.info(sender, lang.get("npc-command-help-displayName"));
+                MessageHelper.info(sender, lang.get("npc-command-help-equipment"));
+                MessageHelper.info(sender, lang.get("npc-command-help-message"));
+                MessageHelper.info(sender, lang.get("npc-command-help-playerCommand"));
+                MessageHelper.info(sender, lang.get("npc-command-help-serverCommand"));
+                MessageHelper.info(sender, lang.get("npc-command-help-showInTab"));
+                MessageHelper.info(sender, lang.get("npc-command-help-glowing"));
+                MessageHelper.info(sender, lang.get("npc-command-help-glowingColor"));
+                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "2").replace("{max_pages}", maxPages));
+            }
+            else if (args[1].equals("3")) {
+                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "3").replace("{max_pages}", maxPages));
+                MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
+                MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
+                MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
+                MessageHelper.info(sender, lang.get("npc-command-help-interactionCooldown"));
+                MessageHelper.info(sender, lang.get("npc-command-help-mirrorSkin"));
+                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "3").replace("{max_pages}", maxPages));
+            }
             return true;
         }
 

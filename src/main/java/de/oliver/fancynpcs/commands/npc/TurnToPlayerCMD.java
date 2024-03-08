@@ -57,9 +57,9 @@ public class TurnToPlayerCMD implements Subcommand {
             npc.getData().setTurnToPlayer(turnToPlayer);
 
             if (turnToPlayer) {
-                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-turnToPlayer-false", "npc", npc.getData().getName()));
                 npc.updateForAll(); // move to default pos
             }
         } else {

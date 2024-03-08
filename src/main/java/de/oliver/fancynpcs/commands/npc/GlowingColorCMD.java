@@ -44,7 +44,7 @@ public class GlowingColorCMD implements Subcommand {
 
         NamedTextColor color = NamedTextColor.NAMES.value(args[2]);
         if (color == null) {
-            MessageHelper.error(receiver, lang.get("npc-command-glowingColor-invalid"));
+            MessageHelper.error(receiver, lang.get("npc-command-glowingColor-invalid", "input", args[2]));
             return false;
         }
 
@@ -54,7 +54,7 @@ public class GlowingColorCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setGlowingColor(color);
             npc.updateForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-glowingColor-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-glowingColor-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

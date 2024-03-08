@@ -53,7 +53,7 @@ public class EquipmentCMD implements Subcommand {
 
         NpcEquipmentSlot equipmentSlot = NpcEquipmentSlot.parse(slot);
         if (equipmentSlot == null) {
-            MessageHelper.error(receiver, lang.get("npc-command-equipment-invalid-slot"));
+            MessageHelper.error(receiver, lang.get("npc-command-equipment-invalid-slot", "input", slot));
             return false;
         }
 
@@ -65,7 +65,7 @@ public class EquipmentCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().addEquipment(equipmentSlot, item);
             npc.updateForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-equipment-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-equipment-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

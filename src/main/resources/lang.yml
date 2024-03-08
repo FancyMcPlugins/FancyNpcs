@@ -8,84 +8,89 @@ messages:
   wrong-usage: 'Wrong usage: /npc help'
   could-not-parse-number: Could not parse number
   world-not-found: Could not find world
-  npc-not-found: Could not find NPC
-  npc-must-be-player: Npc's type must be Player to do this
-  on-interaction-cooldown: You need to wait {time} seconds until you can interact with this npc again
-  npc-command-help-header: '<b>FancyNpcs Plugin help:'
-  npc-command-help-create: ' - /npc create (name) <dark_gray>- <white>Creates a new npc at your location'
-  npc-command-help-remove: ' - /npc remove (name) <dark_gray>- <white>Removes an npc'
-  npc-command-help-copy: ' - /npc copy (name) (new name) <dark_gray>- <white>Copies an npc'
-  npc-command-help-list: ' - /npc list <dark_gray>- <white>Summary of all npcs'
-  npc-command-help-skin: ' - /npc skin (name) [(skin)] <dark_gray>- <white>Sets the skin for an npc'
-  npc-command-help-type: ' - /npc type (name) (type) <dark_gray>- <white>Sets the entity type for an npc'
-  npc-command-help-moveHere: ' - /npc movehere (name) <dark_gray>- <white>Teleports an npc to your location'
-  npc-command-help-teleport: ' - /npc teleport (name) (x) (y) (z) [world] <dark_gray>- <white>Teleports the npc to the provided location'
-  npc-command-help-displayName: ' - /npc displayName (name) (displayName ...) <dark_gray>- <white>Sets the displayname for an npc'
-  npc-command-help-equipment: ' - /npc equipment (name) (slot) <dark_gray>- <white>Equips the npc with the item you are holding'
-  npc-command-help-message: ' - /npc message (name) (none|message) <dark_gray>- <white>Set NPC message'
-  npc-command-help-playerCommand: ' - /npc playerCommand (name) (none|command ...) <dark_gray>- <white>Executes the command on a player when interacting'
-  npc-command-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc'
-  npc-command-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not'
-  npc-command-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not'
-  npc-command-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect'
-  npc-command-help-collidable: ' - /npc collidable (name) (true|false) <dark_gray>- <white>Whether the NPC will be collidable or not'
-  npc-command-help-turnToPlayer: ' - /npc turnToPlayer (name) (true|false) <dark_gray>- <white>Whether the NPC will turn to you or not'
-  npc-command-help-attribute: ' - /npc attribute (name) (attribute) (value) <dark_gray>- <white>Set certain npc attributes'
-  npc-command-help-interactionCooldown: ' - /npc interactionCooldown (name) (seconds) <dark_gray>- <white>Set the interaction cooldown (0 = disabled)'
-  npc_command-help-mirrorSkin: ' - /npc mirrorSkin (name) (true|false) <dark_gray>- <white>Whether the NPC will mirror the skin of the viewing player'
-  npc-command-list-header: <b>All NPCs:</b>
-  npc-command-list-no-npcs: There are no NPCs. Use '/npc create' to create one
+  npc-not-found: <dark_gray>› <errorColor>This feature is only available for player-type NPCs.
+  npc-must-be-player: <dark_gray>› <errorColor>This feature is only available for player-type NPCs.
+  on-interaction-cooldown: You need to wait {time} seconds uasdsssssssssssssssssssssssssssssssssssssssssssssssssss
+  npc-command-help-header: '<gray>Commands for <primaryColor>FancyNpcs<gray> plugin: (<primaryColor>{page}<gray>/<primaryColor>{max_pages}<gray>)'
+  npc-command-help-footer: <gray>Full command reference available <primaryColor><u>here</u><gray>.
+  npc-command-help-create: <dark_gray>› <primaryColor>/npc create <secondaryColor>(npc) <dark_gray>- <gray>Creates a new NPC at your location.
+  npc-command-help-remove: <dark_gray>› <primaryColor>/npc remove <secondaryColor>(npc) <dark_gray>- <gray>Removes specified NPC.
+  npc-command-help-copy: <dark_gray>› <primaryColor>/npc copy <secondaryColor>(npc) (new_name) <dark_gray>- <gray>Copies/clones specified NPC.
+  npc-command-help-list: <dark_gray>› <primaryColor>/npc list <dark_gray>- <gray>Lists all loaded NPCs.
+  npc-command-help-skin: <dark_gray>› <primaryColor>/npc skin <secondaryColor>(skin) <dark_gray>- <gray>Changes skin of an NPC.
+  npc-command-help-type: <dark_gray>› <primaryColor>/npc type <secondaryColor>(npc) (type) <dark_gray>- <gray>Changes entity type of an NPC.
+  npc-command-help-moveHere: <dark_gray>› <primaryColor>/npc movehere <secondaryColor>(npc) <dark_gray>- <gray>Teleports NPC to your location.
+  npc-command-help-teleport: <dark_gray>› <primaryColor>/npc teleport <secondaryColor>(npc) (x) (y) (z) [world] <dark_gray>- <gray>Teleports NPC.
+  npc-command-help-displayName: <dark_gray>› <primaryColor>/npc displayname <secondaryColor>(npc) (name) <dark_gray>- <gray>Changes NPC's displayname.
+  npc-command-help-equipment: <dark_gray>› <primaryColor>/npc equipment <secondaryColor>(npc) (slot) <dark_gray>- <gray>Changes equipement of an NPC.
+  npc-command-help-message: <dark_gray>› <primaryColor>/npc message <secondaryColor>(npc) (...) <dark_gray>- <gray>Changes click message(s).
+  npc-command-help-playerCommand: <dark_gray>› <primaryColor>/npc playerCommand <secondaryColor>(npc) (...) <dark_gray>- <gray>Changes click command(s).
+  npc-command-help-serverCommand: <dark_gray>› <primaryColor>/npc serverCommand <secondaryColor>(npc) (...) <dark_gray>- <gray>Changes click command(s).
+  npc-command-help-showInTab: <dark_gray>› <primaryColor>/npc showInTab <secondaryColor>(npc) (state) <dark_gray>- <gray>Changes tab-list visibility.
+  npc-command-help-glowing: <dark_gray>› <primaryColor>/npc glowing <secondaryColor>(npc) (state) <dark_gray>- <gray>Changes glowing effect state.
+  npc-command-help-glowingColor: <dark_gray>› <primaryColor>/npc glowingColor <secondaryColor>(npc) (color) <dark_gray>- <gray>Changes glowing color.
+  npc-command-help-collidable: <dark_gray>› <primaryColor>/npc collidable <secondaryColor>(npc) (state) <dark_gray>- <gray>Changes collidable state.
+  npc-command-help-turnToPlayer: <dark_gray>› <primaryColor>/npc turnToPlayer <secondaryColor>(npc) (state) <dark_gray>- <gray>Changes turning state.
+  npc-command-help-attribute: <dark_gray>› <primaryColor>/npc attribute <secondaryColor>(npc) (attr) (value) <dark_gray>- <gray>Sets entity attribute.
+  npc-command-help-interactionCooldown: <dark_gray>› <primaryColor>/npc interactionCooldown <secondaryColor>(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown.
+  npc-command-help-mirrorSkin: <dark_gray>› <primaryColor>/npc mirrorSkin <secondaryColor>(npc) (state) <dark_gray>- <gray>Changes skin mirroring state.
+  npc-command-list-header: <b>All NPCs:</b> # todo
+  npc-command-list-no-npcs: <dark_gray>› <errorColor>No NPCs found, use <warningColor>/npc create (npc)<errorColor> to create one.
   npc-command-list-tp-hover: <hover:show_text:'<gray><i>Click to teleport</i></gray>'><click:run_command:'{tp_cmd}'> - {name} ({x}/{y}/{z})</click></hover>
-  npc-command-create-name-already-exists: An npc with that name already exists
-  npc-command-create-created: Created new NPC
-  npc-command-create-cancelled: Creation has been cancelled
-  npc-command-collidable-true: NPC will now be collidable
-  npc-command-collidable-false: NPC will no longer be collidable
-  npc-command-copy-success: Copied NPC
-  npc-command-copy-cancelled: Copying has been cancelled
-  npc-command-remove-removed: Removed NPC
-  npc-command-remove-cancelled: Removing has been cancelled
-  npc-command-moveHere-moved: Moved NPC to your location
-  npc-command-message-updated: Updated message
-  npc-command-message-removed: Removed message
-  npc-command-message-invalid: Invalid message
-  npc-command-message-invalid-index: Invalid index
-  npc-command-message-cancelled: Updating message has been cancelled
-  npc-command-message-sendMessagesRandomly-true: NPC will now send messages randomly
-  npc-command-message-sendMessagesRandomly-false: NPC will no longer send messages randomly
-  npc-command-skin-invalid: Invalid username or url
-  npc-command-skin-failed_header: 'Could not load skin. Possible causes:'
-  npc-command-skin-failed_url: ' - Invalid URL (check the url)'
-  npc-command-skin-failed_limited: ' - Rate limit reached (try again later)'
-  npc-command-skin-updated: Updated skin
-  npc-command-displayName-updated: Updated display name
-  npc-command-equipment-invalid-slot: Invalid equipment slot
-  npc-command-equipment-updated: Updated equipment
-  npc-command-serverCommand-updated: Updated server command to be executed
-  npc-command-playercommand-updated: Updated playerCommand
-  npc-command-playercommand-removed: Removed playerCommand
-  npc-command-playercommand-invalid: Invalid playerCommand
-  npc-command-playercommand-invalid-index: Invalid index
-  npc-command-playercommand-cancelled: Updating playerCommands has been cancelled
-  npc-command-showInTab-invalid-argument: 'Invalid argument (expected: ''true'' or ''false'')'
-  npc-command-showInTab-same: Nothing has changed
-  npc-command-showInTab-true: NPC will now be shown in tab
-  npc-command-showInTab-false: NPC will no longer be shown in tab
-  npc-command-glowing-true: NPC will now glow
-  npc-command-glowing-false: NPC will no longer glow
-  npc-command-glowingColor-invalid: Invalid color
-  npc-command-glowingColor-updated: Updated glowing color
-  npc-command-turnToPlayer-true: NPC will now turn to the players
-  npc-command-turnToPlayer-false: NPC will no longer turn to the players
-  npc-command-type-invalid: Invalid type
-  npc-command-type-updated: Updated entity type
+  npc-command-create-name-already-exists: <dark_gray>› <errorColor>NPC named <warningColor>{npc}<errorColor> already exists.
+  npc-command-create-created: <dark_gray>› <successColor>NPC named <warningColor>{npc}<successColor> has been created.
+  npc-command-create-cancelled: <errorColor>Creation of NPC named <warningColor>{npc}<errorColor> has been cancelled by the API.
+  npc-command-collidable-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now <successColor>collidable<gray>.
+  npc-command-collidable-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer <errorColor>collidable<gray>.
+  npc-command-copy-success: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has been copied to <warningColor>{new_npc}<gray>.
+  npc-command-copy-cancelled: <errorColor>Copying of NPC named <warningColor>{npc}<errorColor> has been cancelled by the API.
+  npc-command-remove-removed: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has been removed.
+  npc-command-remove-cancelled: <errorColor>Removal of NPC named <warningColor>{npc}<errorColor> has been cancelled by the API.
+  npc-command-moveHere-moved: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has been moved to your location.
+  npc-command-message-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their message(s) updated.
+  npc-command-message-removed: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their message(s) removed.
+  npc-command-message-invalid: N/A
+  npc-command-message-invalid-index: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid index.
+  npc-command-message-cancelled: N/A
+  npc-command-message-sendMessagesRandomly-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now sending messages <successColor>randomly<gray>.
+  npc-command-message-sendMessagesRandomly-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer sending messages <errorColor>randomly<gray>.
+  npc-command-skin-invalid: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid player name or URL.
+  npc-command-skin-failed_header: 'Could not load skin. Possible causes:' # todo
+  npc-command-skin-failed_url: ' - Invalid URL (check the url)' # todo
+  npc-command-skin-failed_limited: ' - Rate limit reached (try again later)' # todo
+  npc-command-skin-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their skin updated.
+  npc-command-displayName-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their display-name updated.
+  npc-command-equipment-invalid-slot: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid equipment slot.
+  npc-command-equipment-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their equipment updated.
+  npc-command-serverCommand-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their command(s) updated.
+  npc-command-playercommand-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their command(s) updated.
+  npc-command-playercommand-removed: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their command(s) removed.
+  npc-command-playercommand-invalid: N/A
+  npc-command-playercommand-invalid-index: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid index.
+  npc-command-playercommand-cancelled: N/A
+
+
+  npc-command-showInTab-invalid-argument: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid boolean.
+  npc-command-showInTab-same: N/A
+  npc-command-showInTab-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now shown in <successColor>player-list<gray>.
+  npc-command-showInTab-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer shown in <errorColor>player-list<gray>.
+  npc-command-glowing-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now <successColor>glowing<gray>.
+  npc-command-glowing-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer <errorColor>glowing<gray>.
+  npc-command-glowingColor-invalid: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid color.
+  npc-command-glowingColor-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their glowing color updated.
+  npc-command-turnToPlayer-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now <successColor>turning to player<gray>.
+  npc-command-turnToPlayer-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer <errorColor>turning to player<gray>.
+  npc-command-type-invalid: <dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid entity type.
+  npc-command-type-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their type set to <warningColor>{type}<gray>.
   npc-command-attribute-attribute-not-found: Could not find attribute
   npc-command-attribute-wrong-entity-type: This attribute can not be applied to this entity type
   npc-command-attribute-invalid-value: Invalid attribute value
-  npc-command-attribute-success: Successfully set the attribute
-  npc-command-interactioncooldown-updated: Successfully updated the interaction cooldown
-  npc-command-teleport-success: Successfully teleported npc
-  npc-command-mirrorSkin-true: NPC will now mirror the skin of the viewer
-  npc-command-mirrorSkin-false: NPC will no longer mirror the skin of the viewer
-  npc-command-mirrorSkin-cancelled: Modification has been cancelled
-  npc-command-fix-success: Successfully tried to fixed the npc
+  npc-command-attribute-success: <gray>Attribute <aqua>{attribute}<gray> set to {value}<gray>
+
+  npc-command-interactioncooldown-updated: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their interaction cooldown updated.
+
+  npc-command-teleport-success: <gray>You have been teleported to NPC <aqua>{npc}<gray>.
+  npc-command-mirrorSkin-true: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is now <successColor>mirroring player skin<gray>.
+  npc-command-mirrorSkin-false: <dark_gray>› <gray>NPC named <warningColor>{npc}<gray> is no longer <errorColor>mirroring player skin<gray>.
+  npc-command-mirrorSkin-cancelled: N/A
+  npc-command-fix-success: <dark_gray>› <gray>Trying to fix NPC named <warningColor>{npc}<gray>...

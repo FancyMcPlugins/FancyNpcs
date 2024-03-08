@@ -115,9 +115,9 @@ public class MessageCMD implements Subcommand {
             npc.getData().setSendMessagesRandomly(sendMessagesRandomly);
 
             if (sendMessagesRandomly) {
-                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-false", "npc", npc.getData().getName()));
                 npc.updateForAll(); // move to default pos
             }
         } else {
@@ -154,7 +154,7 @@ public class MessageCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().addMessage(message);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-message-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -177,7 +177,7 @@ public class MessageCMD implements Subcommand {
         }
 
         if (index < 1 || index > npc.getData().getMessages().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index"));
+            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index", "input", String.valueOf(index)));
             return false;
         }
 
@@ -202,7 +202,7 @@ public class MessageCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().getMessages().set(index - 1, message);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-message-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -225,7 +225,7 @@ public class MessageCMD implements Subcommand {
         }
 
         if (index < 1 || index > npc.getData().getMessages().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index"));
+            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index", "input", String.valueOf(index)));
             return false;
         }
 
@@ -234,7 +234,7 @@ public class MessageCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().removeMessage(index - 1);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-message-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
@@ -253,7 +253,7 @@ public class MessageCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().getMessages().clear();
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-message-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

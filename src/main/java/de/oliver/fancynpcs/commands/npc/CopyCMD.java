@@ -76,9 +76,9 @@ public class CopyCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
 
-            MessageHelper.success(receiver, lang.get("npc-command-copy-success"));
+            MessageHelper.success(receiver, lang.get("npc-command-copy-success", "npc", npc.getData().getName()));
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-copy-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-copy-cancelled", "npc", npc.getData().getName()));
         }
 
         return true;

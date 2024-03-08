@@ -64,7 +64,7 @@ public class ServerCommandCMD implements Subcommand {
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setServerCommand(cmd);
-            MessageHelper.success(receiver, lang.get("npc-command-serverCommand-updated"));
+            MessageHelper.success(receiver, lang.get("npc-command-serverCommand-updated", "npc", npc.getData().getName()));
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }

@@ -45,9 +45,9 @@ public class RemoveCMD implements Subcommand {
                 }
             }
             FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
-            MessageHelper.success(receiver, lang.get("npc-command-remove-removed"));
+            MessageHelper.success(receiver, lang.get("npc-command-remove-removed", "npc", npc.getData().getName()));
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-remove-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-remove-cancelled", "npc", npc.getData().getName()));
         }
 
         return false;

@@ -60,12 +60,12 @@ public class MirrorSkinCMD implements Subcommand {
             npc.spawnForAll();
 
             if (mirrorSkin) {
-                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-false", "npc", npc.getData().getName()));
             }
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-mirrorSkin-cancelled"));
+            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
         }
 
         return true;

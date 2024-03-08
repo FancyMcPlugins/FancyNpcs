@@ -53,18 +53,13 @@ public class ShowInTabCMD implements Subcommand {
             case "true" -> showInTab = true;
             case "false" -> showInTab = false;
             default -> {
-                MessageHelper.error(receiver, lang.get("npc-command-showInTab-invalid-argument"));
+                MessageHelper.error(receiver, lang.get("npc-command-showInTab-invalid-argument", "input", args[2].toLowerCase()));
                 return false;
             }
         }
 
         NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, receiver);
         npcModifyEvent.callEvent();
-
-        if (showInTab == npc.getData().isShowInTab()) {
-            MessageHelper.warning(receiver, lang.get("npc-command-showInTab-same"));
-            return false;
-        }
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setShowInTab(showInTab);
@@ -77,9 +72,9 @@ public class ShowInTabCMD implements Subcommand {
             }
 
             if (showInTab) {
-                MessageHelper.success(receiver, lang.get("npc-command-showInTab-true"));
+                MessageHelper.success(receiver, lang.get("npc-command-showInTab-true", "npc", npc.getData().getName()));
             } else {
-                MessageHelper.success(receiver, lang.get("npc-command-showInTab-false"));
+                MessageHelper.success(receiver, lang.get("npc-command-showInTab-false", "npc", npc.getData().getName()));
             }
         } else {
             MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));

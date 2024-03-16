@@ -14,7 +14,7 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.0.9-test3" + (if (buildId != null) ".$buildId" else "")
+    version = "2.0.9-test4" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -37,7 +37,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    api("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }

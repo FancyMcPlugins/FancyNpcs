@@ -1,64 +1,86 @@
-[![Generic badge](https://img.shields.io/badge/version-1.1.3-green.svg)](https://shields.io/)
+![](fancynpcs_title.png)
+
+#                         
+
+![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
+[![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
+[![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
+![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=GitHub&style=flat-square)
 [![SpigotMC Downloads](https://badges.spiget.org/resources/downloads/spigotmc-orange-107306.svg)](https://www.spigotmc.org/resources/npc-plugin-1-19-4.107306/)
-[![Downloads](https://img.shields.io/modrinth/dt/npc-plugin?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/npc-plugin/versions)
+[![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
 
-# Fancy Npcs
-A simple NPC plugin for minecraft servers using [packets](https://wiki.vg/Protocol)
+Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.19.4**<br>
+**Only for minecraft server version 1.19.4 - 1.20.4**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin
-You can download the latest versions at the following places:
 
-- https://www.spigotmc.org/resources/fancy-npcs-1-19-4.107306/
-- https://modrinth.com/plugin/fancy-npcs/
-- https://github.com/OliverSchlueter/FancyNpcs/releases
-- Build from source (``gradlew reobfJar``)
+### Stable versions
 
-## Commands
-/npc create (name) - _Creates a new npc at your location_<br>
-/npc remove (name) - _Removes an npc_<br>
-/npc list - _Summary of all npcs_<br>
-/npc skin (name) (skin) - _Sets the skin for an npc_<br>
-/npc movehere (name) - _Teleports an npc to your location_<br>
-/npc displayName (name) (displayName ...) - _Sets the displayname for an npc_<br>
-/npc equipment (name) (slot) - _Equips the npc with the item you are holding_<br>
-/npc serverCommand (name) (command ...) - _The command will be executed by the console when someone interacts with the npc_<br>
-/npc playerCommand (name) (command ...) - _Executes the command on a player when interacting_<br>
-/npc showInTab (name) (true|false) - _Whether the NPC will be shown in tab-list or not_<br>
-/npc turnToPlay (name) (true|false) - _Whether the NPC will turn to you or not_<br>
-/fancynpcs version - _Shows you the current plugin version_<br>
-/fancynpcs save - _Saves all npcs_<br>
-/fancynpcs reload - _Reloads the config and npcs_
-<br>
-<br>
-Using `<empty>` as displayName will make the whole name tag invisible.
+- https://hangar.papermc.io/Oliver/FancyNpcs
+- https://modrinth.com/plugin/fancynpcs/
+- https://github.com/FancyMcPlugins/FancyNpcs/releases
+- https://www.spigotmc.org/resources/fancy-npcs.107306/
 
-For the serverCommand, there is a placeholder `{player}` - it will be replaced with the username of the player who interacted with the npc.
+### Development builds
 
-## Permissions
-For the /npc command - ``FancyNpcs.admin``
+- https://fancyplugins.de/ng/FancyNpcs/download/
+- Build from source
 
-## Used packets
+## Documentation
 
-_(Just a note for me when updating this plugin to a new version)_
+You can find the official FancyNpcs documentation here: https://fancyplugins.de/docs/fancynpcs.html
 
-- ClientboundPlayerInfoUpdatePacket
-- ClientboundAddPlayerPacket
-- ClientboundSetPlayerTeamPacket
-- ClientboundSetEntityDataPacket
-- ClientboundSetEquipmentPacket
-- ClientboundTeleportEntityPacket
-- ClientboundRotateHeadPacket
-- ClientboundRemoveEntitiesPacket
+- Getting started: https://fancyplugins.de/docs/fn-getting-started.html
+- Commands: https://fancyplugins.de/docs/fn-commands.html
+- API: https://fancyplugins.de/docs/fn-api.html
 
-### Mappings
+If you have any questions about the plugin/api, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
 
-- Npc#move
-  - ClientboundTeleportEntityPacket.b ('x')
-  - ClientboundTeleportEntityPacket.c ('y')
-  - ClientboundTeleportEntityPacket.d ('z')
+## Features
 
-- Npc#removeFromTab
-  - ClientboundPlayerInfoUpdatePacket.b ('entries')
+With FancyNpcs you can create NPCs that look like real players. You can edit a bunch of properties like the display name
+or skin.
+
+All properties:
+
+- display name
+- skin (username or url)
+- entity type (cow, pig, blaze etc.)
+- equipment (e.g. holding something in the hand)
+- glowing (in all colors)
+- and many more properties that are entity specific
+
+You can also define some actions that will be executed when a player interacts with the npc:
+
+- message: sends a simple message to the player
+- player command: forces the player to execute a command
+- server command: executes a command in the console
+
+Explore more features on the official website: https://fancyplugins.de/
+
+### Build from source
+
+1. Clone this repo and run `gradlew shadowJar`
+2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
+
+## Examples
+
+The following images are by https://explorerseden.eu/
+![](exampleImages/niceron2.png)
+
+![](exampleImages/niceron1.png)
+
+![](exampleImages/niceron3.png)
+
+The following image is by Beacon's Quest
+![](exampleImages/dave1.png)
+
+The following images are by oliver (main dev of this plugin)
+![](exampleImages/oliver1.png)
+
+![](exampleImages/oliver2.png)
+
+![](exampleImages/oliver3.png)
+

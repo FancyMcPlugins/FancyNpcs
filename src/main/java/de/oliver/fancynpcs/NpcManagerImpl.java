@@ -43,9 +43,9 @@ public class NpcManagerImpl implements NpcManager {
     public void registerNpc(Npc npc) {
         if(npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
             throw new InstanceAlreadyExistsException("An NPC with the name " + npc.getData().getName() + " already exists!");
-            return;
+        } else {
+            npcs.put(npc.getData().getId(), npc);
         }
-        npcs.put(npc.getData().getId(), npc);
     }
 
     public void removeNpc(Npc npc) {

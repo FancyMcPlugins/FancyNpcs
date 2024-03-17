@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.ApiStatus;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -40,6 +41,10 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void registerNpc(Npc npc) {
+        if(npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
+            throw new InstanceAlreadyExistsException("An NPC with the name " + npc.getData().getName() + " already exists!");
+            return;
+        }
         npcs.put(npc.getData().getId(), npc);
     }
 

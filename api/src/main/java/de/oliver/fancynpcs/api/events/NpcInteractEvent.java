@@ -5,11 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Is fired when a player interacts with a NPC
@@ -27,14 +28,16 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final Consumer<Player> onClick;
     @NotNull
     private final Player player;
+    private final InteractionType interactionType;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player) {
+    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player, @Nullable InteractionType interactionType) {
         this.npc = npc;
         this.playerCommands = playerCommands;
         this.serverCommand = serverCommand;
         this.onClick = onClick;
         this.player = player;
+        this.interactionType = interactionType;
     }
 
     public static HandlerList getHandlerList() {
@@ -70,6 +73,13 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
+     * @return returns click type
+     */
+    public @NotNull InteractionType getInteractionType() {
+        return interactionType;
+    }
+
+    /**
      * @return the player who interacted with the npc
      */
     public @NotNull Player getPlayer() {
@@ -89,6 +99,13 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
+    }
+
+    public enum InteractionType {
+        LEFT_CLICK,
+        RIGHT_CLICK,
+        /** {@link InteractionType#CUSTOM InteractionType#CUSTOM} represents interactions invoked by the API. */
+        CUSTOM
     }
 
 }

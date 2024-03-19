@@ -40,7 +40,11 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void registerNpc(Npc npc) {
-        npcs.put(npc.getData().getId(), npc);
+        if (npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
+            throw new IllegalStateException("An NPC with the name " + npc.getData().getName() + " already exists!");
+        } else {
+            npcs.put(npc.getData().getId(), npc);
+        }
     }
 
     public void removeNpc(Npc npc) {
@@ -252,12 +256,10 @@ public class NpcManagerImpl implements NpcManager {
             boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
             String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
 
-            @Deprecated(since = "2.0.8")
-            String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.0.9
+            @Deprecated(since = "2.0.8") String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.0.9
             List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
 
-            @Deprecated(since = "2.0.7")
-            String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.9
+            @Deprecated(since = "2.0.7") String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.9
             List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
 
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);

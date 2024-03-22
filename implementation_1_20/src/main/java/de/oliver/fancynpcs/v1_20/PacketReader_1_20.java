@@ -4,6 +4,7 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.events.PacketReceivedEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -71,16 +72,12 @@ public class PacketReader_1_20 implements Listener {
         boolean isInteract = action == ServerboundInteractPacket.ActionType.INTERACT_AT;
         Vector clickLoc = isInteract ? new Vector(0, 0, 0) : null;
 
-        if (npc.getData().getType() == EntityType.VILLAGER && hand == EquipmentSlot.HAND && clickLoc == null) {
-            npc.interact(event.getPlayer());
-            return;
-        }
-
-        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
-            return;
-        }
-
-        npc.interact(p);
+        // This packet can optionally be ALSO sent for OFF-HAND slot. Making sure to run logic only ONCE.
+        if (hand == EquipmentSlot.HAND)
+            // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
+            if (isAttack || clickLoc == null)
+                // Further interaction handling is done by Npc#interact method...
+                npc.interact(event.getPlayer(), isAttack ? NpcInteractEvent.InteractionType.LEFT_CLICK : NpcInteractEvent.InteractionType.RIGHT_CLICK);
     }
 
 }

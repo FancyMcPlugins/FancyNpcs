@@ -31,7 +31,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final InteractionType interactionType;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player, @Nullable InteractionType interactionType) {
+    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player, @NotNull InteractionType interactionType) {
         this.npc = npc;
         this.playerCommands = playerCommands;
         this.serverCommand = serverCommand;
@@ -73,7 +73,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return returns click type
+     * @return returns interaction type
      */
     public @NotNull InteractionType getInteractionType() {
         return interactionType;

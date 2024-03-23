@@ -12,8 +12,8 @@ import static de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 public class PlayerUseUnknownEntityListener implements Listener {
 
     @EventHandler
-    public void onPlayerUseUnknownEntity(PlayerUseUnknownEntityEvent event) {
-        Npc npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(event.getEntityId());
+    public void onPlayerUseUnknownEntity(final PlayerUseUnknownEntityEvent event) {
+        final Npc npc = FancyNpcs.getInstance().getNpcManagerImpl().getNpc(event.getEntityId());
         // Skipping entities that are not FancyNpcs' NPCs
         if (npc == null)
             return;

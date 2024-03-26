@@ -24,9 +24,11 @@ public class PlayerJoinListener implements Listener {
             npc.getIsVisibleForPlayer().put(event.getPlayer().getUniqueId(), false);
             npc.getIsLookingAtPlayer().put(event.getPlayer().getUniqueId(), false);
             npc.getIsTeamCreated().put(event.getPlayer().getUniqueId(), false);
-
-            npc.checkAndUpdateVisibility(event.getPlayer());
         }
+
+        // don't spawn the npc for player if he just joined
+        FancyNpcs.getInstance().getVisibilityTracker().addJoinDelayPlayer(event.getPlayer().getUniqueId());
+        FancyNpcs.getInstance().getScheduler().runTaskLater(null, 20L * 2, () -> FancyNpcs.getInstance().getVisibilityTracker().removeJoinDelayPlayer(event.getPlayer().getUniqueId()));
 
         if (!FancyNpcs.getInstance().getFancyNpcConfig().isMuteVersionNotification() && event.getPlayer().hasPermission("FancyNpcs.admin")) {
             FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true);

@@ -53,6 +53,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
+    private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
     public FancyNpcs() {
@@ -209,8 +210,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // load config
         scheduler.runTaskLater(null, 20L * 5, () -> npcManager.loadNpcs());
 
+        visibilityTracker = new VisibilityTracker();
+
         scheduler.runTaskTimerAsynchronously(0, 1, new TurnToPlayerTracker());
-        scheduler.runTaskTimerAsynchronously(0, 20, new VisibilityTracker());
+        scheduler.runTaskTimerAsynchronously(0, 20, visibilityTracker);
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
@@ -269,6 +272,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public VersionFetcher getVersionFetcher() {
         return versionFetcher;
+    }
+
+    public VisibilityTracker getVisibilityTracker() {
+        return visibilityTracker;
     }
 
     public boolean isUsingPlotSquared() {

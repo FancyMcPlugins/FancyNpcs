@@ -47,8 +47,8 @@ tasks {
         minecraftVersion(findProperty("minecraftVersion").toString())
 
         downloadPlugins {
-            hangar("ViaVersion", "4.9.3-SNAPSHOT+216")
-            hangar("ViaBackwards", "4.9.2-SNAPSHOT+131")
+            hangar("ViaVersion", "4.9.4-SNAPSHOT+280")
+            hangar("ViaBackwards", "4.9.3-SNAPSHOT+155")
             hangar("PlaceholderAPI", "2.11.5")
         }
     }

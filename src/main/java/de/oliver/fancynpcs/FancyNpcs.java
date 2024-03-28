@@ -8,6 +8,8 @@ import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
+import de.oliver.fancylib.translations.TextConfig;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
 import de.oliver.fancylib.versionFetcher.VersionFetcher;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
@@ -50,6 +52,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
+    private TextConfig textConfig;
+    private Translator translator;
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
@@ -137,6 +141,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             }
         }
         languageConfig.load();
+
+        textConfig = new TextConfig("", "", "", "", "", "");
+        translator = new Translator(textConfig);
+        translator.loadLanguages(getDataFolder().getAbsolutePath());
+        translator.setSelectedLanguage(translator.getFallbackLanguage());
 
         versionConfig.load();
 
@@ -264,6 +273,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public VersionConfig getVersionConfig() {
         return versionConfig;
+    }
+
+    public Translator getTranslator() {
+        return translator;
+    }
+
+    public TextConfig getTextConfig() {
+        return textConfig;
     }
 
     public FeatureFlagConfig getFeatureFlagConfig() {

@@ -192,12 +192,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         pluginManager.registerEvents(new PlayerTeleportListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
 
-        if (mcVersion.equals("1.19.4")) // use packet injection method
-            pluginManager.registerEvents(new PacketReader_1_19_4(), instance);
-        else if (mcVersion.equals("1.20"))
-            pluginManager.registerEvents(new PacketReader_1_20(), instance);
-        else
-            pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+        // use packet injection method
+        switch (mcVersion) {
+            case "1.19.4" -> pluginManager.registerEvents(new PacketReader_1_19_4(), instance);
+            case "1.20" -> pluginManager.registerEvents(new PacketReader_1_20(), instance);
+            default -> pluginManager.registerEvents(new PlayerUseUnknownEntityListener(), instance);
+        }
 
         if (PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
             pluginManager.registerEvents(new PlayerNpcsListener(), instance);

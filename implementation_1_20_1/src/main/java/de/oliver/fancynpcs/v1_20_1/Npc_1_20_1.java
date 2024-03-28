@@ -11,12 +11,13 @@ import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.RemoteChatSession;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.MinecraftServer;
@@ -96,20 +97,6 @@ public class Npc_1_20_1 extends Npc {
             return;
         }
 
-        if (data.isMirrorSkin() && npc instanceof ServerPlayer npcPlayer) {
-            SkinFetcher playerSkin = new SkinFetcher(serverPlayer.getGameProfile().getId().toString());
-            playerSkin.load();
-            Property textures = new Property("textures", playerSkin.getValue(), playerSkin.getSignature());
-
-            if (npcPlayer.gameProfile.getProperties().containsKey("textures")) {
-                npcPlayer.gameProfile.getProperties().replaceValues("textures", ImmutableList.of(
-                        textures
-                ));
-            } else {
-                npcPlayer.gameProfile.getProperties().put("textures", textures);
-            }
-        }
-
 
         if (npc instanceof ServerPlayer npcPlayer) {
             EnumSet<ClientboundPlayerInfoUpdatePacket.Action> actions = EnumSet.noneOf(ClientboundPlayerInfoUpdatePacket.Action.class);
@@ -119,18 +106,16 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
-                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer);
-                serverPlayer.connection.send(spawnPlayerPacket);
             }
-        } else {
-            ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-            serverPlayer.connection.send(addEntityPacket);
         }
+
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+        serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
@@ -238,10 +223,7 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer));
-            if (!data.isShowInTab()) {
-                removeListed(playerInfoPacket);
-            }
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -331,31 +313,30 @@ public class Npc_1_20_1 extends Npc {
         serverPlayer.connection.send(animatePacket);
     }
 
-    private ClientboundPlayerInfoUpdatePacket removeListed(ClientboundPlayerInfoUpdatePacket playerInfoUpdatePacket) {
-        playerInfoUpdatePacket.actions().add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
+        GameProfile profile = npcPlayer.getGameProfile();
+        if (data.isMirrorSkin() && viewer.getGameProfile().getProperties().containsKey("textures")) {
+            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+            profile = newProfile;
+        }
 
-        ClientboundPlayerInfoUpdatePacket.Entry entry = playerInfoUpdatePacket.entries().get(0);
-        ClientboundPlayerInfoUpdatePacket.Entry newEntry = new ClientboundPlayerInfoUpdatePacket.Entry(
-                entry.profileId(),
-                entry.profile(),
-                false,
-                entry.latency(),
-                entry.gameMode(),
-                entry.displayName(),
-                entry.chatSession()
+        return new ClientboundPlayerInfoUpdatePacket.Entry(
+                npcPlayer.getUUID(),
+                profile,
+                data.isShowInTab(),
+                69,
+                npcPlayer.gameMode.getGameModeForPlayer(),
+                npcPlayer.getTabListDisplayName(),
+                Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
         );
-
-        // replace the old entry with the new entry
-        ReflectionUtils.setValue(playerInfoUpdatePacket, MappingKeys1_20_1.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), List.of(newEntry)); // 'entries'
-
-        return playerInfoUpdatePacket;
     }
 
     public void setSitting(ServerPlayer serverPlayer) {
         if (npc == null) {
             return;
         }
-        
+
         if (sittingVehicle == null) {
             sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
         }

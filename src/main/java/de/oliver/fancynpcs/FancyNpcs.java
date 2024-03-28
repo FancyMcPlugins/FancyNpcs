@@ -15,7 +15,9 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
+import de.oliver.fancynpcs.commands.NpcConverterCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
+import de.oliver.fancynpcs.converters.ConverterManager;
 import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
@@ -53,6 +55,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
+    private ConverterManager converterManager;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
@@ -121,6 +124,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
+        converterManager = new ConverterManager();
 
         // Load language file
         String defaultLang = new FileUtils().readResource("lang.yml");
@@ -179,7 +183,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
         // register commands
-        final Collection<Command> commands = Arrays.asList(new FancyNpcsCMD(), new NpcCMD());
+        final Collection<Command> commands = Arrays.asList(new FancyNpcsCMD(), new NpcCMD(), new NpcConverterCMD());
         if (config.isRegisterCommands()) {
             commands.forEach(command -> getServer().getCommandMap().register("fancynpcs", command));
         } else {
@@ -251,6 +255,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public AttributeManagerImpl getAttributeManager() {
         return attributeManager;
+    }
+
+    public ConverterManager getConverterManager() {
+        return converterManager;
     }
 
     @Override

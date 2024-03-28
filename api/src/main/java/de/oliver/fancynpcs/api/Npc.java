@@ -6,6 +6,7 @@ import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
+import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
@@ -136,6 +137,10 @@ public abstract class Npc {
     }
 
     public void interact(Player player) {
+        interact(player, InteractionType.CUSTOM);
+    }
+
+    public void interact(Player player, InteractionType interactionType) {
         if (data.getInteractionCooldown() > 0) {
             if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
                 long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
@@ -152,7 +157,7 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommand(), data.getOnClick(), player);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommand(), data.getOnClick(), player, interactionType);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {

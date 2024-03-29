@@ -311,8 +311,10 @@ public class Npc_1_20_2 extends Npc {
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
 
-        ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
-        serverPlayer.connection.send(animatePacket);
+        if (npc instanceof ServerPlayer) {
+            ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
+            serverPlayer.connection.send(animatePacket);
+        }
     }
 
     private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
@@ -338,7 +340,7 @@ public class Npc_1_20_2 extends Npc {
         if (npc == null) {
             return;
         }
-        
+
         if (sittingVehicle == null) {
             sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
         }

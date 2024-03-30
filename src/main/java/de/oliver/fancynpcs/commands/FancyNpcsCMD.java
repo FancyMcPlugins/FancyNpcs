@@ -1,19 +1,19 @@
 package de.oliver.fancynpcs.commands;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+
 public class FancyNpcsCMD extends Command {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     public FancyNpcsCMD() {
         super("fancynpcs");
@@ -34,34 +34,37 @@ public class FancyNpcsCMD extends Command {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
-        if (!testPermission(sender)) {
+        if (!testPermission(sender))
             return false;
+
+        final FancyNpcs plugin = FancyNpcs.getInstance();
+
+        if (args.length >= 1) {
+            switch (args[0].toLowerCase()) {
+                case "version" -> FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(sender, false);
+                case "reload" -> {
+                    translator.loadLanguages(plugin.getDataFolder().getAbsolutePath());
+                    plugin.getFancyNpcConfig().reload();
+                    plugin.getNpcManagerImpl().reloadNpcs();
+                    translator.translate("fancynpcs_reload_success").send(sender);
+                }
+                case "save" -> {
+                    plugin.getNpcManagerImpl().saveNpcs(true);
+                    translator.translate("fancynpcs_save_success").send(sender);
+                }
+                case "featureflags" -> {
+                    translator.translate("<gray>Feature Flags:").send(sender);
+                    translator.translate("<dark_gray>› Player NPCs<gray>: " + getFormattedBoolean(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled())).send(sender);
+                }
+            }
+            return true;
         }
-        
-        FancyNpcs plugin = FancyNpcs.getInstance();
-
-        if (args.length >= 1 && args[0].equalsIgnoreCase("version")) {
-            FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(sender, false);
-
-        } else if (args.length >= 1 && args[0].equalsIgnoreCase("reload")) {
-            plugin.getLanguageConfig().load();
-            plugin.getFancyNpcConfig().reload();
-            plugin.getNpcManagerImpl().reloadNpcs();
-            MessageHelper.success(sender, lang.get("reloaded-config"));
-
-        } else if (args.length >= 1 && args[0].equalsIgnoreCase("save")) {
-            plugin.getNpcManagerImpl().saveNpcs(true);
-            MessageHelper.success(sender, lang.get("saved-npcs"));
-
-        } else if (args.length >= 1 && args[0].equalsIgnoreCase("featureFlags")) {
-            MessageHelper.info(sender, "<b>Feature flags:</b>");
-            MessageHelper.info(sender, " - player-npcs: " + FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled());
-
-        } else {
-            MessageHelper.info(sender, lang.get("fancynpcs-syntax"));
-            return false;
-        }
-
-        return true;
+        translator.translate("fancynpcs_syntax:").send(sender);
+        return false;
     }
+
+    private static @NotNull String getFormattedBoolean(final boolean bool) {
+        return (bool) ? "<successColor>ON" : "<errorColor>OFF";
+    }
+
 }

@@ -51,6 +51,11 @@ tasks {
         }
     }
 
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }

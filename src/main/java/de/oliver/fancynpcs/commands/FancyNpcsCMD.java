@@ -59,7 +59,7 @@ public class FancyNpcsCMD extends Command {
             }
             return true;
         }
-        translator.translate("fancynpcs_syntax:").send(sender);
+        translator.translate("fancynpcs_syntax").send(sender);
         return false;
     }
 

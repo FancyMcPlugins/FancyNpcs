@@ -19,12 +19,11 @@ public class PlayerUseUnknownEntityListener implements Listener {
         if (npc == null)
             return;
         // PlayerUseUnknownEntityEvent can optionally be ALSO called for OFF-HAND slot. Making sure to run logic only ONCE.
-        if (event.getHand() == EquipmentSlot.HAND) {
+        if (event.getHand() == EquipmentSlot.HAND)
             // PlayerUseUnknownEntityEvent can be called multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
             if (event.isAttack() || event.getClickedRelativePosition() == null || npc.getData().getType() == EntityType.ARMOR_STAND)
                 // Further interaction handling is done by Npc#interact method...
                 npc.interact(event.getPlayer(), event.isAttack() ? InteractionType.LEFT_CLICK : InteractionType.RIGHT_CLICK);
-        }
     }
 
 }

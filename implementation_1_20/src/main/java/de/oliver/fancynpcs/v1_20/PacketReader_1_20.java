@@ -12,6 +12,7 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.server.level.ServerPlayer;
 import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -66,7 +67,7 @@ public class PacketReader_1_20 implements Listener {
         // This can optionally be ALSO called for OFF-HAND slot. Making sure to run logic only ONCE.
         if (hand == EquipmentSlot.HAND)
             // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
-            if (isAttack || !isInteract)
+            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND)
                 // Further interaction handling is done by Npc#interact method...
                 npc.interact(event.getPlayer(), isAttack ? NpcInteractEvent.InteractionType.LEFT_CLICK : NpcInteractEvent.InteractionType.RIGHT_CLICK);
     }

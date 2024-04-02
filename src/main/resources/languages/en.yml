@@ -8,17 +8,19 @@ messages:
   command_missing_permissions: ""
   command_wrong_usage: ""
   command_player_only: ""
-  command_invalid_world: ""
-  command_invalid_npc: ""
+  command_invalid_world: "<dark_gray>› <errorColor>World named <warningColor>{npc}<errorColor> does not exist."
+  command_invalid_npc: "<dark_gray>› <errorColor>NPC named <warningColor>{npc}<errorColor> does not exist."
   command_unsupported_npc_type: "This NPC type does not support this feature."
+  command_npc_modification_cancelled: "<dark_gray>› <errorColor>NPC modification has been cancelled by the API."
   # Commands
   fancynpcs_syntax: "<primaryColor>/fancynpcs <secondaryColor>(version|reload|save)"
-  fancynpcs_reload_success: "<dark_gray>› <successMessage>Plugin has been reloaded."
-  fancynpcs_save_success: "<dark_gray>› <successMessage>NPCs has been saved."
+  fancynpcs_reload_success: "<dark_gray>› <successColor>Plugin has been reloaded."
+  fancynpcs_save_success: "<dark_gray>› <successColor>NPCs has been saved."
   fancynpcs_version: ""  # NOT CONFIGURABLE
   fancynpcs_feature_flags_header: ""  # NOT CONFIGURABLE
   fancynpcs_feature_flags_entry: ""  # NOT CONFIGURABLE
+  npc_attribute_syntax: "<dark_gray>› <gray>Syntax: <primaryColor>/npc attribute <secondaryColor>(npc) (attribute) (value)"
   npc_attribute_set: "<dark_gray>› <gray>Attribute <secondaryColor>{attribute}<primaryColor> has been set to <secondaryColor>{value}<gray>."
   npc_attribute_invalid_attribute: "<dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid attribute."
-  npc_attribute_invalid_attribute_value: "<dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid attribute value."
-  npc_attribute_invalid_entity_type: "<dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid entity type."
+  npc_attribute_invalid_attribute_value: "<dark_gray>› <errorColor>Specified value <warningColor>{input}<errorColor> is not a valid value for this attribute."
+  npc_attribute_invalid_entity_type: "<dark_gray>› <errorColor>Attribute <warningColor>{input}<errorColor> is not a valid for this entity type."

@@ -1,6 +1,11 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancylib.*;
+import de.oliver.fancylib.FancyLib;
+import de.oliver.fancylib.FileUtils;
+import de.oliver.fancylib.LanguageConfig;
+import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.Metrics;
+import de.oliver.fancylib.VersionConfig;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
 import de.oliver.fancylib.featureFlags.FeatureFlagConfig;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
@@ -17,7 +22,12 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
-import de.oliver.fancynpcs.listeners.*;
+import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
+import de.oliver.fancynpcs.listeners.PlayerJoinListener;
+import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
+import de.oliver.fancynpcs.listeners.PlayerQuitListener;
+import de.oliver.fancynpcs.listeners.PlayerTeleportListener;
+import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
@@ -141,7 +151,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
         languageConfig.load();
 
-        textConfig = new TextConfig("", "", "", "", "", "");
+        textConfig = new TextConfig("#E33239", "#AD1D23", "#55FF55", "#FFFF55", "#FF5555", "");
         translator = new Translator(textConfig);
         translator.loadLanguages(getDataFolder().getAbsolutePath());
         translator.setSelectedLanguage(translator.getFallbackLanguage());

@@ -77,12 +77,12 @@ public class AttributeCMD implements Subcommand {
         }
 
         if (!attribute.getTypes().contains(npc.getData().getType())) {
-            translator.translate("npc_attribute_invalid_attribute_value").replace("input", attributeName).send(sender);
+            translator.translate("npc_attribute_invalid_entity_type").replace("input", attributeName).send(sender);
             return false;
         }
 
         if (!attribute.isValidValue(value)) {
-            translator.translate("npc_attribute_invalid_entity_type").replace("input", value).send(sender);
+            translator.translate("npc_attribute_invalid_attribute_value").replace("input", value).send(sender);
             return false;
         }
 

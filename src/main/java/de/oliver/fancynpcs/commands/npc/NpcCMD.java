@@ -1,30 +1,23 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.MultiMessage;
-import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.commands.Subcommand;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.yaml.snakeyaml.Yaml;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+
 public class NpcCMD extends Command {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
     private final Subcommand attributeCMD = new AttributeCMD();
     private final Subcommand collidableCMD = new CollidableCMD();
@@ -50,7 +43,7 @@ public class NpcCMD extends Command {
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player p)) {
-            MessageHelper.error(sender, lang.get("only-players"));
+            translator.translate("command_player_only").send(sender);
             return null;
         }
 
@@ -136,7 +129,7 @@ public class NpcCMD extends Command {
         }
 
         if (args.length < 2) {
-            MessageHelper.error(sender, lang.get("wrong-usage"));
+            translator.translate("command_wrong_usage").send(sender);
             return false;
         }
 
@@ -151,7 +144,7 @@ public class NpcCMD extends Command {
 
 
         if (!sender.hasPermission("fancynpcs.npc." + subcommand) && !sender.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(sender, lang.get("no-permission-subcommand"));
+            translator.translate("command_missing_permissions").send(sender);
             return false;
         }
 
@@ -245,13 +238,13 @@ public class NpcCMD extends Command {
             }
 
             default -> {
-                MessageHelper.error(sender, lang.get("wrong-usage"));
+                translator.translate("command_wrong_usage").send(sender);
                 return false;
             }
         }
     }
 
-    // Parses String to Integer and returns it, or default if failed.
+    // Parses String to Integer and returns it, or default value if exception was caught.
     private static int parseIntOrDefault(final String str, final int def) {
         try {
             return Integer.parseInt(str);

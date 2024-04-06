@@ -5,9 +5,9 @@ messages:
   # Common
   interaction_on_cooldown: ""
   # Commands (Common Replies)
-  command_missing_permissions: ""
-  command_wrong_usage: ""
-  command_player_only: ""
+  command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
+  command_wrong_usage: "<dark_gray>› {errorColor}This sub-command does not exist. Use {warningColor}/npc help{errorColor} to view available commands."
+  command_player_only: "<dark_gray>› {errorColor}This command can only be executed by in-game players."
   command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{npc}{errorColor} does not exist."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} does not exist."
   command_unsupported_npc_type: "This NPC type does not support this feature."

@@ -2,12 +2,19 @@ package de.oliver.fancynpcs.commands.npc;
 
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancylib.translations.message.MultiMessage;
+import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.commands.Subcommand;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.Yaml;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -18,6 +25,7 @@ import java.util.stream.Stream;
 public class NpcCMD extends Command {
 
     private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
     private final Subcommand attributeCMD = new AttributeCMD();
     private final Subcommand collidableCMD = new CollidableCMD();
     private final Subcommand displayNameCMD = new DisplayNameCMD();
@@ -103,44 +111,23 @@ public class NpcCMD extends Command {
 
         if (args.length >= 1 && args[0].equalsIgnoreCase("help")) {
             if (!sender.hasPermission("fancynpcs.npc.help") && !sender.hasPermission("fancynpcs.npc.*")) {
-                MessageHelper.error(sender, lang.get("no-permission-subcommand"));
+                translator.translate("command_missing_permissions").send(sender);
                 return false;
             }
-            // TO-DO: Replace with automatic pagination once better configuration system is in place.
-            final String maxPages = "3";
-            if (args.length == 1 || args[1].equals("1")) {
-                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "1").replace("{max_pages}", maxPages));
-                MessageHelper.info(sender, lang.get("npc-command-help-create"));
-                MessageHelper.info(sender, lang.get("npc-command-help-remove"));
-                MessageHelper.info(sender, lang.get("npc-command-help-copy"));
-                MessageHelper.info(sender, lang.get("npc-command-help-list"));
-                MessageHelper.info(sender, lang.get("npc-command-help-skin"));
-                MessageHelper.info(sender, lang.get("npc-command-help-type"));
-                MessageHelper.info(sender, lang.get("npc-command-help-moveHere"));
-                MessageHelper.info(sender, lang.get("npc-command-help-teleport"));
-                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "1").replace("{max_pages}", maxPages));
-            }
-            else if (args[1].equals("2")) {
-                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "2").replace("{max_pages}", maxPages));
-                MessageHelper.info(sender, lang.get("npc-command-help-displayName"));
-                MessageHelper.info(sender, lang.get("npc-command-help-equipment"));
-                MessageHelper.info(sender, lang.get("npc-command-help-message"));
-                MessageHelper.info(sender, lang.get("npc-command-help-playerCommand"));
-                MessageHelper.info(sender, lang.get("npc-command-help-serverCommand"));
-                MessageHelper.info(sender, lang.get("npc-command-help-showInTab"));
-                MessageHelper.info(sender, lang.get("npc-command-help-glowing"));
-                MessageHelper.info(sender, lang.get("npc-command-help-glowingColor"));
-                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "2").replace("{max_pages}", maxPages));
-            }
-            else if (args[1].equals("3")) {
-                MessageHelper.info(sender, lang.get("npc-command-help-header").replace("{page}", "3").replace("{max_pages}", maxPages));
-                MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
-                MessageHelper.info(sender, lang.get("npc-command-help-turnToPlayer"));
-                MessageHelper.info(sender, lang.get("npc-command-help-attribute"));
-                MessageHelper.info(sender, lang.get("npc-command-help-interactionCooldown"));
-                MessageHelper.info(sender, lang.get("npc-command-help-mirrorSkin"));
-                MessageHelper.info(sender, lang.get("npc-command-help-footer").replace("{page}", "3").replace("{max_pages}", maxPages));
-            }
+            // Getting the (full) help contents.
+            final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
+            // Calculating max page number.
+            final int maxPage = contents.getRawMessages().size() / 6 + 1;
+            // Getting the requested page. Defaults to 1 for invalid input and is capped by number of the last page.
+            final int page = Math.min(args.length == 2 ? parseIntOrDefault(args[1], 1) : 1, maxPage);
+            // Getting help contents for requested page, or defaulting to 1.
+            final MultiMessage requestedContents = contents.page(page, 6);
+            // Sending help header to the sender.
+            translator.translate("npc_help_page_header").replace("page", String.valueOf(page)).replace("max_page", String.valueOf(maxPage)).send(sender);
+            // Sending (requested) help contents to the sender.
+            requestedContents.send(sender);
+            // Sending help footer to the sender.
+            translator.translate("npc_help_page_footer").replace("page", String.valueOf(page)).replace("max_page", String.valueOf(maxPage)).send(sender);
             return true;
         }
 
@@ -263,4 +250,14 @@ public class NpcCMD extends Command {
             }
         }
     }
+
+    // Parses String to Integer and returns it, or default if failed.
+    private static int parseIntOrDefault(final String str, final int def) {
+        try {
+            return Integer.parseInt(str);
+        } catch (final NumberFormatException e) {
+            return def;
+        }
+    }
+
 }

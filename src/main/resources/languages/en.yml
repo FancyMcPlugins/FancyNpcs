@@ -19,8 +19,34 @@ messages:
   fancynpcs_version: ""  # NOT CONFIGURABLE
   fancynpcs_feature_flags_header: ""  # NOT CONFIGURABLE
   fancynpcs_feature_flags_entry: ""  # NOT CONFIGURABLE
+  npc_help_page_header: "<gray>Commands for {primaryColor}FancyNpcs<gray> plugin: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
+  npc_help_page_footer: "<newline><gray>Full command reference available {primaryColor}<u><click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click></u><gray>."
+  npc_help_contents:
+    - "<dark_gray>› {primaryColor}/npc create {secondaryColor}(npc) <dark_gray>- <gray>Creates a new NPC at your location."
+    - "<dark_gray>› {primaryColor}/npc remove {secondaryColor}(npc) <dark_gray>- <gray>Removes specified NPC."
+    - "<dark_gray>› {primaryColor}/npc copy {secondaryColor}(npc) (new_name) <dark_gray>- <gray>Copies/clones specified NPC."
+    - "<dark_gray>› {primaryColor}/npc list <dark_gray>- <gray>Lists all loaded NPCs."
+    - "<dark_gray>› {primaryColor}/npc skin {secondaryColor}(skin) <dark_gray>- <gray>Changes skin of an NPC."
+    - "<dark_gray>› {primaryColor}/npc type {secondaryColor}(npc) (type) <dark_gray>- <gray>Changes entity type of an NPC."
+    - "<dark_gray>› {primaryColor}/npc movehere {secondaryColor}(npc) <dark_gray>- <gray>Teleports NPC to your location."
+    - "<dark_gray>› {primaryColor}/npc teleport {secondaryColor}(npc) (x) (y) (z) [world] <dark_gray>- <gray>Teleports NPC."
+    - "<dark_gray>› {primaryColor}/npc displayname {secondaryColor}(npc) (name) <dark_gray>- <gray>Changes NPC's displayname."
+    - "<dark_gray>› {primaryColor}/npc equipment {secondaryColor}(npc) (slot) <dark_gray>- <gray>Changes equipment of an NPC."
+    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) (...) <dark_gray>- <gray>Changes click message(s)."
+    - "<dark_gray>› {primaryColor}/npc playerCommand {secondaryColor}(npc) (...) <dark_gray>- <gray>Changes click command(s)."
+    - "<dark_gray>› {primaryColor}/npc serverCommand {secondaryColor}(npc) (...) <dark_gray>- <gray>Changes click command(s)."
+    - "<dark_gray>› {primaryColor}/npc showInTab {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes tab-list visibility."
+    - "<dark_gray>› {primaryColor}/npc glowing {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes glowing effect state."
+    - "<dark_gray>› {primaryColor}/npc glowingColor {secondaryColor}(npc) (color) <dark_gray>- <gray>Changes glowing color."
+    - "<dark_gray>› {primaryColor}/npc collidable {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes collidable state."
+    - "<dark_gray>› {primaryColor}/npc turnToPlayer {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes turning state."
+    - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) (attr) (value) <dark_gray>- <gray>Sets entity attribute."
+    - "<dark_gray>› {primaryColor}/npc interactionCooldown {secondaryColor}(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown."
+    - "<dark_gray>› {primaryColor}/npc mirrorSkin {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes skin mirroring state."
   npc_attribute_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) (attribute) (value)"
   npc_attribute_set: "<dark_gray>› <gray>Attribute {primaryColor}{attribute}<gray> has been set to {primaryColor}{value}<gray>."
   npc_attribute_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
   npc_attribute_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
   npc_attribute_invalid_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not a valid for this entity type."
+
+

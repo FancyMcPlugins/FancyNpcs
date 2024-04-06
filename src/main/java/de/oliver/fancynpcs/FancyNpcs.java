@@ -154,7 +154,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         textConfig = new TextConfig("#E33239", "#AD1D23", "#55FF55", "#FFFF55", "#FF5555", "");
         translator = new Translator(textConfig);
         translator.loadLanguages(getDataFolder().getAbsolutePath());
-        translator.setSelectedLanguage(translator.getFallbackLanguage());
+        translator.setSelectedLanguage(translator.getFallbackLanguage()); // WIP: Make it configurable.
 
         versionConfig.load();
 

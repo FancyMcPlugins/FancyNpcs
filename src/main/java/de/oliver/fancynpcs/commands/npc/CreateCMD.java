@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.commands.npc;
 
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class CreateCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -24,9 +25,9 @@ public class CreateCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            translator.translate("command_player_only").send(sender);
             return false;
         }
 
@@ -34,12 +35,12 @@ public class CreateCMD implements Subcommand {
 
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()) {
             if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name, player.getUniqueId()) != null) {
-                MessageHelper.error(receiver, lang.get("npc-command-create-name-already-exists", "npc", name));
+                translator.translate("npc_create_failure_already_exists").replace("npc", name).send(sender);
                 return false;
             }
         } else {
             if (FancyNpcs.getInstance().getNpcManagerImpl().getNpc(name) != null) {
-                MessageHelper.error(receiver, lang.get("npc-command-create-name-already-exists", "npc", name));
+                translator.translate("npc_create_failure_already_exists").replace("npc", name).send(sender);
                 return false;
             }
         }
@@ -59,9 +60,9 @@ public class CreateCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(createdNpc);
             createdNpc.spawnForAll();
 
-            MessageHelper.success(receiver, lang.get("npc-command-create-created", "npc", name));
+            translator.translate("npc_create_success").replace("npc", name).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-create-cancelled", "npc", name));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

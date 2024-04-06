@@ -57,4 +57,9 @@ messages:
   npc_copy_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
   npc_copy_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been copied to {warningColor}{new_npc}<gray>."
 
+  npc_create_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc)"
+  npc_create_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been created."
+  npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} already exists."
+
+
 

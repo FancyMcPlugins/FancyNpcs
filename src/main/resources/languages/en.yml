@@ -54,6 +54,7 @@ messages:
   npc_collidable_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}collidable<gray>."
   npc_collidable_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}collidable<gray>."
 
+  npc_copy_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
   npc_copy_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been copied to {warningColor}{new_npc}<gray>."
 
 

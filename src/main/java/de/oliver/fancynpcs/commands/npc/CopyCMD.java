@@ -1,7 +1,6 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
@@ -9,15 +8,16 @@ import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class CopyCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -25,19 +25,19 @@ public class CopyCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            translator.translate("command_player_only").send(sender);
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_copy_syntax").send(sender);
             return false;
         }
 
@@ -76,9 +76,9 @@ public class CopyCMD implements Subcommand {
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
 
-            MessageHelper.success(receiver, lang.get("npc-command-copy-success", "npc", npc.getData().getName()));
+            translator.translate("npc_command_copy_success").replace("npc", npc.getData().getName()).replace("new_name", copied.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-copy-cancelled", "npc", npc.getData().getName()));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.commands.npc;
 
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.commands.Subcommand;
@@ -15,7 +16,7 @@ import java.util.List;
 
 public class FixCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -23,9 +24,9 @@ public class FixCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -33,7 +34,7 @@ public class FixCMD implements Subcommand {
         npc.create();
         Bukkit.getOnlinePlayers().forEach(npc::checkAndUpdateVisibility);
 
-        MessageHelper.success(receiver, lang.get("npc-command-fix-success"));
+        translator.translate("npc_fix_success").replace("npc", npc.getData().getName()).send(sender);
         return true;
     }
 }

@@ -69,3 +69,5 @@ messages:
   npc_equipment_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their equipment updated."
   npc_equipment_failure_invalid_slot: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid equipment slot."
 
+  npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC named {warningColor}{npc}<gray>... Still having issues? Please let us know."
+

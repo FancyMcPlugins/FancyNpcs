@@ -64,4 +64,5 @@ messages:
 
   npc_displayname_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc displayname {secondaryColor}(npc) (name)"
   npc_displayname_success: "<dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their display-name updated."
+  npc_displayname_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their display-name updated."
 

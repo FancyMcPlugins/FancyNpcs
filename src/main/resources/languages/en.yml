@@ -61,3 +61,7 @@ messages:
   npc_create_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc)"
   npc_create_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been created."
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} already exists."
+
+  npc_displayname_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc displayname {secondaryColor}(npc) (name)"
+  npc_displayname_success: "<dark_gray>› <gray>NPC named <warningColor>{npc}<gray> has had their display-name updated."
+

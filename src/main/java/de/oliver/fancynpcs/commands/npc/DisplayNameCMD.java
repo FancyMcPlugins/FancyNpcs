@@ -1,22 +1,22 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class DisplayNameCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -29,14 +29,14 @@ public class DisplayNameCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_displayname_syntax").send(sender);
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -46,15 +46,15 @@ public class DisplayNameCMD implements Subcommand {
         }
         displayName = displayName.substring(0, displayName.length() - 1);
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, displayName, receiver);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, displayName, sender);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setDisplayName(displayName.toString());
             npc.updateForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-displayName-updated", "npc", npc.getData().getName()));
+            translator.translate("npc_displayname_success").replace("npc", args[1]).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

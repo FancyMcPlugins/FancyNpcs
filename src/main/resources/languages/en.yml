@@ -71,6 +71,10 @@ messages:
 
   npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC named {warningColor}{npc}<gray>... Still having issues? Please let us know."
 
+  npc_glowing_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (state)"
+  npc_glowing_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}glowing<gray>."
+  npc_glowing_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}glowing<gray>."
+
   npc_glowingColor_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (state)"
   npc_glowingColor_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their glowing color updated."
   npc_glowingColor_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."

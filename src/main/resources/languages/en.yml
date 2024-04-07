@@ -91,5 +91,8 @@ messages:
   npc_moveHere_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc moveHere {secondaryColor}(npc)"
   npc_moveHere_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been moved to your location."
 
+  npc_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc remove {secondaryColor}(npc)"
+  npc_remove_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been removed."
+
 
 

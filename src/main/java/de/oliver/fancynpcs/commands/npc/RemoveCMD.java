@@ -1,7 +1,6 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
@@ -10,14 +9,15 @@ import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class RemoveCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -25,13 +25,13 @@ public class RemoveCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
-        NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, receiver);
+        NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, sender);
         npcRemoveEvent.callEvent();
         if (!npcRemoveEvent.isCancelled()) {
             npc.removeForAll();
@@ -45,9 +45,9 @@ public class RemoveCMD implements Subcommand {
                 }
             }
             FancyNpcs.getInstance().getNpcManagerImpl().removeNpc(npc);
-            MessageHelper.success(receiver, lang.get("npc-command-remove-removed", "npc", npc.getData().getName()));
+            translator.translate("npc_remove_success").replace("npc", npc.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-remove-cancelled", "npc", npc.getData().getName()));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return false;

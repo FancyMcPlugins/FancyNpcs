@@ -1,22 +1,23 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class MirrorSkinCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -30,15 +31,15 @@ public class MirrorSkinCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_mirrorSkin_syntax").send(sender);
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -46,11 +47,11 @@ public class MirrorSkinCMD implements Subcommand {
         try {
             mirrorSkin = Boolean.parseBoolean(args[2]);
         } catch (Exception e) {
-            MessageHelper.error(receiver, lang.get("npc-command-wrong_usage"));
+            translator.translate("command_invalid_boolean").replace("input", args[2]).send(sender);
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, mirrorSkin, receiver);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, mirrorSkin, sender);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
@@ -58,14 +59,9 @@ public class MirrorSkinCMD implements Subcommand {
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-
-            if (mirrorSkin) {
-                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-true", "npc", npc.getData().getName()));
-            } else {
-                MessageHelper.success(receiver, lang.get("npc-command-mirrorSkin-false", "npc", npc.getData().getName()));
-            }
+            translator.translate(mirrorSkin ? "npc_mirrorSkin_set_true" : "npc_mirrorSkin_set_false").replace("npc", npc.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

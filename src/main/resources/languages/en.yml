@@ -10,6 +10,8 @@ messages:
   command_incomplete_usage: "<dark_gray>› {errorColor}Incomplete command. Use {warningColor}/npc help{errorColor} to view correct syntax."
   command_player_only: "<dark_gray>› {errorColor}This command can only be executed by in-game players."
   command_invalid_boolean: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} must be either {warningColor}true{errorColor} or {warningColor}false{errorColor}."
+  command_invalid_number: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid number."
+  command_invalid_integer: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid integer."
   command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{npc}{errorColor} does not exist."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} does not exist."
   command_unsupported_npc_type: "This NPC type does not support this feature."
@@ -78,5 +80,8 @@ messages:
   npc_glowingColor_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (state)"
   npc_glowingColor_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their glowing color updated."
   npc_glowingColor_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."
+
+  npc_interactionCooldown_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interactionCooldown {secondaryColor}(npc) (seconds)"
+  npc_interactionCooldown_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their interaction cooldown updated."
 
 

@@ -1,21 +1,21 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class InteractionCooldownCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -23,14 +23,14 @@ public class InteractionCooldownCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_interactionCooldown_syntax").send(sender);
             return false;
         }
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -38,18 +38,18 @@ public class InteractionCooldownCMD implements Subcommand {
         try {
             cooldown = Float.parseFloat(args[2]);
         } catch (NumberFormatException e) {
-            MessageHelper.error(receiver, lang.get("could-not-parse-number"));
+            translator.translate("command_invalid_number").replace("input", args[2]).send(sender);
             return false;
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.INTERACTION_COOLDOWN, cooldown, receiver);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.INTERACTION_COOLDOWN, cooldown, sender);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setInteractionCooldown(cooldown);
-            MessageHelper.success(receiver, lang.get("npc-command-interactioncooldown-updated"));
+            translator.translate("npc_interactionCooldown_success").replace("npc", npc.getData().getName());
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

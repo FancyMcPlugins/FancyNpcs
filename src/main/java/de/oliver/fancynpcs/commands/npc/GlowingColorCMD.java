@@ -38,7 +38,7 @@ public class GlowingColorCMD implements Subcommand {
 
 
         if (npc == null) {
-            translator.translate("command_invalid_npc").send(sender);
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -54,7 +54,7 @@ public class GlowingColorCMD implements Subcommand {
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().setGlowingColor(color);
             npc.updateForAll();
-            translator.translate("npc_glowingColor_failure_invalid_color").replace("input", npc.getData().getName()).send(sender);
+            translator.translate("npc_glowingColor_success").replace("npc", npc.getData().getName()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }

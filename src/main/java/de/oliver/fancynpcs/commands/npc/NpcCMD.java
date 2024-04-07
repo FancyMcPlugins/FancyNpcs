@@ -128,8 +128,9 @@ public class NpcCMD extends Command {
             return new ListCMD().run(sender, null, args);
         }
 
+        // NOTE(command rework): This will be replaced to use command-specific syntax message instead.
         if (args.length < 2) {
-            translator.translate("command_wrong_usage").send(sender);
+            translator.translate("command_incomplete_usage").send(sender);
             return false;
         }
 

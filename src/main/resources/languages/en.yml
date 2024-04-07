@@ -7,6 +7,7 @@ messages:
   # Commands (Common Replies)
   command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
   command_wrong_usage: "<dark_gray>› {errorColor}This sub-command does not exist. Use {warningColor}/npc help{errorColor} to view available commands."
+  command_incomplete_usage: "<dark_gray>› {errorColor}Incomplete command. Use {warningColor}/npc help{errorColor} to view correct syntax."
   command_player_only: "<dark_gray>› {errorColor}This command can only be executed by in-game players."
   command_invalid_boolean: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} must be either {warningColor}true{errorColor} or {warningColor}false{errorColor}."
   command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{npc}{errorColor} does not exist."
@@ -60,6 +61,3 @@ messages:
   npc_create_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc)"
   npc_create_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been created."
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} already exists."
-
-
-

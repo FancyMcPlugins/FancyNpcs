@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.commands.npc;
 
 import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class EquipmentCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -32,20 +33,20 @@ public class EquipmentCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
+        if (!(sender instanceof Player player)) {
+            translator.translate("command_player_only").send(sender);
             return false;
         }
 
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_equipment_syntax").send(sender);
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
@@ -53,21 +54,21 @@ public class EquipmentCMD implements Subcommand {
 
         NpcEquipmentSlot equipmentSlot = NpcEquipmentSlot.parse(slot);
         if (equipmentSlot == null) {
-            MessageHelper.error(receiver, lang.get("npc-command-equipment-invalid-slot", "input", slot));
+            translator.translate("npc_equipment_failure_invalid_slot").replace("input", slot).send(sender);
             return false;
         }
 
         ItemStack item = player.getInventory().getItemInMainHand().clone();
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, receiver);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{equipmentSlot, item}, sender);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
             npc.getData().addEquipment(equipmentSlot, item);
             npc.updateForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-equipment-updated", "npc", npc.getData().getName()));
+            translator.translate("npc_equipment_success").replace("npc", npc.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

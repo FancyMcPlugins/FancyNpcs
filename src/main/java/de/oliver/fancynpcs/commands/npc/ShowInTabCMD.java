@@ -1,7 +1,6 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
@@ -9,15 +8,16 @@ import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class ShowInTabCMD implements Subcommand {
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Override
     public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
@@ -31,20 +31,20 @@ public class ShowInTabCMD implements Subcommand {
     }
 
     @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
+    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
         if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
+            translator.translate("npc_showInTab_syntax").send(sender);
             return false;
         }
 
 
         if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
+            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
             return false;
         }
 
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(receiver, lang.get("npc-must-be-player"));
+            translator.translate("command_unsupported_npc_type").send(sender);
             return false;
         }
 
@@ -53,12 +53,12 @@ public class ShowInTabCMD implements Subcommand {
             case "true" -> showInTab = true;
             case "false" -> showInTab = false;
             default -> {
-                MessageHelper.error(receiver, lang.get("npc-command-showInTab-invalid-argument", "input", args[2].toLowerCase()));
+                translator.translate("command_invalid_boolean").replace("input", args[2].toLowerCase());
                 return false;
             }
         }
 
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, receiver);
+        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, showInTab, sender);
         npcModifyEvent.callEvent();
 
         if (!npcModifyEvent.isCancelled()) {
@@ -70,14 +70,9 @@ public class ShowInTabCMD implements Subcommand {
                 npc.removeForAll();
                 npc.spawnForAll();
             }
-
-            if (showInTab) {
-                MessageHelper.success(receiver, lang.get("npc-command-showInTab-true", "npc", npc.getData().getName()));
-            } else {
-                MessageHelper.success(receiver, lang.get("npc-command-showInTab-false", "npc", npc.getData().getName()));
-            }
+            translator.translate(showInTab ? "npc_showInTab_set_true" : "npc_showInTab_set_false").replace("npc", npc.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
 
         return true;

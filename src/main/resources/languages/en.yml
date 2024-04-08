@@ -95,4 +95,6 @@ messages:
   npc_remove_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been removed."
 
 
-
+  npc_showInTab_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc showInTab {secondaryColor}(npc) (state)"
+  npc_showInTab_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}shown in player-list<gray>."
+  npc_showInTab_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}shown in player-list<gray>."

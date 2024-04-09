@@ -43,10 +43,7 @@ public class InfoCMD implements Subcommand {
         translator.translate("npc_info_general")
                 .replace("name", npc.getData().getName())
                 .replace("id", npc.getData().getId())
-                .replace("id_short", npc.getData().getId().substring(0, 13) + "...")
-                .replace("internal_id", "2")
                 .replace("creator", npc.getData().getCreator().toString())
-                .replace("creator_short", npc.getData().getCreator().toString().substring(0, 13) + "...")
                 .replace("displayname", npc.getData().getDisplayName())
                 .replace("type", "<lang:" + npc.getData().getType().translationKey() + ">") // Not ideal solution but should work fine for now.
                 .replace("location_x", COORDS_FORMAT.format(loc.x()))

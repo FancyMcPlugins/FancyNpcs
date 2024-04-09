@@ -22,7 +22,7 @@ messages:
   command_invalid_boolean: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} must be either {warningColor}true{errorColor} or {warningColor}false{errorColor}."
   command_invalid_number: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid number."
   command_invalid_integer: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid integer."
-  command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{npc}{errorColor} does not exist."
+  command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{input}{errorColor} does not exist."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} does not exist."
   command_unsupported_npc_type: "This NPC type does not support this feature."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
@@ -136,6 +136,9 @@ messages:
 
   npc_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc remove {secondaryColor}(npc)"
   npc_remove_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been removed."
+
+  npc_teleport_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc) (x) (y) (z) [world]"
+  npc_teleport_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."
 
   npc_turnToPlayer_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turnToPlayer {secondaryColor}(npc) (state)"
   npc_turnToPlayer_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}turning to player<gray>."

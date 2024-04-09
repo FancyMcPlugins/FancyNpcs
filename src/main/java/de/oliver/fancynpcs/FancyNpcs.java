@@ -116,8 +116,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
 
         FancyLib.setPlugin(instance);
-        MessageHelper.setPrimaryColor("#E33239");
-        MessageHelper.setSecondaryColor("#ad1d23");
 
         String mcVersion = Bukkit.getMinecraftVersion();
 
@@ -140,11 +138,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             }
         }
         languageConfig.load();
-
-        textConfig = new TextConfig("", "", "", "", "", "");
-        translator = new Translator(textConfig);
-        translator.loadLanguages(getDataFolder().getAbsolutePath());
-        translator.setSelectedLanguage(translator.getFallbackLanguage());
 
         versionConfig.load();
 

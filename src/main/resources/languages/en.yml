@@ -2,7 +2,17 @@ language_name: english
 
 # Messages support MiniMessage formatting: https://docs.advntr.dev/minimessage/format.html
 messages:
-  # Common
+  # Common (States)
+  true: "{successColor}True"
+  false: "{errorColor}False"
+  # Common (Equipment Slots)
+  main_hand: "Main Hand"
+  off_hand: "Off Hand"
+  head: "Head"
+  chest: "Chest"
+  legs: "Legs"
+  feet: "Feet"
+  # Common (Other)
   interaction_on_cooldown: ""
   # Commands (Common Replies)
   command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
@@ -80,6 +90,39 @@ messages:
   npc_glowingColor_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (state)"
   npc_glowingColor_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their glowing color updated."
   npc_glowingColor_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."
+
+  npc_info_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc info {secondaryColor}(npc)"
+  npc_info_general:
+    - "<gray>Information about NPC named {primaryColor}{name}<dark_gray>:"
+    - " "
+    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><gray>Identifier</hover>: <hover:show_text:'<gray>Click to copy identifier to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator to clipboard.'><click:copy_to_clipboard:'{creator}'>{warningColor}{creator}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Current location of the NPC.'><gray>Location</hover>: <hover:show_text:'<gray>Click to copy location to clipboard.'><click:copy_to_clipboard:'{location_x} {location_y} {location_z}'>{warningColor}{location_x}<gray>, {warningColor}{location_y}<gray>, {warningColor}{location_z}<gray> in {warningColor}{world}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Display name of the NPC, displayed above their head.'><gray>Display Name</hover>: <white>{displayname}"
+    - "<dark_gray>› <hover:show_text:'<gray>Entity type of the NPC.'><gray>Type</hover><dark_gray>: {warningColor}{type}    <hover:show_text:'<gray>Glowing state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Glowing</hover>: {is_glowing}   <hover:show_text:'<gray>Glowing color of the NPC.'><gray>Glowing Color</hover><dark_gray>: {warningColor}{glowing_color}"
+    - "<dark_gray>› <hover:show_text:'<gray>Whether the NPC should be shown in player-list. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Shown in TAB</hover>: {is_show_in_tab}   <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}   <hover:show_text:'<gray>Whether the NPC should turn to player. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Turns to Player</hover><dark_gray>: {is_turn_to_player}"
+    - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}   <hover:show_text:'<gray>Interaction cooldown between interactions. In seconds.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
+    - " "
+
+  npc_info_messages_header: "<dark_gray>› <gray>Messages:"
+  npc_info_messages_entry: "<dark_gray>›   <reset>{message}"
+  npc_info_messages_footer: " "
+
+  npc_info_playerCommands_header: "<dark_gray>› <gray>Player Commands:"
+  npc_info_playerCommands_entry: "<dark_gray>›   <reset>{command}"
+  npc_info_playerCommands_footer: " "
+
+  npc_info_serverCommands_header: "<dark_gray>› <gray>Server Commands:"
+  npc_info_serverCommands_entry: "<dark_gray>›   <reset>{command}"
+  npc_info_serverCommands_footer: " "
+
+  npc_info_equipment_header: "<dark_gray>› <gray>Equipment:"
+  npc_info_equipment_entry: "<dark_gray>›   <#848484>{slot}<dark_gray>: {warningColor}<item>"  # DEV NOTE: This uses <> brackets because <item> this must be a MiniMessage placeholder (TagResolver).
+  npc_info_equipment_footer: " "
+
+  npc_info_attributes_header: "<dark_gray>› <gray>Attributes:"
+  npc_info_attributes_entry: "<dark_gray>›   <#848484>{attribute}<dark_gray>: {warningColor}{value}"
+  npc_info_attributes_footer: " "
 
   npc_interactionCooldown_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interactionCooldown {secondaryColor}(npc) (seconds)"
   npc_interactionCooldown_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their interaction cooldown updated."

@@ -137,6 +137,9 @@ messages:
   npc_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc remove {secondaryColor}(npc)"
   npc_remove_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been removed."
 
+  npc_turnToPlayer_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turnToPlayer {secondaryColor}(npc) (state)"
+  npc_turnToPlayer_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}turning to player<gray>."
+  npc_turnToPlayer_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}turning to player<gray>."
 
   npc_showInTab_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc showInTab {secondaryColor}(npc) (state)"
   npc_showInTab_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}shown in player-list<gray>."

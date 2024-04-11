@@ -192,6 +192,7 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void loadNpcs() {
+        npcs.clear();
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         if (!npcConfig.isConfigurationSection("npcs")) {
@@ -313,7 +314,9 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void reloadNpcs() {
-        for (Npc npc : new ArrayList<>(getAllNpcs())) {
+        Collection<Npc> npcCopy = new ArrayList<>(getAllNpcs());
+        npcs.clear();
+        for (Npc npc : npcCopy) {
             npc.removeForAll();
         }
 

@@ -111,11 +111,13 @@ public class Npc_1_20_1 extends Npc {
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
+                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer); // # keep!
+                serverPlayer.connection.send(spawnPlayerPacket); // # keep!
             }
         }
 
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-        serverPlayer.connection.send(addEntityPacket);
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc); // # keep!
+        serverPlayer.connection.send(addEntityPacket); // # keep!
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 

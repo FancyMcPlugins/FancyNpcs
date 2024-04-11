@@ -45,6 +45,7 @@ dependencies {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
+//        minecraftVersion("1.20.1")
 
         downloadPlugins {
             hangar("ViaVersion", "4.9.4-SNAPSHOT+280")

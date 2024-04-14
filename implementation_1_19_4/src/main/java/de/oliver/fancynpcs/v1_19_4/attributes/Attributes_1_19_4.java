@@ -33,6 +33,7 @@ public class Attributes_1_19_4 {
         attributes.addAll(WolfAttributes.getAllAttributes());
         attributes.addAll(SlimeAttributes.getAllAttributes());
         attributes.addAll(PigAttributes.getAllAttributes());
+        attributes.addAll(ArmorStandAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

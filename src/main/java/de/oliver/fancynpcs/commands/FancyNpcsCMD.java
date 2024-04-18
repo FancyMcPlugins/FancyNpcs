@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-
 import org.jetbrains.annotations.NotNull;
 
 public enum FancyNpcsCMD {

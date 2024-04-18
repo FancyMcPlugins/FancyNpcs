@@ -38,6 +38,9 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("org.incendo:cloud-core:${findProperty("cloudVersion")}")
+    implementation("org.incendo:cloud-paper:${findProperty("cloudVersion")}")
+    implementation("org.incendo:cloud-annotations:${findProperty("cloudVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
@@ -100,6 +103,9 @@ tasks {
         // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
         // See https://openjdk.java.net/jeps/247 for more information.
         options.release.set(17)
+
+        // For cloud-annotations, see https://cloud.incendo.org/annotations/#command-components
+        options.compilerArgs.add("-parameters")
     }
 
     javadoc {

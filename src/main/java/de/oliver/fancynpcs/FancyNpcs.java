@@ -20,6 +20,7 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
@@ -232,6 +233,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
+        // Creating new instance of CloudCommandManager and registering commands.
+        final CloudCommandManager cloud = new CloudCommandManager(this, true).registerCommands();
+
     }
 
     @Override

@@ -2,9 +2,6 @@ package de.oliver.fancynpcs.v1_20_5.attributes;
 
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
-import de.oliver.fancynpcs.v1_20_5.ReflectionHelper;
-import net.minecraft.world.entity.animal.FrogVariant;
-import net.minecraft.world.entity.animal.frog.Frog;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -29,16 +26,16 @@ public class FrogAttributes {
     }
 
     private static void setVariant(Npc npc, String value) {
-        Frog frog = ReflectionHelper.getEntity(npc);
-
-        FrogVariant variant;
-        switch (value.toUpperCase()) {
-            case "COLD" -> variant = FrogVariant.COLD;
-            case "WARM" -> variant = FrogVariant.WARM;
-            default -> variant = FrogVariant.TEMPERATE;
-        }
-
-        frog.setVariant(variant);
+//        Frog frog = ReflectionHelper.getEntity(npc);
+//
+//        FrogVariant variant;
+//        switch (value.toUpperCase()) {
+//            case "COLD" -> variant = FrogVariant.COLD;
+//            case "WARM" -> variant = FrogVariant.WARM;
+//            default -> variant = FrogVariant.TEMPERATE;
+//        }
+//
+//        frog.setVariant(variant);
     }
 
 }

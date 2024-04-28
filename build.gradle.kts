@@ -5,7 +5,7 @@ plugins {
     id("java-library")
     id("maven-publish")
 
-    id("xyz.jpenilla.run-paper") version "2.2.2"
+    id("xyz.jpenilla.run-paper") version "2.2.4"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -23,6 +23,7 @@ allprojects {
         maven(url = "https://papermc.io/repo/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
+        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
@@ -98,10 +99,6 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
-
-        // Set the release flag. This configures what version bytecode the compiler will emit, as well as what JDK APIs are usable.
-        // See https://openjdk.java.net/jeps/247 for more information.
-        options.release.set(17)
     }
 
     javadoc {
@@ -131,7 +128,7 @@ tasks {
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 fun getCurrentCommitHash(): String {

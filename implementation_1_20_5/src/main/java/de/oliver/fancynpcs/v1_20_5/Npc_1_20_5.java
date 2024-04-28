@@ -33,11 +33,11 @@ import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_20_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_20_R3.util.CraftNamespacedKey;
+import org.bukkit.craftbukkit.CraftServer;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.craftbukkit.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -318,7 +318,7 @@ public class Npc_1_20_5 extends Npc {
 
     private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
         GameProfile profile = npcPlayer.getGameProfile();
-        if (data.isMirrorSkin() && net.minecraft.world.entity.player.Player.isValidUsername(viewer.getGameProfile().getName())) {
+        if (data.isMirrorSkin()) {
             GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
             newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
             profile = newProfile;

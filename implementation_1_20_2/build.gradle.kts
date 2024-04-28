@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.5.11"
+    id("io.papermc.paperweight.userdev") version "1.6.2"
 }
 
 val minecraftVersion = "1.20.2"
@@ -26,6 +26,6 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name()
 
-        options.release.set(17)
+
     }
 }

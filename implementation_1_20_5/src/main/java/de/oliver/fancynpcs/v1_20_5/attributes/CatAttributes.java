@@ -3,10 +3,7 @@ package de.oliver.fancynpcs.v1_20_5.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_20_5.ReflectionHelper;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cat;
-import net.minecraft.world.entity.animal.CatVariant;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -40,10 +37,10 @@ public class CatAttributes {
     private static void setVariant(Npc npc, String value) {
         Cat cat = ReflectionHelper.getEntity(npc);
 
-        CatVariant variant = BuiltInRegistries.CAT_VARIANT.get(ResourceLocation.of("minecraft:" + value.toLowerCase(), ':'));
-        if (variant == null) return;
-
-        cat.setVariant(variant);
+//        CatVariant variant = BuiltInRegistries.CAT_VARIANT.get(ResourceLocation.of("minecraft:" + value.toLowerCase(), ':'));
+//        if (variant == null) return;
+//
+//        cat.setVariant(variant);
     }
 
     private static void setPose(Npc npc, String value) {

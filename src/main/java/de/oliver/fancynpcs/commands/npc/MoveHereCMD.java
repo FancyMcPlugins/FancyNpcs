@@ -4,58 +4,40 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-public class MoveHereCMD implements Subcommand {
+// NOTE: Perhaps a better command could be added instead, which supports both - teleporting to the sender and setting coordinates.
+public enum MoveHereCMD {
+    INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    @Command(value = "npc move_here", requiredSender = Player.class)
+    @Permission("fancynpcs.command.npc.move_here")
+    public void onDefault(final Player sender) {
+        translator.translate("npc_move_here_syntax").send(sender);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) {
-            translator.translate("command_player_only").send(sender);
-            return false;
-        }
-
-        if (npc == null) {
-            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
-            return false;
-        }
-
-        Location location = player.getLocation();
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, sender);
-        npcModifyEvent.callEvent();
-
-        String oldWorld = npc.getData().getLocation().getWorld().getName();
-
-        if (!npcModifyEvent.isCancelled()) {
+    @Command(value = "npc move_here <npc>", requiredSender = Player.class)
+    @Permission("fancynpcs.command.npc.move_here")
+    public void onCommand(final Player sender, final Npc npc) {
+        final Location location = sender.getLocation();
+        final String oldWorld = npc.getData().getLocation().getWorld().getName();
+        // Calling the event and moving the NPc to location of the sender, if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, sender).callEvent()) {
             npc.getData().setLocation(location);
-
             if (oldWorld.equals(location.getWorld().getName())) {
                 npc.updateForAll();
             } else {
                 npc.removeForAll();
                 npc.spawnForAll();
             }
-            translator.translate("npc_moveHere_success").replace("npc", npc.getData().getName()).send(sender);
+            translator.translate("npc_move_here_success").replace("npc", npc.getData().getName()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 }

@@ -5,35 +5,32 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
 import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Flag;
+import org.incendo.cloud.annotations.Permission;
 
-import java.util.List;
-
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class RemoveCMD implements Subcommand {
+public enum RemoveCMD {
+    INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    @Command("npc remove")
+    @Permission("fancynpcs.command.npc.remove")
+    public void onDefault(final CommandSender sender) {
+        translator.translate("npc_remove_syntax").send(sender);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
-        if (npc == null) {
-            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
-            return false;
-        }
-
-        NpcRemoveEvent npcRemoveEvent = new NpcRemoveEvent(npc, sender);
-        npcRemoveEvent.callEvent();
-        if (!npcRemoveEvent.isCancelled()) {
+    @Command("npc remove <npc>")
+    @Permission("fancynpcs.command.npc.remove")
+    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable @Flag("creator") OfflinePlayer creator) {
+        // Calling the event and removing the NPC if not cancelled.
+        if (new NpcRemoveEvent(npc, sender).callEvent()) {
             npc.removeForAll();
             // Iterating over all online players that the NPC is currently looking at.
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
@@ -49,7 +46,6 @@ public class RemoveCMD implements Subcommand {
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return false;
     }
+
 }

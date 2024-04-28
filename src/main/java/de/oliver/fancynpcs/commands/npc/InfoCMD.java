@@ -5,40 +5,36 @@ import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.commands.Subcommand;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class InfoCMD implements Subcommand {
+public enum InfoCMD {
+    INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     private static final DecimalFormat COORDS_FORMAT = new DecimalFormat("#.##");
     private static final DecimalFormat SECONDS_FORMAT = new DecimalFormat("#,###.#");
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    @Command("npc info")
+    @Permission("fancynpcs.command.npc.info")
+    public void onDefault(final CommandSender sender) {
+        translator.translate("npc_info_syntax").send(sender);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender sender, @Nullable Npc npc, @NotNull String[] args) {
-        if (npc == null) {
-            translator.translate("command_invalid_npc").replace("npc", args[1]).send(sender);
-            return false;
-        }
-
-        Location loc = npc.getData().getLocation();
+    @Command("npc info <npc>")
+    @Permission("fancynpcs.command.npc.info")
+    public void onCommand(final CommandSender sender, final Npc npc) {
+        final Location loc = npc.getData().getLocation();
 
         translator.translate("npc_info_general")
                 .replace("name", npc.getData().getName())
@@ -101,7 +97,6 @@ public class InfoCMD implements Subcommand {
             );
             translator.translate("npc_info_attributes_footer").send(sender);
         }
-        return false;
     }
 
     // NOTE: Might need to be improved later down the line, should get work done for now.

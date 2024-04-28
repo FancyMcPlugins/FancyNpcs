@@ -22,7 +22,6 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.commands.FancyNpcsCMD;
-import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
@@ -39,15 +38,12 @@ import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.function.Function;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
@@ -192,14 +188,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
-        // register commands
-        final Collection<Command> commands = Arrays.asList(new FancyNpcsCMD(), new NpcCMD());
-        if (config.isRegisterCommands()) {
-            commands.forEach(command -> getServer().getCommandMap().register("fancynpcs", command));
-        } else {
-            commands.stream().filter(Command::isRegistered).forEach(command ->
-                    command.unregister(getServer().getCommandMap()));
-        }
+        this.getServer().getCommandMap().register("fancynpcs", new FancyNpcsCMD());
 
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
@@ -234,8 +223,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
         // Creating new instance of CloudCommandManager and registering commands.
-        final CloudCommandManager cloud = new CloudCommandManager(this, true).registerCommands();
-
+        // NOTE: Brigadier is a bit bugged currently, should be disabled by default for the time being.
+        //
+        final CloudCommandManager cloud = new CloudCommandManager(this, false).registerCommands();
     }
 
     @Override

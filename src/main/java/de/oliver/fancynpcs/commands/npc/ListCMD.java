@@ -23,39 +23,79 @@ public class ListCMD implements Subcommand {
         return null;
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!receiver.hasPermission("fancynpcs.npc.list") && !receiver.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(receiver, lang.get("no-permission-subcommand"));
-            return false;
-        }
-
-        MessageHelper.info(receiver, lang.get("npc-command-list-header"));
-
-        Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && receiver instanceof Player player) {
-            allNpcs = allNpcs.stream()
-                    .filter(n -> n.getData().getCreator().equals(player.getUniqueId()))
-                    .toList();
-        }
-
-        if (allNpcs.isEmpty()) {
-            MessageHelper.warning(receiver, lang.get("npc-command-list-no-npcs"));
-        } else {
-            final DecimalFormat df = new DecimalFormat("#########.##");
-            for (Npc n : allNpcs) {
-                MessageHelper.info(receiver, lang.get(
-                                "npc-command-list-tp-hover",
-                                "name", n.getData().getName(),
-                                "x", df.format(n.getData().getLocation().x()),
-                                "y", df.format(n.getData().getLocation().y()),
-                                "z", df.format(n.getData().getLocation().z()),
-                                "tp_cmd", "/tp " + n.getData().getLocation().x() + " " + n.getData().getLocation().y() + " " + n.getData().getLocation().z()
-                        )
-                );
+    @Command("npc list")
+    @Permission("fancynpcs.command.npc.list")
+    public void onCommand(
+            final CommandSender sender,
+            final @Nullable @Flag("radius") Long radius,
+            final @Nullable @Flag("type") EntityType type,
+            final @Nullable @Flag("sort") SortType sort
+    ) {
+        Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
+        // Excluding NPCs not created by the sender, if PLAYER_NPCS_FEATURE_FLAG is enabled and sender is a player.
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && sender instanceof Player player)
+            npcs = npcs.filter(npc -> npc.getData().getCreator().equals(player.getUniqueId()));
+        // Excluding NPCs that are not in radius, if specified and sender is a player. (radius is calculated from the location of player)
+        if (radius != null && sender instanceof Player player)
+            npcs = npcs.filter(npc -> npc.getData().getLocation().distance(player.getLocation()) <= radius);
+        // Excluding NPCs that are not of a specified type, if desired.
+        if (type != null)
+            npcs = npcs.filter(npc -> npc.getData().getType() == type);
+        // Sorting...
+        switch (sort != null ? sort : (sender instanceof Player player) ? SortType.NEAREST : SortType.NAME) {
+            case NEAREST -> {
+                if (sender instanceof Player player)
+                    npcs = npcs.sorted(Comparator.comparingDouble(npc -> npc.getData().getLocation().distance(player.getLocation())));
+                // ...
+                else sender.sendMessage("Cannot use SortType.NEAREST from console."); // TODO
+            }
+            case FARTHEST -> {
+                if (sender instanceof Player player)
+                    // This needs a cast for some reason.
+                    npcs = npcs.sorted(Comparator.comparingDouble(npc -> ((Npc) npc).getData().getLocation().distance(player.getLocation())).reversed());
+                    // ...
+                else sender.sendMessage("Cannot use SortType.FARTHEST from console."); // TODO
+            }
+            case NAME -> {
+                npcs = npcs.sorted(Comparator.comparing(npc -> npc.getData().getName()));
+            }
+            case NAME_REVERSED -> {
+                // This needs a cast for some reason.
+                npcs = npcs.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed());
             }
         }
-
-        return true;
+        translator.translate("npc_list_header").send(sender);
+        final AtomicInteger count = new AtomicInteger(1);
+        // ...
+        npcs.toList().forEach(npc -> {
+            final Location loc = npc.getData().getLocation();
+            // ...
+            translator.translate(sender instanceof Player player ? "npc_list_entry_player" : "npc_list_entry")
+                    .replace("num", String.valueOf(count.getAndIncrement()))
+                    .replace("npc", npc.getData().getName())
+                    .replace("name", npc.getData().getName())
+                    .replace("id", npc.getData().getId())
+                    .replace("id_short", npc.getData().getId().substring(0, 13) + "...")
+                    .replace("internal_id", "2")
+                    .replace("creator", npc.getData().getCreator().toString())
+                    .replace("creator_short", npc.getData().getCreator().toString().substring(0, 13) + "...")
+                    .replace("displayname", npc.getData().getDisplayName())
+                    .replace("type", npc.getData().getType().toString())
+                    .replace("location_x", COORDS_FORMAT.format(loc.x()))
+                    .replace("location_y", COORDS_FORMAT.format(loc.y()))
+                    .replace("location_z", COORDS_FORMAT.format(loc.z()))
+                    .replace("distance", (sender instanceof Player player) ? new DecimalFormat("#.#").format(player.getLocation().distance(npc.getData().getLocation())) : "N/A")
+                    .replace("world", loc.getWorld().getName())
+                    .send(sender);
+        });
+        translator.translate("npc_list_footer")
+                .replace("count", String.valueOf(count))
+                .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
+                .send(sender);
     }
+
+    public enum SortType {
+        NEAREST, FARTHEST, NAME, NAME_REVERSED
+    }
+
 }

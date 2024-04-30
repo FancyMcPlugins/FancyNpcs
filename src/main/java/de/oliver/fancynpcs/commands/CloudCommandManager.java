@@ -15,6 +15,8 @@ import de.oliver.fancynpcs.commands.npc.InfoCMD;
 import de.oliver.fancynpcs.commands.npc.InteractionCooldownCMD;
 import de.oliver.fancynpcs.commands.npc.ListCMD;
 import de.oliver.fancynpcs.commands.npc.MoveHereCMD;
+import de.oliver.fancynpcs.commands.npc.MoveToCMD;
+import de.oliver.fancynpcs.commands.npc.NearbyCMD;
 import de.oliver.fancynpcs.commands.npc.NpcCMD;
 import de.oliver.fancynpcs.commands.npc.RemoveCMD;
 import de.oliver.fancynpcs.commands.npc.ShowInTabCMD;
@@ -83,13 +85,15 @@ public final class CloudCommandManager {
         // annotationParser.parse(ServerCommandCMD.INSTANCE);
         // annotationParser.parse(PlayerCommandCMD.INSTANCE);
         annotationParser.parse(MoveHereCMD.INSTANCE);
+        annotationParser.parse(NearbyCMD.INSTANCE);
         annotationParser.parse(NpcCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
         annotationParser.parse(ShowInTabCMD.INSTANCE);
+        annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
         annotationParser.parse(RemoveCMD.INSTANCE);
         annotationParser.parse(SkinCMD.INSTANCE);
-        annotationParser.parse(TeleportCMD.INSTANCE);
+        annotationParser.parse(MoveToCMD.INSTANCE);
         // Returning this instance of CloudCommandManager to keep "builder-like" flow.
         return this;
     }

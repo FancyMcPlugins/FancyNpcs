@@ -251,7 +251,7 @@ public class Npc_1_20_4 extends Npc {
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
-            move(player);
+            move(player, true);
         }
 
         NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
@@ -287,7 +287,7 @@ public class Npc_1_20_4 extends Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
-    public void move(Player player) {
+    public void move(Player player, boolean swingArm) {
         if (npc == null) {
             return;
         }
@@ -310,7 +310,7 @@ public class Npc_1_20_4 extends Npc {
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
 
-        if (npc instanceof ServerPlayer) {
+        if (swingArm && npc instanceof ServerPlayer) {
             ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
             serverPlayer.connection.send(animatePacket);
         }

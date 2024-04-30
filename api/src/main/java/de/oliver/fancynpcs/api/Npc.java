@@ -128,12 +128,20 @@ public abstract class Npc {
         }
     }
 
-    public abstract void move(Player player);
+    public abstract void move(Player player, boolean swingArm);
+
+    public void move(Player player) {
+        move(player, true);
+    }
+
+    public void moveForAll(boolean swingArm) {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            move(onlinePlayer, swingArm);
+        }
+    }
 
     public void moveForAll() {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            move(onlinePlayer);
-        }
+        moveForAll(true);
     }
 
     public void interact(Player player) {

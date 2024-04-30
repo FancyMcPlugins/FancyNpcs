@@ -40,7 +40,7 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void registerNpc(Npc npc) {
-        if (npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
+        if (!FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
             throw new IllegalStateException("An NPC with the name " + npc.getData().getName() + " already exists!");
         } else {
             npcs.put(npc.getData().getId(), npc);
@@ -192,6 +192,7 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void loadNpcs() {
+        npcs.clear();
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         if (!npcConfig.isConfigurationSection("npcs")) {
@@ -313,7 +314,9 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void reloadNpcs() {
-        for (Npc npc : new ArrayList<>(getAllNpcs())) {
+        Collection<Npc> npcCopy = new ArrayList<>(getAllNpcs());
+        npcs.clear();
+        for (Npc npc : npcCopy) {
             npc.removeForAll();
         }
 

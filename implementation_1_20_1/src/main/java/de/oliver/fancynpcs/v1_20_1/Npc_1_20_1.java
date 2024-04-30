@@ -106,16 +106,21 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
+            // The constructor ClientboundPlayerInfoUpdatePacket(actions, entries) is not available in 1.20
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer)); // KEEP
+            List<ClientboundPlayerInfoUpdatePacket.Entry> entries = List.of(getEntry(npcPlayer, serverPlayer)); // KEEP
+            ReflectionUtils.setValue(playerInfoPacket, MappingKeys1_20_1.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), entries); // KEEP
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
                 npc.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
+                ClientboundAddPlayerPacket spawnPlayerPacket = new ClientboundAddPlayerPacket(npcPlayer); // # keep!
+                serverPlayer.connection.send(spawnPlayerPacket); // # keep!
             }
         }
 
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
-        serverPlayer.connection.send(addEntityPacket);
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc); // # keep!
+        serverPlayer.connection.send(addEntityPacket); // # keep!
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
@@ -223,7 +228,10 @@ public class Npc_1_20_1 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
+            // The constructor ClientboundPlayerInfoUpdatePacket(actions, entries) is not available in 1.20
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, List.of(npcPlayer)); // KEEP
+            List<ClientboundPlayerInfoUpdatePacket.Entry> entries = List.of(getEntry(npcPlayer, serverPlayer)); // KEEP
+            ReflectionUtils.setValue(playerInfoPacket, MappingKeys1_20_1.CLIENTBOUND_PLAYER_INFO_UPDATE_PACKET__ENTRIES.getMapping(), entries); // KEEP
             serverPlayer.connection.send(playerInfoPacket);
         }
 
@@ -250,7 +258,7 @@ public class Npc_1_20_1 extends Npc {
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
-            move(player);
+            move(player, true);
         }
 
         NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
@@ -286,7 +294,7 @@ public class Npc_1_20_1 extends Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
-    public void move(Player player) {
+    public void move(Player player, boolean swingArm) {
         if (npc == null) {
             return;
         }
@@ -309,7 +317,7 @@ public class Npc_1_20_1 extends Npc {
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
 
-        if (npc instanceof ServerPlayer) {
+        if (swingArm && npc instanceof ServerPlayer) {
             ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
             serverPlayer.connection.send(animatePacket);
         }
@@ -327,7 +335,7 @@ public class Npc_1_20_1 extends Npc {
                 npcPlayer.getUUID(),
                 profile,
                 data.isShowInTab(),
-                69,
+                npcPlayer.latency,
                 npcPlayer.gameMode.getGameModeForPlayer(),
                 npcPlayer.getTabListDisplayName(),
                 Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)

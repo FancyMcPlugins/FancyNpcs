@@ -4,7 +4,9 @@ language_name: english
 messages:
   # Common (States)
   true: "{successColor}True"
+  enabled: "{successColor}Enabled"
   false: "{errorColor}False"
+  disabled: "{errorColor}Disabled"
   # Common (Equipment Slots)
   main_hand: "Main Hand"
   off_hand: "Off Hand"
@@ -44,12 +46,13 @@ messages:
   command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
   # Commands
-  fancynpcs_syntax: "{primaryColor}/fancynpcs {secondaryColor}(version|reload|save)"
+  fancynpcs_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/fancynpcs {secondaryColor}(version | reload | save | feature_flags)"
   fancynpcs_reload_success: "<dark_gray>› {successColor}Plugin has been reloaded."
-  fancynpcs_save_success: "<dark_gray>› {successColor}NPCs has been saved."
+  fancynpcs_save_success: "<dark_gray>› {successColor}NPCs have been saved."
   fancynpcs_version: ""  # NOT CONFIGURABLE
-  fancynpcs_feature_flags_header: ""  # NOT CONFIGURABLE
-  fancynpcs_feature_flags_entry: ""  # NOT CONFIGURABLE
+  fancynpcs_feature_flags_header: "<dark_gray>› <gray>Feature Flags:"
+  fancynpcs_feature_flags_entry: "<dark_gray>›  <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
+  fancynpcs_feature_flags_footer: ""
   npc_help_page_header: "<gray>Commands for {primaryColor}FancyNpcs<gray> plugin: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
   npc_help_page_footer: "<newline><gray>Full command reference available {primaryColor}<u><click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click></u><gray>."
   npc_help_contents:

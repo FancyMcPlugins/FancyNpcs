@@ -71,6 +71,7 @@ public final class CloudCommandManager {
      * Registers plugin commands to the {@link PaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerCommands() {
+        annotationParser.parse(FancyNpcsCMD.INSTANCE);
         annotationParser.parse(AttributeCMD.INSTANCE);
         annotationParser.parse(CollidableCMD.INSTANCE);
         annotationParser.parse(CreateCMD.INSTANCE);
@@ -96,6 +97,14 @@ public final class CloudCommandManager {
         annotationParser.parse(MoveToCMD.INSTANCE);
         // Returning this instance of CloudCommandManager to keep "builder-like" flow.
         return this;
+    }
+
+    /**
+     * Unregisters plugin commands from the {@link PaperCommandManager}.
+     */
+    public void unregisterCommands() {
+        commandManager.deleteRootCommand("fancynpcs");
+        commandManager.deleteRootCommand("npc");
     }
 
     /**

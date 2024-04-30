@@ -21,7 +21,6 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
-import de.oliver.fancynpcs.commands.FancyNpcsCMD;
 import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
 import de.oliver.fancynpcs.listeners.PlayerJoinListener;
 import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
@@ -58,6 +57,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
+    private CloudCommandManager commandManager;
     private TextConfig textConfig;
     private Translator translator;
     private Function<NpcData, Npc> npcAdapter;
@@ -188,8 +188,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
 
-        this.getServer().getCommandMap().register("fancynpcs", new FancyNpcsCMD());
-
         // register listeners
         pluginManager.registerEvents(new PlayerJoinListener(), instance);
         pluginManager.registerEvents(new PlayerQuitListener(), instance);
@@ -223,9 +221,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
         // Creating new instance of CloudCommandManager and registering commands.
-        // NOTE: Brigadier is a bit bugged currently, should be disabled by default for the time being.
-        //
-        final CloudCommandManager cloud = new CloudCommandManager(this, false).registerCommands();
+        commandManager = new CloudCommandManager(this, false).registerCommands();
     }
 
     @Override
@@ -271,6 +267,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public VersionConfig getVersionConfig() {
         return versionConfig;
+    }
+
+    public CloudCommandManager getCommandManager() {
+        return commandManager;
     }
 
     public Translator getTranslator() {

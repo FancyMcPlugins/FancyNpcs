@@ -31,7 +31,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_20_5", configuration = "reobf"))
+    implementation(project(":implementation_1_20_5"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
     implementation(project(":implementation_1_20_1", configuration = "reobf"))
@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
@@ -60,9 +60,6 @@ tasks {
         archiveClassifier.set("")
 
         dependsOn(":api:shadowJar")
-
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
-        relocate("io.sentry", "de.oliver.fancynpcs.libs.sentry")
     }
 
     publishing {

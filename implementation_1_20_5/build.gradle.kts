@@ -5,6 +5,8 @@ plugins {
 
 val minecraftVersion = "1.20.6"
 
+paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
+
 dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
@@ -15,10 +17,6 @@ dependencies {
 
 
 tasks {
-    named("assemble") {
-        dependsOn(named("reobfJar"))
-    }
-
     javadoc {
         options.encoding = Charsets.UTF_8.name()
     }

@@ -8,7 +8,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
-import org.incendo.cloud.annotations.Default;
 import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 
@@ -35,7 +34,7 @@ public enum ListCMD {
     public void onCommand(
             final CommandSender sender,
             final @Nullable @Flag("type") EntityType type,
-            final @Flag("sort") @Default("name") SortType sort // NOTE: @Default annotation doesn't work, waiting for a fix.
+            final @Nullable @Flag("sort") SortType sort // NOTE: Replace with @Default once fixed.
     ) {
         Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
         // Excluding NPCs not created by the sender, if PLAYER_NPCS_FEATURE_FLAG is enabled and sender is a player.
@@ -45,7 +44,7 @@ public enum ListCMD {
         if (type != null)
             npcs = npcs.filter(npc -> npc.getData().getType() == type);
         // Sorting...
-        switch (sort) {
+        switch (sort != null ? sort : SortType.NAME) {
             case NAME -> npcs = npcs.sorted(Comparator.comparing(npc -> npc.getData().getName()));
             case NAME_REVERSED -> npcs = npcs.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed()); // This needs a cast for some reason.
         }

@@ -7,7 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
-import org.incendo.cloud.annotations.Default;
 import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 
@@ -30,13 +29,13 @@ public enum NearbyCMD {
         COORDS_FORMAT.setMinimumFractionDigits(2);
     }
 
-    @Command("npc nearby")
+    @Command(value = "npc nearby", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.nearby")
     public void onCommand(
             final Player sender,
             final @Nullable @Flag("radius") Long radius,
             final @Nullable @Flag("type") EntityType type,
-            final @Nullable @Flag("sort") @Default("nearest") SortType sort // NOTE: @Default annotation doesn't work, waiting for a fix.
+            final @Nullable @Flag("sort") SortType sort // NOTE: Replace with @Default once fixed.
     ) {
         Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
         // Getting location of the sender.
@@ -61,7 +60,7 @@ public enum NearbyCMD {
         if (type != null)
             npcs = npcs.filter(npc -> npc.getData().getType() == type);
         // Sorting...
-        switch (sort) { // This should never produce NPE.
+        switch (sort != null ? sort : SortType.NEAREST) { // This should never produce NPE.
             case NAME -> npcs = npcs.sorted(Comparator.comparing(npc -> npc.getData().getName()));
             case NAME_REVERSED -> npcs = npcs.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed());
             case NEAREST -> npcs = npcs.sorted(Comparator.comparingDouble(npc -> npc.getData().getLocation().distance(location)));

@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
-import org.incendo.cloud.annotations.Default;
 import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.Regex;
@@ -30,14 +29,15 @@ public enum CreateCMD {
     @Permission("fancynpcs.command.npc.create")
     public void onCreateCommand(final @NotNull CommandSender sender,
                                 final @NotNull @Regex("^[A-Za-z0-9_-]*$") String name,
-                                final @Nullable @Flag("type") @Default("player") EntityType type, // NOTE: @Default annotation doesn't work, waiting for a fix.
-                                final @Nullable @Flag(value = "position") Location position,
-                                final @Nullable @Flag(value = "world") World world
+                                final @Nullable @Flag("type") EntityType type, // NOTE: Replace with @Default once fixed.
+                                final @Nullable @Flag("position") Location position,
+                                final @Nullable @Flag("world") World world
     ) {
         if (FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
             translator.translate("npc_create_failure_already_exists").replace("npc", FancyNpcs.getInstance().getNpcManager().getNpc(name).getData().getName()).send(sender);
             return;
         }
+        final EntityType finalType = (type != null) ? type : EntityType.PLAYER;
         // Getting the Location where NPC will be created at.
         final Location location = (position == null && sender instanceof Player player) ? player.getLocation() : position;
         // Setting the world of specified location.
@@ -50,7 +50,7 @@ public enum CreateCMD {
         }
         final Npc npc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, (sender instanceof Player player) ? player.getUniqueId() : UUID.nameUUIDFromBytes(new byte[0]), location));
         // Setting the type of NPC. Default type is EntityType.PLAYER.
-        npc.getData().setType(type); // TO-DO: FIX IT
+        npc.getData().setType(finalType);
         // Calling event and creating NPC if not cancelled, sending error message otherwise.
         if (new NpcCreateEvent(npc, sender).callEvent()) {
             npc.create();

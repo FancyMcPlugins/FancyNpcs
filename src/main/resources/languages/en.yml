@@ -54,8 +54,8 @@ messages:
   fancynpcs_feature_flags_header: "<dark_gray>› <gray>Feature Flags:"
   fancynpcs_feature_flags_entry: "<dark_gray>›  <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
   fancynpcs_feature_flags_footer: ""
-  npc_help_page_header: "<dark_gray>―――――― {primaryColor}FancyNpcs<gray> plugin help: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
-  npc_help_page_footer: "<newline><gray>Full command reference available {primaryColor}<u><click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click></u><gray>."
+  npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"
+  npc_help_page_footer: "<newline><dark_gray><st>-----------</st>  <gray>Click {primaryColor}<click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click><gray> to open documentation  <dark_gray><st>-----------</st>"
   npc_help_contents:
     - "<dark_gray>› {primaryColor}/npc create {secondaryColor}(npc) <dark_gray>- <gray>Creates a new NPC at your location."
     - "<dark_gray>› {primaryColor}/npc remove {secondaryColor}(npc) <dark_gray>- <gray>Removes specified NPC."
@@ -112,15 +112,14 @@ messages:
 
   npc_info_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc info {secondaryColor}(npc)"
   npc_info_general:
-    - "<gray>Information about NPC named {primaryColor}{name}<dark_gray>:"
+    - "<dark_gray><st>------------</st>  <gray>Information about {primaryColor}{name}  <dark_gray><st>------------</st>"
     - " "
-    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><gray>Identifier</hover>: <hover:show_text:'<gray>Click to copy identifier to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id}</click></hover>"
-    - "<dark_gray>› <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator to clipboard.'><click:copy_to_clipboard:'{creator}'>{warningColor}{creator}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><gray>Identifier</hover>: <hover:show_text:'<gray>Click to copy identifier to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id_short}</click></hover>   <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator to clipboard.'><click:copy_to_clipboard:'{creator}'>{warningColor}{creator_short}</click></hover>"
     - "<dark_gray>› <hover:show_text:'<gray>Current location of the NPC.'><gray>Location</hover>: <hover:show_text:'<gray>Click to copy location to clipboard.'><click:copy_to_clipboard:'{location_x} {location_y} {location_z}'>{warningColor}{location_x}<gray>, {warningColor}{location_y}<gray>, {warningColor}{location_z}<gray> in {warningColor}{world}</click></hover>"
     - "<dark_gray>› <hover:show_text:'<gray>Display name of the NPC, displayed above their head.'><gray>Display Name</hover>: <white>{displayname}"
-    - "<dark_gray>› <hover:show_text:'<gray>Entity type of the NPC.'><gray>Type</hover><dark_gray>: {warningColor}{type}    <hover:show_text:'<gray>Glowing state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Glowing</hover>: {is_glowing}   <hover:show_text:'<gray>Glowing color of the NPC.'><gray>Glowing Color</hover><dark_gray>: {warningColor}{glowing_color}"
-    - "<dark_gray>› <hover:show_text:'<gray>Whether the NPC should be shown in player-list. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Shown in TAB</hover>: {is_show_in_tab}   <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}   <hover:show_text:'<gray>Whether the NPC should turn to player. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Turns to Player</hover><dark_gray>: {is_turn_to_player}"
-    - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}   <hover:show_text:'<gray>Interaction cooldown between interactions. In seconds.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
+    - "<dark_gray>› <hover:show_text:'<gray>Entity type of the NPC.'><gray>Type</hover><dark_gray>: {warningColor}{type}   <hover:show_text:'<gray>Glowing state of the NPC. Can be a {warningColor}color<gray> or {errorColor}disabled<gray>.'><gray>Glow</hover><dark_gray>: {glow}   <hover:show_text:'<gray>Whether the NPC should turn to player. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Turns to Player</hover><dark_gray>: {is_turn_to_player}"
+    - "<dark_gray>› <hover:show_text:'<gray>Whether the NPC should be shown in player-list. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Shown in TAB</hover>: {is_show_in_tab}   <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}   <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
+    - "<dark_gray>› <hover:show_text:'<gray>Interaction cooldown between interactions. In seconds.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
     - " "
 
   npc_info_messages_header: "<dark_gray>› <gray>Messages:"

@@ -5,7 +5,7 @@ import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import net.kyori.adventure.text.format.NamedTextColor;
+import de.oliver.fancynpcs.util.GlowingColor;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -35,19 +35,24 @@ public enum InfoCMD {
     @Permission("fancynpcs.command.npc.info")
     public void onCommand(final CommandSender sender, final Npc npc) {
         final Location loc = npc.getData().getLocation();
-
+        // Getting the translated glowing state. This should never throw because all supported NamedTextColor objects has their mapping in GlowingColor enum.
+        final String glowingStateTranslated = (!npc.getData().isGlowing() || npc.getData().getGlowingColor() != null)
+                ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
+                : ((SimpleMessage) translator.translate("disabled")).getMessage();
+        // Sending general info to the sender.
         translator.translate("npc_info_general")
                 .replace("name", npc.getData().getName())
                 .replace("id", npc.getData().getId())
+                .replace("id_short", npc.getData().getId().substring(0, 13) + "...")
                 .replace("creator", npc.getData().getCreator().toString())
+                .replace("creator_short", npc.getData().getCreator().toString().substring(0, 13) + "...")
                 .replace("displayname", npc.getData().getDisplayName())
                 .replace("type", "<lang:" + npc.getData().getType().translationKey() + ">") // Not ideal solution but should work fine for now.
                 .replace("location_x", COORDS_FORMAT.format(loc.x()))
                 .replace("location_y", COORDS_FORMAT.format(loc.y()))
                 .replace("location_z", COORDS_FORMAT.format(loc.z()))
                 .replace("world", loc.getWorld().getName())
-                .replace("is_glowing", getTranslatedBoolean(npc.getData().isGlowing()))
-                .replace("glowing_color", getFormattedColor(npc.getData().getGlowingColor()))
+                .replace("glow", glowingStateTranslated)
                 .replace("is_collidable", getTranslatedBoolean(npc.getData().isCollidable()))
                 .replace("is_turn_to_player", getTranslatedBoolean(npc.getData().isTurnToPlayer()))
                 .replace("is_show_in_tab", getTranslatedBoolean(npc.getData().isShowInTab()))
@@ -116,30 +121,6 @@ public enum InfoCMD {
                     case FEET -> "feet";
                 }
         )).getMessage();
-    }
-
-    // NOTE: Might need to be improved later down the line, should get work done for now.
-    private static @NotNull String getFormattedColor(final @NotNull NamedTextColor color) {
-        final int colorCode = color.value();
-        return switch (colorCode) {
-            case 0 -> "Black";
-            case 170 -> "Dark Blue";
-            case 43520 -> "Dark Green";
-            case 43690 -> "Dark Aqua";
-            case 11141120 -> "Dark Red";
-            case 11141290 -> "Dark Purple";
-            case 16755200 -> "Gold";
-            case 11184810 -> "Gray";
-            case 5592405 -> "Dark Gray";
-            case 5592575 -> "Blue";
-            case 5635925 -> "Green";
-            case 5636095 -> "Aqua";
-            case 16733525 -> "Red";
-            case 16733695 -> "Light Purple";
-            case 16777045 -> "Yellow";
-            case 16777215 -> "White";
-            default -> "Unknown";
-        };
     }
 
 }

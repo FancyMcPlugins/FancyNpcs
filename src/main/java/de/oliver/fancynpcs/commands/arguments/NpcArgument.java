@@ -13,8 +13,10 @@ import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum NpcArgument {
     INSTANCE; // SINGLETON
@@ -26,7 +28,11 @@ public enum NpcArgument {
         // Reading next argument as single/literal String.
         final String value = input.readString();
         // Getting the NPC from the manager.
-        final Npc npc =  FancyNpcs.getInstance().getNpcManager().getNpc(value);
+        final @Nullable Npc npc = !isUUID(value)
+                ? FancyNpcs.getInstance().getNpcManager().getNpc(value)
+                : !FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() || context.sender().hasPermission("fancynpcs.admin")
+                        ? FancyNpcs.getInstance().getNpcManager().getNpcById(value)
+                        : null;
         // Throwing exception if NPC does not exist.
         if (npc == null)
             throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replace("input", value).send(context.sender()));
@@ -48,6 +54,15 @@ public enum NpcArgument {
                         .toList()
                 // PLAYER NPCS FLAG is disabled or sender is console; Showing all NPCs.
                 : FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName()).sorted().toList();
+    }
+
+    private static boolean isUUID(final @NotNull String string) {
+        try {
+            UUID.fromString(string);
+            return true;
+        } catch (final IllegalArgumentException e) {
+            return false;
+        }
     }
 
 }

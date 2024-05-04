@@ -54,7 +54,7 @@ messages:
   fancynpcs_feature_flags_header: "<dark_gray>› <gray>Feature Flags:"
   fancynpcs_feature_flags_entry: "<dark_gray>›  <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
   fancynpcs_feature_flags_footer: ""
-  npc_help_page_header: "<gray>Commands for {primaryColor}FancyNpcs<gray> plugin: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
+  npc_help_page_header: "<dark_gray>―――――― {primaryColor}FancyNpcs<gray> plugin help: ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)<newline>"
   npc_help_page_footer: "<newline><gray>Full command reference available {primaryColor}<u><click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click></u><gray>."
   npc_help_contents:
     - "<dark_gray>› {primaryColor}/npc create {secondaryColor}(npc) <dark_gray>- <gray>Creates a new NPC at your location."
@@ -79,7 +79,7 @@ messages:
     - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) (attr) (value) <dark_gray>- <gray>Sets entity attribute."
     - "<dark_gray>› {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown."
   npc_attribute_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) (attribute) (value)"
-  npc_attribute_set: "<dark_gray>› <gray>Attribute {primaryColor}{attribute}<gray> has been set to {primaryColor}{value}<gray>."
+  npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
   npc_attribute_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
   npc_attribute_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
   npc_attribute_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."

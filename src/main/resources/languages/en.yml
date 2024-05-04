@@ -44,6 +44,7 @@ messages:
   command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{input}{errorColor} does not exist."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC named {warningColor}{input}{errorColor} does not exist."
   command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
+  command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
   # Commands
   fancynpcs_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/fancynpcs {secondaryColor}(version | reload | save | feature_flags)"
@@ -84,8 +85,8 @@ messages:
   npc_attribute_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
 
   npc_collidable_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc collidable {secondaryColor}(npc) (state)"
-  npc_collidable_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}collidable<gray>."
-  npc_collidable_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}collidable<gray>."
+  npc_collidable_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now collidable<gray>."
+  npc_collidable_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer collidable<gray>."
 
   npc_copy_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
   npc_copy_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has been copied to {warningColor}{new_npc}<gray>."
@@ -104,8 +105,8 @@ messages:
   npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC named {warningColor}{npc}<gray>... Still having issues? Please let us know."
 
   npc_glowing_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
-  npc_glowing_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}glowing<gray>."
-  npc_glowing_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}glowing<gray>."
+  npc_glowing_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now glowing."
+  npc_glowing_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer glowing."
   npc_glowing_set_color_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now glowing in {color}<gray>."
   npc_glowing_set_color_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."
 
@@ -182,9 +183,27 @@ messages:
   npc_teleport_failure_world_not_loaded: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Destination world is not loaded."
 
   npc_turn_to_player_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
-  npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}turning to player<gray>."
-  npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}turning to player<gray>."
+  npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now turning to player."
+  npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer turning to player."
 
   npc_show_in_tab_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
-  npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now {successColor}shown in player-list<gray>."
-  npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer {errorColor}shown in player-list<gray>."
+  npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now shown in player-list."
+  npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer shown in player-list."
+
+  npc_message_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) add (none | message)"
+  npc_message_add_success: "<dark_gray>› <gray>Message has been added. There is {warningColor}{total}<gray> messages in total."
+
+  npc_message_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) set (number) (none | message)"
+  npc_message_set_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> messages in total."
+  npc_message_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
+  npc_message_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
+
+  npc_message_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) remove (number)"
+  npc_message_remove_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> messages in total."
+  npc_message_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
+  npc_message_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
+
+  npc_message_clear_success: "<dark_gray>› <gray>Messages have been cleared. There was {warningColor}{total}<gray> messages in total."
+
+  npc_message_send_randomly_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now sending messages randomly."
+  npc_message_send_randomly_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer sending messages randomly."

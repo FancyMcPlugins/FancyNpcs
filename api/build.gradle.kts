@@ -4,21 +4,17 @@ plugins {
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
+repositories {
+    maven(url = "https://repo.smrt-1.com/releases")
+}
+
 dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
-
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-
-    implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 tasks {
-    shadowJar {
-        archiveClassifier.set("")
-
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
-    }
-
     publishing {
         repositories {
             maven {

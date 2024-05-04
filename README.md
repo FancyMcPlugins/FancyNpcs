@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#                          
+#                           
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -10,7 +10,7 @@
 
 Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
 
-**Only for minecraft server version 1.19.4 - 1.20.5**<br>
+**Only for minecraft server version 1.19.4 - 1.20.6**<br>
 _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ## Get the plugin

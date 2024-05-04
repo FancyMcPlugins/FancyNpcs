@@ -16,7 +16,7 @@ tasks {
     shadowJar {
         archiveClassifier.set("")
 
-        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
+//        relocate("me.dave.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
     }
 
     publishing {

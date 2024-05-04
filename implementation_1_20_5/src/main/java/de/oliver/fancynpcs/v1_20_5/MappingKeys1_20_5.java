@@ -2,12 +2,12 @@ package de.oliver.fancynpcs.v1_20_5;
 
 public enum MappingKeys1_20_5 {
 
-    ENTITY_TYPE__FACTORY("bC"),
-    SYNCHED_ENTITY_DATA__ITEMS_BY_ID("e"),
-    CLIENTBOUND_TELEPORT_ENTITY_PACKET__X("b"),
-    CLIENTBOUND_TELEPORT_ENTITY_PACKET__Y("c"),
-    CLIENTBOUND_TELEPORT_ENTITY_PACKET__Z("d"),
-    PANDA__DATA_ID_FLAGS("cb"),
+    ENTITY_TYPE__FACTORY("factory"),
+    SYNCHED_ENTITY_DATA__ITEMS_BY_ID("itemsById"),
+    CLIENTBOUND_TELEPORT_ENTITY_PACKET__X("x"),
+    CLIENTBOUND_TELEPORT_ENTITY_PACKET__Y("y"),
+    CLIENTBOUND_TELEPORT_ENTITY_PACKET__Z("z"),
+    PANDA__DATA_ID_FLAGS("dataidFlags"),
     ;
 
     private final String mapping;

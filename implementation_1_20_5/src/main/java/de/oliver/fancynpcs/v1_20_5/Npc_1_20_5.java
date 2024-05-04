@@ -12,7 +12,6 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -278,9 +277,9 @@ public class Npc_1_20_5 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        Int2ObjectMap<SynchedEntityData.DataItem<?>> itemsById = (Int2ObjectMap<SynchedEntityData.DataItem<?>>) ReflectionUtils.getValue(npc.getEntityData(), MappingKeys1_20_5.SYNCHED_ENTITY_DATA__ITEMS_BY_ID.getMapping()); // itemsById
+        SynchedEntityData.DataItem<?>[] itemsById = (SynchedEntityData.DataItem<?>[]) ReflectionUtils.getValue(npc.getEntityData(), MappingKeys1_20_5.SYNCHED_ENTITY_DATA__ITEMS_BY_ID.getMapping()); // itemsById
         List<SynchedEntityData.DataValue<?>> entityData = new ArrayList<>();
-        for (SynchedEntityData.DataItem<?> dataItem : itemsById.values()) {
+        for (SynchedEntityData.DataItem<?> dataItem : itemsById) {
             entityData.add(dataItem.value());
         }
         ClientboundSetEntityDataPacket setEntityDataPacket = new ClientboundSetEntityDataPacket(npc.getId(), entityData);

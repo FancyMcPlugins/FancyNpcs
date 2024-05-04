@@ -14,7 +14,7 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.0.11" + (if (buildId != null) ".$buildId" else "")
+    version = "2.1.0-SNAPSHOT" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -115,7 +115,7 @@ tasks {
 
         inputs.properties(props)
 
-        filesMatching("plugin.yml") {
+        filesMatching("paper-plugin.yml") {
             expand(props)
         }
 

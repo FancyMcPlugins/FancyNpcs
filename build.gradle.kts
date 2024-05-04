@@ -6,7 +6,7 @@ plugins {
     id("maven-publish")
 
     id("xyz.jpenilla.run-paper") version "2.2.4"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.7"
 }
 
 runPaper.folia.registerTask()
@@ -99,6 +99,7 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
+        options.release = 21
     }
 
     javadoc {

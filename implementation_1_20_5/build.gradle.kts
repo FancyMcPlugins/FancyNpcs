@@ -3,7 +3,7 @@ plugins {
     id("io.papermc.paperweight.userdev") version "1.6.2"
 }
 
-val minecraftVersion = "1.20.5"
+val minecraftVersion = "1.20.6"
 
 dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
@@ -25,6 +25,6 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
-
+        options.release = 21
     }
 }

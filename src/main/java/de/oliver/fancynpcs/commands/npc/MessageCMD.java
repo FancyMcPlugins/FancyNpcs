@@ -18,6 +18,8 @@ import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
@@ -42,7 +44,7 @@ public enum MessageCMD {
 
     @Command("npc message <npc> add <message>")
     @Permission("fancynpcs.command.npc.message.add")
-    public void onMessageAdd(final CommandSender sender, final Npc npc, final @Argument(suggestions = "@none") @Greedy String message) {
+    public void onMessageAdd(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Exiting the command block in case banned command has been found in the message.
@@ -70,7 +72,7 @@ public enum MessageCMD {
 
     @Command("npc message <npc> set <number> <message>")
     @Permission("fancynpcs.command.npc.message.set")
-    public void onMessageSet(final CommandSender sender, final Npc npc, final int number, final @Argument(suggestions = "@none") @Greedy String message) {
+    public void onMessageSet(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/number_range") int number, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Sending error message in case banned command has been found in the message.
@@ -115,7 +117,7 @@ public enum MessageCMD {
 
     @Command("npc message <npc> remove <number>")
     @Permission("fancynpcs.command.npc.message.remove")
-    public void onMessageRemove(final CommandSender sender, final Npc npc, final int number) {
+    public void onMessageRemove(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/number_range") int number) {
         // Getting the total count of messages that are currently in the list.
         final int totalCount = npc.getData().getMessages().size();
         // Sending error message if the list is empty.
@@ -204,9 +206,21 @@ public enum MessageCMD {
 
     /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
 
-    @Suggestions("@none")
-    public List<String> suggest(final CommandContext<CommandSender> context, final CommandInput input) {
+    @Suggestions("MessageCMD/none")
+    public List<String> suggestNone(final CommandContext<CommandSender> context, final CommandInput input) {
         return NONE_SUGGESTIONS;
+    }
+
+    @Suggestions("MessageCMD/number_range")
+    public List<String> suggestNumber(final CommandContext<CommandSender> context, final CommandInput input) {
+        final Npc npc = context.getOrDefault("npc", null);
+        // Returning...
+        return npc == null || npc.getData().getMessages().isEmpty()
+                ? Collections.emptyList()
+                : new ArrayList<>() {{
+                    for (int i = 0; i < npc.getData().getMessages().size(); i++)
+                        add(String.valueOf(i + 1));
+                }};
     }
 
     /* UTILITY METHODS */

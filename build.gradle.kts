@@ -1,3 +1,4 @@
+import net.minecrell.pluginyml.paper.PaperPluginDescription
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -7,6 +8,7 @@ plugins {
 
     id("xyz.jpenilla.run-paper") version "2.2.4"
     id("io.github.goooler.shadow") version "8.1.7"
+    id("net.minecrell.plugin-yml.paper") version "0.6.0"
 }
 
 runPaper.folia.registerTask()
@@ -47,14 +49,30 @@ dependencies {
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
 
+paper {
+    main = "de.oliver.fancynpcs.FancyNpcs"
+    bootstrapper = "de.oliver.fancynpcs.loaders.FancyNpcsBootstrapper"
+    loader = "de.oliver.fancynpcs.loaders.FancyNpcsLoader"
+    foliaSupported = true
+    version = rootProject.version.toString()
+    description = "Simple, lightweight and fast NPC plugin using packets"
+    apiVersion = "1.20"
+    serverDependencies {
+        register("PlaceholderAPI") {
+            required = false
+            load = PaperPluginDescription.RelativeLoadOrder.BEFORE
+        }
+    }
+}
+
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
 //        minecraftVersion("1.20.1")
 
         downloadPlugins {
-//            hangar("ViaVersion", "4.9.4-SNAPSHOT+280")
-//            hangar("ViaBackwards", "4.9.3-SNAPSHOT+155")
+            hangar("ViaVersion", "4.10.2-SNAPSHOT+347")
+            hangar("ViaBackwards", "4.10.2-SNAPSHOT+208")
 //            hangar("PlaceholderAPI", "2.11.5")
         }
     }

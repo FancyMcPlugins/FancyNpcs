@@ -1,7 +1,0 @@
-name: FancyNpcs
-version: '$version'
-main: de.oliver.fancynpcs.FancyNpcs
-description: $description
-api-version: '1.20'
-bootstrapper: de.oliver.fancynpcs.loaders.FancyNpcsBootstrapper
-loader: de.oliver.fancynpcs.loaders.FancyNpcsLoader

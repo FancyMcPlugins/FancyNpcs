@@ -11,8 +11,12 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.ClickEvent.Action;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotation.specifier.Greedy;
+import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 
 import java.util.List;
 import java.util.stream.StreamSupport;
@@ -25,6 +29,11 @@ public enum MessageCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
+    // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
+    private static final List<String> NONE_SUGGESTIONS = List.of("@none");
+
+    /* MESSAGE ADD */
+
     @Command("npc message <npc> add")
     @Permission("fancynpcs.command.npc.message.add")
     public void onMessageAdd(final CommandSender sender, final Npc npc) {
@@ -33,27 +42,39 @@ public enum MessageCMD {
 
     @Command("npc message <npc> add <message>")
     @Permission("fancynpcs.command.npc.message.add")
-    public void onMessageAdd(final CommandSender sender, final Npc npc, final @Greedy String message) {
+    public void onMessageAdd(final CommandSender sender, final Npc npc, final @Argument(suggestions = "@none") @Greedy String message) {
+        // Handling '@none' as an empty message.
+        final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Exiting the command block in case banned command has been found in the message.
-        if (hasBlockedCommands(message)) {
+        if (hasBlockedCommands(finalMessage)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
             return;
         }
-        // ...
-        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SET, message, sender).callEvent()) {
-            npc.getData().getMessages().add(message);
-            // ...
+        // Calling the event and adding message if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_ADD, finalMessage, sender).callEvent()) {
+            npc.getData().getMessages().add(finalMessage);
+            // Sending success message to the sender.
             translator.translate("npc_message_add_success").replace("total", String.valueOf(npc.getData().getMessages().size())).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
     }
 
+    /* MESSAGE SET */
+
+    @Command("npc message <npc> set")
+    @Permission("fancynpcs.command.npc.message.set")
+    public void onMessageSet(final CommandSender sender, final Npc npc) {
+        translator.translate("npc_message_set_syntax").send(sender);
+    }
+
     @Command("npc message <npc> set <number> <message>")
     @Permission("fancynpcs.command.npc.message.set")
-    public void onMessageSet(final CommandSender sender, final Npc npc, final int number, final @Greedy String message) {
+    public void onMessageSet(final CommandSender sender, final Npc npc, final int number, final @Argument(suggestions = "@none") @Greedy String message) {
+        // Handling '@none' as an empty message.
+        final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Sending error message in case banned command has been found in the message.
-        if (hasBlockedCommands(message)) {
+        if (hasBlockedCommands(finalMessage)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
             return;
         }
@@ -71,10 +92,10 @@ public enum MessageCMD {
         }
         // User-specified number starts from 1, while index starts from 0. Subtracting 1 from the provided number to get the list index.
         final int index = number - 1;
-        // ...
-        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SET, new Object[]{index, message}, sender).callEvent()) {
-            npc.getData().getMessages().set(index, message);
-            // ...
+        // Calling the event and setting message if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SET, new Object[]{index, finalMessage}, sender).callEvent()) {
+            npc.getData().getMessages().set(index, finalMessage);
+            // Sending success message to the sender.
             translator.translate("npc_message_set_success")
                     .replace("number", String.valueOf(number))
                     .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
@@ -83,6 +104,8 @@ public enum MessageCMD {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
     }
+
+    /* MESSAGE REMOVE */
 
     @Command("npc message <npc> remove")
     @Permission("fancynpcs.command.npc.message.remove")
@@ -109,10 +132,10 @@ public enum MessageCMD {
         final int index = number - 1;
         // Getting the message to pass to the NpcModifyEvent.
         final String message = npc.getData().getMessages().get(index);
-        // ...
+        // Calling the event and removing message if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_REMOVE, new Object[]{index, message}, sender).callEvent()) {
             npc.getData().getMessages().remove(index);
-            // ...
+            // Sending success message to the sender.
             translator.translate("npc_message_remove_success")
                     .replace("number", String.valueOf(number))
                     .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
@@ -122,11 +145,13 @@ public enum MessageCMD {
         }
     }
 
+    /* MESSAGE CLEAR */
+
     @Command("npc message <npc> clear")
     @Permission("fancynpcs.command.npc.message.clear")
     public void onMessageClear(final CommandSender sender, final Npc npc) {
         final int total = npc.getData().getMessages().size();
-        // ...
+        // Calling the event and clearing messages if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_CLEAR, null, sender).callEvent()) {
             npc.getData().getMessages().clear();
             translator.translate("npc_message_clear_success").replace("total", String.valueOf(total)).send(sender);
@@ -135,11 +160,32 @@ public enum MessageCMD {
         }
     }
 
+    /* MESSAGE LIST */
+
     @Command("npc message <npc> list")
     @Permission("fancynpcs.command.npc.message.list")
     public void onMessageList(final CommandSender sender, final Npc npc) {
-        throw new UnsupportedOperationException("NOT IMPLEMENTED");
+        // Sending error message if the list is empty.
+        if (npc.getData().getMessages().isEmpty()) {
+            translator.translate("npc_message_list_failure_empty").send(sender);
+            return;
+        }
+        // Sending header to the sender.
+        translator.translate("npc_message_list_header").send(sender);
+        // Iterating over all messages attached to this NPC.
+        for (int i = 0; i < npc.getData().getMessages().size(); i++) {
+            final String message = npc.getData().getMessages().get(i);
+            // Sending message entry to the sender.
+            translator.translate("npc_message_list_entry")
+                    .replace("number", String.valueOf(i + 1))
+                    .replace("message", message)
+                    .send(sender);
+        }
+        // Sending footer to the sender.
+        translator.translate("npc_message_list_footer").send(sender);
     }
+
+    /* MESSAGE SEND_RANDOMLY */
 
     @Command("npc message <npc> send_randomly [state]")
     @Permission("fancynpcs.command.npc.message.send_randomly")
@@ -149,13 +195,23 @@ public enum MessageCMD {
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SEND_RANDOMLY, finalState, sender).callEvent()) {
             npc.getData().setSendMessagesRandomly(finalState);
             npc.updateForAll();
+            // Sending success message to the sender.
             translator.translate(finalState ? "npc_message_send_randomly_set_true" : "npc_message_send_randomly_set_false").replace("npc", npc.getData().getName()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
     }
 
-    // Returns 'true' if specified component contains blocked command, 'false' otherwise.
+    /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
+
+    @Suggestions("@none")
+    public List<String> suggest(final CommandContext<CommandSender> context, final CommandInput input) {
+        return NONE_SUGGESTIONS;
+    }
+
+    /* UTILITY METHODS */
+
+    /** Returns {@code true} if specified component contains blocked command, {@code false} otherwise. */
     private boolean hasBlockedCommands(final @NotNull String message) {
         // Converting message to a Component.
         final Component component = ModernChatColorHandler.translate(message);

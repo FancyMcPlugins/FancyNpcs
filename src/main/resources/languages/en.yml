@@ -144,10 +144,6 @@ messages:
   npc_info_serverCommands_entry: "<dark_gray>›   <reset>{command}"
   npc_info_serverCommands_footer: " "
 
-  npc_info_equipment_header: "<dark_gray>› <gray>Equipment:"
-  npc_info_equipment_entry: "<dark_gray>›   <#848484>{slot}<dark_gray>: {warningColor}<item>"  # DEV NOTE: This uses <> brackets because <item> this must be a MiniMessage placeholder (TagResolver).
-  npc_info_equipment_footer: " "
-
   npc_info_attributes_header: "<dark_gray>› <gray>Attributes:"
   npc_info_attributes_entry: "<dark_gray>›   <#848484>{attribute}<dark_gray>: {warningColor}{value}"
   npc_info_attributes_footer: " "
@@ -216,3 +212,8 @@ messages:
 
   npc_message_send_randomly_set_true: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is now sending messages randomly."
   npc_message_send_randomly_set_false: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> is no longer sending messages randomly."
+
+  npc_message_list_header: "<dark_gray><st>--------------------</st>  <gray>Messages  <dark_gray><st>--------------------</st><newline>"
+  npc_message_list_entry: " <#848484>{number}. <reset>{message}"
+  npc_message_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_message_list_failure_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."

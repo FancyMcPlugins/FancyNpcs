@@ -77,14 +77,6 @@ public enum InfoCMD {
             translator.translate("npc_info_playerCommands_footer").send(sender);
         }
 
-        if (!npc.getData().getMessages().isEmpty()) {
-            translator.translate("npc_info_messages_header").send(sender);
-            npc.getData().getMessages().forEach(message ->
-                translator.translate("npc_info_messages_entry").replace("message", message).send(sender)
-            );
-            translator.translate("npc_info_messages_footer").send(sender);
-        }
-
         if (!npc.getData().getEquipment().isEmpty()) {
             translator.translate("npc_info_equipment_header").send(sender);
             npc.getData().getEquipment().forEach((slot, item) -> {

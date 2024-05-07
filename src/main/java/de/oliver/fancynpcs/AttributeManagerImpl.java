@@ -6,7 +6,7 @@ import de.oliver.fancynpcs.v1_19_4.attributes.Attributes_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.attributes.Attributes_1_20_1;
 import de.oliver.fancynpcs.v1_20_2.attributes.Attributes_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.attributes.Attributes_1_20_4;
-import de.oliver.fancynpcs.v1_20_5.attributes.Attributes_1_20_5;
+import de.oliver.fancynpcs.v1_20_6.attributes.Attributes_1_20_5;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 

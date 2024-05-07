@@ -58,6 +58,9 @@ public enum InfoCMD {
                 .replace("is_show_in_tab", getTranslatedBoolean(npc.getData().isShowInTab()))
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
                 .replace("interaction_cooldown", SECONDS_FORMAT.format(npc.getData().getInteractionCooldown()) + "s")
+                .replace("messages_total", String.valueOf(npc.getData().getMessages().size()))
+                .replace("player_commands_total", String.valueOf(npc.getData().getPlayerCommands().size()))
+                .replace("server_commands_total", String.valueOf(0)) // TODO
                 .send(sender);
 
         if (npc.getData().getServerCommand() != null) {

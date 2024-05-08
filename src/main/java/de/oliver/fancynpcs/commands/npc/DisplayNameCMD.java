@@ -20,12 +20,8 @@ public enum DisplayNameCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private static final List<String> SUGGESTIONS = List.of("<empty>");
-
-    @Suggestions("empty")
-    public List<String> suggestions(final CommandContext<CommandSender> sender, CommandInput input) {
-        return SUGGESTIONS;
-    }
+    // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
+    private static final List<String> NONE_SUGGESTIONS = List.of("@none");
 
     @Command("npc displayname")
     @Permission("fancynpcs.command.npc.displayname")
@@ -35,15 +31,25 @@ public enum DisplayNameCMD {
 
     @Command("npc displayname <npc> <name>")
     @Permission("fancynpcs.command.npc.displayname")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Argument(suggestions = "empty") @Greedy String name) {
+    public void onCommand(final CommandSender sender, final Npc npc, final @Argument(suggestions = "DisplayNameCMD/none") @Greedy String name) {
+        // Finalizing the name. In case input is '@none', it gets replaced with '<empty>' for backwards compatibility.
+        final String finalName = name.equalsIgnoreCase("@none") ? "<empty>" : name;
         // Calling the event and updating the state if not cancelled.
-        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, name, sender).callEvent()) {
-            npc.getData().setDisplayName(name);
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.DISPLAY_NAME, finalName, sender).callEvent()) {
+            npc.getData().setDisplayName(finalName);
             npc.updateForAll();
-            translator.translate("npc_displayname_success").replace("npc", npc.getData().getName()).send(sender);
+            translator.translate(finalName.equalsIgnoreCase("<empty>") ? "npc_displayname_set_empty" : "npc_displayname_set_name")
+                    .replace("npc", npc.getData().getName())
+                    .replace("name", finalName)
+                    .send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
+    }
+
+    @Suggestions("DisplayNameCMD/none")
+    public List<String> suggestions(final CommandContext<CommandSender> sender, CommandInput input) {
+        return NONE_SUGGESTIONS;
     }
 
 }

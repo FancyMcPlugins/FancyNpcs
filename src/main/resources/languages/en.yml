@@ -96,7 +96,8 @@ messages:
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC named {warningColor}{npc}{errorColor} already exists."
 
   npc_displayname_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc displayname {secondaryColor}(npc) (name)"
-  npc_displayname_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their display-name updated."
+  npc_displayname_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using <reset>{name}<gray> as their display name."
+  npc_displayname_set_empty: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer showing display name."
 
   npc_equipment_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) (slot)"
   npc_equipment_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their equipment updated."

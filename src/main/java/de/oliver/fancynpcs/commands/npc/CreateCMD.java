@@ -43,7 +43,7 @@ public enum CreateCMD {
         // Setting the world of specified location.
         if (location.getWorld() == null) {
             if (world == null) {
-                sender.sendMessage("must specify world");
+                translator.translate("npc_create_failure_must_specify_world").send(sender);
                 return;
             }
             location.setWorld(world);

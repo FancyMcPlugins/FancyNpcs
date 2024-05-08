@@ -94,6 +94,7 @@ messages:
   npc_create_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc)"
   npc_create_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been created."
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC {warningColor}{npc}{errorColor} already exists."
+  npc_create_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
   npc_displayname_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc displayname {secondaryColor}(npc) (name)"
   npc_displayname_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using <reset>{name}<gray> as their display name."
@@ -179,7 +180,7 @@ messages:
   npc_nearby_footer: "<dark_gray>› <gray>Showing {warningColor}{count}<gray> out of total {warningColor}{total}<gray> entries in your world."
 
   npc_list_failure_sort_requires_player: "<dark_gray>› {errorColor}This sort type cannot be used from the console."
-  npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify a {warningColor}--world{errorColor} flag when running this command from the console."
+  npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
   npc_move_to_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world]"
   npc_move_to_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."

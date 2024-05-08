@@ -37,14 +37,14 @@ public enum NearbyCMD {
             final @Nullable @Flag("type") EntityType type,
             final @Nullable @Flag("sort") SortType sort
     ) {
-        Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
-        // Getting location of the sender.
-        final Location location = sender.getLocation();
+        Stream<Npc> stream = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
+        // Getting senderLocation of the sender.
+        final Location senderLocation = sender.getLocation();
         // Creating a counter which is increased by 1 for every NPC present in player's world.
         final AtomicInteger totalCount = new AtomicInteger(0);
         // Excluding NPCs from different worlds. This also increments the counter defined above.
-        npcs = npcs.filter(npc -> {
-            if (npc.getData().getLocation().getWorld().equals(location.getWorld())) {
+        stream = stream.filter(npc -> {
+            if (npc.getData().getLocation().getWorld().equals(senderLocation.getWorld())) {
                 totalCount.incrementAndGet();
                 return true;
             }
@@ -52,39 +52,40 @@ public enum NearbyCMD {
         });
         // Excluding NPCs not created by the sender, if PLAYER_NPCS_FEATURE_FLAG is enabled and sender is a player.
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled())
-            npcs = npcs.filter(npc -> npc.getData().getCreator().equals(sender.getUniqueId()));
-        // Excluding NPCs that are not in radius, if specified and sender is a player. (radius is calculated from the location of player)
+            stream = stream.filter(npc -> npc.getData().getCreator().equals(sender.getUniqueId()));
+        // Excluding NPCs that are not in radius, if specified and sender is a player. (radius is calculated from the senderLocation of player)
         if (radius != null)
-            npcs = npcs.filter(npc -> npc.getData().getLocation().distance(location) <= radius);
+            stream = stream.filter(npc -> npc.getData().getLocation().distance(senderLocation) <= radius);
         // Excluding NPCs that are not of a specified type, if desired.
         if (type != null)
-            npcs = npcs.filter(npc -> npc.getData().getType() == type);
-        // Sorting...
+            stream = stream.filter(npc -> npc.getData().getType() == type);
+        // Sorting based on SortType choice. Defaults to SortType.NEAREST. There might be more sort types in the future which should be handled here accordingly.
         switch (sort != null ? sort : SortType.NEAREST) { // This should never produce NPE.
-            case NAME -> npcs = npcs.sorted(Comparator.comparing(npc -> npc.getData().getName()));
-            case NAME_REVERSED -> npcs = npcs.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed());
-            case NEAREST -> npcs = npcs.sorted(Comparator.comparingDouble(npc -> npc.getData().getLocation().distance(location)));
-            case FARTHEST -> npcs = npcs.sorted(Comparator.comparingDouble(npc -> ((Npc) npc).getData().getLocation().distance(location)).reversed());
+            case NAME -> stream = stream.sorted(Comparator.comparing(npc -> npc.getData().getName()));
+            case NAME_REVERSED -> stream = stream.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed());
+            case NEAREST -> stream = stream.sorted(Comparator.comparingDouble(npc -> npc.getData().getLocation().distance(senderLocation)));
+            case FARTHEST -> stream = stream.sorted(Comparator.comparingDouble(npc -> ((Npc) npc).getData().getLocation().distance(senderLocation)).reversed());
         }
-        // Printing the header.
         translator.translate("npc_nearby_header").send(sender);
-        // Creating a counter which is increased by 1 for every NPC that is "selected" in this query.
+        // Using AtomicInteger counter because streams don't expose entry index.
         final AtomicInteger count = new AtomicInteger(0);
-        // Printing each entry.
-        npcs.toList().forEach(npc -> {
+        // Iterating over each NPC referenced in the stream. Usage of forEachOrdered should presumably preserve element order.
+        stream.forEachOrdered(npc -> {
             translator.translate("npc_nearby_entry")
                     .replace("number", String.valueOf(count.incrementAndGet()))
                     .replace("npc", npc.getData().getName())
-                    .replace("distance", DISTANCE_FORMAT.format(npc.getData().getLocation().distance(location)))
+                    .replace("distance", DISTANCE_FORMAT.format(npc.getData().getLocation().distance(senderLocation)))
                     .replace("location_x", COORDS_FORMAT.format(npc.getData().getLocation().x()))
                     .replace("location_y", COORDS_FORMAT.format(npc.getData().getLocation().y()))
                     .replace("location_z", COORDS_FORMAT.format(npc.getData().getLocation().z()))
+                    .replace("world", npc.getData().getLocation().getWorld().getName())
                     .send(sender);
         });
-        // Printing the footer.
         translator.translate("npc_nearby_footer")
                 .replace("count", String.valueOf(count))
+                .replace("count_formatted", "· ".repeat(3 - String.valueOf(count).length()) + count)
                 .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
                 .send(sender);
     }
 

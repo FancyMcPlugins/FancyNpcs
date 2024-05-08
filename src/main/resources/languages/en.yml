@@ -170,14 +170,14 @@ messages:
   npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
 
   npc_list_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc list {secondaryColor}[filters...]"
-  npc_list_header: "<dark_gray>› <gray>Listing results for requested query:"
-  npc_list_entry: "<dark_gray>›  <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({location_x}, {location_y}, {location_z} in {world})"
-  npc_list_footer: "<dark_gray>› <gray>Showing {warningColor}{count}<gray> out of total {warningColor}{total}<gray> entries in all worlds."
+  npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"
+  npc_list_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({location_x}, {location_y}, {location_z} in {world})"
+  npc_list_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
 
   npc_nearby_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc nearby {secondaryColor}[filters...]"
-  npc_nearby_header: "<dark_gray>› <gray>Listing results for requested query:"
-  npc_nearby_entry: "<dark_gray>›  <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
-  npc_nearby_footer: "<dark_gray>› <gray>Showing {warningColor}{count}<gray> out of total {warningColor}{total}<gray> entries in your world."
+  npc_nearby_header: "<dark_gray><st>----------------</st>  <gray>Nearby Query Result  <dark_gray><st>-----------------</st><newline>"
+  npc_nearby_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
+  npc_nearby_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
 
   npc_list_failure_sort_requires_player: "<dark_gray>› {errorColor}This sort type cannot be used from the console."
   npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."

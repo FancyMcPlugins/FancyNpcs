@@ -27,19 +27,20 @@ public enum NpcArgument {
     public @NotNull Npc parse(final CommandContext<CommandSender> context, final CommandInput input) {
         // Reading next argument as single/literal String.
         final String value = input.readString();
-        // Getting the NPC from the manager.
+        // Getting the NPC from the manager. This can be name or optionally (under certain circumstances) UUID of the NPC.
         final @Nullable Npc npc = !isUUID(value)
+                // Not an UUID, getting NPC from name.
                 ? FancyNpcs.getInstance().getNpcManager().getNpc(value)
+                // Input is UUID, getting the NPC that way. If PLAYER NPCS FLAG is enabled, sender is required to have 'fancynpcs.admin' permission.
                 : !FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() || context.sender().hasPermission("fancynpcs.admin")
                         ? FancyNpcs.getInstance().getNpcManager().getNpcById(value)
                         : null;
-        // Throwing exception if NPC does not exist.
+        // Throwing exception if no NPC with given name or UUID exist.
         if (npc == null)
             throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replace("input", value).send(context.sender()));
-        // Throwing exception if PLAYER NPCS FLAG is enabled and sender (player) is not creator of the specified NPC.
+        // Throwing exception if PLAYER NPCS FLAG is enabled and sender is not creator of the specified NPC.
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && context.sender() instanceof Player sender && !npc.getData().getCreator().equals(sender.getUniqueId()))
             throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replace("input", value).send(context.sender()));
-        // Returning...
         return npc;
     }
 
@@ -50,12 +51,14 @@ public enum NpcArgument {
                 ? FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream()
                         .filter(npc -> npc.getData().getCreator().equals(sender.getUniqueId()))
                         .map(npc -> npc.getData().getName())
-                        .sorted()
                         .toList()
                 // PLAYER NPCS FLAG is disabled or sender is console; Showing all NPCs.
-                : FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName()).sorted().toList();
+                : FancyNpcs.getInstance().getNpcManager().getAllNpcs().stream().map(npc -> npc.getData().getName()).toList();
     }
 
+    /**
+     * Returns {@code true} if provided {@link String} can be converted to a valid {@link UUID}. Otherwise {@code false} is returned.
+     * */
     private static boolean isUUID(final @NotNull String string) {
         try {
             UUID.fromString(string);

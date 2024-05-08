@@ -35,7 +35,7 @@ public enum NearbyCMD {
             final Player sender,
             final @Nullable @Flag("radius") Long radius,
             final @Nullable @Flag("type") EntityType type,
-            final @Nullable @Flag("sort") SortType sort // NOTE: Replace with @Default once fixed.
+            final @Nullable @Flag("sort") SortType sort
     ) {
         Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
         // Getting location of the sender.

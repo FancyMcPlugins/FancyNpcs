@@ -34,7 +34,7 @@ public enum ListCMD {
     public void onCommand(
             final CommandSender sender,
             final @Nullable @Flag("type") EntityType type,
-            final @Nullable @Flag("sort") SortType sort // NOTE: Replace with @Default once fixed.
+            final @Nullable @Flag("sort") SortType sort
     ) {
         Stream<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
         // Excluding NPCs not created by the sender, if PLAYER_NPCS_FEATURE_FLAG is enabled and sender is a player.

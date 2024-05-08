@@ -29,7 +29,7 @@ public enum CreateCMD {
     @Permission("fancynpcs.command.npc.create")
     public void onCreateCommand(final @NotNull CommandSender sender,
                                 final @NotNull @Regex("^[A-Za-z0-9_-]*$") String name,
-                                final @Nullable @Flag("type") EntityType type, // NOTE: Replace with @Default once fixed.
+                                final @Nullable @Flag("type") EntityType type,
                                 final @Nullable @Flag("position") Location position,
                                 final @Nullable @Flag("world") World world
     ) {

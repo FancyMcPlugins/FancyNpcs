@@ -26,8 +26,8 @@ public enum CopyCMD {
 
     @Command(value = "npc copy <npc> <name>", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.copy")
-    public void onCommand(final Player sender, final Npc npc, final @Regex("^[^.]*$") String name) {
-        // Copying the NPC.
+    public void onCommand(final Player sender, final Npc npc, final @Regex("^[A-Za-z0-9_-]*$") String name) {
+        // Creating a copy of an NPC and all it's data. The only different thing is it's UUID.
         final Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(
                 new NpcData(
                         UUID.randomUUID().toString(),

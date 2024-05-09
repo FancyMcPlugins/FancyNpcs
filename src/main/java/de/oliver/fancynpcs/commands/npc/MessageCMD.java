@@ -47,7 +47,7 @@ public enum MessageCMD {
     public void onMessageAdd(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
-        // Exiting the command block in case banned command has been found in the message.
+        // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(finalMessage)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
             return;
@@ -55,7 +55,6 @@ public enum MessageCMD {
         // Calling the event and adding message if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_ADD, finalMessage, sender).callEvent()) {
             npc.getData().getMessages().add(finalMessage);
-            // Sending success message to the sender.
             translator.translate("npc_message_add_success").replace("total", String.valueOf(npc.getData().getMessages().size())).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
@@ -75,7 +74,7 @@ public enum MessageCMD {
     public void onMessageSet(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/number_range") int number, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
-        // Sending error message in case banned command has been found in the message.
+        // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(finalMessage)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
             return;
@@ -87,7 +86,7 @@ public enum MessageCMD {
             translator.translate("npc_message_set_failure_list_is_empty").send(sender);
             return;
         }
-        // Sending error message Exiting command block if provided number is lower than 0 or higher than the list size.
+        // Sending error message if provided number is lower than 0 or higher than the list size.
         if (number < 1 || number > totalCount) {
             translator.translate("npc_message_set_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
             return;
@@ -97,7 +96,6 @@ public enum MessageCMD {
         // Calling the event and setting message if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SET, new Object[]{index, finalMessage}, sender).callEvent()) {
             npc.getData().getMessages().set(index, finalMessage);
-            // Sending success message to the sender.
             translator.translate("npc_message_set_success")
                     .replace("number", String.valueOf(number))
                     .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
@@ -111,7 +109,7 @@ public enum MessageCMD {
 
     @Command("npc message <npc> remove")
     @Permission("fancynpcs.command.npc.message.remove")
-    public void onMessageRemoveSyntax(final CommandSender sender, final Npc npc) {
+    public void onMessageRemove(final CommandSender sender, final Npc npc) {
         translator.translate("npc_message_remove_syntax").send(sender);
     }
 
@@ -125,7 +123,7 @@ public enum MessageCMD {
             translator.translate("npc_message_remove_failure_list_is_empty").send(sender);
             return;
         }
-        // Sending error message Exiting command block if provided number is lower than 0 or higher than the list size.
+        // Sending error message if provided number is lower than 0 or higher than the list size.
         if (number < 1 || number > totalCount) {
             translator.translate("npc_message_remove_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
             return;
@@ -137,7 +135,6 @@ public enum MessageCMD {
         // Calling the event and removing message if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_REMOVE, new Object[]{index, message}, sender).callEvent()) {
             npc.getData().getMessages().remove(index);
-            // Sending success message to the sender.
             translator.translate("npc_message_remove_success")
                     .replace("number", String.valueOf(number))
                     .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
@@ -172,18 +169,15 @@ public enum MessageCMD {
             translator.translate("npc_message_list_failure_empty").send(sender);
             return;
         }
-        // Sending header to the sender.
         translator.translate("npc_message_list_header").send(sender);
-        // Iterating over all messages attached to this NPC.
+        // Iterating over all messages attached to this NPC and sending them to the sender.
         for (int i = 0; i < npc.getData().getMessages().size(); i++) {
             final String message = npc.getData().getMessages().get(i);
-            // Sending message entry to the sender.
             translator.translate("npc_message_list_entry")
                     .replace("number", String.valueOf(i + 1))
                     .replace("message", message)
                     .send(sender);
         }
-        // Sending footer to the sender.
         translator.translate("npc_message_list_footer").send(sender);
     }
 
@@ -193,11 +187,10 @@ public enum MessageCMD {
     @Permission("fancynpcs.command.npc.message.send_randomly")
     public void onMessageSendRandomly(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
         final boolean finalState = state != null ? state : !npc.getData().isSendMessagesRandomly();
-        // ...
+        // Calling the event and setting send_randomly state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SEND_RANDOMLY, finalState, sender).callEvent()) {
             npc.getData().setSendMessagesRandomly(finalState);
             npc.updateForAll();
-            // Sending success message to the sender.
             translator.translate(finalState ? "npc_message_send_randomly_set_true" : "npc_message_send_randomly_set_false").replace("npc", npc.getData().getName()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
@@ -211,10 +204,9 @@ public enum MessageCMD {
         return NONE_SUGGESTIONS;
     }
 
-    @Suggestions("MessageCMD/number_range")
+    @Suggestions("MessageCMD/number_range") // Generates number range suggestions based on the number of messages.
     public List<String> suggestNumber(final CommandContext<CommandSender> context, final CommandInput input) {
         final Npc npc = context.getOrDefault("npc", null);
-        // Returning...
         return npc == null || npc.getData().getMessages().isEmpty()
                 ? Collections.emptyList()
                 : new ArrayList<>() {{

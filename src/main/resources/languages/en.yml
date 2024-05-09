@@ -198,10 +198,10 @@ messages:
   npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."
   npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer shown in player-list."
 
-  npc_message_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) add (none | message)"
+  npc_message_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) add (@none | message)"
   npc_message_add_success: "<dark_gray>› <gray>Message has been added. There is {warningColor}{total}<gray> messages in total."
 
-  npc_message_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) set (number) (none | message)"
+  npc_message_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) set (number) (@none | message)"
   npc_message_set_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> messages in total."
   npc_message_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
   npc_message_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."

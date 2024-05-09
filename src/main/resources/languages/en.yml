@@ -220,3 +220,25 @@ messages:
   npc_message_list_entry: " <#848484>{number}. <reset>{message}"
   npc_message_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
   npc_message_list_failure_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
+
+  npc_player_command_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) add (command)"
+  npc_player_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
+
+  npc_player_command_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) set (number) (command)"
+  npc_player_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
+  npc_player_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
+  npc_player_command_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
+
+  npc_player_command_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) remove (number)"
+  npc_player_command_remove_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> commands in total."
+  npc_player_command_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
+  npc_player_command_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
+
+  npc_player_command_clear_success: "<dark_gray>› <gray>Commands have been cleared. There was {warningColor}{total}<gray> commands in total."
+
+  npc_player_command_list_header: "<dark_gray><st>-----------------</st>  <gray>Player Commands  <dark_gray><st>-----------------</st><newline>"
+  npc_player_command_list_entry: " <#848484>{number}. <reset>{command}"
+  npc_player_command_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_player_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
+
+

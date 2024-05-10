@@ -2,7 +2,6 @@ package de.oliver.fancynpcs.commands;
 
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
-import de.oliver.fancynpcs.commands.arguments.NpcAttributeArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
 import de.oliver.fancynpcs.commands.npc.AttributeCMD;
 import de.oliver.fancynpcs.commands.npc.CollidableCMD;
@@ -63,7 +62,6 @@ public final class CloudCommandManager {
         this.annotationParser = new AnnotationParser<>(commandManager, CommandSender.class);
         // Registering parsers and suggestion providers.
         annotationParser.parse(NpcArgument.INSTANCE);
-        annotationParser.parse(NpcAttributeArgument.INSTANCE);
         // Registering exception handlers.
         commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(ReplyingParseException.class));
         commandManager.exceptionController().registerHandler(ReplyingParseException.class, context -> context.exception().runnable().run());

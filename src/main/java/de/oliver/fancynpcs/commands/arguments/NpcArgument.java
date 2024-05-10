@@ -23,7 +23,8 @@ public enum NpcArgument {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Parser(suggestions = "npc")
+    // This parser does not specify a name, making it default parser for the returned type.
+    @Parser(name = "", suggestions = "npc")
     public @NotNull Npc parse(final CommandContext<CommandSender> context, final CommandInput input) {
         // Reading next argument as single/literal String.
         final String value = input.readString();

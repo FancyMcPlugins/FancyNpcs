@@ -43,6 +43,10 @@ messages:
   command_invalid_integer: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid integer."
   command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{input}{errorColor} does not exist."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC {warningColor}{input}{errorColor} does not exist."
+  command_invalid_material: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid material."
+  command_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
+  command_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
+  command_invalid_equipment_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid slot."
   command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
   command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
@@ -78,11 +82,14 @@ messages:
     - "<dark_gray>› {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes turning state."
     - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) (attr) (value) <dark_gray>- <gray>Sets entity attribute."
     - "<dark_gray>› {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown."
-  npc_attribute_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) (attribute) (value)"
+
+  npc_attribute_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}set {secondaryColor}(attribute) (value)"
   npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
-  npc_attribute_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
-  npc_attribute_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
-  npc_attribute_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
+  npc_attribute_set_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
+  npc_attribute_list_header: "<dark_gray><st>--------------------</st>  <gray>Attributes  <dark_gray><st>--------------------</st><newline>"
+  npc_attribute_list_entry: " <dark_gray>› <#848484>{attribute}<dark_gray>: {warningColor}{value}"
+  npc_attribute_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_attribute_list_failure_empty: "<dark_gray>› {errorColor}There is no attributes set. Use {warningColor}/npc attribute (npc) set (attribute) (value){errorColor} to set an attribute."
 
   npc_collidable_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc collidable {secondaryColor}(npc) (state)"
   npc_collidable_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now collidable<gray>."
@@ -100,10 +107,15 @@ messages:
   npc_displayname_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using <reset>{name}<gray> as their display name."
   npc_displayname_set_empty: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer showing display name."
 
-  npc_equipment_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) (slot)"
-  npc_equipment_success: "<dark_gray>› <gray>NPC named {warningColor}{npc}<gray> has had their equipment updated."
-  npc_equipment_failure_invalid_slot: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid equipment slot."
-
+  npc_equipment_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (@hand | @none | item)"
+  npc_equipment_set_item: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been set to <reset><item><gray>."
+  npc_equipment_set_empty: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been removed."
+  npc_equipment_set_failure_invalid_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid equipment slot."
+  npc_equipment_clear_success: "<dark_gray>› <gray>Equipment has been cleared."
+  npc_equipment_list_header: "<dark_gray><st>--------------------</st>  <gray>Equipment  <dark_gray><st>--------------------</st><newline>"
+  npc_equipment_list_entry: " <#848484>{slot}<dark_gray>: <reset><item>"
+  npc_equipment_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_equipment_list_failure_empty: "<dark_gray>› {errorColor}There is no equipment slots set. Use {warningColor}/npc equipment (npc) set (slot) (@hand | @none | material){errorColor} to set an equipment slot."
 
   npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC {warningColor}{npc}<gray>... Still having issues? Please let us know."
 
@@ -138,18 +150,6 @@ messages:
     - "<dark_gray>› {primaryColor}Can't find what you're looking for?"
     - "<dark_gray>› <gray>Open the chat window to see all information."
     - ""
-
-  npc_info_playerCommands_header: "<dark_gray>› <gray>Player Commands:"
-  npc_info_playerCommands_entry: "<dark_gray>›   <reset>{command}"
-  npc_info_playerCommands_footer: " "
-
-  npc_info_serverCommands_header: "<dark_gray>› <gray>Server Commands:"
-  npc_info_serverCommands_entry: "<dark_gray>›   <reset>{command}"
-  npc_info_serverCommands_footer: " "
-
-  npc_info_attributes_header: "<dark_gray>› <gray>Attributes:"
-  npc_info_attributes_entry: "<dark_gray>›   <#848484>{attribute}<dark_gray>: {warningColor}{value}"
-  npc_info_attributes_footer: " "
 
   npc_interaction_cooldown_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (seconds)"
   npc_interaction_cooldown_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has had their interaction cooldown updated."
@@ -200,22 +200,17 @@ messages:
 
   npc_message_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) add (@none | message)"
   npc_message_add_success: "<dark_gray>› <gray>Message has been added. There is {warningColor}{total}<gray> messages in total."
-
   npc_message_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) set (number) (@none | message)"
   npc_message_set_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> messages in total."
   npc_message_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
   npc_message_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
-
   npc_message_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) remove (number)"
   npc_message_remove_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> messages in total."
   npc_message_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
   npc_message_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
-
   npc_message_clear_success: "<dark_gray>› <gray>Messages have been cleared. There was {warningColor}{total}<gray> messages in total."
-
   npc_message_send_randomly_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now sending messages randomly."
   npc_message_send_randomly_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer sending messages randomly."
-
   npc_message_list_header: "<dark_gray><st>--------------------</st>  <gray>Messages  <dark_gray><st>--------------------</st><newline>"
   npc_message_list_entry: " <#848484>{number}. <reset>{message}"
   npc_message_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
@@ -223,19 +218,15 @@ messages:
 
   npc_player_command_add_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) add (command)"
   npc_player_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
-
   npc_player_command_set_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) set (number) (command)"
   npc_player_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
   npc_player_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
   npc_player_command_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
-
   npc_player_command_remove_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) remove (number)"
   npc_player_command_remove_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> commands in total."
   npc_player_command_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
   npc_player_command_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
-
   npc_player_command_clear_success: "<dark_gray>› <gray>Commands have been cleared. There was {warningColor}{total}<gray> commands in total."
-
   npc_player_command_list_header: "<dark_gray><st>-----------------</st>  <gray>Player Commands  <dark_gray><st>-----------------</st><newline>"
   npc_player_command_list_entry: " <#848484>{number}. <reset>{command}"
   npc_player_command_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"

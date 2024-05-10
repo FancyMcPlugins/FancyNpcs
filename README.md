@@ -25,6 +25,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 - https://fancyplugins.de/ng/FancyNpcs/download/
 - Build from source
+- https://github.com/FancyMcPlugins/FancyNpcs/actions (GitHub Actions)
 
 ## Documentation
 

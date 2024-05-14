@@ -26,7 +26,7 @@ public class CatAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sleeping"),
+                List.of("standing", "sleeping", "sitting"),
                 List.of(EntityType.CAT),
                 CatAttributes::setPose
         ));
@@ -47,8 +47,21 @@ public class CatAttributes {
         Cat cat = ReflectionHelper.getEntity(npc);
 
         switch (value.toLowerCase()) {
-            case "standing" -> cat.setLying(false);
-            case "sleeping" -> cat.setLying(true);
+            case "standing" -> {
+                cat.setOrderedToSit(false);
+                cat.setInSittingPose(false, false);
+                cat.setLying(false);
+            }
+            case "sleeping" -> {
+                cat.setOrderedToSit(false);
+                cat.setInSittingPose(false, false);
+                cat.setLying(true);
+            }
+            case "sitting" -> {
+                cat.setLying(false);
+                cat.setOrderedToSit(true);
+                cat.setInSittingPose(true, false);
+            }
         }
     }
 

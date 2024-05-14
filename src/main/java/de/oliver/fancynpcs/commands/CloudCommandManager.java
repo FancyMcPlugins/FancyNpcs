@@ -30,7 +30,7 @@ import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
 import org.incendo.cloud.exception.ArgumentParseException;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -47,13 +47,13 @@ public final class CloudCommandManager {
 
     private final @NotNull FancyNpcs plugin;
 
-    private final @NotNull PaperCommandManager<CommandSender> commandManager;
+    private final @NotNull LegacyPaperCommandManager<CommandSender> commandManager;
     private final @NotNull AnnotationParser<CommandSender> annotationParser;
 
     public CloudCommandManager(final @NotNull FancyNpcs plugin, final boolean isBrigadier) {
         this.plugin = plugin;
-        // Creating instance of Cloud's PaperCommandManager, which is used for anything command-related.
-        this.commandManager = PaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
+        // Creating instance of Cloud's LegacyPaperCommandManager, which is used for anything command-related.
+        this.commandManager = LegacyPaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
         // Registering Brigadier, if available.
         if (isBrigadier && commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER)) {
             commandManager.registerBrigadier();
@@ -110,7 +110,7 @@ public final class CloudCommandManager {
     /**
      * Returns the internal {@link PaperCommandManager} associated with this instance of {@link CloudCommandManager}.
      */
-    public @NotNull PaperCommandManager<CommandSender> getCommandManager() {
+    public @NotNull LegacyPaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;
     }
 

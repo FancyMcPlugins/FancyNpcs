@@ -25,7 +25,7 @@ allprojects {
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
-        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
+        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
@@ -42,9 +42,9 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-    implementation("org.incendo:cloud-core:${findProperty("cloudVersion")}")
-    implementation("org.incendo:cloud-paper:${findProperty("cloudVersion")}")
-    implementation("org.incendo:cloud-annotations:${findProperty("cloudVersion")}")
+    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
+    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
+    implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }

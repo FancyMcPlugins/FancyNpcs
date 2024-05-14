@@ -54,6 +54,7 @@ public class CopyCMD implements Subcommand {
                         npc.getData().isShowInTab(),
                         npc.getData().isSpawnEntity(),
                         npc.getData().isCollidable(),
+                        npc.getData().isSilent(),
                         npc.getData().isGlowing(),
                         npc.getData().getGlowingColor(),
                         npc.getData().getType(),

@@ -234,6 +234,8 @@ public class Npc_1_19_4 extends Npc {
             serverPlayer.connection.send(playerInfoPacket);
         }
 
+        npc.setSilent(data.isSilent());
+
         npc.setGlowingTag(data.isGlowing());
 
         if (data.getEquipment() != null && data.getEquipment().size() > 0) {

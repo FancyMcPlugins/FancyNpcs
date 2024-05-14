@@ -42,6 +42,7 @@ public class InfoCMD implements Subcommand {
         MessageHelper.info(receiver, " - Is glowing: <gray>" + npc.getData().isGlowing());
         MessageHelper.info(receiver, " - Glowing color: <gray>" + npc.getData().getGlowingColor().toString());
         MessageHelper.info(receiver, " - Is collidable: <gray>" + npc.getData().isCollidable());
+        MessageHelper.info(receiver, " - Is silent: <gray>" + npc.getData().isSilent());
         MessageHelper.info(receiver, " - Interaction cooldown: <gray>" + npc.getData().getInteractionCooldown() + " seconds");
         MessageHelper.info(receiver, " - Server Command: <gray>" + npc.getData().getServerCommand());
 

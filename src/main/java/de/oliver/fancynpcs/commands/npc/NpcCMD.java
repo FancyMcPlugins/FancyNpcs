@@ -22,6 +22,7 @@ public class NpcCMD extends Command {
     private final Subcommand collidableCMD = new CollidableCMD();
     private final Subcommand displayNameCMD = new DisplayNameCMD();
     private final Subcommand equipmentCMD = new EquipmentCMD();
+    private final Subcommand silentCMD = new SilentCMD();
     private final Subcommand glowingCMD = new GlowingCMD();
     private final Subcommand glowingColorCMD = new GlowingColorCMD();
     private final Subcommand messageCMD = new MessageCMD();
@@ -79,6 +80,7 @@ public class NpcCMD extends Command {
             case "collidable" -> collidableCMD.tabcompletion(p, npc, args);
             case "displayname" -> displayNameCMD.tabcompletion(p, npc, args);
             case "equipment" -> equipmentCMD.tabcompletion(p, npc, args);
+            case "silent" -> silentCMD.tabcompletion(p, npc, args);
             case "glowing" -> glowingCMD.tabcompletion(p, npc, args);
             case "glowingcolor" -> glowingColorCMD.tabcompletion(p, npc, args);
             case "message" -> messageCMD.tabcompletion(p, npc, args);
@@ -122,6 +124,7 @@ public class NpcCMD extends Command {
             MessageHelper.info(sender, lang.get("npc-command-help-playerCommand"));
             MessageHelper.info(sender, lang.get("npc-command-help-serverCommand"));
             MessageHelper.info(sender, lang.get("npc-command-help-showInTab"));
+            MessageHelper.info(sender, lang.get("npc-command-help-silent"));
             MessageHelper.info(sender, lang.get("npc-command-help-glowing"));
             MessageHelper.info(sender, lang.get("npc-command-help-glowingColor"));
             MessageHelper.info(sender, lang.get("npc-command-help-collidable"));
@@ -212,6 +215,10 @@ public class NpcCMD extends Command {
 
             case "showintab" -> {
                 return showInTabCMD.run(sender, npc, args);
+            }
+
+            case "silent" -> {
+                return silentCMD.run(sender, npc, args);
             }
 
             case "glowing" -> {

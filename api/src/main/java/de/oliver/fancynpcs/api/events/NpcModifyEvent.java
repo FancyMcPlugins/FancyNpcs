@@ -92,6 +92,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         TYPE,
         ATTRIBUTE,
         COLLIDABLE,
+        SILENT,
         INTERACTION_COOLDOWN,
         MIRROR_SKIN,
     }

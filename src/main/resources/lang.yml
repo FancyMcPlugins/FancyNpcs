@@ -26,6 +26,7 @@ messages:
   npc-command-help-playerCommand: ' - /npc playerCommand (name) (none|command ...) <dark_gray>- <white>Executes the command on a player when interacting'
   npc-command-help-serverCommand: ' - /npc serverCommand (name) (none|command ...) <dark_gray>- <white>The command will be executed by the console when someone interacts with the npc'
   npc-command-help-showInTab: ' - /npc showInTab (name) (true|false) <dark_gray>- <white>Whether the NPC will be shown in tab-list or not'
+  npc-command-help-silent: ' - /npc silent (name) (true|false) <dark_gray>- <white>Whether the NPC will make sound or not'
   npc-command-help-glowing: ' - /npc glowing (name) (true|false) <dark_gray>- <white>Whether the NPC will glow or not'
   npc-command-help-glowingColor: ' - /npc glowingColor (name) (color) <dark_gray>- <white>The color of the glowing effect'
   npc-command-help-collidable: ' - /npc collidable (name) (true|false) <dark_gray>- <white>Whether the NPC will be collidable or not'
@@ -71,6 +72,8 @@ messages:
   npc-command-showInTab-same: Nothing has changed
   npc-command-showInTab-true: NPC will now be shown in tab
   npc-command-showInTab-false: NPC will no longer be shown in tab
+  npc-command-silent-true: NPC will no longer make sound
+  npc-command-silent-false: NPC will now make sound
   npc-command-glowing-true: NPC will now glow
   npc-command-glowing-false: NPC will no longer glow
   npc-command-glowingColor-invalid: Invalid color

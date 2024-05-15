@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 
 import java.text.DecimalFormat;
@@ -30,7 +31,8 @@ public enum MoveToCMD {
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull @Argument(suggestions = "relative_location") Location location,
-            final @Nullable World world
+            final @Nullable World world,
+            final @Flag("look-in-my-direction") boolean shouldLookInSenderDirection
     ) {
         // Finalizing World argument. Player-like senders don't have to specify the 'world' argument which then defaults to the World sender is currently in.
         final World finalWorld = (world == null && sender instanceof Player player) ? player.getWorld() : world;
@@ -41,6 +43,9 @@ public enum MoveToCMD {
         }
         // Updating World of the finalized Location. This should never pass a null value.
         location.setWorld(finalWorld);
+        // Updating direction NPC will be looking at. Only if '--look-in-my-direction' is present and sender is player.
+        if (shouldLookInSenderDirection && sender instanceof Player player)
+            location.setDirection(player.getLocation().subtract(location).toVector());
         // Calling the event and re-locating NPC if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, sender).callEvent()) {
             npc.getData().setLocation(location);

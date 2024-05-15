@@ -33,7 +33,7 @@ public class PlayerAttributes {
 
         Pose pose = Pose.valueOf(value.toUpperCase());
 
-        EntityDataAccessor<Pose> DATA_POSE = (EntityDataAccessor<Pose>) ReflectionUtils.getStaticValue(Entity.class, "as"); // DATA_POSE
+        EntityDataAccessor<Pose> DATA_POSE = (EntityDataAccessor<Pose>) ReflectionUtils.getStaticValue(Entity.class, "DATA_POSE"); // DATA_POSE
         player.getEntityData().set(DATA_POSE, pose);
     }
 

@@ -24,6 +24,13 @@ public class ParrotAttributes {
                 ParrotAttributes::setVariant
         ));
 
+        attributes.add(new NpcAttribute(
+                "pose",
+                List.of("standing", "sitting", "dancing"),
+                List.of(EntityType.PARROT),
+                ParrotAttributes::setPose
+        ));
+
         return attributes;
     }
 
@@ -32,6 +39,26 @@ public class ParrotAttributes {
 
         Parrot.Variant variant = Parrot.Variant.valueOf(value.toUpperCase());
         parrot.setVariant(variant);
+    }
+
+    private static void setPose(Npc npc, String value) {
+        Parrot parrot = ReflectionHelper.getEntity(npc);
+
+        switch (value.toLowerCase()) {
+            case "standing" -> {
+                parrot.setOrderedToSit(false);
+                parrot.setInSittingPose(false, false);
+            }
+            case "dancing" -> {
+                parrot.setOrderedToSit(false);
+                parrot.setInSittingPose(false, false);
+                parrot.setRecordPlayingNearby(parrot.blockPosition(), true);
+            }
+            case "sitting" -> {
+                parrot.setOrderedToSit(true);
+                parrot.setInSittingPose(true, false);
+            }
+        }
     }
 
 }

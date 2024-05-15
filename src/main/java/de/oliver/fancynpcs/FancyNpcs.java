@@ -12,6 +12,7 @@ import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancylib.serverSoftware.schedulers.BukkitScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.serverSoftware.schedulers.FoliaScheduler;
+import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.TextConfig;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.versionFetcher.MasterVersionFetcher;
@@ -153,7 +154,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
         translator.loadLanguages(getDataFolder().getAbsolutePath());
-        translator.setSelectedLanguage(translator.getFallbackLanguage()); // WIP: Make it configurable.
+        final Language selectedLanguage = translator.getLanguages().stream()
+                .filter(language -> language.getLanguageName().equals(config.getLanguage()))
+                .findFirst().orElse(translator.getFallbackLanguage());
+        translator.setSelectedLanguage(selectedLanguage);
 
         versionConfig.load();
 
@@ -222,8 +226,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
-        // Creating new instance of CloudCommandManager and registering commands.
-        commandManager = new CloudCommandManager(this, false).registerCommands();
+        // Creating new instance of CloudCommandManager and registering all needed components.
+        // NOTE: Brigadier is disabled by default. More detailed information about that can be found in CloudCommandManager class.
+        commandManager = new CloudCommandManager(this, false)
+                .registerArguments()
+                .registerExceptionHandlers()
+                .registerCommands();
     }
 
     @Override

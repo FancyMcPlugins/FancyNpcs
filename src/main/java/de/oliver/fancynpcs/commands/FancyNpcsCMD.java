@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
@@ -15,12 +16,6 @@ public enum FancyNpcsCMD {
     private final FancyNpcs plugin = FancyNpcs.getInstance();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("fancynpcs")
-    @Permission("fancynpcs.command.fancynpcs")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("fancynpcs_syntax").send(sender);
-    }
-
     @Command("fancynpcs version")
     @Permission("fancynpcs.command.fancynpcs.version")
     public void onVersion(final CommandSender sender) {
@@ -32,11 +27,15 @@ public enum FancyNpcsCMD {
     public void onReload(final CommandSender sender) {
         // Reloading all defined languages.
         translator.loadLanguages(plugin.getDataFolder().getAbsolutePath());
-        // Reloading configuration
+        // Reloading plugin configuration.
         plugin.getFancyNpcConfig().reload();
-        // Updating the selected language obtained from configuration.
-        translator.setSelectedLanguage(translator.getFallbackLanguage()); // WIP: Make it configurable.
+        // Getting the selected language from configuration. Defaults to fallback language.
+        final Language selectedLanguage = translator.getLanguages().stream()
+                .filter(language -> language.getLanguageName().equals(plugin.getFancyNpcConfig().getLanguage()))
+                .findFirst().orElse(translator.getFallbackLanguage());
+        translator.setSelectedLanguage(selectedLanguage);
         // Reloading all NPCs.
+        // NOTE: This sometimes creates duplicated NPCs on the client-side.
         plugin.getNpcManagerImpl().reloadNpcs();
         // Sending success message to the sender.
         translator.translate("fancynpcs_reload_success").send(sender);

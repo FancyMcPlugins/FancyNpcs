@@ -18,6 +18,8 @@ import org.incendo.cloud.context.CommandInput;
 
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum AttributeCMD {
     INSTANCE; // SINGLETON
 
@@ -27,15 +29,15 @@ public enum AttributeCMD {
     @Command("npc attribute <npc> set <attribute> <attributeValue>")
     @Permission("fancynpcs.command.npc.attribute.set")
     public void onAttributeSet(
-            final CommandSender sender,
-            final Npc npc,
-            final NpcAttribute attribute,
-            final @Argument(parserName = "AttributeCMD/attribute_value") String attributeValue
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull NpcAttribute attribute,
+            final @NotNull @Argument(parserName = "AttributeCMD/attribute_value") String attributeValue
     ) {
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.ATTRIBUTE, new Object[]{attribute, attributeValue}, sender).callEvent()) {
             npc.getData().addAttribute(attribute, attributeValue);
             npc.updateForAll();
-            translator.translate("npc_attribute_set").replace("attribute", attribute.getName()).replace("value", attributeValue.toLowerCase()).send(sender);
+            translator.translate("npc_attribute_set").replace("attribute", attribute.getName()).replaceStripped("value", attributeValue.toLowerCase()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
@@ -43,7 +45,10 @@ public enum AttributeCMD {
 
     @Command("npc attribute <npc> list")
     @Permission("fancynpcs.command.npc.attribute.list")
-    public void onAttributeList(final CommandSender sender, final Npc npc) {
+    public void onAttributeList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Sending error message if the list is empty.
         if (npc.getData().getAttributes().isEmpty()) {
             translator.translate("npc_attribute_list_failure_empty").send(sender);
@@ -101,7 +106,7 @@ public enum AttributeCMD {
     public List<String> suggestAttributeValue(final CommandContext<CommandSender> context, final CommandInput input) {
         final Npc npc = context.get("npc");
         final NpcAttribute attribute = context.get("attribute");
-        return FancyNpcs.getInstance().getAttributeManager().getAttributeByName(npc.getData().getType(), attribute.getName()).getPossibleValues();
+        return attributeManager.getAttributeByName(npc.getData().getType(), attribute.getName()).getPossibleValues();
     }
 
 }

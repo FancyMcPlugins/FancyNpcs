@@ -39,30 +39,22 @@ public enum EquipmentCMD {
     private static final List<String> SLOT_SUGGESTIONS = Arrays.stream(NpcEquipmentSlot.values()).map(slot -> slot.name().toLowerCase()).toList();
     private static final List<String> MATERIAL_SUGGESTIONS = Registry.MATERIAL.stream().map(material -> material.key().asString()).toList();
 
-    @Command("npc equipment <npc> set")
-    @Permission("fancynpcs.command.npc.equipment.set")
-    public void onEquipmentSet(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_equipment_set_syntax").send(sender);
-    }
-
     @Command("npc equipment <npc> set <slot> <item>")
     @Permission("fancynpcs.command.npc.equipment.set")
     public void onEquipmentSet(
-            final CommandSender sender,
-            final Npc npc,
-            final NpcEquipmentSlot slot,
-            final @Argument(parserName = "EquipmentCMD/item") ItemStack item
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull NpcEquipmentSlot slot,
+            final @NotNull @Argument(parserName = "EquipmentCMD/item") ItemStack item
     ) {
-        if (!(sender instanceof Player) && item == null)
-            translator.translate("command_player_only").send(sender);
         // Calling the event and updating equipment if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, new Object[]{slot, item}, sender).callEvent()) {
             npc.getData().addEquipment(slot, item);
             npc.updateForAll();
-            translator.translate(item != null && item.getType() != Material.AIR ? "npc_equipment_set_item" : "npc_equipment_set_empty")
+            translator.translate(item.getType() != Material.AIR ? "npc_equipment_set_item" : "npc_equipment_set_empty")
                     .replace("npc", npc.getData().getName())
                     .replace("slot", getTranslatedSlot(slot))
-                    .addTagResolver(Placeholder.component("item", (item != null && item.getType() != Material.AIR) ? item.displayName().hoverEvent(item.asHoverEvent()) : Component.empty()))
+                    .addTagResolver(Placeholder.component("item", (item.getType() != Material.AIR) ? item.displayName().hoverEvent(item.asHoverEvent()) : Component.empty()))
                     .send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
@@ -71,7 +63,10 @@ public enum EquipmentCMD {
 
     @Command("npc equipment <npc> clear")
     @Permission("fancynpcs.command.npc.equipment.clear")
-    public void onEquipmentClear(final CommandSender sender, final Npc npc) {
+    public void onEquipmentClear(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Calling the event and clearing equipment if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, null, sender).callEvent()) {
             // Entries must be set to null manually because clearing the map would prevent equipment from being updated. (Npc#update checks if map is empty)
@@ -86,7 +81,10 @@ public enum EquipmentCMD {
 
     @Command("npc equipment <npc> list")
     @Permission("fancynpcs.command.npc.equipment.list")
-    public void onEquipmentList(final CommandSender sender, final Npc npc) {
+    public void onEquipmentList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Sending error message if the list is empty or all items are Material.AIR.
         if (npc.getData().getEquipment().isEmpty() || npc.getData().getEquipment().values().stream().allMatch(item -> item == null || item.getType() == Material.AIR)) {
             translator.translate("npc_equipment_list_failure_empty").send(sender);

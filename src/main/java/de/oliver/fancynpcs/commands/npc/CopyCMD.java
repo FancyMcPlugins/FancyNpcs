@@ -8,9 +8,11 @@ import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-import org.incendo.cloud.annotations.Regex;
 
 import java.util.UUID;
+import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 // TO-DO: Console support with --position and --world parameter flags.
 public enum CopyCMD {
@@ -18,15 +20,21 @@ public enum CopyCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command(value = "npc copy", requiredSender = Player.class)
-    @Permission("fancynpcs.command.npc.copy")
-    public void onDefault(final Player sender) {
-        translator.translate("npc_copy_syntax").send(sender);
-    }
+    private static final Pattern NPC_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9/_-]*$");
+
 
     @Command(value = "npc copy <npc> <name>", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.copy")
-    public void onCommand(final Player sender, final Npc npc, final @Regex("^[A-Za-z0-9_-]*$") String name) {
+    public void onCopy(
+            final @NotNull Player sender,
+            final @NotNull Npc npc,
+            final @NotNull String name
+    ) {
+        // Sending error message if name does not match configured pattern.
+        if (!NPC_NAME_PATTERN.matcher(name).find()) {
+            translator.translate("npc_create_failure_invalid_name").replaceStripped("name", name).send(sender);
+            return;
+        }
         // Creating a copy of an NPC and all it's data. The only different thing is it's UUID.
         final Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(
                 new NpcData(

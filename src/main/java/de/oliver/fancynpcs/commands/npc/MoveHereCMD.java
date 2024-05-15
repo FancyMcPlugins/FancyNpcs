@@ -9,21 +9,19 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
-// NOTE: Perhaps a better command could be added instead, which supports both - teleporting to the sender and setting coordinates.
+import org.jetbrains.annotations.NotNull;
+
 public enum MoveHereCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command(value = "npc move_here", requiredSender = Player.class)
-    @Permission("fancynpcs.command.npc.move_here")
-    public void onDefault(final Player sender) {
-        translator.translate("npc_move_here_syntax").send(sender);
-    }
-
     @Command(value = "npc move_here <npc>", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.move_here")
-    public void onCommand(final Player sender, final Npc npc) {
+    public void onCommand(
+            final @NotNull Player sender,
+            final @NotNull Npc npc
+    ) {
         final Location location = sender.getLocation();
         final String oldWorld = npc.getData().getLocation().getWorld().getName();
         // Calling the event and moving the NPc to location of the sender, if not cancelled.

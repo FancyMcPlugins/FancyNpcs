@@ -34,17 +34,13 @@ public enum MessageCMD {
     // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
     private static final List<String> NONE_SUGGESTIONS = List.of("@none");
 
-    /* MESSAGE ADD */
-
-    @Command("npc message <npc> add")
-    @Permission("fancynpcs.command.npc.message.add")
-    public void onMessageAdd(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_message_add_syntax").send(sender);
-    }
-
     @Command("npc message <npc> add <message>")
     @Permission("fancynpcs.command.npc.message.add")
-    public void onMessageAdd(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
+    public void onMessageAdd(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "MessageCMD/none") @Greedy String message
+    ) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Sending error message in case banned command has been found in the input.
@@ -61,17 +57,14 @@ public enum MessageCMD {
         }
     }
 
-    /* MESSAGE SET */
-
-    @Command("npc message <npc> set")
+    @Command("npc message <npc> set [number] [message]")
     @Permission("fancynpcs.command.npc.message.set")
-    public void onMessageSet(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_message_set_syntax").send(sender);
-    }
-
-    @Command("npc message <npc> set <number> <message>")
-    @Permission("fancynpcs.command.npc.message.set")
-    public void onMessageSet(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/number_range") int number, final @Argument(suggestions = "MessageCMD/none") @Greedy String message) {
+    public void onMessageSet(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "MessageCMD/number_range") Integer number,
+            final @NotNull @Argument(suggestions = "MessageCMD/none") @Greedy String message
+    ) {
         // Handling '@none' as an empty message.
         final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
         // Sending error message in case banned command has been found in the input.
@@ -105,17 +98,13 @@ public enum MessageCMD {
         }
     }
 
-    /* MESSAGE REMOVE */
-
-    @Command("npc message <npc> remove")
-    @Permission("fancynpcs.command.npc.message.remove")
-    public void onMessageRemove(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_message_remove_syntax").send(sender);
-    }
-
     @Command("npc message <npc> remove <number>")
     @Permission("fancynpcs.command.npc.message.remove")
-    public void onMessageRemove(final CommandSender sender, final Npc npc, final @Argument(suggestions = "MessageCMD/number_range") int number) {
+    public void onMessageRemove(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "MessageCMD/number_range") int number
+    ) {
         // Getting the total count of messages that are currently in the list.
         final int totalCount = npc.getData().getMessages().size();
         // Sending error message if the list is empty.
@@ -144,11 +133,12 @@ public enum MessageCMD {
         }
     }
 
-    /* MESSAGE CLEAR */
-
     @Command("npc message <npc> clear")
     @Permission("fancynpcs.command.npc.message.clear")
-    public void onMessageClear(final CommandSender sender, final Npc npc) {
+    public void onMessageClear(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         final int total = npc.getData().getMessages().size();
         // Calling the event and clearing messages if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_CLEAR, null, sender).callEvent()) {
@@ -159,11 +149,12 @@ public enum MessageCMD {
         }
     }
 
-    /* MESSAGE LIST */
-
     @Command("npc message <npc> list")
     @Permission("fancynpcs.command.npc.message.list")
-    public void onMessageList(final CommandSender sender, final Npc npc) {
+    public void onMessageList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Sending error message if the list is empty.
         if (npc.getData().getMessages().isEmpty()) {
             translator.translate("npc_message_list_failure_empty").send(sender);
@@ -181,11 +172,13 @@ public enum MessageCMD {
         translator.translate("npc_message_list_footer").send(sender);
     }
 
-    /* MESSAGE SEND_RANDOMLY */
-
     @Command("npc message <npc> send_randomly [state]")
     @Permission("fancynpcs.command.npc.message.send_randomly")
-    public void onMessageSendRandomly(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
+    public void onMessageSendRandomly(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
         final boolean finalState = state != null ? state : !npc.getData().isSendMessagesRandomly();
         // Calling the event and setting send_randomly state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SEND_RANDOMLY, finalState, sender).callEvent()) {
@@ -196,6 +189,7 @@ public enum MessageCMD {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }
     }
+
 
     /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
 
@@ -214,6 +208,7 @@ public enum MessageCMD {
                         add(String.valueOf(i + 1));
                 }};
     }
+
 
     /* UTILITY METHODS */
 

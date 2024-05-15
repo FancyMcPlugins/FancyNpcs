@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum ShowInTabCMD {
@@ -15,15 +16,13 @@ public enum ShowInTabCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc show_in_tab")
-    @Permission("fancynpcs.command.npc.show_in_tab")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_show_in_tab_syntax").send(sender);
-    }
-
     @Command("npc show_in_tab <npc> [state]")
     @Permission("fancynpcs.command.npc.show_in_tab")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
+    public void onCommand(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
         final boolean finalState = (state == null) ? !npc.getData().isShowInTab() : state;
         // Calling the event and updating the state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, finalState, sender).callEvent()) {

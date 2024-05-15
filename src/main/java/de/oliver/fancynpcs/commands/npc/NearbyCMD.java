@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum NearbyCMD {
@@ -32,7 +33,7 @@ public enum NearbyCMD {
     @Command(value = "npc nearby", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.nearby")
     public void onCommand(
-            final Player sender,
+            final @NotNull Player sender,
             final @Nullable @Flag("radius") Long radius,
             final @Nullable @Flag("type") EntityType type,
             final @Nullable @Flag("sort") SortType sort

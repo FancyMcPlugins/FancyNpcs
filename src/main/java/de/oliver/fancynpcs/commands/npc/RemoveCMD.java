@@ -6,29 +6,24 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcRemoveEvent;
 import de.oliver.fancynpcs.api.events.NpcStopLookingEvent;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
-import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public enum RemoveCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc remove")
-    @Permission("fancynpcs.command.npc.remove")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_remove_syntax").send(sender);
-    }
-
     @Command("npc remove <npc>")
     @Permission("fancynpcs.command.npc.remove")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable @Flag("creator") OfflinePlayer creator) {
+    public void onRemove(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Calling the event and removing the NPC if not cancelled.
         if (new NpcRemoveEvent(npc, sender).callEvent()) {
             npc.removeForAll();

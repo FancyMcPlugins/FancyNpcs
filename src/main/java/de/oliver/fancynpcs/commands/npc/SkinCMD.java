@@ -33,24 +33,13 @@ public enum SkinCMD {
 
     private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-zA-Z0-9_]{3,16}$");
 
-    @Suggestions("skin")
-    public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
-        return new ArrayList<>() {{
-            add("@none");
-            add("@mirror");
-            Bukkit.getOnlinePlayers().stream().map(Player::getName).forEach(this::add);
-        }};
-    }
-
-    @Command("npc skin")
-    @Permission("fancynpcs.command.npc.skin")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_skin_syntax").send(sender);
-    }
-
     @Command("npc skin <npc> <skin>")
     @Permission("fancynpcs.command.npc.skin")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Argument(suggestions = "skin") String skin) {
+    public void onSkin(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "SkinCMD/skin") String skin
+    ) {
         // Exiting command block if specified NPC is not of a PLAYER type.
         if (npc.getData().getType() != EntityType.PLAYER) {
             translator.translate("command_unsupported_npc_type").send(sender);
@@ -137,6 +126,15 @@ public enum SkinCMD {
         } else {
             translator.translate("npc_skin_failure_invalid_name_or_url").replace("input", skin).send(sender);
         }
+    }
+
+    @Suggestions("SkinCMD/skin")
+    public List<String> suggestSkin(final CommandContext<CommandSender> context, final CommandInput input) {
+        return new ArrayList<>() {{
+            add("@none");
+            add("@mirror");
+            Bukkit.getOnlinePlayers().stream().map(Player::getName).forEach(this::add);
+        }};
     }
 
     // Returns 'true' if String can be parsed to an URL or 'false' otherwise.

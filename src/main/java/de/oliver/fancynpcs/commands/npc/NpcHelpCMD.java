@@ -14,36 +14,20 @@ import org.incendo.cloud.context.CommandInput;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public enum NpcCMD {
+public enum NpcHelpCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Suggestions("page")
-    public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
-        // Getting the (full) help contents.
-        final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
-        // Calculating max page number.
-        final int maxPage = contents.getRawMessages().size() / 6 + 1;
-        // Returning suggestions...
-        return new ArrayList<>() {{
-            for (int i = 1; i <= maxPage; i++) {
-                add(String.valueOf(i));
-            }}
-        };
-    }
-
-    @Command("npc")
-    @Permission("fancynpcs.command.npc")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("command_incomplete_usage").send(sender);
-    }
-
     @Command("npc help [page]")
     @Permission("fancynpcs.command.npc")
-    public void onHelp(final CommandSender sender, final @Argument(suggestions = "page") @Nullable Integer page) {
+    public void onHelp(
+            final @NotNull CommandSender sender,
+            final @Nullable @Argument(suggestions = "NpcHelpCMD/page") Integer page
+    ) {
         // Getting the (full) help contents.
         final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
         // Calculating max page number.
@@ -58,6 +42,20 @@ public enum NpcCMD {
         requestedContents.send(sender);
         // Sending help footer to the sender.
         translator.translate("npc_help_page_footer").replace("page", String.valueOf(finalPage)).replace("max_page", String.valueOf(maxPage)).send(sender);
+    }
+
+    @Suggestions("NpcHelpCMD/page")
+    public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
+        // Getting the (full) help contents.
+        final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
+        // Calculating max page number.
+        final int maxPage = contents.getRawMessages().size() / 6 + 1;
+        // Returning suggestions...
+        return new ArrayList<>() {{
+            for (int i = 1; i <= maxPage; i++) {
+                add(String.valueOf(i));
+            }}
+        };
     }
 
 }

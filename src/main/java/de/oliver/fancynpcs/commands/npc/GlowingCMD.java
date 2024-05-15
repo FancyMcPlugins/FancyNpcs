@@ -10,6 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum GlowingCMD {
@@ -17,15 +18,13 @@ public enum GlowingCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc glowing")
-    @Permission("fancynpcs.command.npc.glowing")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_glowing_syntax").send(sender);
-    }
-
     @Command("npc glowing <npc> [color]")
     @Permission("fancynpcs.command.npc.glowing")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable GlowingColor color) {
+    public void onGlowing(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable GlowingColor color
+    ) {
         // Handling 'toggle' state, which means inverting the current state.
         if (color == null) {
             // Inverting the current glowing state, so the command works like a toggle.

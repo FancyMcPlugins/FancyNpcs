@@ -9,39 +9,35 @@ import org.bukkit.entity.EntityType;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum TypeCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc type")
-    @Permission("fancynpcs.command.npc.type")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_type_syntax").send(sender);
-    }
-
     @Command("npc type <npc> <type>")
     @Permission("fancynpcs.command.npc.type")
-    public boolean onCommand(final CommandSender sender, final Npc npc, final EntityType type) {
+    public void onType(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull EntityType type
+    ) {
         // Calling the event and updating the type if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TYPE, type, sender).callEvent()) {
             npc.getData().setType(type);
-            if (type != EntityType.PLAYER) {
-                npc.getData().setGlowing(false);
+            // Removing NPC from the player-list if new type is not EntityType.PLAYER.
+            if (type != EntityType.PLAYER)
                 npc.getData().setShowInTab(false);
-                if (npc.getData().getEquipment() != null) {
-                    npc.getData().getEquipment().clear();
-                }
-            }
-
+            // Clearing equipment if new type is not a living entity or equipment list is empty.
+            if (!type.isAlive() && npc.getData().getEquipment() != null)
+                npc.getData().getEquipment().clear();
             npc.removeForAll();
             npc.create();
             npc.spawnForAll();
-            //MessageHelper.success(receiver, lang.get("npc-command-type-updated", "npc", npc.getData().getName(), "type", type.name().toLowerCase()));
+            translator.translate("npc_type_success").replace("npc", npc.getData().getName()).replace("type", type.name().toLowerCase()).send(sender);
         } else {
-            //MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 }

@@ -8,20 +8,19 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
+
 public enum TeleportCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command(value = "npc teleport", requiredSender = Player.class)
-    @Permission("fancynpcs.command.npc.teleport")
-    public void onDefault(final Player sender) {
-        translator.translate("npc_teleport_syntax").send(sender);
-    }
-
     @Command(value = "npc teleport <npc>", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.teleport")
-    public void onCommand(final Player sender, final Npc npc) {
+    public void onTeleport(
+            final @NotNull Player sender,
+            final @NotNull Npc npc
+    ) {
         final Location location = npc.getData().getLocation();
         // Checking if the world is still loaded.
         if (location.getWorld() == null) {

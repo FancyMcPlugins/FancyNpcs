@@ -14,6 +14,7 @@ import org.incendo.cloud.annotations.Permission;
 
 import java.text.DecimalFormat;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum MoveToCMD {
@@ -23,18 +24,12 @@ public enum MoveToCMD {
 
     private static final DecimalFormat COORDS_FORMAT = new DecimalFormat("#.##");
 
-    @Command("npc move_to")
-    @Permission("fancynpcs.command.npc.move_to")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_move_to_syntax").send(sender);
-    }
-
     @Command("npc move_to <npc> <location> [world]")
     @Permission("fancynpcs.command.npc.move_to")
     public void onCommand(
-            final CommandSender sender,
-            final Npc npc,
-            final @Argument(suggestions = "relative_location") Location location,
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "relative_location") Location location,
             final @Nullable World world
     ) {
         // Finalizing World argument. Player-like senders don't have to specify the 'world' argument which then defaults to the World sender is currently in.

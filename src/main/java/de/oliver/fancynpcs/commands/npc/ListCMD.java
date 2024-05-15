@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum ListCMD {
@@ -31,7 +32,7 @@ public enum ListCMD {
     @Command("npc list")
     @Permission("fancynpcs.command.npc.list")
     public void onCommand(
-            final CommandSender sender,
+            final @NotNull CommandSender sender,
             final @Nullable @Flag("type") EntityType type,
             final @Nullable @Flag("sort") SortType sort
     ) {

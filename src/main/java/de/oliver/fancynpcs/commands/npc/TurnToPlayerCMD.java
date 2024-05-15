@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum TurnToPlayerCMD {
@@ -15,26 +16,20 @@ public enum TurnToPlayerCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc turn_to_player")
-    @Permission("fancynpcs.command.npc.turn_to_player")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_turn_to_player_syntax").send(sender);
-    }
-
     @Command("npc turn_to_player <npc> [state]")
     @Permission("fancynpcs.command.npc.turn_to_player")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
+    public void onTurnToPlayer(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
         final boolean finalState = (state == null) ? !npc.getData().isTurnToPlayer() : state;
         // Calling the event and updating the state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, finalState, sender).callEvent()) {
-            // Updating the state.
             npc.getData().setTurnToPlayer(finalState);
-            // Sending message to the sender.
             translator.translate(finalState ? "npc_turn_to_player_set_true" : "npc_turn_to_player_set_false").replace("npc", npc.getData().getName()).send(sender);
-            // Returning from the command block.
             return;
         }
-        // Otherwise, sending error message to the sender.
         translator.translate("command_npc_modification_cancelled").send(sender);
     }
 

@@ -24,17 +24,13 @@ public enum PlayerCommandCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    /* PLAYER_COMMAND ADD */
-
-    @Command("npc player_command <npc> add")
-    @Permission("fancynpcs.command.npc.player_command.add")
-    public void onPlayerCommandAdd(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_player_command_add_syntax").send(sender);
-    }
-
     @Command("npc player_command <npc> add <command>")
     @Permission("fancynpcs.command.npc.player_command.add")
-    public void onPlayerCommandAdd(final CommandSender sender, final Npc npc, final @Greedy String command) {
+    public void onPlayerCommandAdd(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Greedy String command
+    ) {
         // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(command)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
@@ -49,17 +45,14 @@ public enum PlayerCommandCMD {
         }
     }
 
-    /* PLAYER_COMMAND SET */
-
-    @Command("npc player_command <npc> set")
-    @Permission("fancynpcs.command.npc.player_command.set")
-    public void onPlayerCommandSet(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_player_command_set_syntax").send(sender);
-    }
-
     @Command("npc player_command <npc> set <number> <command>")
     @Permission("fancynpcs.command.npc.player_command.set")
-    public void onPlayerCommandSet(final CommandSender sender, final Npc npc, final @Argument(suggestions = "PlayerCommandCMD/number_range") int number, final @Greedy String command) {
+    public void onPlayerCommandSet(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "PlayerCommandCMD/number_range") int number,
+            final @NotNull @Greedy String command
+    ) {
         // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(command)) {
             translator.translate("command_input_contains_blocked_command").send(sender);
@@ -91,17 +84,13 @@ public enum PlayerCommandCMD {
         }
     }
 
-    /* PLAYER_COMMAND REMOVE */
-
-    @Command("npc player_command <npc> remove")
-    @Permission("fancynpcs.command.npc.player_command.remove")
-    public void onPlayerCommandRemove(final CommandSender sender, final Npc npc) {
-        translator.translate("npc_player_command_remove_syntax").send(sender);
-    }
-
     @Command("npc player_command <npc> remove <number>")
     @Permission("fancynpcs.command.npc.player_command.remove")
-    public void onPlayerCommandRemove(final CommandSender sender, final Npc npc, final @Argument(suggestions = "PlayerCommandCMD/number_range") int number) {
+    public void onPlayerCommandRemove(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "PlayerCommandCMD/number_range") int number
+    ) {
         // Getting the total count of player commands that are currently in the list.
         final int totalCount = npc.getData().getPlayerCommands().size();
         // Sending error message if the list is empty.
@@ -131,11 +120,12 @@ public enum PlayerCommandCMD {
         }
     }
 
-    /* PLAYER_COMMAND CLEAR */
-
     @Command("npc player_command <npc> clear")
     @Permission("fancynpcs.command.npc.player_command.clear")
-    public void onPlayerCommandClear(final CommandSender sender, final Npc npc) {
+    public void onPlayerCommandClear(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         final int total = npc.getData().getPlayerCommands().size();
         // Calling the event and clearing player commands if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND_CLEAR, null, sender).callEvent()) {
@@ -146,11 +136,12 @@ public enum PlayerCommandCMD {
         }
     }
 
-    /* PLAYER_COMMAND LIST */
-
     @Command("npc player_command <npc> list")
     @Permission("fancynpcs.command.npc.player_command.list")
-    public void onPlayerCommandList(final CommandSender sender, final Npc npc) {
+    public void onPlayerCommandList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
         // Sending error message if the list is empty.
         if (npc.getData().getPlayerCommands().isEmpty()) {
             translator.translate("npc_player_command_list_failure_empty").send(sender);

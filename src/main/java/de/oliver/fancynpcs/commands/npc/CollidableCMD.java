@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public enum CollidableCMD {
@@ -15,15 +16,13 @@ public enum CollidableCMD {
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Command("npc collidable")
-    @Permission("fancynpcs.command.npc.collidable")
-    public void onDefault(final CommandSender sender) {
-        translator.translate("npc_collidable_syntax").send(sender);
-    }
-
     @Command("npc collidable <npc> [state]")
     @Permission("fancynpcs.command.npc.collidable")
-    public void onCommand(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
+    public void onCollidable(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
         // Finalizing the state. If no state has been specified, the current one is inverted.
         final boolean finalState = (state == null) ? !npc.getData().isCollidable() : state;
         // Calling the event and updating the state if not cancelled.

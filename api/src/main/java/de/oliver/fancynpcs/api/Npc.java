@@ -165,7 +165,7 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommand(), data.getOnClick(), player, interactionType);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommands(), data.getOnClick(), player, interactionType);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -190,8 +190,7 @@ public abstract class Npc {
         }
 
         // serverCommand
-        if (data.getServerCommand() != null && data.getServerCommand().length() > 0) {
-            String command = data.getServerCommand();
+        for (String command : data.getServerCommands()) {
             command = command.replace("{player}", player.getName());
 
             String finalCommand = ChatColorHandler.translate(command, player, List.of(PlaceholderAPIParser.class));

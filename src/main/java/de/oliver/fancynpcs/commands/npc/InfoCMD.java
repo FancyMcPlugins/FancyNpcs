@@ -10,18 +10,16 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-
-import org.jetbrains.annotations.NotNull;
 
 public enum InfoCMD {
     INSTANCE; // SINGLETON
 
-    private final Translator translator = FancyNpcs.getInstance().getTranslator();
-
     private static final DecimalFormat COORDS_FORMAT = new DecimalFormat("#.##");
     private static final DecimalFormat SECONDS_FORMAT = new DecimalFormat("#,###.#");
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Command("npc info <npc>")
     @Permission("fancynpcs.command.npc.info")
@@ -54,7 +52,7 @@ public enum InfoCMD {
                 .replace("interaction_cooldown", SECONDS_FORMAT.format(npc.getData().getInteractionCooldown()) + "s")
                 .replace("messages_total", String.valueOf(npc.getData().getMessages().size()))
                 .replace("player_commands_total", String.valueOf(npc.getData().getPlayerCommands().size()))
-                .replace("server_commands_total", String.valueOf(npc.getData().getServerCommand() == null ? 0 : 1)) // NOTE: PLACEHOLDER; MULTI COMMAND SUPPORT NOT IMPLEMENTED YET
+                .replace("server_commands_total", String.valueOf(npc.getData().getServerCommands().size()))
                 .send(sender);
     }
 

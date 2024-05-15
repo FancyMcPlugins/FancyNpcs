@@ -5,12 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
-
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Is fired when a player interacts with a NPC
@@ -23,7 +22,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @Nullable
     private final List<String> playerCommands;
     @Nullable
-    private final String serverCommand;
+    private final List<String> serverCommands;
     @NotNull
     private final Consumer<Player> onClick;
     @NotNull
@@ -31,10 +30,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final InteractionType interactionType;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player, @NotNull InteractionType interactionType) {
+    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable List<String> serverCommands, @NotNull Consumer<Player> onClick, @NotNull Player player, @NotNull InteractionType interactionType) {
         this.npc = npc;
         this.playerCommands = playerCommands;
-        this.serverCommand = serverCommand;
+        this.serverCommands = serverCommands;
         this.onClick = onClick;
         this.player = player;
         this.interactionType = interactionType;
@@ -59,10 +58,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the command that the server will run
+     * @return the commands that the server will run
      */
-    public @Nullable String getServerCommand() {
-        return serverCommand;
+    public @Nullable List<String> getServerCommands() {
+        return serverCommands;
     }
 
     /**
@@ -104,7 +103,9 @@ public class NpcInteractEvent extends Event implements Cancellable {
     public enum InteractionType {
         LEFT_CLICK,
         RIGHT_CLICK,
-        /** {@link InteractionType#CUSTOM InteractionType#CUSTOM} represents interactions invoked by the API. */
+        /**
+         * {@link InteractionType#CUSTOM InteractionType#CUSTOM} represents interactions invoked by the API.
+         */
         CUSTOM
     }
 

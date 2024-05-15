@@ -26,9 +26,9 @@ public enum GlowingCMD {
     @Command("npc glowing <npc> [color]")
     @Permission("fancynpcs.command.npc.glowing")
     public void onCommand(final CommandSender sender, final Npc npc, final @Nullable GlowingColor color) {
-        // Handling 'toggle' state.
+        // Handling 'toggle' state, which means inverting the current state.
         if (color == null) {
-            // Inverting the current glowing state, so it works like a toggle.
+            // Inverting the current glowing state, so the command works like a toggle.
             final boolean isGlowingToggled = !npc.getData().isGlowing();
             // Calling the event and updating the state if not cancelled.
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, isGlowingToggled, sender).callEvent()) {
@@ -39,7 +39,7 @@ public enum GlowingCMD {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
         }
-        // Handling 'disabled' state.
+        // Handling 'disabled' state, which means disabling glowing state.
         else if (color == GlowingColor.DISABLED) {
             // Calling the event and updating the state if not cancelled.
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, false, sender).callEvent()) {

@@ -24,14 +24,12 @@ public enum CollidableCMD {
     @Command("npc collidable <npc> [state]")
     @Permission("fancynpcs.command.npc.collidable")
     public void onCommand(final CommandSender sender, final Npc npc, final @Nullable Boolean state) {
+        // Finalizing the state. If no state has been specified, the current one is inverted.
         final boolean finalState = (state == null) ? !npc.getData().isCollidable() : state;
         // Calling the event and updating the state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, finalState, sender).callEvent()) {
-            // Updating the state.
             npc.getData().setCollidable(finalState);
-            // Sending message to the sender.
             translator.translate(finalState ? "npc_collidable_set_true" : "npc_collidable_set_false").replace("npc", npc.getData().getName()).send(sender);
-            // Returning from the command block.
             return;
         }
         // Otherwise, sending error message to the sender.

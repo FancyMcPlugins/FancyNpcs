@@ -1,6 +1,6 @@
 ![](fancynpcs_title.png)
 
-#                           
+#                            
 
 ![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
 [![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
@@ -23,7 +23,7 @@ _Using [paper](https://papermc.io/downloads) is highly recommended_
 
 ### Development builds
 
-- https://fancyplugins.de/ng/FancyNpcs/download/
+- https://fancyplugins.de/FancyNpcs/download/
 - Build from source
 
 ## Documentation

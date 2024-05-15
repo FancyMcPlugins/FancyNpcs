@@ -2,9 +2,8 @@ package de.oliver.fancynpcs.api;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.RandomUtils;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 import me.dave.chatcolorhandler.ChatColorHandler;
@@ -32,7 +31,7 @@ public abstract class Npc {
     protected final Map<UUID, Boolean> isVisibleForPlayer = new ConcurrentHashMap<>();
     protected final Map<UUID, Boolean> isLookingAtPlayer = new ConcurrentHashMap<>();
     protected final Map<UUID, Long> lastPlayerInteraction = new ConcurrentHashMap<>();
-    private final LanguageConfig lang = FancyNpcsPlugin.get().getLanguageConfig();
+    private final Translator translator = FancyNpcsPlugin.get().getTranslator();
     protected NpcData data;
     protected boolean saveToFile;
 
@@ -155,8 +154,7 @@ public abstract class Npc {
                 if (nextAllowedInteraction > System.currentTimeMillis()) {
                     if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
                         float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
-                        String cooldownMessage = lang.get("on-interaction-cooldown", "time", DECIMAL_FORMAT.format(timeLeft));
-                        MessageHelper.warning(player, cooldownMessage);
+                        translator.translate("interaction_on_cooldown").replace("time", DECIMAL_FORMAT.format(timeLeft)).send(player);
                     }
                     return;
                 }

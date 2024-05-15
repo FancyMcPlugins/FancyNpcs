@@ -275,6 +275,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return commandManager;
     }
 
+    @Override
     public Translator getTranslator() {
         return translator;
     }

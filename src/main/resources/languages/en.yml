@@ -7,6 +7,7 @@ messages:
   enabled: "{successColor}Enabled"
   false: "{errorColor}False"
   disabled: "{errorColor}Disabled"
+
   # Common (Equipment Slots)
   main_hand: "Main Hand"
   off_hand: "Off Hand"
@@ -14,6 +15,7 @@ messages:
   chest: "Chest"
   legs: "Legs"
   feet: "Feet"
+
   # Common (Colors)
   color_black: "<dark_gray>Black"
   color_dark_blue: "<dark_blue>Dark Blue"
@@ -31,8 +33,10 @@ messages:
   color_light_purple: "<light_purple>Light Purple"
   color_yellow: "<yellow>Yellow"
   color_white: "<white>White"
+
   # Common (Other)
-  interaction_on_cooldown: ""
+  interaction_on_cooldown: "<dark_gray>› {errorColor}You're currently on cooldown. {time} seconds remaining."
+
   # Commands (Common Replies)
   command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
   command_wrong_usage: "<dark_gray>› {errorColor}This sub-command does not exist. Use {warningColor}/npc help{errorColor} to view available commands."
@@ -50,8 +54,10 @@ messages:
   command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
   command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
+
   # Generic Syntax Message (syntax is provided by Cloud and may not be human-friendly)
   command_invalid_syntax_generic: "<dark_gray>› <gray>Syntax: {warningColor}/{syntax}"
+
   # Command Syntaxes
   command_syntax:
     fancynpcs: "<dark_gray>› <gray>Syntax: {primaryColor}/fancynpcs {secondaryColor}(version | reload | save | feature_flags)"
@@ -89,13 +95,16 @@ messages:
     npc_teleport: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc)"
     npc_turn_to_player: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
     npc_type: "<dark_gray>› <gray>Syntax: {primaryColor}/npc type {secondaryColor}(npc) (type)"
-  # Commands
+
+  # Commands (fancynpcs)
   fancynpcs_reload_success: "<dark_gray>› {successColor}Plugin has been reloaded."
   fancynpcs_save_success: "<dark_gray>› {successColor}NPCs have been saved."
   fancynpcs_version: ""  # NOT CONFIGURABLE
   fancynpcs_feature_flags_header: "<dark_gray>› <gray>Feature Flags:"
   fancynpcs_feature_flags_entry: "<dark_gray>›  <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
   fancynpcs_feature_flags_footer: ""
+
+  # Commands (npc help)
   npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"
   npc_help_page_footer: "<newline><dark_gray><st>-----------</st>  <gray>Click {primaryColor}<click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click><gray> to open documentation  <dark_gray><st>-----------</st>"
   npc_help_contents:
@@ -136,8 +145,8 @@ messages:
     - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}list <dark_gray>- <gray>Lists attributes."
     - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}clear <dark_gray>- <gray>Clears attributes."
     - "<dark_gray>› {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown."
-
-  # FIX COLORS
+    -
+  # Commands (npc attribute)
   npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
   npc_attribute_set_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
   npc_attribute_list_header: "<dark_gray><st>--------------------</st>  <gray>Attributes  <dark_gray><st>--------------------</st><newline>"
@@ -145,19 +154,24 @@ messages:
   npc_attribute_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
   npc_attribute_list_failure_empty: "<dark_gray>› {errorColor}There is no attributes set. Use {warningColor}/npc attribute (npc) set (attribute) (value){errorColor} to set an attribute."
 
+  # Commands (npc collidable)
   npc_collidable_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now collidable<gray>."
   npc_collidable_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer collidable<gray>."
 
+  # Commands (npc copy)
   npc_copy_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been copied to {warningColor}{new_npc}<gray>."
 
+  # Commands (npc create)
   npc_create_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been created."
   npc_create_failure_invalid_name: "<dark_gray>› {errorColor}Name contains illegal characters. Only [{warningColor}A-Z{errorColor}, {warningColor}a-z{errorColor}, {warningColor}0-9{errorColor}, {warningColor}_{errorColor}, {warningColor}-{errorColor}, {warningColor}/{errorColor}] characters are allowed."
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC {warningColor}{npc}{errorColor} already exists."
   npc_create_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
+  # Commands (npc displayname)
   npc_displayname_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using <reset>{name}<gray> as their display name."
   npc_displayname_set_empty: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer showing display name."
 
+  # Commands (npc equipment)
   npc_equipment_set_item: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been set to <reset><item><gray>."
   npc_equipment_set_empty: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been removed."
   npc_equipment_set_failure_invalid_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid equipment slot."
@@ -167,13 +181,16 @@ messages:
   npc_equipment_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
   npc_equipment_list_failure_empty: "<dark_gray>› {errorColor}There is no equipment slots set. Use {warningColor}/npc equipment (npc) set (slot) (@hand | @none | material){errorColor} to set an equipment slot."
 
+  # Commands (npc fix)
   npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC {warningColor}{npc}<gray>... Still having issues? Please let us know."
 
+  # Commands (npc glowing)
   npc_glowing_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now glowing."
   npc_glowing_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer glowing."
   npc_glowing_set_color_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now glowing in {color}<gray>."
   npc_glowing_set_color_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."
 
+  # Commands (npc info)
   npc_info_general:
     - ""
     - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><#848484>Identifier</hover>: <hover:show_text:'<gray>Click to copy identifier to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id_short}</click></hover>"
@@ -199,43 +216,17 @@ messages:
     - "<dark_gray>› <gray>Open the chat window to see all information."
     - ""
 
+  # Commands (npc interaction_cooldown)
   npc_interaction_cooldown_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has had their interaction cooldown updated."
 
-  npc_skin_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using {warningColor}{name}'s<gray> skin."
-  npc_skin_set_url: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using skin from specified URL."
-  npc_skin_set_mirror: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now mirroring player skin."
-  npc_skin_set_none: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer using any skin."
-  npc_skin_failure_invalid_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is invalid or unsupported URL."
-  npc_skin_failure_invalid_name_or_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid player name or URL."
-  npc_skin_failure_invalid_name_or_rate_limit: "<dark_gray>› {errorColor}Could not find {warningColor}{input}'s{errorColor} skin. Either the account does not exist or you're being rate limited."
-
-  npc_move_here_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to your location."
-
-  npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
-
+  # Commands (npc list)
   npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"
   npc_list_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({location_x}, {location_y}, {location_z} in {world})"
   npc_list_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
   npc_list_failure_sort_requires_player: "<dark_gray>› {errorColor}This sort type cannot be used from the console."
   npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
-  npc_nearby_header: "<dark_gray><st>----------------</st>  <gray>Nearby Query Result  <dark_gray><st>-----------------</st><newline>"
-  npc_nearby_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
-  npc_nearby_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
-
-  npc_move_to_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."
-  npc_move_to_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify world when running this command from the console."
-
-  npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."
-  npc_teleport_failure_exception: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Check console for errors."
-  npc_teleport_failure_world_not_loaded: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Destination world is not loaded."
-
-  npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now turning to player."
-  npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer turning to player."
-
-  npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."
-  npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer shown in player-list."
-
+  # Commands (npc message)
   npc_message_add_success: "<dark_gray>› <gray>Message has been added. There is {warningColor}{total}<gray> messages in total."
   npc_message_set_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> messages in total."
   npc_message_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
@@ -251,6 +242,19 @@ messages:
   npc_message_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
   npc_message_list_failure_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
 
+  # Commands (npc move_here)
+  npc_move_here_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to your location."
+
+  # Commands (npc move_to)
+  npc_move_to_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."
+  npc_move_to_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify world when running this command from the console."
+
+  # Commands (npc nearby)
+  npc_nearby_header: "<dark_gray><st>----------------</st>  <gray>Nearby Query Result  <dark_gray><st>-----------------</st><newline>"
+  npc_nearby_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
+  npc_nearby_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
+
+  # Commands (npc player_command)
   npc_player_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
   npc_player_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
   npc_player_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
@@ -264,6 +268,10 @@ messages:
   npc_player_command_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
   npc_player_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
 
+  # Commands (npc remove)
+  npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
+
+  # Commands (npc server_command)
   npc_server_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
   npc_server_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
   npc_server_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
@@ -277,6 +285,29 @@ messages:
   npc_server_command_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
   npc_server_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc server_command (npc) add (command){errorColor} to add your first command."
 
+  # Commands (npc show_in_tab)
+  npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."
+  npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer shown in player-list."
+
+  # Commands (npc skin)
+  npc_skin_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using {warningColor}{name}'s<gray> skin."
+  npc_skin_set_url: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using skin from specified URL."
+  npc_skin_set_mirror: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now mirroring player skin."
+  npc_skin_set_none: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer using any skin."
+  npc_skin_failure_invalid_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is invalid or unsupported URL."
+  npc_skin_failure_invalid_name_or_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid player name or URL."
+  npc_skin_failure_invalid_name_or_rate_limit: "<dark_gray>› {errorColor}Could not find {warningColor}{input}'s{errorColor} skin. Either the account does not exist or you're being rate limited."
+
+  # Commands (npc teleport)
+  npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."
+  npc_teleport_failure_exception: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Check console for errors."
+  npc_teleport_failure_world_not_loaded: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Destination world is not loaded."
+
+  # Commands (npc turn_to_player)
+  npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now turning to player."
+  npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer turning to player."
+
+  # Commands (npc type)
   npc_type_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> type has been changed to {warningColor}{type}<gray>."
 
 

@@ -7,6 +7,8 @@ import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 
@@ -32,9 +34,19 @@ public enum MoveToCMD {
     public void onCommand(
             final CommandSender sender,
             final Npc npc,
-            final Location location,
+            final @Argument(suggestions = "relative_location") Location location,
             final @Nullable World world
     ) {
+        // Finalizing World argument. Player-like senders don't have to specify the 'world' argument which then defaults to the World sender is currently in.
+        final World finalWorld = (world == null && sender instanceof Player player) ? player.getWorld() : world;
+        // Sending error message if finalized World argument ended up being null. This can happen when command is executed by console and 'world' argument was not specified.
+        if (finalWorld == null) {
+            translator.translate("npc_move_to_failure_must_specify_world").send(sender);
+            return;
+        }
+        // Updating World of the finalized Location. This should never pass a null value.
+        location.setWorld(finalWorld);
+        // Calling the event and re-locating NPC if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, sender).callEvent()) {
             npc.getData().setLocation(location);
             npc.updateForAll();
@@ -43,7 +55,7 @@ public enum MoveToCMD {
                     .replace("x", COORDS_FORMAT.format(location.x()))
                     .replace("y", COORDS_FORMAT.format(location.y()))
                     .replace("z", COORDS_FORMAT.format(location.z()))
-                    .replace("world", world.getName())
+                    .replace("world", finalWorld.getName())
                     .send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);

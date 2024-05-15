@@ -100,6 +100,7 @@ messages:
 
   npc_create_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc)"
   npc_create_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been created."
+  npc_create_failure_invalid_name: "<dark_gray>› {errorColor}Name contains illegal characters. Only [{warningColor}A-Z{errorColor}, {warningColor}a-z{errorColor}, {warningColor}0-9{errorColor}, {warningColor}_{errorColor}, {warningColor}-{errorColor}, {warningColor}/{errorColor}] characters are allowed."
   npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC {warningColor}{npc}{errorColor} already exists."
   npc_create_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
@@ -184,6 +185,7 @@ messages:
 
   npc_move_to_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world]"
   npc_move_to_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."
+  npc_move_to_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify world when running this command from the console."
 
   npc_teleport_syntax: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc)"
   npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."

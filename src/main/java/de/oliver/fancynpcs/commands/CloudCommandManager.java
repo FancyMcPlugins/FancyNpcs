@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.commands;
 
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
 import de.oliver.fancynpcs.commands.npc.AttributeCMD;
@@ -62,13 +63,14 @@ public final class CloudCommandManager {
         this.annotationParser = new AnnotationParser<>(commandManager, CommandSender.class);
         // Registering parsers and suggestion providers.
         annotationParser.parse(NpcArgument.INSTANCE);
+        annotationParser.parse(LocationArgument.INSTANCE);
         // Registering exception handlers.
         commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(ReplyingParseException.class));
         commandManager.exceptionController().registerHandler(ReplyingParseException.class, context -> context.exception().runnable().run());
     }
 
     /**
-     * Registers plugin commands to the {@link PaperCommandManager}.
+     * Registers plugin commands to the {@link LegacyPaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerCommands() {
         annotationParser.parse(FancyNpcsCMD.INSTANCE);
@@ -100,15 +102,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Unregisters plugin commands from the {@link PaperCommandManager}.
-     */
-    public void unregisterCommands() {
-        commandManager.deleteRootCommand("fancynpcs");
-        commandManager.deleteRootCommand("npc");
-    }
-
-    /**
-     * Returns the internal {@link PaperCommandManager} associated with this instance of {@link CloudCommandManager}.
+     * Returns the internal {@link LegacyPaperCommandManager} associated with this instance of {@link CloudCommandManager}.
      */
     public @NotNull LegacyPaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;

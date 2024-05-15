@@ -169,7 +169,11 @@ public enum MessageCMD {
                     .replace("message", message)
                     .send(sender);
         }
-        translator.translate("npc_message_list_footer").send(sender);
+        final int totalCount = npc.getData().getMessages().size();
+        translator.translate("npc_message_list_footer")
+                .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
     }
 
     @Command("npc message <npc> send_randomly [state]")

@@ -12,11 +12,12 @@ import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.jetbrains.annotations.NotNull;
 
 public enum ServerCommandCMD {
     INSTANCE; // SINGLETON
@@ -155,7 +156,11 @@ public enum ServerCommandCMD {
                     .replace("command", command)
                     .send(sender);
         }
-        translator.translate("npc_server_command_list_footer").send(sender);
+        final int totalCount = npc.getData().getServerCommands().size();
+        translator.translate("npc_server_command_list_footer")
+                .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
     }
 
     /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */

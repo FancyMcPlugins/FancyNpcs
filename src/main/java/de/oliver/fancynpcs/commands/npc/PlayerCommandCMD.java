@@ -156,7 +156,11 @@ public enum PlayerCommandCMD {
                     .replace("command", command)
                     .send(sender);
         }
-        translator.translate("npc_player_command_list_footer").send(sender);
+        final int totalCount = npc.getData().getPlayerCommands().size();
+        translator.translate("npc_player_command_list_footer")
+                .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
     }
 
     /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */

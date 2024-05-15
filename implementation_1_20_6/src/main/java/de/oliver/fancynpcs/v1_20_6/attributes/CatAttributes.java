@@ -3,6 +3,8 @@ package de.oliver.fancynpcs.v1_20_6.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_20_6.ReflectionHelper;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cat;
 import org.bukkit.entity.EntityType;
 
@@ -26,7 +28,7 @@ public class CatAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sleeping"),
+                List.of("standing", "sleeping", "sitting"),
                 List.of(EntityType.CAT),
                 CatAttributes::setPose
         ));
@@ -35,20 +37,26 @@ public class CatAttributes {
     }
 
     private static void setVariant(Npc npc, String value) {
-        Cat cat = ReflectionHelper.getEntity(npc);
-
-//        CatVariant variant = BuiltInRegistries.CAT_VARIANT.get(ResourceLocation.of("minecraft:" + value.toLowerCase(), ':'));
-//        if (variant == null) return;
-//
-//        cat.setVariant(variant);
+        final Cat cat = ReflectionHelper.getEntity(npc);
+        BuiltInRegistries.CAT_VARIANT.getHolder(ResourceLocation.of(value.toLowerCase(), ':'))
+                .ifPresent(cat::setVariant);
     }
 
     private static void setPose(Npc npc, String value) {
-        Cat cat = ReflectionHelper.getEntity(npc);
-
+        final Cat cat = ReflectionHelper.getEntity(npc);
         switch (value.toLowerCase()) {
-            case "standing" -> cat.setLying(false);
-            case "sleeping" -> cat.setLying(true);
+            case "standing" -> {
+                cat.setInSittingPose(false);
+                cat.setLying(false);
+            }
+            case "sleeping" -> {
+                cat.setInSittingPose(false);
+                cat.setLying(true);
+            }
+            case "sitting" -> {
+                cat.setInSittingPose(true);
+                cat.setLying(false);
+            }
         }
     }
 

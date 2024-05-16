@@ -5,7 +5,6 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
-import de.oliver.fancynpcs.commands.npc.*;
 import de.oliver.fancynpcs.commands.npc.AttributeCMD;
 import de.oliver.fancynpcs.commands.npc.CollidableCMD;
 import de.oliver.fancynpcs.commands.npc.CopyCMD;

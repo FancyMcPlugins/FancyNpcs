@@ -35,7 +35,7 @@ messages:
   color_white: "<white>White"
 
   # Common (Other)
-  interaction_on_cooldown: "<dark_gray>› {errorColor}You're currently on cooldown. {time} seconds remaining."
+  interaction_on_cooldown: "<dark_gray>› {errorColor}You're currently on cooldown. {warningColor}{time}{errorColor} remaining."
 
   # Commands (Common Replies)
   command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
@@ -51,6 +51,7 @@ messages:
   command_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
   command_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
   command_invalid_equipment_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid slot."
+  command_invalid_interval: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid duration of time."
   command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
   command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
@@ -72,7 +73,7 @@ messages:
     npc_equipment_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (@hand | @none | item)"
     npc_glowing: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
     npc_info: "<dark_gray>› <gray>Syntax: {primaryColor}/npc info {secondaryColor}(npc)"
-    npc_interaction_cooldown: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (seconds)"
+    npc_interaction_cooldown: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
     npc_list: "<dark_gray>› <gray>Syntax: {primaryColor}/npc list {secondaryColor}[filters...]"
     npc_message: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}(add | set | remove | clear | list | send_randomly)"
     npc_message_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}add {secondaryColor}(@none | message)"
@@ -108,44 +109,14 @@ messages:
   npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"
   npc_help_page_footer: "<newline><dark_gray><st>-----------</st>  <gray>Click {primaryColor}<click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click><gray> to open documentation  <dark_gray><st>-----------</st>"
   npc_help_contents:
-    # - "<dark_gray>› {primaryColor}/npc create {secondaryColor}(npc) <dark_gray>- <gray>Creates a new NPC at your location."
-    # - "<dark_gray>› {primaryColor}/npc remove {secondaryColor}(npc) <dark_gray>- <gray>Removes specified NPC."
-    # - "<dark_gray>› {primaryColor}/npc copy {secondaryColor}(npc) (new_name) <dark_gray>- <gray>Copies/clones specified NPC."
-    # - "<dark_gray>› {primaryColor}/npc list {secondaryColor}[flags...] <dark_gray>- <gray>Lists all NPCs."
-    # - "<dark_gray>› {primaryColor}/npc nearby {secondaryColor}[flags...] <dark_gray>- <gray>Lists nearby NPCs."
-    # - "<dark_gray>› {primaryColor}/npc skin {secondaryColor}(@none | @mirror | name | url) <dark_gray>- <gray>Changes NPC's skin."
     - "<dark_gray>› <hover:show_text:'<gray>Creates a new NPC at your location.'>{primaryColor}/npc create {secondaryColor}(npc) <#6B1216>[--type] [--position] [--world]</hover>"
     - "<dark_gray>› <hover:show_text:'<gray>Removes specified NPC.'>{primaryColor}/npc remove {secondaryColor}(npc)"
     - "<dark_gray>› <hover:show_text:'<gray>Copies/clones specified NPC.'>{primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
     - "<dark_gray>› <hover:show_text:'<gray>Lists all NPCs in all worlds. Filters can be applied.'>{primaryColor}/npc list <#6B1216>[--type] [--sort]"
     - "<dark_gray>› <hover:show_text:'<gray>Lists all NPCs in player''s world. Filters can be applied.'>{primaryColor}/npc nearby <#6B1216>[--radius] [--type] [--sort]"
     - "<dark_gray>› <hover:show_text:'<gray>Changes skin of the NPC.'>{primaryColor}/npc skin {secondaryColor}(@none | @mirror | name | url)"
+    # TO-DO: ...
 
-    - "<dark_gray>› {primaryColor}/npc type {secondaryColor}(npc) (type) <dark_gray>- <gray>Changes entity type of an NPC."
-    - "<dark_gray>› {primaryColor}/npc teleport {secondaryColor}(npc) <dark_gray>- <gray>Teleports you to the NPC."
-    - "<dark_gray>› {primaryColor}/npc move_here {secondaryColor}(npc) <dark_gray>- <gray>Moves NPC to your location."
-    - "<dark_gray>› {primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world] <dark_gray>- <gray>Moves NPC."
-    - "<dark_gray>› {primaryColor}/npc displayname {secondaryColor}(npc) (name) <dark_gray>- <gray>Changes NPC's displayname."
-    - "<dark_gray>› {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (item) <dark_gray>- <gray>Changes equipment."
-    - "<dark_gray>› {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}clear <dark_gray>- <gray>Clears equipment."
-    - "<dark_gray>› {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}list <dark_gray>- <gray>Lists equipment."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}add {secondaryColor}(message) <dark_gray>- <gray>Adds message."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}set {secondaryColor}(num) (message) <dark_gray>- <gray>Sets message."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}remove {secondaryColor}(num) <dark_gray>- <gray>Removes message."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}clear <dark_gray>- <gray>Clears message."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}list <dark_gray>- <gray>Lists message."
-    - "<dark_gray>› {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}send_randomly {secondaryColor}[state] <dark_gray>- <gray>"
-    - "<dark_gray>› {primaryColor}/npc player_command {secondaryColor}(npc) (...) <dark_gray>- <gray>Manages click commands."
-    - "<dark_gray>› {primaryColor}/npc server_command {secondaryColor}(npc) (...) <dark_gray>- <gray>Manages click commands."
-    - "<dark_gray>› {primaryColor}/npc show_in_tab {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes tab-list visibility."
-    - "<dark_gray>› {primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color) <dark_gray>- <gray>Changes glowing state."
-    - "<dark_gray>› {primaryColor}/npc collidable {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes collidable state."
-    - "<dark_gray>› {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state) <dark_gray>- <gray>Changes turning state."
-    - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}set {secondaryColor}(attr) (value) <dark_gray>- <gray>Sets attribute."
-    - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}list <dark_gray>- <gray>Lists attributes."
-    - "<dark_gray>› {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}clear <dark_gray>- <gray>Clears attributes."
-    - "<dark_gray>› {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (sec) <dark_gray>- <gray>Sets inter. cooldown."
-    -
   # Commands (npc attribute)
   npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
   npc_attribute_set_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
@@ -217,7 +188,8 @@ messages:
     - ""
 
   # Commands (npc interaction_cooldown)
-  npc_interaction_cooldown_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has had their interaction cooldown updated."
+  npc_interaction_cooldown_set: "<dark_gray>› <gray>Interaction cooldown has been set to {warningColor}{time}<gray>."
+  npc_interaction_cooldown_disabled: "<dark_gray>› <gray>Interaction cooldown has been disabled."
 
   # Commands (npc list)
   npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"

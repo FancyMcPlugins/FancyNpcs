@@ -6,6 +6,8 @@ import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
+import de.oliver.fancynpcs.api.util.Interval;
+import de.oliver.fancynpcs.api.util.Interval.Unit;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
@@ -15,7 +17,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -25,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class Npc {
 
     private static final NpcAttribute INVISIBLE_ATTRIBUTE = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(EntityType.PLAYER, "invisible");
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
     protected final Map<UUID, Boolean> isTeamCreated = new ConcurrentHashMap<>();
     protected final Map<UUID, Boolean> isVisibleForPlayer = new ConcurrentHashMap<>();
@@ -149,17 +149,13 @@ public abstract class Npc {
 
     public void interact(Player player, InteractionType interactionType) {
         if (data.getInteractionCooldown() > 0) {
-            if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
-                long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
-                if (nextAllowedInteraction > System.currentTimeMillis()) {
-                    if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
-                        float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
-                        translator.translate("interaction_on_cooldown").replace("time", DECIMAL_FORMAT.format(timeLeft)).send(player);
-                    }
-                    return;
-                }
+            final long interactionCooldownMillis = (long) (data.getInteractionCooldown() * 1000);
+            final long lastInteractionMillis = lastPlayerInteraction.getOrDefault(player.getUniqueId(), 0L);
+            final Interval interactionCooldownLeft = Interval.between(lastInteractionMillis + interactionCooldownMillis, System.currentTimeMillis(), Unit.MILLISECONDS);
+            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0 && !FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
+                translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+                return;
             }
-
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 

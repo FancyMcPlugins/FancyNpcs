@@ -41,6 +41,8 @@ import static de.oliver.fancynpcs.api.util.Interval.Unit.YEARS;
 /**
  * {@link Interval} is simple (but not very extensible) object that provides methods for
  * unit conversion and creation of human-readable 'elapsed time' strings.
+ *
+ * @apiNote This API is for internal use only and can change at any time.
  */
 @ApiStatus.Internal
 public final class Interval {
@@ -164,7 +166,7 @@ public final class Interval {
         final StringBuilder builder = new StringBuilder();
         // Appending to the StringBuilder.
         if (years > 0L) builder.append(years).append("y ");
-        if (months > 0L) builder.append(months).append("m ");
+        if (months > 0L) builder.append(months).append("mo ");
         if (days > 0L) builder.append(days).append("d ");
         if (hours > 0L) builder.append(hours).append("h ");
         if (minutes > 0L) builder.append(minutes).append("min ");

@@ -4,15 +4,18 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.util.Interval;
+import de.oliver.fancynpcs.api.util.Interval.Unit;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.util.GlowingColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+
+import org.jetbrains.annotations.NotNull;
 
 public enum InfoCMD {
     INSTANCE; // SINGLETON
@@ -28,6 +31,7 @@ public enum InfoCMD {
             final @NotNull Npc npc
     ) {
         final Location loc = npc.getData().getLocation();
+        final Interval interactionCooldown = Interval.of(npc.getData().getInteractionCooldown(), Unit.SECONDS);
         // Getting the translated glowing state. This should never throw because all supported NamedTextColor objects has their mapping in GlowingColor enum.
         final String glowingStateTranslated = (!npc.getData().isGlowing() || npc.getData().getGlowingColor() != null)
                 ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
@@ -49,7 +53,7 @@ public enum InfoCMD {
                 .replace("is_turn_to_player", getTranslatedBoolean(npc.getData().isTurnToPlayer()))
                 .replace("is_show_in_tab", getTranslatedBoolean(npc.getData().isShowInTab()))
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
-                .replace("interaction_cooldown", SECONDS_FORMAT.format(npc.getData().getInteractionCooldown()) + "s")
+                .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
                 .replace("messages_total", String.valueOf(npc.getData().getMessages().size()))
                 .replace("player_commands_total", String.valueOf(npc.getData().getPlayerCommands().size()))
                 .replace("server_commands_total", String.valueOf(npc.getData().getServerCommands().size()))
@@ -59,6 +63,11 @@ public enum InfoCMD {
     // NOTE: Might need to be improved later down the line, should get work done for now.
     private @NotNull String getTranslatedBoolean(final boolean bool) {
         return (bool) ? ((SimpleMessage) translator.translate("true")).getMessage() : ((SimpleMessage) translator.translate("false")).getMessage();
+    }
+
+    // NOTE: Might need to be improved later down the line, should get work done for now.
+    private @NotNull String getTranslatedState(final boolean bool) {
+        return (bool) ? ((SimpleMessage) translator.translate("enabled")).getMessage() : ((SimpleMessage) translator.translate("disabled")).getMessage();
     }
 
     // NOTE: Might need to be improved later down the line, should get work done for now.

@@ -4,6 +4,7 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -14,6 +15,7 @@ import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,7 +31,7 @@ public enum PlayerCommandCMD {
     public void onPlayerCommandAdd(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
-            final @NotNull @Greedy String command
+            final @NotNull @Argument(suggestions = "PlayerCommandCMD/commands") @Greedy String command
     ) {
         // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(command)) {
@@ -51,7 +53,7 @@ public enum PlayerCommandCMD {
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @Argument(suggestions = "PlayerCommandCMD/number_range") int number,
-            final @NotNull @Greedy String command
+            final @NotNull @Argument(suggestions = "PlayerCommandCMD/commands") @Greedy String command
     ) {
         // Sending error message in case banned command has been found in the input.
         if (hasBlockedCommands(command)) {
@@ -174,6 +176,14 @@ public enum PlayerCommandCMD {
                     for (int i = 0; i < npc.getData().getPlayerCommands().size(); i++)
                         add(String.valueOf(i + 1));
                 }};
+    }
+
+    @Suggestions("PlayerCommandCMD/commands") // Suggests allowed (non-blocked) commands accessible by the command sender.
+    public Collection<String> suggestCommand(final CommandContext<CommandSender> context, final CommandInput input) {
+        return Bukkit.getServer().getCommandMap().getKnownCommands().values().stream()
+                .filter(command -> !command.getName().contains(":") && command.testPermission(context.sender()) && !hasBlockedCommands(command.getName()))
+                .map(org.bukkit.command.Command::getName)
+                .toList();
     }
 
     /* UTILITY METHODS */

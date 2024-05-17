@@ -76,7 +76,7 @@ public enum InteractionCooldownCMD {
         final @Nullable Long num = parseLong(split[0]);
         // Checking that the number is not null.
         return (num == null || num <= 0)
-                ? List.of("disabled")
+                ? List.of("30s", "5min", "8h", "disabled")
                 : new ArrayList<>() {{
                     add("disabled");
                     addAll(Stream.of(

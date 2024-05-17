@@ -30,7 +30,7 @@ import de.oliver.fancynpcs.commands.npc.SkinCMD;
 import de.oliver.fancynpcs.commands.npc.TeleportCMD;
 import de.oliver.fancynpcs.commands.npc.TurnToPlayerCMD;
 import de.oliver.fancynpcs.commands.npc.TypeCMD;
-import de.oliver.fancynpcs.util.GlowingColor;
+import de.oliver.fancynpcs.utils.GlowingColor;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -202,8 +202,8 @@ public final class CloudCommandManager {
         annotationParser.parse(NearbyCMD.INSTANCE);
         annotationParser.parse(NpcHelpCMD.INSTANCE);
         annotationParser.parse(PlayerCommandCMD.INSTANCE);
-        annotationParser.parse(ServerCommandCMD.INSTANCE);
         annotationParser.parse(RemoveCMD.INSTANCE);
+        annotationParser.parse(ServerCommandCMD.INSTANCE);
         annotationParser.parse(ShowInTabCMD.INSTANCE);
         annotationParser.parse(SkinCMD.INSTANCE);
         annotationParser.parse(TeleportCMD.INSTANCE);

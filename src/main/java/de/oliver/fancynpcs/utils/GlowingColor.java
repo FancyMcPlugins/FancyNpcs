@@ -1,11 +1,11 @@
-package de.oliver.fancynpcs.util;
+package de.oliver.fancynpcs.utils;
 
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-// Used by commands.
+// Used 'info' and 'glowing' sub-commands.
 public enum GlowingColor {
     DISABLED(null, ""),
     BLACK(NamedTextColor.BLACK, "color_black"),
@@ -25,12 +25,10 @@ public enum GlowingColor {
     YELLOW(NamedTextColor.YELLOW, "color_yellow"),
     WHITE(NamedTextColor.WHITE, "color_white");
 
-    // Handled as 'disabled' if set to null.
     private final @Nullable NamedTextColor color;
-
     private final @NotNull String translationKey;
 
-    private GlowingColor(final @Nullable NamedTextColor color, final @NotNull String translationKey) {
+    GlowingColor(final @Nullable NamedTextColor color, final @NotNull String translationKey) {
         this.color = color;
         this.translationKey = translationKey;
     }

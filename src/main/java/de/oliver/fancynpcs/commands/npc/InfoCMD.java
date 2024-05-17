@@ -7,7 +7,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.util.Interval;
 import de.oliver.fancynpcs.api.util.Interval.Unit;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.util.GlowingColor;
+import de.oliver.fancynpcs.utils.GlowingColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;

@@ -104,7 +104,7 @@ public enum EquipmentCMD {
         translator.translate("npc_equipment_list_footer").send(sender);
     }
 
-    /* PARSER AND SUGGESTIONS */
+    /* PARSERS AND SUGGESTIONS */
 
     // This parser does not specify a name, making it default parser for the returned type.
     @Parser(name = "", suggestions = "EquipmentCMD/slot")

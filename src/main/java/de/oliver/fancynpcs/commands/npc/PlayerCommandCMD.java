@@ -165,7 +165,7 @@ public enum PlayerCommandCMD {
                 .send(sender);
     }
 
-    /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
+    /* PARSERS AND SUGGESTIONS */
 
     @Suggestions("PlayerCommandCMD/number_range") // Generates number range suggestions based on the number of player commands.
     public List<String> suggestNumber(final CommandContext<CommandSender> context, final CommandInput input) {

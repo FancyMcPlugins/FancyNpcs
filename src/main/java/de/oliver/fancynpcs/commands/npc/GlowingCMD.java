@@ -50,14 +50,12 @@ public enum GlowingCMD {
             }
         // Handling 'color' state, which means enabling glowing and changing the color to desired one.
         } else if (npc.getData().isGlowing() || new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING, true, sender).callEvent()) {
-            // Updating the glowing state, if previously disabled.
-            if (!npc.getData().isGlowing()) {
-                npc.getData().setGlowing(true);
-                npc.updateForAll();
-            }
             // Calling the event and updating the glowing color if not cancelled.
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.GLOWING_COLOR, color.getColor(), sender).callEvent()) {
                 npc.getData().setGlowingColor(color.getColor());
+                // Updating the glowing state, if previously disabled.
+                if (!npc.getData().isGlowing())
+                    npc.getData().setGlowing(true);
                 npc.updateForAll();
                 translator.translate("npc_glowing_set_color_success")
                         .replace("npc", npc.getData().getName())

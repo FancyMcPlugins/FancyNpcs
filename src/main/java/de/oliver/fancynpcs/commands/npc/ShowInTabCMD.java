@@ -26,11 +26,8 @@ public enum ShowInTabCMD {
         final boolean finalState = (state == null) ? !npc.getData().isShowInTab() : state;
         // Calling the event and updating the state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SHOW_IN_TAB, finalState, sender).callEvent()) {
-            // Updating the state.
             npc.getData().setShowInTab(finalState);
-            // Sending message to the sender.
             translator.translate(finalState ? "npc_show_in_tab_set_true" : "npc_show_in_tab_set_false").replace("npc", npc.getData().getName()).send(sender);
-            // Returning from the command block.
             return;
         }
         // Otherwise, sending error message to the sender.

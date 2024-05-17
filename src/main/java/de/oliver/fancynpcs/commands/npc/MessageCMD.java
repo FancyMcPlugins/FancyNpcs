@@ -195,7 +195,7 @@ public enum MessageCMD {
     }
 
 
-    /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
+    /* PARSERS AND SUGGESTIONS */
 
     @Suggestions("MessageCMD/none")
     public List<String> suggestNone(final CommandContext<CommandSender> context, final CommandInput input) {

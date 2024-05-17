@@ -57,10 +57,14 @@ public enum DisplayNameCMD {
         }
     }
 
+    /* PARSERS AND SUGGESTIONS */
+
     @Suggestions("DisplayNameCMD/none")
     public List<String> suggestNone(final CommandContext<CommandSender> sender, CommandInput input) {
         return NONE_SUGGESTIONS;
     }
+
+    /* UTILITY METHODS */
 
     /** Returns {@code true} if specified component contains blocked command, {@code false} otherwise. */
     private boolean hasBlockedCommands(final @NotNull String message) {

@@ -8,17 +8,19 @@ import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 // TO-DO: Console support with --position and --world parameter flags.
 public enum CopyCMD {
     INSTANCE; // SINGLETON
 
-    private static final Pattern NPC_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9/_-]*$");
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
+
+    private static final Pattern NPC_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9/_-]*$");
 
     @Command(value = "npc copy <npc> <name>", requiredSender = Player.class)
     @Permission("fancynpcs.command.npc.copy")

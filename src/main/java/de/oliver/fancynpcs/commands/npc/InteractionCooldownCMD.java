@@ -52,6 +52,8 @@ public enum InteractionCooldownCMD {
         }
     }
 
+    /* PARSERS AND SUGGESTIONS */
+
     @Parser(name = "InteractionCooldownCMD/cooldown", suggestions = "InteractionCooldownCMD/cooldown")
     public @NotNull Interval parse(final CommandContext<CommandSender> context, final CommandInput input) {
         final String value = input.readString();
@@ -87,6 +89,8 @@ public enum InteractionCooldownCMD {
                     ).map(pair -> num + pair.second().getShortCode()).toList());
                 }};
     }
+
+    /* UTILITY METHODS */
 
     private @Nullable Long parseLong(final @NotNull String value) {
         try {

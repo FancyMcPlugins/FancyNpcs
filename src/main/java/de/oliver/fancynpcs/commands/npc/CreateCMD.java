@@ -65,7 +65,7 @@ public enum CreateCMD {
         // Updating World of the Location argument if '--world' flag has been specified.
         if (world != null)
             finalLocation.setWorld(world);
-        // Creating new NPC
+        // Creating new NPC and applying data.
         final Npc npc = FancyNpcs.getInstance().getNpcAdapter().apply(new NpcData(name, creator, finalLocation));
         // Setting the type of NPC. Flag '--type' is optional and defaults to EntityType.PLAYER.
         npc.getData().setType(type != null ? type : EntityType.PLAYER);

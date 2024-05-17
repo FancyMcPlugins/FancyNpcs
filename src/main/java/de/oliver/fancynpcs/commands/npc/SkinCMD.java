@@ -124,6 +124,8 @@ public enum SkinCMD {
         }
     }
 
+    /* PARSERS AND SUGGESTIONS */
+
     @Suggestions("SkinCMD/skin")
     public List<String> suggestSkin(final CommandContext<CommandSender> context, final CommandInput input) {
         return new ArrayList<>() {{
@@ -132,6 +134,8 @@ public enum SkinCMD {
             Bukkit.getOnlinePlayers().stream().map(Player::getName).forEach(this::add);
         }};
     }
+
+    /* UTILITY METHODS */
 
     /**
      * Returns {@code true} if provided string can be parsed to an {@link URL} object.

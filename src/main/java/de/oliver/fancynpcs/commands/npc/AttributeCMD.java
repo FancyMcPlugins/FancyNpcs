@@ -65,7 +65,7 @@ public enum AttributeCMD {
         translator.translate("npc_attribute_list_footer").send(sender);
     }
 
-    /* PARSERS AND SUGGESTION PROVIDERS */
+    /* PARSERS AND SUGGESTIONS */
 
     // This parser does not specify a name, making it default parser for the returned type.
     @Parser(name = "", suggestions = "AttributeCMD/attribute")

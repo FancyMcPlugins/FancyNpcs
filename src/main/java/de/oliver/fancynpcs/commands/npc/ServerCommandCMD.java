@@ -165,7 +165,7 @@ public enum ServerCommandCMD {
                 .send(sender);
     }
 
-    /* ARGUMENT PARSERS AND SUGGESTION PROVIDERS */
+    /* PARSERS AND SUGGESTIONS */
 
     @Suggestions("ServerCommandCMD/number_range")
     // Generates number range suggestions based on the number of server commands.

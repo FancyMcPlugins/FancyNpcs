@@ -44,6 +44,8 @@ public enum NpcHelpCMD {
         translator.translate("npc_help_page_footer").replace("page", String.valueOf(finalPage)).replace("max_page", String.valueOf(maxPage)).send(sender);
     }
 
+    /* PARSERS AND SUGGESTIONS */
+
     @Suggestions("NpcHelpCMD/page")
     public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
         // Getting the (full) help contents.

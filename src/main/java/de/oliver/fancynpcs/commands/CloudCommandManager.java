@@ -21,7 +21,7 @@ import de.oliver.fancynpcs.commands.npc.MessageCMD;
 import de.oliver.fancynpcs.commands.npc.MoveHereCMD;
 import de.oliver.fancynpcs.commands.npc.MoveToCMD;
 import de.oliver.fancynpcs.commands.npc.NearbyCMD;
-import de.oliver.fancynpcs.commands.npc.NpcHelpCMD;
+import de.oliver.fancynpcs.commands.npc.HelpCMD;
 import de.oliver.fancynpcs.commands.npc.PlayerCommandCMD;
 import de.oliver.fancynpcs.commands.npc.RemoveCMD;
 import de.oliver.fancynpcs.commands.npc.ServerCommandCMD;
@@ -200,7 +200,7 @@ public final class CloudCommandManager {
         annotationParser.parse(MoveHereCMD.INSTANCE);
         annotationParser.parse(MoveToCMD.INSTANCE);
         annotationParser.parse(NearbyCMD.INSTANCE);
-        annotationParser.parse(NpcHelpCMD.INSTANCE);
+        annotationParser.parse(HelpCMD.INSTANCE);
         annotationParser.parse(PlayerCommandCMD.INSTANCE);
         annotationParser.parse(RemoveCMD.INSTANCE);
         annotationParser.parse(ServerCommandCMD.INSTANCE);

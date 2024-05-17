@@ -17,7 +17,7 @@ import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public enum NpcHelpCMD {
+public enum HelpCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
@@ -26,7 +26,7 @@ public enum NpcHelpCMD {
     @Permission("fancynpcs.command.npc")
     public void onHelp(
             final @NotNull CommandSender sender,
-            final @Nullable @Argument(suggestions = "NpcHelpCMD/page") Integer page
+            final @Nullable @Argument(suggestions = "HelpCMD/page") Integer page
     ) {
         // Getting the (full) help contents.
         final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
@@ -46,7 +46,7 @@ public enum NpcHelpCMD {
 
     /* PARSERS AND SUGGESTIONS */
 
-    @Suggestions("NpcHelpCMD/page")
+    @Suggestions("HelpCMD/page")
     public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
         // Getting the (full) help contents.
         final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");

@@ -25,6 +25,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public enum SkinCMD {
     INSTANCE; // SINGLETON
@@ -40,7 +41,7 @@ public enum SkinCMD {
             final @NotNull Npc npc,
             final @NotNull @Argument(suggestions = "SkinCMD/skin") String skin
     ) {
-        // Exiting command block if specified NPC is not of a PLAYER type.
+        // Sending error message if NPC cannot have skin applied. Only players can have skins.
         if (npc.getData().getType() != EntityType.PLAYER) {
             translator.translate("command_unsupported_npc_type").send(sender);
             return;
@@ -49,7 +50,6 @@ public enum SkinCMD {
         final boolean isMirror = skin.equalsIgnoreCase("@mirror");
         final boolean isNone = skin.equalsIgnoreCase("@none");
         final boolean isURL = isURL(skin);
-
         if (isMirror) {
             // Calling event and updating the skin if not cancelled, sending error message otherwise.
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, true, sender).callEvent()) {
@@ -61,7 +61,6 @@ public enum SkinCMD {
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
-
         } else if (isNone) {
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
@@ -74,7 +73,6 @@ public enum SkinCMD {
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
-
         } else if (isURL) {
             // Creating SkinFetcher from the specified texture URL.
             final SkinFetcher skinFetcher = new SkinFetcher(skin);
@@ -94,13 +92,11 @@ public enum SkinCMD {
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
-
-        // NOTE: Matching against valid username pattern to make it somewhat injection-proof.
+        // Handling as if user input is a player name. Because this may require sending a web request, we should (?) match against valid username pattern to make it somewhat injection-proof.
         } else if (USERNAME_PATTERN.matcher(skin).find()) {
             // Fetching UUID from the specified player name.
-            // NOTE: This can occasionally print stacktrace to the console and right now there is nothing that could be done to prevent that.
-            final UUID uuid = UUIDFetcher.getUUID(skin);
-            // Exiting the command block and sending error message if invalid/unsupported URL has been provided.
+            final @Nullable UUID uuid = UUIDFetcher.getUUID(skin);
+            // Sending error message if message if UUID fetch has (for whatever reason) failed. This can happen eg. when being rate limited.
             if (uuid == null) {
                 translator.translate("npc_skin_failure_invalid_name_or_rate_limit").send(sender);
                 return;
@@ -137,7 +133,9 @@ public enum SkinCMD {
         }};
     }
 
-    // Returns 'true' if String can be parsed to an URL or 'false' otherwise.
+    /**
+     * Returns {@code true} if provided string can be parsed to an {@link URL} object.
+     */
     private static boolean isURL(final @NotNull String url) {
         try {
             new URL(url);

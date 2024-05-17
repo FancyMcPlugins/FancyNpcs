@@ -57,7 +57,7 @@ messages:
   command_invalid_equipment_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid slot."
   command_invalid_interval: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid duration of time."
   command_invalid_enum_generic: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid {enum}."
-  command_unsupported_npc_type: "<dark_gray>› This NPC type does not support this feature."
+  command_unsupported_npc_type: "<dark_gray>› {errorColor}This NPC type does not support this feature."
   command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
   command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
 

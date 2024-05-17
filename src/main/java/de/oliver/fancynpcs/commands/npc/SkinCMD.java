@@ -80,7 +80,7 @@ public enum SkinCMD {
             final SkinFetcher skinFetcher = new SkinFetcher(skin);
             // Sending error message if SkinFetcher has failed to load the skin.
             if (!skinFetcher.isLoaded()) {
-                translator.translate("npc_skin_failure_invalid_url").replace("input", skin).send(sender);
+                translator.translate("npc_skin_failure_invalid_url").replaceStripped("input", skin).send(sender);
                 return;
             }
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
@@ -124,7 +124,7 @@ public enum SkinCMD {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
         } else {
-            translator.translate("npc_skin_failure_invalid_name_or_url").replace("input", skin).send(sender);
+            translator.translate("npc_skin_failure_invalid_name_or_url").replaceStripped("input", skin).send(sender);
         }
     }
 

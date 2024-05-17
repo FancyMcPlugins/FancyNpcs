@@ -38,10 +38,10 @@ public enum NpcArgument {
                         : null;
         // Throwing exception if no NPC with given name or UUID exist.
         if (npc == null)
-            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replace("input", value).send(context.sender()));
+            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replaceStripped("input", value).send(context.sender()));
         // Throwing exception if PLAYER NPCS FLAG is enabled and sender is not creator of the specified NPC.
         if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && context.sender() instanceof Player sender && !npc.getData().getCreator().equals(sender.getUniqueId()))
-            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replace("input", value).send(context.sender()));
+            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_npc").replaceStripped("input", value).send(context.sender()));
         return npc;
     }
 

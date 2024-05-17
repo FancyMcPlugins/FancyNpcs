@@ -78,7 +78,7 @@ public enum AttributeCMD {
         final NpcAttribute attribute = attributeManager.getAttributeByName(npc.getData().getType(), value);
         // Throwing exception when non-existent attribute has been provided.
         if (attribute == null)
-            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_attribute").replace("input", value).send(context.sender()));
+            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_attribute").replaceStripped("input", value).send(context.sender()));
         // Otherwise, returning the attribute from the parser.
         return attribute;
     }
@@ -91,7 +91,7 @@ public enum AttributeCMD {
         final String value = input.readString();
         // Sending error message if attribute is null or cannot accept provided value.
         if (!attribute.isValidValue(value))
-            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_attribute_value").replace("input", value).send(context.sender()));
+            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_attribute_value").replaceStripped("input", value).send(context.sender()));
         // Otherwise, returning the attribute from the parser.
         return value;
     }

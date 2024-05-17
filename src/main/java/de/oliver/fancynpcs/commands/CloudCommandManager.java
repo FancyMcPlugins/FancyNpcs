@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.commands;
 
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.Message;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
@@ -29,14 +30,27 @@ import de.oliver.fancynpcs.commands.npc.SkinCMD;
 import de.oliver.fancynpcs.commands.npc.TeleportCMD;
 import de.oliver.fancynpcs.commands.npc.TurnToPlayerCMD;
 import de.oliver.fancynpcs.commands.npc.TypeCMD;
+import de.oliver.fancynpcs.util.GlowingColor;
+import io.leangen.geantyref.TypeToken;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.incendo.cloud.annotations.AnnotationParser;
 import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
+import org.incendo.cloud.bukkit.parser.WorldParser;
+import org.incendo.cloud.bukkit.parser.location.LocationParser;
 import org.incendo.cloud.component.CommandComponent;
 import org.incendo.cloud.exception.ArgumentParseException;
+import org.incendo.cloud.exception.InvalidCommandSenderException;
 import org.incendo.cloud.exception.InvalidSyntaxException;
+import org.incendo.cloud.exception.NoPermissionException;
+import org.incendo.cloud.exception.handling.ExceptionHandlerRegistration;
+import org.incendo.cloud.exception.parsing.NumberParseException;
+import org.incendo.cloud.exception.parsing.ParserException;
 import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.parser.standard.BooleanParser;
+import org.incendo.cloud.parser.standard.EnumParser;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,12 +76,85 @@ public final class CloudCommandManager {
             commandManager.registerBrigadier();
         // Creating instance of AnnotationParser, which is used for parsing and registering commands.
         this.annotationParser = new AnnotationParser<>(commandManager, CommandSender.class);
-        // Registering parsers and suggestion providers.
+    }
+
+    /**
+     * Registers arguments (parsers and suggestion providers) to the {@link LegacyPaperCommandManager}.
+     */
+    public @NotNull CloudCommandManager registerArguments() {
         annotationParser.parse(NpcArgument.INSTANCE);
         annotationParser.parse(LocationArgument.INSTANCE);
-        // Registering exception handlers.
+        // Returning this instance of CloudCommandManager to keep "builder-like" flow.
+        return this;
+    }
+
+    /**
+     * Registers exception handlers to the {@link LegacyPaperCommandManager}.
+     */
+    public @NotNull CloudCommandManager registerExceptionHandlers() {
+        final Translator translator = plugin.getTranslator();
+        // Unwrapping some causes of ArgumentParseException to be handled in standalone exception handlers.
+        commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(NumberParseException.class));
+        commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(BooleanParser.BooleanParseException.class));
+        commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(EnumParser.EnumParseException.class));
+        commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(WorldParser.WorldParseException.class));
         commandManager.exceptionController().registerHandler(ArgumentParseException.class, unwrappingHandler(ReplyingParseException.class));
+        // Overriding some default handlers to send specialized messages.
+        commandManager.exceptionController().registerHandler(NoPermissionException.class, (exceptionContext) -> {
+            translator.translate("command_missing_permissions").send(exceptionContext.context().sender());
+        });
+        // DEV NOTE: No need to compare sender types until we decide to make a console-only command. Should get the job done for the time being.
+        commandManager.exceptionController().registerHandler(InvalidCommandSenderException.class, (exceptionContext) -> {
+            translator.translate("command_player_only").send(exceptionContext.context().sender());
+        });
+        commandManager.exceptionController().registerHandler(NumberParseException.class, (exceptionContext) -> {
+            translator.translate("command_invalid_number")
+                    .replaceStripped("input", exceptionContext.exception().input())
+                    .replace("min", exceptionContext.exception().range().min().toString())
+                    .replace("max", exceptionContext.exception().range().max().toString())
+                    .send(exceptionContext.context().sender());
+        });
+        commandManager.exceptionController().registerHandler(BooleanParser.BooleanParseException.class, (exceptionContext) -> {
+            translator.translate("command_invalid_boolean")
+                    .replaceStripped("input", exceptionContext.exception().input())
+                    .send(exceptionContext.context().sender());
+        });
+        commandManager.exceptionController().registerHandler(WorldParser.WorldParseException.class, (exceptionContext) -> {
+            translator.translate("command_invalid_world")
+                    .replaceStripped("input", exceptionContext.exception().input())
+                    .send(exceptionContext.context().sender());
+        });
+        // DEV NOTE: Temporary solution util https://github.com/Incendo/cloud-minecraft/pull/70 is merged.
+        commandManager.exceptionController().register(ExceptionHandlerRegistration.<CommandSender, ArgumentParseException>builder(TypeToken.get(ArgumentParseException.class))
+                        .exceptionFilter(exception -> exception.getCause() instanceof ParserException parserException && parserException.argumentParserClass() == LocationParser.class)
+                        .exceptionHandler(exceptionContext -> {
+                            final ParserException exception = (ParserException) exceptionContext.exception().getCause();
+                            final String input = exception.captionVariables()[0].value(); // Should never throw.
+                            translator.translate("command_invalid_location")
+                                    .replaceStripped("input", !input.isBlank() ? input : "N/A") // Under certain conditions, input is not passed to the exception.
+                                    .send(exceptionContext.context().sender());
+                        }).build()
+        );
+        commandManager.exceptionController().registerHandler(EnumParser.EnumParseException.class, (exceptionContext) -> {
+            String translationKey = "command_invalid_enum_generic";
+            // Comparing exception enum class and choosing specialized messages.
+            if (exceptionContext.exception().enumClass() == ListCMD.SortType.class)
+                translationKey = "command_invalid_list_sort_type";
+            else if (exceptionContext.exception().enumClass() == NearbyCMD.SortType.class)
+                translationKey = "command_invalid_nearby_sort_type";
+            else if (exceptionContext.exception().enumClass() == EntityType.class)
+                translationKey = "command_invalid_entity_type";
+            else if (exceptionContext.exception().enumClass() == GlowingColor.class)
+                translationKey = "command_invalid_glowing_color";
+            // Sending error message to the sender. In case no specialized message has been found, a generic one is used instead.
+            translator.translate(translationKey)
+                    .replaceStripped("input", exceptionContext.exception().input())
+                    .replace("enum", exceptionContext.exception().enumClass().getSimpleName().toLowerCase())
+                    .send(exceptionContext.context().sender());
+        });
+        // ReplyingParseException is thrown from custom argument types and is handled there.
         commandManager.exceptionController().registerHandler(ReplyingParseException.class, context -> context.exception().runnable().run());
+        // InvalidSyntaxException is thrown when user specified syntax don't match any command.
         commandManager.exceptionController().registerHandler(InvalidSyntaxException.class, (exceptionContext) -> {
             // Creating a StringBuilder which is then appended with (known/existing) command literals.
             final StringBuilder translationKeyBuilder = new StringBuilder("command_syntax.");
@@ -89,6 +176,8 @@ public final class CloudCommandManager {
             }
             message.send(exceptionContext.context().sender());
         });
+        // Returning this instance of CloudCommandManager to keep "builder-like" flow.
+        return this;
     }
 
     /**

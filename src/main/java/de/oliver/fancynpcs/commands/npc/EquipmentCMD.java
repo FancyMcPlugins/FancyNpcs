@@ -113,7 +113,7 @@ public enum EquipmentCMD {
         final @Nullable NpcEquipmentSlot slot = NpcEquipmentSlot.parse(value);
         // Sending error message if input is not a valid NpcEquipmentSlot.
         if (slot == null)
-            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_equipment_slot").replace("input", value).send(context.sender()));
+            throw ReplyingParseException.replying(() -> translator.translate("command_invalid_equipment_slot").replaceStripped("input", value).send(context.sender()));
         return slot;
     }
 
@@ -132,12 +132,12 @@ public enum EquipmentCMD {
             final @Nullable NamespacedKey key = NamespacedKey.fromString(value);
             // Sending error message if input is not a valid NamespacedKey.
             if (key == null)
-                throw ReplyingParseException.replying(() -> translator.translate("command_invalid_material").replace("input", value).send(context.sender()));
+                throw ReplyingParseException.replying(() -> translator.translate("command_invalid_material").replaceStripped("input", value).send(context.sender()));
             // Getting material from the registry.
             final @Nullable Material material = Registry.MATERIAL.get(key);
             // Sending error message if no material was found.
             if (material == null)
-                throw ReplyingParseException.replying(() -> translator.translate("command_invalid_material").replace("input", value).send(context.sender()));
+                throw ReplyingParseException.replying(() -> translator.translate("command_invalid_material").replaceStripped("input", value).send(context.sender()));
             // Returning new ItemStack object from the specified Material.
             return new ItemStack(material);
         }

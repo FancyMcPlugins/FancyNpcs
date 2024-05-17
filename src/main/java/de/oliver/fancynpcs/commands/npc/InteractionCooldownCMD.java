@@ -83,10 +83,7 @@ public enum InteractionCooldownCMD {
                             Pair.of(Interval.of(num, Unit.MILLISECONDS), Unit.MILLISECONDS),
                             Pair.of(Interval.of(num, Unit.SECONDS), Unit.SECONDS),
                             Pair.of(Interval.of(num, Unit.MINUTES), Unit.MINUTES),
-                            Pair.of(Interval.of(num, Unit.HOURS), Unit.HOURS),
-                            Pair.of(Interval.of(num, Unit.DAYS), Unit.DAYS),
-                            Pair.of(Interval.of(num, Unit.MONTHS), Unit.MONTHS),
-                            Pair.of(Interval.of(num, Unit.YEARS), Unit.YEARS)
+                            Pair.of(Interval.of(num, Unit.HOURS), Unit.HOURS)
                     ).map(pair -> num + pair.second().getShortCode()).toList());
                 }};
     }

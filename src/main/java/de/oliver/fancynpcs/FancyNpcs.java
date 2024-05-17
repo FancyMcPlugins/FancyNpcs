@@ -3,7 +3,6 @@ package de.oliver.fancynpcs;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.FileUtils;
 import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
@@ -126,8 +125,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
 
         FancyLib.setPlugin(instance);
-        MessageHelper.setPrimaryColor("#E33239");
-        MessageHelper.setSecondaryColor("#ad1d23");
 
         String mcVersion = Bukkit.getMinecraftVersion();
 

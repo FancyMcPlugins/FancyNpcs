@@ -109,10 +109,9 @@ messages:
   # Commands (fancynpcs)
   fancynpcs_reload_success: "<dark_gray>› {successColor}Plugin has been reloaded."
   fancynpcs_save_success: "<dark_gray>› {successColor}NPCs have been saved."
-  fancynpcs_version: ""  # NOT CONFIGURABLE
-  fancynpcs_feature_flags_header: "<dark_gray>› <gray>Feature Flags:"
-  fancynpcs_feature_flags_entry: "<dark_gray>›  <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
-  fancynpcs_feature_flags_footer: ""
+  fancynpcs_feature_flags_header: "<dark_gray><st>-------------------</st>   <gray>Feature Flags  <dark_gray><st>------------------</st><newline>"
+  fancynpcs_feature_flags_entry: " <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
+  fancynpcs_feature_flags_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
 
   # Commands (npc help)
   npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"
@@ -186,11 +185,11 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
     - "<dark_gray>› <hover:show_text:'<gray>Cooldown between interactions.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
     - ""
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse equipment.'><#848484>Equipment</hover><dark_gray>: {warningColor}[Click Here]"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse attributes.'><gray>Attributes</hover><dark_gray>: {warningColor}[Click Here]"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of messages.'><#848484>Messages</hover><dark_gray>: {warningColor}[Click Here] <dark_gray>({messages_total} total)"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of player commands.'><gray>Player Commands</hover><dark_gray>: {warningColor}[Click Here] <dark_gray>({player_commands_total} total)"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of server commands.'><#848484>Server Commands</hover><dark_gray>: {warningColor}[Click Here] <dark_gray>({server_commands_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse equipment.'><#848484>Equipment</hover><dark_gray>: {warningColor}<click:run_command:'npc equipment {npc} list'>[Click Here]</click>"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse attributes.'><gray>Attributes</hover><dark_gray>: {warningColor}<click:run_command:'npc attribute {npc} list'>[Click Here]</click>"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of messages.'><#848484>Messages</hover><dark_gray>: {warningColor}<click:run_command:'npc message {npc} list'>[Click Here]</click> <dark_gray>({messages_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of player commands.'><gray>Player Commands</hover><dark_gray>: {warningColor}<click:run_command:'npc player_command {npc} list'>[Click Here]</click> <dark_gray>({player_commands_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of server commands.'><#848484>Server Commands</hover><dark_gray>: {warningColor}<click:run_command:'npc server_command {npc} list'>[Click Here]</click> <dark_gray>({server_commands_total} total)"
     - ""
     - "<dark_gray>› {primaryColor}Can't find what you're looking for?"
     - "<dark_gray>› <gray>Open the chat window to see all information."

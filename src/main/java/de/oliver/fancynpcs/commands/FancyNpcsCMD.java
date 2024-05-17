@@ -44,26 +44,27 @@ public enum FancyNpcsCMD {
     @Command("fancynpcs save")
     @Permission("fancynpcs.command.fancynpcs.save")
     public void onSave(final CommandSender sender) {
-        // Saving all NPCs.
         plugin.getNpcManagerImpl().saveNpcs(true);
-        // Sending success message to the sender.
         translator.translate("fancynpcs_save_success").send(sender);
     }
 
+    // NOTE: In the future, if there is more than a few feature flags, we might consider listing entries automatically by iterating, just like in 'list' sub-command.
     @Command("fancynpcs feature_flags")
     @Permission("fancynpcs.command.fancynpcs.feature_flags")
     public void onFeatureFlags(final CommandSender sender) {
-        // Printing the header of the list.
         translator.translate("fancynpcs_feature_flags_header").send(sender);
-        // Printing status of all existing feature flags.
         translator.translate("fancynpcs_feature_flags_entry")
                 .replace("number", "1")
                 .replace("name", "Player NPCs")
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
-        // Printing the footer of the list.
-        translator.translate("fancynpcs_feature_flags_footer").send(sender);
+        translator.translate("fancynpcs_feature_flags_footer")
+                .replace("count", "1")
+                .replace("count_formatted", "· · 1")
+                .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
+                .replace("total_formatted", "· · 1")
+                .send(sender);
     }
 
     // NOTE: Might need to be improved later down the line, should get work done for now.

@@ -3,9 +3,12 @@ package de.oliver.fancynpcs.v1_20_4.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_20_4.ReflectionHelper;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Markings;
 import net.minecraft.world.entity.animal.horse.Variant;
+import org.bukkit.entity.AbstractHorse;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -35,6 +38,16 @@ public class HorseAttributes {
                 HorseAttributes::setMarkings
         ));
 
+        attributes.add(new NpcAttribute(
+                "pose",
+                List.of("eating", "rearing", "standing"),
+                Arrays.stream(EntityType.values())
+                        .filter(type -> type.getEntityClass() != null && (type == EntityType.HORSE || type == EntityType.DONKEY ||
+                                type == EntityType.MULE || type == EntityType.SKELETON_HORSE ||type == EntityType.ZOMBIE_HORSE))
+                        .toList(),
+                HorseAttributes::setPose
+        ));
+
         return attributes;
     }
 
@@ -50,6 +63,25 @@ public class HorseAttributes {
 
         Markings markings = Markings.valueOf(value.toUpperCase());
         horse.setVariantAndMarkings(horse.getVariant(), markings);
+    }
+
+    private static void setPose(Npc npc, String value) {
+        net.minecraft.world.entity.animal.horse.AbstractHorse horse = ReflectionHelper.getEntity(npc);
+
+        switch (value.toLowerCase()) {
+            case "standing" -> {
+                horse.setEating(false);
+                horse.setForceStanding(false);
+            }
+            case "rearing" -> {
+                horse.setForceStanding(true);
+                horse.setEating(false);
+            }
+            case "eating" -> {
+                horse.setForceStanding(false);
+                horse.setEating(true);
+            }
+        }
     }
 
 }

@@ -192,7 +192,7 @@ public enum PlayerCommandCMD {
     private boolean hasBlockedCommands(final @NotNull String string) {
         // Getting the list of all blocked commands.
         final List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
-        // Iterating over list of blocked commands...
+        // Iterating over all elements of the component.
         for (final String blockedCommand : blockedCommands) {
             // Transforming the command to a base command with trailed whitespaces and slashes. This also removes namespaced part from the beginning of the command.
             final String transformedBaseCommand = blockedCommand.replace('/', ' ').strip().split(" ")[0].replaceAll(".*?:+", "");

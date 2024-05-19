@@ -27,9 +27,8 @@ public enum TeleportCMD {
             translator.translate("npc_teleport_failure_world_not_loaded").send(sender);
             return;
         }
-        // Teleporting...
+        // Teleporting and sending message to the sender. This operation can occasionally fail.
         sender.teleportAsync(location).whenComplete((isSuccess, thr) -> {
-            // Sending message to the sender.
             translator.translate(isSuccess ? "npc_teleport_success" : "npc_teleport_failure_exception").replace("npc", npc.getData().getName()).send(sender);
             // Printing stacktrace to the console in case an exception occurred.
             if (thr != null)

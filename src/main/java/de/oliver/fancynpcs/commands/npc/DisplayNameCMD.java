@@ -72,7 +72,7 @@ public enum DisplayNameCMD {
         final Component component = ModernChatColorHandler.translate(message);
         // Getting the list of all blocked commands.
         final List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
-        // Iterating over all children of the component...
+        // Iterating over all elements of the component.
         return StreamSupport.stream(component.iterable(ComponentIteratorType.DEPTH_FIRST).spliterator(), false).anyMatch(it -> {
             final ClickEvent event = it.clickEvent();
             // We only care about click events with run_command as an action. Continuing if not found.

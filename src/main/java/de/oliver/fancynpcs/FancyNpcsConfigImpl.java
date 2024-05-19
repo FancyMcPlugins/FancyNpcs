@@ -9,6 +9,11 @@ import java.util.stream.Collectors;
 
 public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     /**
+     * Whether invisible NPCs should not be sent to the player.
+     */
+    private boolean skipInvisibleNpcs;
+
+    /**
      * Indicates whether interaction cooldown messages are disabled.
      */
     private boolean disabledInteractionCooldownMessage;
@@ -59,6 +64,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
+        skipInvisibleNpcs = (boolean) ConfigHelper.getOrDefault(config, "skip_invisible_npcs", true);
+        config.setInlineComments("skip_invisible_npcs", List.of("Whether invisible NPCs should not be sent to the player."));
+
         disabledInteractionCooldownMessage = (boolean) ConfigHelper.getOrDefault(config, "disable_interaction_cooldown_message", false);
         config.setInlineComments("disable_interaction_cooldown_message", List.of("Whether interaction cooldown messages are disabled."));
 
@@ -102,6 +110,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FancyNpcs.getInstance().saveConfig();
     }
 
+    public boolean isSkipInvisibleNpcs() {
+        return skipInvisibleNpcs;
+    }
+
     public boolean isInteractionCooldownMessageDisabled() {
         return disabledInteractionCooldownMessage;
     }
@@ -137,4 +149,5 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     public Map<String, Integer> getMaxNpcsPerPermission() {
         return maxNpcsPerPermission;
     }
+
 }

@@ -31,7 +31,7 @@ public enum HelpCMD {
         // Getting the (full) help contents.
         final MultiMessage contents = (MultiMessage) translator.translate("npc_help_contents");
         // Calculating max page number.
-        final int maxPage = Math.max(1, contents.getRawMessages().size() / 6);
+        final int maxPage = (int) Math.ceil(Math.max(1, contents.getRawMessages().size() - 1) / 6F);
         // Getting the requested page. Defaults to 1 for invalid input and is capped by number of the last page.
         final int finalPage = Math.min(page != null ? page : 1, maxPage);
         // Getting help contents for requested page, or defaulting to 1.

@@ -14,6 +14,7 @@ public class Attributes_1_20_4 {
         attributes.addAll(LivingEntityAttributes.getAllAttributes());
         attributes.addAll(AgeableMobAttributes.getAllAttributes());
         attributes.addAll(IllagerAttributes.getAllAttributes());
+        attributes.addAll(SpellCasterAttributes.getAllAttributes());
 
         attributes.addAll(PlayerAttributes.getAllAttributes());
         attributes.addAll(SheepAttributes.getAllAttributes());
@@ -38,7 +39,6 @@ public class Attributes_1_20_4 {
         attributes.addAll(ArmorStandAttributes.getAllAttributes());
         attributes.addAll(BeeAttributes.getAllAttributes());
         attributes.addAll(VexAttributes.getAllAttributes());
-        attributes.addAll(EvokerAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

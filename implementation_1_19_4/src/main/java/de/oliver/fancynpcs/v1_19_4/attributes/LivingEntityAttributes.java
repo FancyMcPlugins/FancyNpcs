@@ -1,8 +1,8 @@
-package de.oliver.fancynpcs.v1_20_4.attributes;
+package de.oliver.fancynpcs.v1_19_4.attributes;
 
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
-import de.oliver.fancynpcs.v1_20_4.ReflectionHelper;
+import de.oliver.fancynpcs.v1_19_4.ReflectionHelper;
 import net.minecraft.world.InteractionHand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;

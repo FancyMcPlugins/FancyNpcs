@@ -52,12 +52,12 @@ public class EntityAttributes {
                 EntityAttributes::setOnGround
         ));
 
-        attributes.add(new NpcAttribute(
+        /*attributes.add(new NpcAttribute(
                 "entity_pose",
                 Arrays.stream(Pose.values()).map(Enum::toString).toList(),
                 Arrays.stream(EntityType.values()).toList(),
                 EntityAttributes::setEntityPose
-        ));
+        ));*/
 
         return attributes;
     }
@@ -103,11 +103,12 @@ public class EntityAttributes {
         entity.setOnGround(onGround);
     }
 
-    private static void setEntityPose(Npc npc, String value) {
+    /*private static void setEntityPose(Npc npc, String value) {
         Entity entity = ReflectionHelper.getEntity(npc);
 
         Pose entityPose = Pose.valueOf(value);
 
-        entity.setPose(entityPose);
-    }
+        //setpose should not be called async
+        //entity.setPose(entityPose);
+    }*/
 }

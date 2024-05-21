@@ -35,6 +35,16 @@ public class HorseAttributes {
                 HorseAttributes::setMarkings
         ));
 
+        attributes.add(new NpcAttribute(
+                "pose",
+                List.of("eating", "rearing", "standing"),
+                Arrays.stream(EntityType.values())
+                        .filter(type -> type.getEntityClass() != null && (type == EntityType.HORSE || type == EntityType.DONKEY ||
+                                type == EntityType.MULE || type == EntityType.SKELETON_HORSE ||type == EntityType.ZOMBIE_HORSE))
+                        .toList(),
+                HorseAttributes::setPose
+        ));
+
         return attributes;
     }
 
@@ -50,6 +60,25 @@ public class HorseAttributes {
 
         Markings markings = Markings.valueOf(value.toUpperCase());
         horse.setVariantAndMarkings(horse.getVariant(), markings);
+    }
+
+    private static void setPose(Npc npc, String value) {
+        net.minecraft.world.entity.animal.horse.AbstractHorse horse = ReflectionHelper.getEntity(npc);
+
+        switch (value.toLowerCase()) {
+            case "standing" -> {
+                horse.setEating(false);
+                horse.setForceStanding(false);
+            }
+            case "rearing" -> {
+                horse.setForceStanding(true);
+                horse.setEating(false);
+            }
+            case "eating" -> {
+                horse.setForceStanding(false);
+                horse.setEating(true);
+            }
+        }
     }
 
 }

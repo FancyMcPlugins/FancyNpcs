@@ -7,7 +7,7 @@ public enum MappingKeys1_20_6 {
     CLIENTBOUND_TELEPORT_ENTITY_PACKET__X("x"),
     CLIENTBOUND_TELEPORT_ENTITY_PACKET__Y("y"),
     CLIENTBOUND_TELEPORT_ENTITY_PACKET__Z("z"),
-    PANDA__DATA_ID_FLAGS("dataidFlags"),
+    PANDA__DATA_ID_FLAGS("DATA_ID_FLAGS"),
     ;
 
     private final String mapping;

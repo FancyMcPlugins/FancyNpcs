@@ -24,6 +24,13 @@ public class AxolotlAttributes {
                 AxolotlAttributes::setVariant
         ));
 
+        attributes.add(new NpcAttribute(
+                "playing_dead",
+                List.of("true", "false"),
+                List.of(EntityType.AXOLOTL),
+                AxolotlAttributes::setPlayingDead
+        ));
+
         return attributes;
     }
 
@@ -32,6 +39,13 @@ public class AxolotlAttributes {
 
         Axolotl.Variant variant = Axolotl.Variant.valueOf(value.toUpperCase());
         axolotl.setVariant(variant);
+    }
+
+    private static void setPlayingDead(Npc npc, String value) {
+        Axolotl axolotl = ReflectionHelper.getEntity(npc);
+
+        boolean playingDead = Boolean.parseBoolean(value);
+        axolotl.setPlayingDead(playingDead);
     }
 
 }

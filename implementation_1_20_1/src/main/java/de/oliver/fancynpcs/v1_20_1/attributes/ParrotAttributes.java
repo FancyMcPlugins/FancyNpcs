@@ -26,7 +26,7 @@ public class ParrotAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sitting", "dancing"),
+                List.of("standing", "sitting"),
                 List.of(EntityType.PARROT),
                 ParrotAttributes::setPose
         ));
@@ -48,11 +48,6 @@ public class ParrotAttributes {
             case "standing" -> {
                 parrot.setOrderedToSit(false);
                 parrot.setInSittingPose(false, false);
-            }
-            case "dancing" -> {
-                parrot.setOrderedToSit(false);
-                parrot.setInSittingPose(false, false);
-                parrot.setRecordPlayingNearby(parrot.blockPosition(), true);
             }
             case "sitting" -> {
                 parrot.setOrderedToSit(true);

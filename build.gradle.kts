@@ -25,7 +25,6 @@ allprojects {
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
-        maven("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 
@@ -42,6 +41,10 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
+    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
+    implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
+    annotationProcessor("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
 }
@@ -115,6 +118,8 @@ tasks {
     compileJava {
         options.encoding = Charsets.UTF_8.name() // We want UTF-8 for everything
         options.release = 21
+        // For cloud-annotations, see https://cloud.incendo.org/annotations/#command-components
+        options.compilerArgs.add("-parameters")
     }
 
     javadoc {

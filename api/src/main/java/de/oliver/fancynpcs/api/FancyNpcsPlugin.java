@@ -1,7 +1,7 @@
 package de.oliver.fancynpcs.api;
 
-import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
+import de.oliver.fancylib.translations.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -32,5 +32,5 @@ public interface FancyNpcsPlugin {
 
     AttributeManager getAttributeManager();
 
-    LanguageConfig getLanguageConfig();
+    Translator getTranslator();
 }

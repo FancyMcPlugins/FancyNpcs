@@ -1,307 +1,244 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentIteratorType;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.ClickEvent.Action;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.incendo.cloud.annotation.specifier.Greedy;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+public enum MessageCMD {
+    INSTANCE; // SINGLETON
 
-public class MessageCMD implements Subcommand {
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
+    private static final List<String> NONE_SUGGESTIONS = List.of("@none");
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length == 3) {
-            return List.of("add", "set", "remove", "clear", "sendRandomly");
-        } else if (args.length == 4) {
-            if (args[2].equalsIgnoreCase("set") || args[2].equalsIgnoreCase("remove")) {
-                List<String> messages = new LinkedList<>();
-                for (int i = 0; i < npc.getData().getMessages().size(); i++) {
-                    messages.add(String.valueOf(i + 1));
-                }
-                return messages;
-            } else if (args[2].equalsIgnoreCase("sendRandomly")) {
-                return List.of("true", "false");
-            }
-        } else if (args.length == 5) {
-            if (args[2].equalsIgnoreCase("set")) {
-                int index;
-                try {
-                    index = Integer.parseInt(args[3]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-
-                if (index < 1 || index > npc.getData().getMessages().size()) {
-                    return null;
-                }
-
-                return List.of(npc.getData().getMessages().get(index - 1));
-            }
+    @Command("npc message <npc> add <message>")
+    @Permission("fancynpcs.command.npc.message.add")
+    public void onMessageAdd(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "MessageCMD/none") @Greedy String message
+    ) {
+        // Handling '@none' as an empty message.
+        final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
+        // Sending error message in case banned command has been found in the input.
+        if (hasBlockedCommands(finalMessage)) {
+            translator.translate("command_input_contains_blocked_command").send(sender);
+            return;
         }
-
-        return null;
-    }
-
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        if (args.length == 3 && args[2].equalsIgnoreCase("clear")) {
-            return clearMessages(receiver, npc, args);
-        }
-
-        if (args.length == 4 && args[2].equalsIgnoreCase("sendRandomly")) {
-            return sendMessagesRandomly(receiver, npc, args);
-        }
-
-        if (args.length == 4 && args[2].equalsIgnoreCase("remove")) {
-            return removeMessage(receiver, npc, args);
-        }
-
-        if (args.length >= 4 && args[2].equalsIgnoreCase("add")) {
-            return addMessage(receiver, npc, args);
-        }
-
-        if (args.length >= 5 && args[2].equalsIgnoreCase("set")) {
-            return setMessage(receiver, npc, args);
-        }
-
-        MessageHelper.error(receiver, lang.get("wrong-usage"));
-        return false;
-    }
-
-    private boolean sendMessagesRandomly(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 4) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        boolean sendMessagesRandomly;
-        try {
-            sendMessagesRandomly = Boolean.parseBoolean(args[3]);
-        } catch (Exception e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, sendMessagesRandomly, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().setSendMessagesRandomly(sendMessagesRandomly);
-
-            if (sendMessagesRandomly) {
-                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-true"));
-            } else {
-                MessageHelper.success(receiver, lang.get("npc-command-message-sendMessagesRandomly-false"));
-                npc.updateForAll(); // move to default pos
-            }
+        // Calling the event and adding message if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_ADD, finalMessage, sender).callEvent()) {
+            npc.getData().getMessages().add(finalMessage);
+            translator.translate("npc_message_add_success").replace("total", String.valueOf(npc.getData().getMessages().size())).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean addMessage(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+    @Command("npc message <npc> set [number] [message]")
+    @Permission("fancynpcs.command.npc.message.set")
+    public void onMessageSet(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "MessageCMD/number_range") Integer number,
+            final @NotNull @Argument(suggestions = "MessageCMD/none") @Greedy String message
+    ) {
+        // Handling '@none' as an empty message.
+        final String finalMessage = message.equalsIgnoreCase("@none") ? "" : message;
+        // Sending error message in case banned command has been found in the input.
+        if (hasBlockedCommands(finalMessage)) {
+            translator.translate("command_input_contains_blocked_command").send(sender);
+            return;
         }
-
-        String message = "";
-        for (int i = 3; i < args.length; i++) {
-            message += args[i] + " ";
+        // Getting the total count of messages that are currently in the list.
+        final int totalCount = npc.getData().getMessages().size();
+        // Sending error message if the list is empty.
+        if (totalCount == 0) {
+            translator.translate("npc_message_set_failure_list_is_empty").send(sender);
+            return;
         }
-
-        message = message.substring(0, message.length() - 1);
-
-        if (message.equalsIgnoreCase("none")) {
-            message = "";
+        // Sending error message if provided number is lower than 0 or higher than the list size.
+        if (number < 1 || number > totalCount) {
+            translator.translate("npc_message_set_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
+            return;
         }
-
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && hasIllegalCommand(message.toLowerCase())) {
-            MessageHelper.error(receiver, lang.get("illegal-command"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().addMessage(message);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+        // User-specified number starts from 1, while index starts from 0. Subtracting 1 from the provided number to get the list index.
+        final int index = number - 1;
+        // Calling the event and setting message if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SET, new Object[]{index, finalMessage}, sender).callEvent()) {
+            npc.getData().getMessages().set(index, finalMessage);
+            translator.translate("npc_message_set_success")
+                    .replace("number", String.valueOf(number))
+                    .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
+                    .send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean setMessage(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 4) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+    @Command("npc message <npc> remove <number>")
+    @Permission("fancynpcs.command.npc.message.remove")
+    public void onMessageRemove(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "MessageCMD/number_range") int number
+    ) {
+        // Getting the total count of messages that are currently in the list.
+        final int totalCount = npc.getData().getMessages().size();
+        // Sending error message if the list is empty.
+        if (totalCount == 0) {
+            translator.translate("npc_message_remove_failure_list_is_empty").send(sender);
+            return;
         }
-
-        int index;
-        try {
-            index = Integer.parseInt(args[3]);
-        } catch (NumberFormatException e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+        // Sending error message if provided number is lower than 0 or higher than the list size.
+        if (number < 1 || number > totalCount) {
+            translator.translate("npc_message_remove_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
+            return;
         }
-
-        if (index < 1 || index > npc.getData().getMessages().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index"));
-            return false;
-        }
-
-        String message = "";
-        for (int i = 4; i < args.length; i++) {
-            message += args[i] + " ";
-        }
-
-        message = message.substring(0, message.length() - 1);
-
-        if (message.equalsIgnoreCase("none")) {
-            message = "";
-        }
-
-        if (hasIllegalCommand(message.toLowerCase())) {
-            MessageHelper.error(receiver, lang.get("illegal-command"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, message, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().getMessages().set(index - 1, message);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+        // User-specified number starts from 1, while index starts from 0. Subtracting 1 from the provided number to get the list index.
+        final int index = number - 1;
+        // Getting the message to pass to the NpcModifyEvent.
+        final String message = npc.getData().getMessages().get(index);
+        // Calling the event and removing message if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_REMOVE, new Object[]{index, message}, sender).callEvent()) {
+            npc.getData().getMessages().remove(index);
+            translator.translate("npc_message_remove_success")
+                    .replace("number", String.valueOf(number))
+                    .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
+                    .send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean removeMessage(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        int index;
-        try {
-            index = Integer.parseInt(args[3]);
-        } catch (NumberFormatException e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        if (index < 1 || index > npc.getData().getMessages().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-message-invalid-index"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, "", receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().removeMessage(index - 1);
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
-        } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
-        }
-
-        return true;
-    }
-
-    private boolean clearMessages(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 2) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.CUSTOM_MESSAGE, "", receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
+    @Command("npc message <npc> clear")
+    @Permission("fancynpcs.command.npc.message.clear")
+    public void onMessageClear(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
+        final int total = npc.getData().getMessages().size();
+        // Calling the event and clearing messages if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_CLEAR, null, sender).callEvent()) {
             npc.getData().getMessages().clear();
-            MessageHelper.success(receiver, lang.get("npc-command-message-updated"));
+            translator.translate("npc_message_clear_success").replace("total", String.valueOf(total)).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    // <click:run_command:"/op">TEST
-    private boolean hasIllegalCommand(String message) {
-        message = message.replace("/", "");
-
-        char[] chars = message.toCharArray();
-        Queue<String> tokens = new LinkedList<>();
-        List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
-        String currentWord = "";
-        for (int i = 0; i < chars.length; i++) {
-            char c = chars[i];
-            if (c == ' ') {
-                if (!currentWord.equals(" ") && !currentWord.equals(""))
-                    tokens.add(currentWord);
-                currentWord = "";
-            } else if (c == '<' || c == '>' || c == ':') {
-                if (!currentWord.equals(" ") && !currentWord.equals(""))
-                    tokens.add(currentWord);
-                tokens.add(String.valueOf(c));
-                currentWord = "";
-            } else {
-                currentWord = currentWord + c;
-            }
+    @Command("npc message <npc> list")
+    @Permission("fancynpcs.command.npc.message.list")
+    public void onMessageList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
+        // Sending error message if the list is empty.
+        if (npc.getData().getMessages().isEmpty()) {
+            translator.translate("npc_message_list_failure_empty").send(sender);
+            return;
         }
-        if (currentWord.length() > 0 && !currentWord.equals(" "))
-            tokens.add(currentWord);
-
-        while (!tokens.isEmpty()) {
-            if (((String) tokens.poll()).equalsIgnoreCase("run_command") && ((String) tokens.poll()).equalsIgnoreCase(":")) {
-                String command = tokens.poll();
-                command = command.replace("\"", "");
-                command = command.replace("'", "");
-                command = command.replace("´", "");
-                command = command.replace("`", "");
-                for (String blockedCommand : blockedCommands) {
-                    if (command.toLowerCase().startsWith(blockedCommand.toLowerCase())) {
-                        return true;
-                    }
-                }
-            }
+        translator.translate("npc_message_list_header").send(sender);
+        // Iterating over all messages attached to this NPC and sending them to the sender.
+        for (int i = 0; i < npc.getData().getMessages().size(); i++) {
+            final String message = npc.getData().getMessages().get(i);
+            translator.translate("npc_message_list_entry")
+                    .replace("number", String.valueOf(i + 1))
+                    .replace("message", message)
+                    .send(sender);
         }
-
-        return false;
+        final int totalCount = npc.getData().getMessages().size();
+        translator.translate("npc_message_list_footer")
+                .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
     }
+
+    @Command("npc message <npc> send_randomly [state]")
+    @Permission("fancynpcs.command.npc.message.send_randomly")
+    public void onMessageSendRandomly(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
+        final boolean finalState = state != null ? state : !npc.getData().isSendMessagesRandomly();
+        // Calling the event and setting send_randomly state if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MESSAGE_SEND_RANDOMLY, finalState, sender).callEvent()) {
+            npc.getData().setSendMessagesRandomly(finalState);
+            npc.updateForAll();
+            translator.translate(finalState ? "npc_message_send_randomly_set_true" : "npc_message_send_randomly_set_false").replace("npc", npc.getData().getName()).send(sender);
+        } else {
+            translator.translate("command_npc_modification_cancelled").send(sender);
+        }
+    }
+
+
+    /* PARSERS AND SUGGESTIONS */
+
+    @Suggestions("MessageCMD/none")
+    public List<String> suggestNone(final CommandContext<CommandSender> context, final CommandInput input) {
+        return NONE_SUGGESTIONS;
+    }
+
+    @Suggestions("MessageCMD/number_range") // Generates number range suggestions based on the number of messages.
+    public List<String> suggestNumber(final CommandContext<CommandSender> context, final CommandInput input) {
+        final Npc npc = context.getOrDefault("npc", null);
+        return npc == null || npc.getData().getMessages().isEmpty()
+                ? Collections.emptyList()
+                : new ArrayList<>() {{
+                    for (int i = 0; i < npc.getData().getMessages().size(); i++)
+                        add(String.valueOf(i + 1));
+                }};
+    }
+
+
+    /* UTILITY METHODS */
+
+    /** Returns {@code true} if specified component contains blocked command, {@code false} otherwise. */
+    private boolean hasBlockedCommands(final @NotNull String message) {
+        // Converting message to a Component.
+        final Component component = ModernChatColorHandler.translate(message);
+        // Getting the list of all blocked commands.
+        final List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
+        // Iterating over all elements of the component.
+        return StreamSupport.stream(component.iterable(ComponentIteratorType.DEPTH_FIRST).spliterator(), false).anyMatch(it -> {
+            final ClickEvent event = it.clickEvent();
+            // We only care about click events with run_command as an action. Continuing if not found.
+            if (event == null || event.action() != Action.RUN_COMMAND)
+                return false;
+            // Iterating over list of blocked commands...
+            for (final String blockedCommand : blockedCommands) {
+                // Transforming the command to a base command with trailed whitespaces and slashes. This also removes namespaced part from the beginning of the command.
+                final String transformedBaseCommand = blockedCommand.replace('/', ' ').strip().split(" ")[0].replaceAll(".*?:+", "");
+                // Comparing click event value with the transformed base command. Returning the result.
+                if (event.value().replace('/', ' ').strip().split(" ")[0].replaceAll(".*?:+", "").equalsIgnoreCase(transformedBaseCommand))
+                    return true;
+            }
+            // Returning false as no blocked commands has been found.
+            return false;
+        });
+    }
+
 }

@@ -8,6 +8,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class FancyNpcsConfigImpl implements FancyNpcsConfig {
+
+    /**
+     * Currently active/selected language.
+     */
+    private String language;
+
     /**
      * Whether invisible NPCs should not be sent to the player.
      */
@@ -64,6 +70,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
+        language = (String) ConfigHelper.getOrDefault(config, "language", "default");
+        config.setInlineComments("language", List.of("Language to use for translatable messages."));
+
         skipInvisibleNpcs = (boolean) ConfigHelper.getOrDefault(config, "skip_invisible_npcs", true);
         config.setInlineComments("skip_invisible_npcs", List.of("Whether invisible NPCs should not be sent to the player."));
 
@@ -110,6 +119,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FancyNpcs.getInstance().saveConfig();
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
     public boolean isSkipInvisibleNpcs() {
         return skipInvisibleNpcs;
     }
@@ -149,5 +162,4 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     public Map<String, Integer> getMaxNpcsPerPermission() {
         return maxNpcsPerPermission;
     }
-
 }

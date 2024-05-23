@@ -25,7 +25,6 @@ allprojects {
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.smrt-1.com/releases")
-        maven(url = "https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
 }
 

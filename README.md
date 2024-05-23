@@ -1,6 +1,6 @@
 <div align=center>
 
-![](fancynpcs_title.png)
+![Banner](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/banner.png?raw=true)
 
 [![GitHub Release](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/FancyMcPlugins/FancyNpcs/releases/latest)
 [![Static Badge](https://img.shields.io/badge/folia-supported-%23F9D879?labelColor=%2313154E&color=%234A44A6)](https://papermc.io/software/folia)
@@ -77,23 +77,23 @@ $ gradlew shadowJar
 ## Images
 Images showcasing the plugin, sent to us by our community.
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/niceron1.png?raw=true)
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron1.jpeg?raw=true)
 <sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/niceron2.png?raw=true)
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron2.jpeg?raw=true)
 <sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/niceron3.png?raw=true)  
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron3.jpeg?raw=true)  
 <sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/dave1.png?raw=true)  
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/dave1.jpeg?raw=true)  
 <sup>Provided by [Beacon's Quest](https://www.beaconsquest.net/)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/oliver1.png?raw=true)  
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/oliver1.jpeg?raw=true)  
 <sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/oliver2.png?raw=true)  
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/oliver2.jpeg?raw=true)  
 <sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/grabsky1.png?raw=true)  
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/grabsky1.jpeg?raw=true)  
 <sup>Provided by [@Grabsky](https://github.com/Grabsky)</sup>

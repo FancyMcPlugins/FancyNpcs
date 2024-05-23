@@ -1,8 +1,6 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancylib.FancyLib;
-import de.oliver.fancylib.FileUtils;
-import de.oliver.fancylib.LanguageConfig;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
 import de.oliver.fancylib.featureFlags.FeatureFlag;
@@ -38,9 +36,6 @@ import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -54,7 +49,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
-    private final LanguageConfig languageConfig;
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
@@ -74,7 +68,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcsConfigImpl();
         this.versionFetcher = new MasterVersionFetcher(getName());
-        this.languageConfig = new LanguageConfig(this);
         this.versionConfig = new VersionConfig(this, versionFetcher);
         this.featureFlagConfig = new FeatureFlagConfig(this);
     }
@@ -114,8 +107,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             pluginManager.disablePlugin(this);
             return;
         }
-
-        new FileUtils().saveFile(this, "lang.yml");
     }
 
     @Override
@@ -131,22 +122,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
-
-        // Load language file
-        String defaultLang = new FileUtils().readResource("lang.yml");
-        if (defaultLang != null) {
-            // Update language file
-            try {
-                FileConfiguration defaultLangConfig = new YamlConfiguration();
-                defaultLangConfig.loadFromString(defaultLang);
-                for (String key : defaultLangConfig.getConfigurationSection("messages").getKeys(false)) {
-                    languageConfig.addDefaultLang(key, defaultLangConfig.getString("messages." + key));
-                }
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            }
-        }
-        languageConfig.load();
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
@@ -266,10 +241,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public FancyNpcsConfigImpl getFancyNpcConfig() {
         return config;
-    }
-
-    public LanguageConfig getLanguageConfig() {
-        return languageConfig;
     }
 
     public VersionConfig getVersionConfig() {

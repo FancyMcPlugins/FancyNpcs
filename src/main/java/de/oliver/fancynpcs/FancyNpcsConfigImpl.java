@@ -65,7 +65,7 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         FancyNpcs.getInstance().reloadConfig();
         FileConfiguration config = FancyNpcs.getInstance().getConfig();
 
-        language = (String) ConfigHelper.getOrDefault(config, "language", "english");
+        language = (String) ConfigHelper.getOrDefault(config, "language", "default");
         config.setInlineComments("language", List.of("Language to use for translatable messages."));
 
         disabledInteractionCooldownMessage = (boolean) ConfigHelper.getOrDefault(config, "disable_interaction_cooldown_message", false);

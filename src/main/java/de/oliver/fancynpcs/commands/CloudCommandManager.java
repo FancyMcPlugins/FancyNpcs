@@ -47,9 +47,11 @@ import org.incendo.cloud.exception.handling.ExceptionHandlerRegistration;
 import org.incendo.cloud.exception.parsing.NumberParseException;
 import org.incendo.cloud.exception.parsing.ParserException;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.standard.BooleanParser;
 import org.incendo.cloud.parser.standard.EnumParser;
+
+import java.util.Optional;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,13 +66,13 @@ public final class CloudCommandManager {
 
     private final @NotNull FancyNpcs plugin;
 
-    private final @NotNull LegacyPaperCommandManager<CommandSender> commandManager;
+    private final @NotNull PaperCommandManager<CommandSender> commandManager;
     private final @NotNull AnnotationParser<CommandSender> annotationParser;
 
     public CloudCommandManager(final @NotNull FancyNpcs plugin, final boolean isBrigadier) {
         this.plugin = plugin;
-        // Creating instance of Cloud's LegacyPaperCommandManager, which is used for anything command-related.
-        this.commandManager = LegacyPaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
+        // Creating instance of Cloud's PaperCommandManager, which is used for anything command-related.
+        this.commandManager = PaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
         // Registering Brigadier, if available.
         if (isBrigadier && commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER))
             commandManager.registerBrigadier();
@@ -79,7 +81,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers arguments (parsers and suggestion providers) to the {@link LegacyPaperCommandManager}.
+     * Registers arguments (parsers and suggestion providers) to the {@link PaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerArguments() {
         annotationParser.parse(NpcArgument.INSTANCE);
@@ -89,7 +91,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers exception handlers to the {@link LegacyPaperCommandManager}.
+     * Registers exception handlers to the {@link PaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerExceptionHandlers() {
         final Translator translator = plugin.getTranslator();
@@ -165,8 +167,8 @@ public final class CloudCommandManager {
             // Trimming input (last character ends up being blank) and replacing whitespaces with underscores, as that's how translations are defined inside the language file.
             final String translationKey = translationKeyBuilder.toString().trim().replace(' ', '_');
             // Getting the message, it's not finished as there we need to handle fallback language etc.
-            // Currently, Translator#translate(String) throws NPE on invalid message and that's why we're not using it here.
-            final @Nullable Message message = plugin.getTranslator().getSelectedLanguage().getMessage(translationKey);
+            final @Nullable Message message = Optional.ofNullable(plugin.getTranslator().getSelectedLanguage().getMessage(translationKey))
+                    .orElse(plugin.getTranslator().getFallbackLanguage().getMessage(translationKey));
             // "Fall-backing" to generic syntax error, if no specialized syntax message has been defined in the language file.
             if (message == null) {
                 plugin.getTranslator().translate("command_invalid_syntax_generic")
@@ -181,7 +183,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers plugin commands to the {@link LegacyPaperCommandManager}.
+     * Registers plugin commands to the {@link PaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerCommands() {
         annotationParser.parse(AttributeCMD.INSTANCE);
@@ -214,9 +216,9 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Returns the internal {@link LegacyPaperCommandManager} associated with this instance of {@link CloudCommandManager}.
+     * Returns the internal {@link PaperCommandManager} associated with this instance of {@link CloudCommandManager}.
      */
-    public @NotNull LegacyPaperCommandManager<CommandSender> getCommandManager() {
+    public @NotNull PaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;
     }
 

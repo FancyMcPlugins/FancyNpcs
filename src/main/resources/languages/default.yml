@@ -1,4 +1,15 @@
-language_name: english
+# ========================================================================
+# THIS FILE IS A TEMPLATE, ANY MODIFICATIONS MADE HERE MAY NOT BE APPLIED.
+# ========================================================================
+# HOW TO CREATE CUSTOM LANGUAGE:
+#   1. Copy this file and name it eg. "en.yml"
+#   2. Change "language_name" property to eg. "english" and update "language" property inside config.yml to match this value.
+#   3. Modify contents to your liking.
+#   4. Reload the plugin using "/fancynpcs reload" command.
+# ========================================================================
+
+# Language name. This value can be used to specify "language" property in the config.yml file.
+language_name: default
 
 # Messages support MiniMessage formatting: https://docs.advntr.dev/minimessage/format.html
 messages:

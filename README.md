@@ -20,9 +20,9 @@ Simple, lightweight and feature-rich NPC plugin for **[Paper](https://github.com
 <br />
 
 ## Requirements
-- For **1.19.4** - **1.20.4** use **Java 17** or higher.
-- For **1.20.6+** use **Java 21** or higher.
-- Plugin should work on non-invasive **Paper** forks. **Spigot** is not supported.
+Paper **1.19.4** - **1.20.6** with **Java 21** or higher. Plugin should also work on non-invasive **Paper** forks.  
+
+**Spigot** is not supported.
 
 <br />
 
@@ -95,5 +95,5 @@ Images showcasing the plugin, sent to us by our community.
 ![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/oliver2.png?raw=true)  
 <sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
 
-![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/oliver3.png?raw=true)  
-<sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
+![](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/exampleImages/grabsky1.png?raw=true)  
+<sup>Provided by [@Grabsky](https://github.com/Grabsky)</sup>

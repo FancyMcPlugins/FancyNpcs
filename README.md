@@ -1,84 +1,97 @@
-![](fancynpcs_title.png)
+<div align="center">
 
-#                            
+![Banner](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/banner.png?raw=true)
 
-![Latest Version](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?style=flat-square)
-[![Generic badge](https://img.shields.io/badge/folia-supported-green.svg)](https://shields.io/)
-[![Discord](https://img.shields.io/discord/899740810956910683?color=7289da&logo=Discord&label=Discord&style=flat-square)](https://discord.gg/ZUgYCEJUEx)
-![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=GitHub&style=flat-square)
-[![Downloads](https://img.shields.io/modrinth/dt/fancynpcs?color=00AF5C&label=modrinth&style=flat&logo=modrinth)](https://modrinth.com/plugin/fancynpcs/versions)
+[![GitHub Release](https://img.shields.io/github/v/release/FancyMcPlugins/FancyNpcs?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/FancyMcPlugins/FancyNpcs/releases/latest)
+[![Supports Folia](https://img.shields.io/badge/folia-supported-%23F9D879?labelColor=%2313154E&color=%234A44A6)](https://papermc.io/software/folia)
+[![Discord](https://img.shields.io/discord/899740810956910683?cacheSeconds=3600&logo=discord&logoColor=white&label=%20&labelColor=%235865F2&color=%23707BF4)](https://discord.gg/ZUgYCEJUEx)
+[![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/FancyMcPlugins/FancyNpcs/releases/latest)
+[![Modrinth Downloads](https://img.shields.io/modrinth/dt/fancynpcs?logo=modrinth&logoColor=white&label=downloads&labelColor=%23139549&color=%2318c25f)](https://modrinth.com/plugin/fancynpcs)
 
-Simple, lightweight and fast NPC plugin using [packets](https://wiki.vg/Protocol)
+[![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg)](https://modrinth.com/plugin/fancynpcs)
+[![Hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/hangar_vector.svg)](https://hangar.papermc.io/Oliver/FancyNpcs)
 
-**Only for minecraft server version 1.19.4 - 1.20.6**<br>
-_Using [paper](https://papermc.io/downloads) is highly recommended_
+<br />
 
-## Get the plugin
+Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and **[Folia](https://papermc.io/software/folia)**) servers using packets.
 
-### Stable versions
-
-- https://hangar.papermc.io/Oliver/FancyNpcs
-- https://modrinth.com/plugin/fancynpcs/
-- https://github.com/FancyMcPlugins/FancyNpcs/releases
-
-### Development builds
-
-- https://fancyplugins.de/FancyNpcs/download/
-- Build from source
-
-## Documentation
-
-You can find the official FancyNpcs documentation here: https://fancyplugins.de/docs/fancynpcs.html
-
-- Getting started: https://fancyplugins.de/docs/fn-getting-started.html
-- Commands: https://fancyplugins.de/docs/fn-commands.html
-- API: https://fancyplugins.de/docs/fn-api.html
-
-If you have any questions about the plugin/api, feel free to ask in the [discord](https://discord.gg/ZUgYCEJUEx).
+</div>
 
 ## Features
+With this plugin you can create NPCs with customizable properties like:
+- **Type** (Cow, Pig, Player, etc.)
+- **Skin** (from username or texture URL)
+- **Glowing** (in all colors)
+- **Attributes** (pose, visibility, variant, etc.)
+- **Equipment** (eg. holding a diamond sword and wearing leather armor)
+- **Interactions** (player commands, console commands, messages)
+- ...and much more!
 
-With FancyNpcs you can create NPCs that look like real players. You can edit a bunch of properties like the display name
-or skin.
+Check out **[images section](#images)** down below.
 
-All properties:
+<br />
 
-- display name
-- skin (username or url)
-- entity type (cow, pig, blaze etc.)
-- equipment (e.g. holding something in the hand)
-- glowing (in all colors)
-- and many more properties that are entity specific
+## Installation
+Paper **1.19.4** - **1.20.6** with **Java 21** (or higher) is required. Plugin should also work on **Paper** forks.
 
-You can also define some actions that will be executed when a player interacts with the npc:
+**Spigot** is **not** supported.
 
-- message: sends a simple message to the player
-- player command: forces the player to execute a command
-- server command: executes a command in the console
+### Download (Stable)
+- **[Hangar](https://hangar.papermc.io/Oliver/FancyNpcs)**
+- **[Modrinth](https://modrinth.com/plugin/fancynpcs)**
+- **[GitHub Releases](https://github.com/FancyMcPlugins/FancyNpcs/releases)**
 
-Explore more features on the official website: https://fancyplugins.de/
+### Download (Development Builds)
+- **[Jenkins CI](https://jenkins.fancyplugins.de/job/FancyNpcs/)**
+- **[FancyPlugins Website](https://fancyplugins.de/FancyNpcs/download)**
 
-### Build from source
+<br />
 
-1. Clone this repo and run `gradlew shadowJar`
-2. The jar file will be in `build/libs/FancyNpcs-<version>.jar`
+## Documentation
+Official documentation is hosted **[here](https://fancyplugins.de/docs/fancynpcs.html)**. Quick reference:
+- **[Getting Started](https://fancyplugins.de/docs/fn-getting-started.html)**
+- **[Command Reference](https://fancyplugins.de/docs/fn-commands.html)**
+- **[Using API](https://fancyplugins.de/docs/fn-api.html)**
 
-## Examples
+**Have more questions?** Feel free to ask them on our **[Discord](https://discord.gg/ZUgYCEJUEx)** server.
 
-The following images are by https://explorerseden.eu/
-![](exampleImages/niceron2.png)
+<br />
 
-![](exampleImages/niceron1.png)
+## Building
+Follow these steps to build the plugin locally:
 
-![](exampleImages/niceron3.png)
+```shell
+# Cloning repository.
+$ git clone https://github.com/FancyMcPlugins/FancyNpcs.git
+# Entering cloned repository.
+$ cd FancyNpcs
+# Compiling and building artifacts.
+$ gradlew shadowJar
+# Once successfully built, plugin .jar can be found in /build/libs directory.
+```
 
-The following image is by Beacon's Quest
-![](exampleImages/dave1.png)
+<br />
 
-The following images are by oliver (main dev of this plugin)
-![](exampleImages/oliver1.png)
+## Images
+Images showcasing the plugin, sent to us by our community.
 
-![](exampleImages/oliver2.png)
+![Screenshot 1](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron1.jpeg?raw=true)  
+<sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
 
-![](exampleImages/oliver3.png)
+![Screenshot 2](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron2.jpeg?raw=true)  
+<sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
 
+![Screenshot 3](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/niceron3.jpeg?raw=true)  
+<sup>Provided by [Explorer's Eden](https://explorerseden.eu/)</sup>
+
+![Screenshot 4](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/dave1.jpeg?raw=true)  
+<sup>Provided by [Beacon's Quest](https://www.beaconsquest.net/)</sup>
+
+![Screenshot 5](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/oliver1.jpeg?raw=true)  
+<sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
+
+![Screenshot 6](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/oliver2.jpeg?raw=true)  
+<sup>Provided by [@OliverSchlueter](https://github.com/OliverSchlueter)</sup>
+
+![Screenshot 7](https://github.com/FancyMcPlugins/FancyNpcs/blob/main/images/screenshots/grabsky1.jpeg?raw=true)  
+<sup>Provided by [@Grabsky](https://github.com/Grabsky)</sup>

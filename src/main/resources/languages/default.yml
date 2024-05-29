@@ -94,6 +94,7 @@ messages:
     npc_glowing: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
     npc_info: "<dark_gray>› <gray>Syntax: {primaryColor}/npc info {secondaryColor}(npc)"
     npc_interaction_cooldown: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
+    npc_scale: "<dark_gray>› <gray>Syntax: {primaryColor}/npc scale {secondaryColor}(npc) (factor)"
     npc_list: "<dark_gray>› <gray>Syntax: {primaryColor}/npc list {secondaryColor}[filters...]"
     npc_message: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}(add | set | remove | clear | list | send_randomly)"
     npc_message_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}add {secondaryColor}(@none | message)"

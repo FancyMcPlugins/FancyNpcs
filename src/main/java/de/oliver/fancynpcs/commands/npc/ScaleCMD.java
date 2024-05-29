@@ -15,7 +15,7 @@ public enum ScaleCMD {
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Command("npc scale <npc> <factor>")
-    @Permission("fancynpcs.command.npc.interaction_cooldown")
+    @Permission("fancynpcs.command.npc.scale")
     public void onScale(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,

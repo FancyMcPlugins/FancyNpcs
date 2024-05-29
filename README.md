@@ -7,6 +7,7 @@
 [![Discord](https://img.shields.io/discord/899740810956910683?cacheSeconds=3600&logo=discord&logoColor=white&label=%20&labelColor=%235865F2&color=%23707BF4)](https://discord.gg/ZUgYCEJUEx)
 [![GitHub Downloads](https://img.shields.io/github/downloads/FancyMcPlugins/FancyNpcs/total?logo=github&labelColor=%2324292F&color=%23454F5A)](https://github.com/FancyMcPlugins/FancyNpcs/releases/latest)
 [![Modrinth Downloads](https://img.shields.io/modrinth/dt/fancynpcs?logo=modrinth&logoColor=white&label=downloads&labelColor=%23139549&color=%2318c25f)](https://modrinth.com/plugin/fancynpcs)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/FancyMcPlugins/FancyNpcs?logo=codefactor&logoColor=white&label=%20)](https://www.codefactor.io/repository/github/fancymcplugins/fancynpcs/issues/main)
 
 [![Modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/modrinth_vector.svg)](https://modrinth.com/plugin/fancynpcs)
 [![Hangar](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/available/hangar_vector.svg)](https://hangar.papermc.io/Oliver/FancyNpcs)

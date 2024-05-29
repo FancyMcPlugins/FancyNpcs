@@ -6,32 +6,10 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
-import de.oliver.fancynpcs.commands.npc.AttributeCMD;
-import de.oliver.fancynpcs.commands.npc.CollidableCMD;
-import de.oliver.fancynpcs.commands.npc.CopyCMD;
-import de.oliver.fancynpcs.commands.npc.CreateCMD;
-import de.oliver.fancynpcs.commands.npc.DisplayNameCMD;
-import de.oliver.fancynpcs.commands.npc.EquipmentCMD;
-import de.oliver.fancynpcs.commands.npc.FixCMD;
-import de.oliver.fancynpcs.commands.npc.GlowingCMD;
-import de.oliver.fancynpcs.commands.npc.InfoCMD;
-import de.oliver.fancynpcs.commands.npc.InteractionCooldownCMD;
-import de.oliver.fancynpcs.commands.npc.ListCMD;
-import de.oliver.fancynpcs.commands.npc.MessageCMD;
-import de.oliver.fancynpcs.commands.npc.MoveHereCMD;
-import de.oliver.fancynpcs.commands.npc.MoveToCMD;
-import de.oliver.fancynpcs.commands.npc.NearbyCMD;
-import de.oliver.fancynpcs.commands.npc.HelpCMD;
-import de.oliver.fancynpcs.commands.npc.PlayerCommandCMD;
-import de.oliver.fancynpcs.commands.npc.RemoveCMD;
-import de.oliver.fancynpcs.commands.npc.ServerCommandCMD;
-import de.oliver.fancynpcs.commands.npc.ShowInTabCMD;
-import de.oliver.fancynpcs.commands.npc.SkinCMD;
-import de.oliver.fancynpcs.commands.npc.TeleportCMD;
-import de.oliver.fancynpcs.commands.npc.TurnToPlayerCMD;
-import de.oliver.fancynpcs.commands.npc.TypeCMD;
+import de.oliver.fancynpcs.commands.npc.*;
 import de.oliver.fancynpcs.utils.GlowingColor;
 import io.leangen.geantyref.TypeToken;
+import io.papermc.paper.ServerBuildInfo;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.incendo.cloud.annotations.AnnotationParser;
@@ -50,11 +28,10 @@ import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.parser.standard.BooleanParser;
 import org.incendo.cloud.parser.standard.EnumParser;
-
-import java.util.Optional;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 import static org.incendo.cloud.exception.handling.ExceptionHandler.unwrappingHandler;
 
@@ -128,14 +105,14 @@ public final class CloudCommandManager {
         });
         // DEV NOTE: Temporary solution util https://github.com/Incendo/cloud-minecraft/pull/70 is merged.
         commandManager.exceptionController().register(ExceptionHandlerRegistration.<CommandSender, ArgumentParseException>builder(TypeToken.get(ArgumentParseException.class))
-                        .exceptionFilter(exception -> exception.getCause() instanceof ParserException parserException && parserException.argumentParserClass() == LocationParser.class)
-                        .exceptionHandler(exceptionContext -> {
-                            final ParserException exception = (ParserException) exceptionContext.exception().getCause();
-                            final String input = exception.captionVariables()[0].value(); // Should never throw.
-                            translator.translate("command_invalid_location")
-                                    .replaceStripped("input", !input.isBlank() ? input : "N/A") // Under certain conditions, input is not passed to the exception.
-                                    .send(exceptionContext.context().sender());
-                        }).build()
+                .exceptionFilter(exception -> exception.getCause() instanceof ParserException parserException && parserException.argumentParserClass() == LocationParser.class)
+                .exceptionHandler(exceptionContext -> {
+                    final ParserException exception = (ParserException) exceptionContext.exception().getCause();
+                    final String input = exception.captionVariables()[0].value(); // Should never throw.
+                    translator.translate("command_invalid_location")
+                            .replaceStripped("input", !input.isBlank() ? input : "N/A") // Under certain conditions, input is not passed to the exception.
+                            .send(exceptionContext.context().sender());
+                }).build()
         );
         commandManager.exceptionController().registerHandler(EnumParser.EnumParseException.class, (exceptionContext) -> {
             String translationKey = "command_invalid_enum_generic";
@@ -211,7 +188,13 @@ public final class CloudCommandManager {
         annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
-        // Returning this instance of CloudCommandManager to keep "builder-like" flow.
+
+
+        String mcVersion = ServerBuildInfo.buildInfo().minecraftVersionName();
+        if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6")) {
+            annotationParser.parse(ScaleCMD.INSTANCE);
+        }
+
         return this;
     }
 

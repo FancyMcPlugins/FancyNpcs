@@ -12,10 +12,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-
-import org.jetbrains.annotations.NotNull;
 
 public enum InfoCMD {
     INSTANCE; // SINGLETON
@@ -54,6 +53,7 @@ public enum InfoCMD {
                 .replace("is_show_in_tab", getTranslatedBoolean(npc.getData().isShowInTab()))
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
                 .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
+                .replace("scale", String.valueOf(npc.getData().getScale()))
                 .replace("messages_total", String.valueOf(npc.getData().getMessages().size()))
                 .replace("player_commands_total", String.valueOf(npc.getData().getPlayerCommands().size()))
                 .replace("server_commands_total", String.valueOf(npc.getData().getServerCommands().size()));

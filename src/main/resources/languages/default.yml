@@ -141,6 +141,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Changes glowing state and color of the NPC.'>{primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
     - "<dark_gray>› <hover:show_text:'<gray>Shows information about specified NPC.'>{primaryColor}/npc info {secondaryColor}(npc)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes duration between interactions (cooldown) of the NPC.'>{primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes the scale of the size of the NPC.'>{primaryColor}/npc scale {secondaryColor}(npc) (factor)"
     - "<dark_gray>› <hover:show_text:'<gray>Lists all NPCs in all worlds. Can be filtered and sorted.'>{primaryColor}/npc list {secondaryColor}[--type] [--sort]"
     - "<dark_gray>› <hover:show_text:'<gray>Adds a new message to the list. Supports MiniMessage, PlaceholderAPI and MiniPlaceholders.<newline><newline><dark_gray>Messages are shown to the player upon interaction with the NPC.'>{primaryColor}/npc message {secondaryColor}(npc) {primaryColor}add {secondaryColor}(@none | message)"
     - "<dark_gray>› <hover:show_text:'<gray>Removes message at a specified index.<newline><newline><dark_gray>Messages are shown to the player upon interaction with the NPC.'>{primaryColor}/npc message {secondaryColor}(npc) {primaryColor}remove {secondaryColor}(number)"
@@ -227,6 +228,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}"
     - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
     - "<dark_gray>› <hover:show_text:'<gray>Cooldown between interactions.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
+    - "<dark_gray>› <hover:show_text:'<gray>Scale factor for the npc size.'><gray>Scale</hover><dark_gray>: {warningColor}x{scale}"
     - ""
     - "<dark_gray>› <hover:show_text:'<gray>Click here to browse equipment.'><#848484>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
     - "<dark_gray>› <hover:show_text:'<gray>Click here to browse attributes.'><gray>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
@@ -241,6 +243,9 @@ messages:
   # Commands (npc interaction_cooldown)
   npc_interaction_cooldown_set: "<dark_gray>› <gray>Interaction cooldown has been set to {warningColor}{time}<gray>."
   npc_interaction_cooldown_disabled: "<dark_gray>› <gray>Interaction cooldown has been disabled."
+
+  # Commands (scale)
+  npc_scale_set_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been scaled to {warningColor}{scale}<gray>."
 
   # Commands (npc list)
   npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"

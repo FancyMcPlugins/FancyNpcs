@@ -155,6 +155,10 @@ tasks.named("publishPluginPublicationToHangar") {
     dependsOn("jar")
 }
 
+tasks.named("modrinth") {
+    dependsOn("shadowJar")
+}
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }

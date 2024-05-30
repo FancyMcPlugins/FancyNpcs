@@ -190,7 +190,7 @@ modrinth {
     projectId.set("fancynpcs")
     versionNumber.set(project.version.toString())
     versionType.set("alpha")
-    uploadFile.set(tasks.shadowJar.flatMap { it.archiveFile })
+    uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
     gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"))
     loaders.add("paper")
 }

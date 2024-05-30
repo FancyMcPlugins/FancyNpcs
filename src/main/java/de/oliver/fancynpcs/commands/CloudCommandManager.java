@@ -9,7 +9,7 @@ import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
 import de.oliver.fancynpcs.commands.npc.*;
 import de.oliver.fancynpcs.utils.GlowingColor;
 import io.leangen.geantyref.TypeToken;
-import io.papermc.paper.ServerBuildInfo;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.incendo.cloud.annotations.AnnotationParser;
@@ -190,7 +190,7 @@ public final class CloudCommandManager {
         annotationParser.parse(TypeCMD.INSTANCE);
 
 
-        String mcVersion = ServerBuildInfo.buildInfo().minecraftVersionName();
+        String mcVersion = Bukkit.getMinecraftVersion();
         if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6")) {
             annotationParser.parse(ScaleCMD.INSTANCE);
         }

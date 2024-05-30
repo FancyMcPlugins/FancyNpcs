@@ -149,6 +149,10 @@ tasks {
             expand(props)
         }
     }
+
+    publishAllPublicationsToHangar {
+        dependsOn("shadowJar")
+    }
 }
 
 java {

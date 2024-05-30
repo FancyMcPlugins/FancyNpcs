@@ -54,8 +54,9 @@ public class CatAttributes {
                 cat.setLying(true);
             }
             case "sitting" -> {
-                cat.setInSittingPose(true, false);
                 cat.setLying(false);
+                cat.setOrderedToSit(true);
+                cat.setInSittingPose(true, false);
             }
         }
     }

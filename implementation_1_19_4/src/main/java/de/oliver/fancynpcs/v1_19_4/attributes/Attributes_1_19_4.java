@@ -11,7 +11,10 @@ public class Attributes_1_19_4 {
         List<NpcAttribute> attributes = new ArrayList<>();
 
         attributes.addAll(EntityAttributes.getAllAttributes());
+        attributes.addAll(LivingEntityAttributes.getAllAttributes());
         attributes.addAll(AgeableMobAttributes.getAllAttributes());
+        attributes.addAll(IllagerAttributes.getAllAttributes());
+        attributes.addAll(SpellCasterAttributes.getAllAttributes());
 
         attributes.addAll(PlayerAttributes.getAllAttributes());
         attributes.addAll(SheepAttributes.getAllAttributes());
@@ -34,6 +37,8 @@ public class Attributes_1_19_4 {
         attributes.addAll(SlimeAttributes.getAllAttributes());
         attributes.addAll(PigAttributes.getAllAttributes());
         attributes.addAll(ArmorStandAttributes.getAllAttributes());
+        attributes.addAll(BeeAttributes.getAllAttributes());
+        attributes.addAll(VexAttributes.getAllAttributes());
 
         attributes.addAll(DisplayAttributes.getAllAttributes());
         attributes.addAll(TextDisplayAttributes.getAllAttributes());

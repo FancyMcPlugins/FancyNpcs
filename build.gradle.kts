@@ -149,10 +149,10 @@ tasks {
             expand(props)
         }
     }
+}
 
-    publishAllPublicationsToHangar {
-        dependsOn("jar")
-    }
+tasks.named("publishPluginPublicationToHangar") {
+    dependsOn("jar")
 }
 
 java {

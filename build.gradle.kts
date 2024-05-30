@@ -151,7 +151,7 @@ tasks {
     }
 
     publishAllPublicationsToHangar {
-        dependsOn("shadowJar")
+        dependsOn("jar")
     }
 }
 

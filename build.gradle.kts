@@ -9,6 +9,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.2.4"
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
 }
 
 runPaper.folia.registerTask()
@@ -163,5 +164,22 @@ fun getCurrentCommitHash(): String {
         return commitHash ?: ""
     } else {
         throw IllegalStateException("Failed to retrieve the commit hash.")
+    }
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version = project.version as String
+        id = "FancyNpcs"
+        channel = "Alpha"
+
+        apiKey = System.getenv("HANGAR_PUBLISH_API_TOKEN")
+
+        platforms {
+            paper {
+                jar = tasks.shadowJar.flatMap { it.archiveFile }
+                platformVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6")
+            }
+        }
     }
 }

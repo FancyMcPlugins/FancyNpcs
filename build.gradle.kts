@@ -151,11 +151,11 @@ tasks {
     }
 }
 
-tasks.named("publishPluginPublicationToHangar") {
+tasks.publishAllPublicationsToHangar {
     dependsOn("jar")
 }
 
-tasks.named("modrinth") {
+tasks.modrinth {
     dependsOn("shadowJar")
 }
 

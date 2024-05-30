@@ -173,7 +173,7 @@ hangarPublish {
         id = "FancyNpcs"
         channel = "Alpha"
 
-        apiKey = System.getenv("HANGAR_PUBLISH_API_TOKEN")
+        apiKey.set(System.getenv("HANGAR_PUBLISH_API_TOKEN"))
 
         platforms {
             paper {

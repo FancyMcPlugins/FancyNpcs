@@ -1,56 +1,46 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcCreateEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
-public class CopyCMD implements Subcommand {
+// TO-DO: Console support with --position and --world parameter flags.
+public enum CopyCMD {
+    INSTANCE; // SINGLETON
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private static final Pattern NPC_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9/_-]*$");
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
-    }
-
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
-            return false;
+    @Command(value = "npc copy <npc> <name>", requiredSender = Player.class)
+    @Permission("fancynpcs.command.npc.copy")
+    public void onCopy(
+            final @NotNull Player sender,
+            final @NotNull Npc npc,
+            final @NotNull String name
+    ) {
+        // Sending error message if name does not match configured pattern.
+        if (!NPC_NAME_PATTERN.matcher(name).find()) {
+            translator.translate("npc_create_failure_invalid_name").replaceStripped("name", name).send(sender);
+            return;
         }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        String newName = args[2];
-
-        Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(
+        // Creating a copy of an NPC and all it's data. The only different thing is it's UUID.
+        final Npc copied = FancyNpcs.getInstance().getNpcAdapter().apply(
                 new NpcData(
                         UUID.randomUUID().toString(),
-                        newName,
-                        player.getUniqueId(),
+                        name,
+                        sender.getUniqueId(),
                         npc.getData().getDisplayName(),
                         npc.getData().getSkin(),
-                        player.getLocation(),
+                        sender.getLocation(),
                         npc.getData().isShowInTab(),
                         npc.getData().isSpawnEntity(),
                         npc.getData().isCollidable(),
@@ -62,25 +52,21 @@ public class CopyCMD implements Subcommand {
                         npc.getData().getOnClick(),
                         npc.getData().getMessages(),
                         npc.getData().isSendMessagesRandomly(),
-                        npc.getData().getServerCommand(),
+                        npc.getData().getServerCommands(),
                         npc.getData().getPlayerCommands(),
                         npc.getData().getInteractionCooldown(),
+                        npc.getData().getScale(),
                         npc.getData().getAttributes(),
                         npc.getData().isMirrorSkin()
                 ));
-
-        NpcCreateEvent npcCreateEvent = new NpcCreateEvent(copied, player);
-        npcCreateEvent.callEvent();
-        if (!npcCreateEvent.isCancelled()) {
+        // Calling the event and creating + registering copied NPC if not cancelled.
+        if (new NpcCreateEvent(copied, sender).callEvent()) {
             copied.create();
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
-
-            MessageHelper.success(receiver, lang.get("npc-command-copy-success"));
+            translator.translate("npc_command_copy_success").replace("npc", npc.getData().getName()).replace("new_npc", copied.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-copy-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 }

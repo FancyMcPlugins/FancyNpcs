@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface FancyNpcsConfig {
 
+    boolean isSkipInvisibleNpcs();
+
     boolean isInteractionCooldownMessageDisabled();
 
     boolean isMuteVersionNotification();

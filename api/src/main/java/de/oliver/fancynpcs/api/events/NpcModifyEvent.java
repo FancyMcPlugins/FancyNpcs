@@ -78,21 +78,39 @@ public class NpcModifyEvent extends Event implements Cancellable {
     }
 
     public enum NpcModification {
-        LOCATION,
-        SKIN,
-        DISPLAY_NAME,
-        EQUIPMENT,
-        SERVER_COMMAND,
-        PLAYER_COMMAND,
-        SHOW_IN_TAB,
-        GLOWING,
-        GLOWING_COLOR,
-        TURN_TO_PLAYER,
-        CUSTOM_MESSAGE,
-        TYPE,
         ATTRIBUTE,
         COLLIDABLE,
+        DISPLAY_NAME,
+        EQUIPMENT,
+        GLOWING,
+        GLOWING_COLOR,
         INTERACTION_COOLDOWN,
+        SCALE,
+        LOCATION,
         MIRROR_SKIN,
+        PLAYER_COMMAND,
+        SERVER_COMMAND,
+        SHOW_IN_TAB,
+        SKIN,
+        TURN_TO_PLAYER,
+        TYPE,
+        // Messages.
+        MESSAGE_ADD,
+        MESSAGE_SET,
+        MESSAGE_REMOVE,
+        MESSAGE_CLEAR,
+        MESSAGE_SEND_RANDOMLY,
+        // Player commands.
+        PLAYER_COMMAND_ADD,
+        PLAYER_COMMAND_SET,
+        PLAYER_COMMAND_REMOVE,
+        PLAYER_COMMAND_CLEAR,
+        PLAYER_COMMAND_SEND_RANDOMLY,
+        // Server commands.
+        SERVER_COMMAND_ADD,
+        SERVER_COMMAND_SET,
+        SERVER_COMMAND_REMOVE,
+        SERVER_COMMAND_CLEAR,
+        SERVER_COMMAND_SEND_RANDOMLY
     }
 }

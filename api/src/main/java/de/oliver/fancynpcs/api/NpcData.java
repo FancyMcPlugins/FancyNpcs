@@ -28,11 +28,12 @@ public class NpcData {
     private Map<NpcEquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
     private boolean turnToPlayer;
-    private String serverCommand;
     private List<String> playerCommands;
+    private List<String> serverCommands;
     private List<String> messages;
     private boolean sendMessagesRandomly;
     private float interactionCooldown;
+    private float scale;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
     private boolean mirrorSkin;
@@ -55,9 +56,10 @@ public class NpcData {
             Consumer<Player> onClick,
             List<String> messages,
             boolean sendMessagesRandomly,
-            String serverCommand,
+            List<String> serverCommands,
             List<String> playerCommands,
             float interactionCooldown,
+            float scale,
             Map<NpcAttribute, String> attributes,
             boolean mirrorSkin
     ) {
@@ -76,11 +78,12 @@ public class NpcData {
         this.equipment = equipment;
         this.onClick = onClick;
         this.turnToPlayer = turnToPlayer;
-        this.serverCommand = serverCommand;
+        this.serverCommands = serverCommands;
         this.playerCommands = playerCommands;
         this.messages = messages;
         this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
+        this.scale = scale;
         this.attributes = attributes;
         this.mirrorSkin = mirrorSkin;
         this.isDirty = true;
@@ -105,9 +108,11 @@ public class NpcData {
         };
         this.turnToPlayer = false;
         this.messages = new ArrayList<>();
+        this.serverCommands = new ArrayList<>();
         this.playerCommands = new ArrayList<>();
         this.sendMessagesRandomly = false;
         this.interactionCooldown = 0;
+        this.scale = 1;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.mirrorSkin = false;
@@ -253,14 +258,24 @@ public class NpcData {
         return this;
     }
 
-    public String getServerCommand() {
-        return serverCommand;
+    public List<String> getServerCommands() {
+        return serverCommands;
     }
 
-    public NpcData setServerCommand(String serverCommand) {
-        this.serverCommand = serverCommand;
+    public NpcData setServerCommands(List<String> serverCommands) {
+        this.serverCommands = serverCommands;
         isDirty = true;
         return this;
+    }
+
+    public void addServerCommand(String command) {
+        serverCommands.add(command);
+        isDirty = true;
+    }
+
+    public void removeServerCommand(int index) {
+        serverCommands.remove(index);
+        isDirty = true;
     }
 
     public List<String> getPlayerCommands() {
@@ -316,6 +331,16 @@ public class NpcData {
 
     public NpcData setInteractionCooldown(float interactionCooldown) {
         this.interactionCooldown = interactionCooldown;
+        return this;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public NpcData setScale(float scale) {
+        this.scale = scale;
+        isDirty = true;
         return this;
     }
 

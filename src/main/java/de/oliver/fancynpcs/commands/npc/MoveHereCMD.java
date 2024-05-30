@@ -1,62 +1,41 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public enum MoveHereCMD {
+    INSTANCE; // SINGLETON
 
-public class MoveHereCMD implements Subcommand {
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
-
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
-    }
-
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!(receiver instanceof Player player)) {
-            MessageHelper.error(receiver, lang.get("npc-command.only-players"));
-            return false;
-        }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        Location location = player.getLocation();
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, receiver);
-        npcModifyEvent.callEvent();
-
-        String oldWorld = npc.getData().getLocation().getWorld().getName();
-
-        if (!npcModifyEvent.isCancelled()) {
+    @Command(value = "npc move_here <npc>", requiredSender = Player.class)
+    @Permission("fancynpcs.command.npc.move_here")
+    public void onCommand(
+            final @NotNull Player sender,
+            final @NotNull Npc npc
+    ) {
+        final Location location = sender.getLocation();
+        final String oldWorld = npc.getData().getLocation().getWorld().getName();
+        // Calling the event and moving the NPc to location of the sender, if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.LOCATION, location, sender).callEvent()) {
             npc.getData().setLocation(location);
-
             if (oldWorld.equals(location.getWorld().getName())) {
                 npc.updateForAll();
             } else {
                 npc.removeForAll();
                 npc.spawnForAll();
             }
-
-            MessageHelper.success(receiver, lang.get("npc-command-moveHere-moved"));
+            translator.translate("npc_move_here_success").replace("npc", npc.getData().getName()).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 }

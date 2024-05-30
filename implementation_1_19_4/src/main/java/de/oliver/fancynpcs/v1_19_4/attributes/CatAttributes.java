@@ -46,12 +46,10 @@ public class CatAttributes {
         final Cat cat = ReflectionHelper.getEntity(npc);
         switch (value.toLowerCase()) {
             case "standing" -> {
-                cat.setOrderedToSit(false);
                 cat.setInSittingPose(false, false);
                 cat.setLying(false);
             }
             case "sleeping" -> {
-                cat.setOrderedToSit(false);
                 cat.setInSittingPose(false, false);
                 cat.setLying(true);
             }

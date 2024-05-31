@@ -26,12 +26,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                // sh './gradlew test'
-            }
-        }
-
         stage('Deploy') {
             steps {
                 // Load the secrets and make them available as environment variables

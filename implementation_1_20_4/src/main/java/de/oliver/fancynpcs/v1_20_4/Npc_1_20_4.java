@@ -234,7 +234,7 @@ public class Npc_1_20_4 extends Npc {
             List<Pair<EquipmentSlot, ItemStack>> equipmentList = new ArrayList<>();
 
             for (NpcEquipmentSlot slot : data.getEquipment().keySet()) {
-                equipmentList.add(new Pair<>(EquipmentSlot.byName(slot.toNmsName()), ((CraftItemStack) data.getEquipment().get(slot).clone()).handle));
+                equipmentList.add(new Pair<>(EquipmentSlot.byName(slot.toNmsName()), CraftItemStack.asNMSCopy(data.getEquipment().get(slot))));
             }
 
             ClientboundSetEquipmentPacket setEquipmentPacket = new ClientboundSetEquipmentPacket(npc.getId(), equipmentList);

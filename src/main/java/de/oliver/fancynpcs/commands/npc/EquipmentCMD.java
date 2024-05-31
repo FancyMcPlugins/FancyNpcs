@@ -38,7 +38,8 @@ public enum EquipmentCMD {
 
     // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
     private static final List<String> SLOT_SUGGESTIONS = Arrays.stream(NpcEquipmentSlot.values()).map(slot -> slot.name().toLowerCase()).toList();
-    private static final List<String> MATERIAL_SUGGESTIONS = StreamSupport.stream(Registry.MATERIAL.spliterator(), false).map(material -> material.key().asString()).toList(); // Replace with Registry#stream after dropping 1.19.4 support.
+    // Replace with Registry#stream after dropping 1.19.4 support.
+    private static final List<String> MATERIAL_SUGGESTIONS = StreamSupport.stream(Registry.MATERIAL.spliterator(), false).filter(Material::isItem).map(material -> material.key().asString()).toList();
 
     @Command("npc equipment <npc> set <slot> <item>")
     @Permission("fancynpcs.command.npc.equipment.set")
@@ -137,7 +138,7 @@ public enum EquipmentCMD {
             // Getting material from the registry.
             final @Nullable Material material = Registry.MATERIAL.get(key);
             // Sending error message if no material was found.
-            if (material == null)
+            if (material == null || !material.isItem())
                 throw ReplyingParseException.replying(() -> translator.translate("command_invalid_material").replaceStripped("input", value).send(context.sender()));
             // Returning new ItemStack object from the specified Material.
             return new ItemStack(material);

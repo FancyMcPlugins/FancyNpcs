@@ -1,3 +1,9 @@
+/*
+    Required env: java 21, git
+    Required plugins: discord notifier
+    Required credentials: MODRINTH_PUBLISH_API_TOKEN, HANGAR_PUBLISH_API_TOKEN
+*/
+
 pipeline {
     agent any
 
@@ -16,13 +22,13 @@ pipeline {
             steps {
                 sh 'chmod +x gradlew'
                 sh './gradlew clean shadowJar'
+                echo 'Built the plugin!'
             }
         }
 
         stage('Test') {
             steps {
-                // Define your test steps here
-                sh './gradlew test'
+                // sh './gradlew test'
             }
         }
 
@@ -34,7 +40,10 @@ pipeline {
                     string(credentialsId: 'HANGAR_PUBLISH_API_TOKEN', variable: 'HANGAR_PUBLISH_API_TOKEN')
                 ]) {
                     sh 'export MODRINTH_PUBLISH_API_TOKEN=${MODRINTH_PUBLISH_API_TOKEN} && ./gradlew modrinth'
+                    echo 'Published to Modrinth!'
+
                     sh 'export HANGAR_PUBLISH_API_TOKEN=${HANGAR_PUBLISH_API_TOKEN} && ./gradlew publishAllPublicationsToHangar'
+                    echo 'Published to Hangar!'
                 }
             }
         }
@@ -46,47 +55,14 @@ pipeline {
         }
         success {
             script {
-                def changes = []
-                currentBuild.changeSets.each { changeSet ->
-                    changeSet.items.each { item ->
-                        changes << "${item.commitId.substring(0, 7)} ${item.msg} - ${item.author}"
-                    }
-                }
-                def changeLogString = changes.join('\n')
-
-                discordSend description: """**Build:** ${env.BUILD_NUMBER}
-**Status:** ${currentBuild.currentResult}
-**Changes:**
-${changeLogString}
-
-**Download:**https://modrinth.com/plugin/fancynpcs/version/${env.BUILD_NUMBER}""",
-                footer: "Jenkins Pipeline",
-                link: env.BUILD_URL,
-                result: 'SUCCESS',
-                title: "FancyNpcs #${env.BUILD_NUMBER}",
-                webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult} \n**Download:** https://modrinth.com/plugin/fancynpcs/versions/${env.BUILD_NUMBER}",
+                 footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'SUCCESS', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
             }
             echo 'Build was successful!'
         }
         failure {
             script {
-                def changes = []
-                currentBuild.changeSets.each { changeSet ->
-                    changeSet.items.each { item ->
-                        changes << "${item.commitId.substring(0, 7)} ${item.msg} - ${item.author}"
-                    }
-                }
-                def changeLogString = changes.join('\n')
-
-                discordSend description: """Build: ${env.BUILD_NUMBER}
-Status: ${currentBuild.currentResult}
-Changes:
-${changeLogString}""",
-                footer: "Jenkins Pipeline",
-                link: env.BUILD_URL,
-                result: 'FAILURE',
-                title: "FancyNpcs #${env.BUILD_NUMBER}",
-                webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult}", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
             }
             echo 'Build failed!'
         }

@@ -46,13 +46,47 @@ pipeline {
         }
         success {
             script {
-                discordSend description: "Build was successful!", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'SUCCESS', title: "Build Success", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                def changes = []
+                currentBuild.changeSets.each { changeSet ->
+                    changeSet.items.each { item ->
+                        changes << "${item.commitId.substring(0, 7)} ${item.msg} - ${item.author}"
+                    }
+                }
+                def changeLogString = changes.join('\n')
+
+                discordSend description: """**Build:** ${env.BUILD_NUMBER}
+**Status:** ${currentBuild.currentResult}
+**Changes:**
+${changeLogString}
+
+**Download:**https://modrinth.com/plugin/fancynpcs/version/${env.BUILD_NUMBER}""",
+                footer: "Jenkins Pipeline",
+                link: env.BUILD_URL,
+                result: 'SUCCESS',
+                title: "FancyNpcs #${env.BUILD_NUMBER}",
+                webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
             }
             echo 'Build was successful!'
         }
         failure {
             script {
-                discordSend description: "Build failed!", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "Build Failed", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                def changes = []
+                currentBuild.changeSets.each { changeSet ->
+                    changeSet.items.each { item ->
+                        changes << "${item.commitId.substring(0, 7)} ${item.msg} - ${item.author}"
+                    }
+                }
+                def changeLogString = changes.join('\n')
+
+                discordSend description: """Build: ${env.BUILD_NUMBER}
+Status: ${currentBuild.currentResult}
+Changes:
+${changeLogString}""",
+                footer: "Jenkins Pipeline",
+                link: env.BUILD_URL,
+                result: 'FAILURE',
+                title: "FancyNpcs #${env.BUILD_NUMBER}",
+                webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
             }
             echo 'Build failed!'
         }

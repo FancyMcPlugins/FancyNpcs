@@ -6,7 +6,31 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
-import de.oliver.fancynpcs.commands.npc.*;
+import de.oliver.fancynpcs.commands.npc.AttributeCMD;
+import de.oliver.fancynpcs.commands.npc.CollidableCMD;
+import de.oliver.fancynpcs.commands.npc.CopyCMD;
+import de.oliver.fancynpcs.commands.npc.CreateCMD;
+import de.oliver.fancynpcs.commands.npc.DisplayNameCMD;
+import de.oliver.fancynpcs.commands.npc.EquipmentCMD;
+import de.oliver.fancynpcs.commands.npc.FixCMD;
+import de.oliver.fancynpcs.commands.npc.GlowingCMD;
+import de.oliver.fancynpcs.commands.npc.HelpCMD;
+import de.oliver.fancynpcs.commands.npc.InfoCMD;
+import de.oliver.fancynpcs.commands.npc.InteractionCooldownCMD;
+import de.oliver.fancynpcs.commands.npc.ListCMD;
+import de.oliver.fancynpcs.commands.npc.MessageCMD;
+import de.oliver.fancynpcs.commands.npc.MoveHereCMD;
+import de.oliver.fancynpcs.commands.npc.MoveToCMD;
+import de.oliver.fancynpcs.commands.npc.NearbyCMD;
+import de.oliver.fancynpcs.commands.npc.PlayerCommandCMD;
+import de.oliver.fancynpcs.commands.npc.RemoveCMD;
+import de.oliver.fancynpcs.commands.npc.ScaleCMD;
+import de.oliver.fancynpcs.commands.npc.ServerCommandCMD;
+import de.oliver.fancynpcs.commands.npc.ShowInTabCMD;
+import de.oliver.fancynpcs.commands.npc.SkinCMD;
+import de.oliver.fancynpcs.commands.npc.TeleportCMD;
+import de.oliver.fancynpcs.commands.npc.TurnToPlayerCMD;
+import de.oliver.fancynpcs.commands.npc.TypeCMD;
 import de.oliver.fancynpcs.utils.GlowingColor;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.Bukkit;
@@ -25,13 +49,14 @@ import org.incendo.cloud.exception.handling.ExceptionHandlerRegistration;
 import org.incendo.cloud.exception.parsing.NumberParseException;
 import org.incendo.cloud.exception.parsing.ParserException;
 import org.incendo.cloud.execution.ExecutionCoordinator;
-import org.incendo.cloud.paper.PaperCommandManager;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.standard.BooleanParser;
 import org.incendo.cloud.parser.standard.EnumParser;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import static org.incendo.cloud.exception.handling.ExceptionHandler.unwrappingHandler;
 
@@ -43,13 +68,13 @@ public final class CloudCommandManager {
 
     private final @NotNull FancyNpcs plugin;
 
-    private final @NotNull PaperCommandManager<CommandSender> commandManager;
+    private final @NotNull LegacyPaperCommandManager<CommandSender> commandManager;
     private final @NotNull AnnotationParser<CommandSender> annotationParser;
 
     public CloudCommandManager(final @NotNull FancyNpcs plugin, final boolean isBrigadier) {
         this.plugin = plugin;
-        // Creating instance of Cloud's PaperCommandManager, which is used for anything command-related.
-        this.commandManager = PaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
+        // Creating instance of Cloud's LegacyPaperCommandManager, which is used for anything command-related.
+        this.commandManager = LegacyPaperCommandManager.createNative(plugin, ExecutionCoordinator.simpleCoordinator());
         // Registering Brigadier, if available.
         if (isBrigadier && commandManager.hasCapability(CloudBukkitCapabilities.NATIVE_BRIGADIER))
             commandManager.registerBrigadier();
@@ -58,7 +83,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers arguments (parsers and suggestion providers) to the {@link PaperCommandManager}.
+     * Registers arguments (parsers and suggestion providers) to the {@link LegacyPaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerArguments() {
         annotationParser.parse(NpcArgument.INSTANCE);
@@ -68,7 +93,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers exception handlers to the {@link PaperCommandManager}.
+     * Registers exception handlers to the {@link LegacyPaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerExceptionHandlers() {
         final Translator translator = plugin.getTranslator();
@@ -103,7 +128,7 @@ public final class CloudCommandManager {
                     .replaceStripped("input", exceptionContext.exception().input())
                     .send(exceptionContext.context().sender());
         });
-        // DEV NOTE: Temporary solution util https://github.com/Incendo/cloud-minecraft/pull/70 is merged.
+        // DEV NOTE: Temporary solution until https://github.com/Incendo/cloud-minecraft/pull/70 is merged.
         commandManager.exceptionController().register(ExceptionHandlerRegistration.<CommandSender, ArgumentParseException>builder(TypeToken.get(ArgumentParseException.class))
                 .exceptionFilter(exception -> exception.getCause() instanceof ParserException parserException && parserException.argumentParserClass() == LocationParser.class)
                 .exceptionHandler(exceptionContext -> {
@@ -160,7 +185,7 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Registers plugin commands to the {@link PaperCommandManager}.
+     * Registers plugin commands to the {@link LegacyPaperCommandManager}.
      */
     public @NotNull CloudCommandManager registerCommands() {
         annotationParser.parse(AttributeCMD.INSTANCE);
@@ -199,9 +224,9 @@ public final class CloudCommandManager {
     }
 
     /**
-     * Returns the internal {@link PaperCommandManager} associated with this instance of {@link CloudCommandManager}.
+     * Returns the internal {@link LegacyPaperCommandManager} associated with this instance of {@link CloudCommandManager}.
      */
-    public @NotNull PaperCommandManager<CommandSender> getCommandManager() {
+    public @NotNull LegacyPaperCommandManager<CommandSender> getCommandManager() {
         return commandManager;
     }
 

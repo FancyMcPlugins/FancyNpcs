@@ -152,7 +152,7 @@ tasks {
 }
 
 tasks.publishAllPublicationsToHangar {
-    dependsOn("jar")
+    dependsOn("shadowJar")
 }
 
 tasks.modrinth {

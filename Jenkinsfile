@@ -42,7 +42,7 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: '**/build/libs/*.jar', allowEmptyArchive: true
+            archiveArtifacts artifacts: '**/build/libs/FancyNpcs-*.jar', allowEmptyArchive: true
         }
         success {
             script {

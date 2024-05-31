@@ -1,6 +1,5 @@
 package de.oliver.fancynpcs.v1_19_4.attributes;
 
-import com.google.common.collect.Streams;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_19_4.ReflectionHelper;
@@ -14,10 +13,11 @@ import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class BlockDisplayAttributes {
 
-    private static final List<String> BLOCKS = Streams.stream(Registry.MATERIAL.iterator()).filter(Material::isBlock).map(it -> it.key().value()).toList();
+    private static final List<String> BLOCKS = StreamSupport.stream(Registry.MATERIAL.spliterator(), false).filter(Material::isBlock).map(it -> it.key().value()).toList();
 
     public static List<NpcAttribute> getAllAttributes() {
         List<NpcAttribute> attributes = new ArrayList<>();

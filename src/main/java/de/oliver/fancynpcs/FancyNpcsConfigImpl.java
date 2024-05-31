@@ -15,6 +15,11 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private String language;
 
     /**
+     * Whether invisible NPCs should not be sent to the player.
+     */
+    private boolean skipInvisibleNpcs;
+
+    /**
      * Indicates whether interaction cooldown messages are disabled.
      */
     private boolean disabledInteractionCooldownMessage;
@@ -68,6 +73,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         language = (String) ConfigHelper.getOrDefault(config, "language", "default");
         config.setInlineComments("language", List.of("Language to use for translatable messages."));
 
+        skipInvisibleNpcs = (boolean) ConfigHelper.getOrDefault(config, "skip_invisible_npcs", true);
+        config.setInlineComments("skip_invisible_npcs", List.of("Whether invisible NPCs should not be sent to the player."));
+
         disabledInteractionCooldownMessage = (boolean) ConfigHelper.getOrDefault(config, "disable_interaction_cooldown_message", false);
         config.setInlineComments("disable_interaction_cooldown_message", List.of("Whether interaction cooldown messages are disabled."));
 
@@ -113,6 +121,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public String getLanguage() {
         return language;
+    }
+
+    public boolean isSkipInvisibleNpcs() {
+        return skipInvisibleNpcs;
     }
 
     public boolean isInteractionCooldownMessageDisabled() {

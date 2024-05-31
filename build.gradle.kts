@@ -9,6 +9,8 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.2.4"
     id("io.github.goooler.shadow") version "8.1.7"
     id("net.minecrell.plugin-yml.paper") version "0.6.0"
+    id("io.papermc.hangar-publish-plugin") version "0.1.2"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 runPaper.folia.registerTask()
@@ -41,6 +43,7 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
     implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
     implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
     implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
@@ -148,6 +151,14 @@ tasks {
     }
 }
 
+tasks.publishAllPublicationsToHangar {
+    dependsOn("jar")
+}
+
+tasks.modrinth {
+    dependsOn("shadowJar")
+}
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
@@ -163,4 +174,31 @@ fun getCurrentCommitHash(): String {
     } else {
         throw IllegalStateException("Failed to retrieve the commit hash.")
     }
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version = project.version as String
+        id = "FancyNpcs"
+        channel = "Alpha"
+
+        apiKey.set(System.getenv("HANGAR_PUBLISH_API_TOKEN"))
+
+        platforms {
+            paper {
+                jar = tasks.shadowJar.flatMap { it.archiveFile }
+                platformVersions = listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6")
+            }
+        }
+    }
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_PUBLISH_API_TOKEN"))
+    projectId.set("fancynpcs")
+    versionNumber.set(project.version.toString())
+    versionType.set("alpha")
+    uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
+    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"))
+    loaders.add("paper")
 }

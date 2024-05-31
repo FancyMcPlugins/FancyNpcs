@@ -16,7 +16,7 @@ public class CamelAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sitting"),
+                List.of("standing", "sitting", "dashing"),
                 List.of(EntityType.CAMEL),
                 CamelAttributes::setPose
         ));
@@ -28,8 +28,18 @@ public class CamelAttributes {
         Camel camel = ReflectionHelper.getEntity(npc);
 
         switch (value.toLowerCase()) {
-            case "standing" -> camel.standUp();
-            case "sitting" -> camel.sitDown();
+            case "standing" -> {
+                camel.setDashing(false);
+                camel.standUp();
+            }
+            case "sitting" -> {
+                camel.setDashing(false);
+                camel.sitDown();
+            }
+            case "dashing" -> {
+                camel.standUp();
+                camel.setDashing(true);
+            }
         }
     }
 

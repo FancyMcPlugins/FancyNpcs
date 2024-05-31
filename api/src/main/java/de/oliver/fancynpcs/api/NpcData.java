@@ -33,6 +33,7 @@ public class NpcData {
     private List<String> messages;
     private boolean sendMessagesRandomly;
     private float interactionCooldown;
+    private float scale;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
     private boolean mirrorSkin;
@@ -58,6 +59,7 @@ public class NpcData {
             List<String> serverCommands,
             List<String> playerCommands,
             float interactionCooldown,
+            float scale,
             Map<NpcAttribute, String> attributes,
             boolean mirrorSkin
     ) {
@@ -81,6 +83,7 @@ public class NpcData {
         this.messages = messages;
         this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
+        this.scale = scale;
         this.attributes = attributes;
         this.mirrorSkin = mirrorSkin;
         this.isDirty = true;
@@ -109,6 +112,7 @@ public class NpcData {
         this.playerCommands = new ArrayList<>();
         this.sendMessagesRandomly = false;
         this.interactionCooldown = 0;
+        this.scale = 1;
         this.equipment = new HashMap<>();
         this.attributes = new HashMap<>();
         this.mirrorSkin = false;
@@ -327,6 +331,16 @@ public class NpcData {
 
     public NpcData setInteractionCooldown(float interactionCooldown) {
         this.interactionCooldown = interactionCooldown;
+        return this;
+    }
+
+    public float getScale() {
+        return scale;
+    }
+
+    public NpcData setScale(float scale) {
+        this.scale = scale;
+        isDirty = true;
         return this;
     }
 

@@ -14,6 +14,7 @@ import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.Optionull;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.RemoteChatSession;
@@ -29,6 +30,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -37,6 +39,8 @@ import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Team;
@@ -276,6 +280,16 @@ public class Npc_1_20_6 extends Npc {
                 }
             }
 
+        }
+
+        if (data.getScale() != 1) {
+            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
+            AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
+            });
+            attributeInstance.setBaseValue(data.getScale());
+
+            ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
+            serverPlayer.connection.send(updateAttributesPacket);
         }
     }
 

@@ -59,7 +59,7 @@ paper {
     foliaSupported = true
     version = rootProject.version.toString()
     description = "Simple, lightweight and fast NPC plugin using packets"
-    apiVersion = "1.20"
+    apiVersion = "1.19"
     serverDependencies {
         register("PlaceholderAPI") {
             required = false

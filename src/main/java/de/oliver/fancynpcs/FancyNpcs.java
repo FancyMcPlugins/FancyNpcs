@@ -1,5 +1,7 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
+import de.oliver.fancyanalytics.api.MetricSupplier;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -19,12 +21,7 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
-import de.oliver.fancynpcs.listeners.PlayerChangedWorldListener;
-import de.oliver.fancynpcs.listeners.PlayerJoinListener;
-import de.oliver.fancynpcs.listeners.PlayerNpcsListener;
-import de.oliver.fancynpcs.listeners.PlayerQuitListener;
-import de.oliver.fancynpcs.listeners.PlayerTeleportListener;
-import de.oliver.fancynpcs.listeners.PlayerUseUnknownEntityListener;
+import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
@@ -45,6 +42,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
+    public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
     private final FancyScheduler scheduler;
@@ -80,8 +78,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
         featureFlagConfig.load();
-
 
         String mcVersion = Bukkit.getMinecraftVersion();
 
@@ -162,6 +160,19 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
+
+        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled()) {
+            FancyAnalyticsAPI fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
+            fancyAnalytics.registerDefaultPluginMetrics(instance);
+            fancyAnalytics.registerLogger(getLogger());
+            fancyAnalytics.registerLogger(Bukkit.getLogger());
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
+
+            fancyAnalytics.initialize();
+        }
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");

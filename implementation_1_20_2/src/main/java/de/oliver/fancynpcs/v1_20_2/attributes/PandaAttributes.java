@@ -28,8 +28,15 @@ public class PandaAttributes {
         ));
 
         attributes.add(new NpcAttribute(
+                "eating",
+                List.of("true", "false"),
+                List.of(EntityType.PANDA),
+                PandaAttributes::setEating
+        ));
+
+        attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sitting", "onBack"),
+                List.of("standing", "sitting", "onBack", "rolling"),
                 List.of(EntityType.PANDA),
                 PandaAttributes::setPose
         ));
@@ -49,18 +56,34 @@ public class PandaAttributes {
 
         switch (value.toLowerCase()) {
             case "standing" -> {
-                setFlag(panda, 8, false); // sitting=false
-                setFlag(panda, 16, false); // onBack=false
+                setFlag(panda, 8, false); //sitting
+                panda.roll(false);
+                panda.setOnBack(false);
             }
             case "sitting" -> {
-                setFlag(panda, 8, true); // sitting=true
-                setFlag(panda, 16, false); // onBack=false
+                panda.roll(false);
+                panda.setOnBack(false);
+                setFlag(panda, 8, true); //sitting
             }
             case "onback" -> {
-                setFlag(panda, 8, false); // sitting=false
-                setFlag(panda, 16, true); // onBack=true
+                setFlag(panda, 8, false); //sitting
+                panda.roll(false);
+                panda.setOnBack(true);
+            }
+            case "rolling" -> {
+                setFlag(panda, 8, false); //sitting
+                panda.setOnBack(false);
+                panda.roll(true);
             }
         }
+    }
+
+    private static void setEating(Npc npc, String value) {
+        Panda panda = ReflectionHelper.getEntity(npc);
+
+        boolean eating = Boolean.parseBoolean(value);
+
+        panda.eat(eating);
     }
 
     private static void setFlag(Panda panda, int mask, boolean value) {

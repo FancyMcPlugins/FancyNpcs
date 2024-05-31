@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.FancyNpcs;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-
 import org.jetbrains.annotations.NotNull;
 
 public enum FancyNpcsCMD {
@@ -59,11 +58,17 @@ public enum FancyNpcsCMD {
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
+        translator.translate("fancynpcs_feature_flags_entry")
+                .replace("number", "2")
+                .replace("name", "FancyAnalytics")
+                .replace("id", FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.getName())
+                .replace("state", getTranslatedState(FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled()))
+                .send(sender);
         translator.translate("fancynpcs_feature_flags_footer")
-                .replace("count", "1")
-                .replace("count_formatted", "· · 1")
+                .replace("count", "2")
+                .replace("count_formatted", "· · 2")
                 .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
-                .replace("total_formatted", "· · 1")
+                .replace("total_formatted", "· · 2")
                 .send(sender);
     }
 

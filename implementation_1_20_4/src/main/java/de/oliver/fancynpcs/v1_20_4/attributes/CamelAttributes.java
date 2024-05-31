@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.v1_20_4.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_20_4.ReflectionHelper;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.animal.camel.Camel;
 import org.bukkit.entity.EntityType;
 
@@ -16,7 +17,7 @@ public class CamelAttributes {
 
         attributes.add(new NpcAttribute(
                 "pose",
-                List.of("standing", "sitting"),
+                List.of("standing", "sitting", "dashing"),
                 List.of(EntityType.CAMEL),
                 CamelAttributes::setPose
         ));
@@ -28,8 +29,18 @@ public class CamelAttributes {
         Camel camel = ReflectionHelper.getEntity(npc);
 
         switch (value.toLowerCase()) {
-            case "standing" -> camel.standUp();
-            case "sitting" -> camel.sitDown();
+            case "standing" -> {
+                camel.setDashing(false);
+                camel.standUp();
+            }
+            case "sitting" -> {
+                camel.setDashing(false);
+                camel.sitDown();
+            }
+            case "dashing" -> {
+                camel.standUpInstantly();
+                camel.setDashing(true);
+            }
         }
     }
 

@@ -49,7 +49,7 @@ pipeline {
         }
         success {
             script {
-                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult} \n**Download:** https://modrinth.com/plugin/fancynpcs/versions/${env.BUILD_NUMBER}",
+                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult} \n**Download:** https://modrinth.com/plugin/fancynpcs/versions",
                  footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'SUCCESS', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
             }
             echo 'Build was successful!'

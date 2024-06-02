@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package de.oliver.fancynpcs.api.util;
+package de.oliver.fancynpcs.api.utils;
 
 import java.time.Instant;
 import java.util.Date;
@@ -30,13 +30,13 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.oliver.fancynpcs.api.util.Interval.Unit.DAYS;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.HOURS;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.MILLISECONDS;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.MINUTES;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.MONTHS;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.SECONDS;
-import static de.oliver.fancynpcs.api.util.Interval.Unit.YEARS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.DAYS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.HOURS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.MILLISECONDS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.MINUTES;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.MONTHS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.SECONDS;
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.YEARS;
 
 /**
  * {@link Interval} is simple (but not very extensible) object that provides methods for

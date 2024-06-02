@@ -27,6 +27,10 @@ messages:
   legs: "Legs"
   feet: "Feet"
 
+  # Common (Availability)
+  unknown: "Unknown"
+  not_available: "N/A"
+
   # Common (Colors)
   color_black: "<dark_gray>Black"
   color_dark_blue: "<dark_blue>Dark Blue"
@@ -217,8 +221,8 @@ messages:
   # Commands (npc info)
   npc_info_general:
     - ""
-    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><#848484>Identifier</hover>: <hover:show_text:'<gray>Click to copy identifier to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id_short}</click></hover>"
-    - "<dark_gray>› <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator to clipboard.'><click:copy_to_clipboard:'{creator}'>{warningColor}{creator_short}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><#848484>Identifier</hover>: <hover:show_text:'<gray>Click to copy UUID to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator UUID to clipboard.'><click:copy_to_clipboard:'{creator_uuid}'>{warningColor}{creator_uuid_short}<gray> ({creator_name})</click></hover>"
     - "<dark_gray>› <hover:show_text:'<gray>Name of the NPC, used in commands and displayed above their head if display name is not set.'><#848484>Name</hover>: {warningColor}{name}"
     - "<dark_gray>› <hover:show_text:'<gray>Display name of the NPC, displayed above their head.'><gray>Display Name</hover>: <reset>{displayname}<reset>"
     - "<dark_gray>› <hover:show_text:'<gray>Entity type of the NPC.'><#848484>Type</hover><dark_gray>: {warningColor}{type}"
@@ -229,13 +233,13 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}"
     - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC.. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
     - "<dark_gray>› <hover:show_text:'<gray>Cooldown between interactions.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
-    - "<dark_gray>› <hover:show_text:'<gray>Scale factor for the npc size.'><gray>Scale</hover><dark_gray>: {warningColor}x{scale}"
+    - "<dark_gray>› <hover:show_text:'<gray>Scale factor for the NPC size.'><#848484>Scale</hover><dark_gray>: {warningColor}x{scale}"
     - ""
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse equipment.'><#848484>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse attributes.'><gray>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of messages.'><#848484>Messages</hover><dark_gray>: <click:RUN_COMMAND:'/npc message {name} list'>{warningColor}[Click Here]</click> <dark_gray>({messages_total} total)"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of player commands.'><gray>Player Commands</hover><dark_gray>: <click:RUN_COMMAND:'/npc player_command {name} list'>{warningColor}[Click Here]</click> <dark_gray>({player_commands_total} total)"
-    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of server commands.'><#848484>Server Commands</hover><dark_gray>: <click:RUN_COMMAND:'/npc server_command {name} list'>{warningColor}[Click Here]</click> <dark_gray>({server_commands_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse equipment.'><gray>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse attributes.'><#848484>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of messages.'><gray>Messages</hover><dark_gray>: <click:RUN_COMMAND:'/npc message {name} list'>{warningColor}[Click Here]</click> <dark_gray>({messages_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of player commands.'><#848484>Player Commands</hover><dark_gray>: <click:RUN_COMMAND:'/npc player_command {name} list'>{warningColor}[Click Here]</click> <dark_gray>({player_commands_total} total)"
+    - "<dark_gray>› <hover:show_text:'<gray>Click here to browse list of server commands.'><gray>Server Commands</hover><dark_gray>: <click:RUN_COMMAND:'/npc server_command {name} list'>{warningColor}[Click Here]</click> <dark_gray>({server_commands_total} total)"
     - ""
     - "<dark_gray>› {primaryColor}Can't find what you're looking for?"
     - "<dark_gray>› <gray>Open the chat window to see all information."

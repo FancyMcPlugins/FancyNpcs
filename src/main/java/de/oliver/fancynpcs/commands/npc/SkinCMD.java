@@ -63,7 +63,7 @@ public enum SkinCMD {
             }
         } else if (isNone) {
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(null);
                 npc.removeForAll();
@@ -82,7 +82,7 @@ public enum SkinCMD {
                 return;
             }
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(skinFetcher);
                 npc.removeForAll();
@@ -109,7 +109,7 @@ public enum SkinCMD {
                 return;
             }
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(skinFetcher);
                 npc.removeForAll();

@@ -170,6 +170,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("language", selectedLanguage::getLanguageCode));
 
             fancyAnalytics.initialize();
         }

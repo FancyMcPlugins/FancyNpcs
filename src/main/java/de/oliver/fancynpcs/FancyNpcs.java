@@ -33,6 +33,7 @@ import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -169,7 +170,59 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
             fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_player_npcs_fflag", () -> PLAYER_NPCS_FEATURE_FLAG.isEnabled() ? "true" : "false"));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("language", selectedLanguage::getLanguageCode));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("avg_interaction_cooldown", () -> {
+                double sum = 0;
+                int count = 0;
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    if (npc.getData().getInteractionCooldown() > 0) {
+                        sum += npc.getData().getInteractionCooldown();
+                        count++;
+                    }
+                }
+
+                if (count == 0) {
+                    return 0.0;
+                }
+
+                return sum / count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_interaction_cooldown_longer_than_5min", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> npc.getData().getInteractionCooldown() > 300)
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_non_persistent_npcs", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> !npc.isSaveToFile())
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_not_player_npcs", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> npc.getData().getType() != EntityType.PLAYER)
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_having_attributes", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> !npc.getData().getAttributes().isEmpty())
+                        .count();
+
+                return (double) count;
+            }));
+
 
             fancyAnalytics.initialize();
         }

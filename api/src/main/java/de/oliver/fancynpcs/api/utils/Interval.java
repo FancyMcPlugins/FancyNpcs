@@ -23,26 +23,21 @@
  */
 package de.oliver.fancynpcs.api.utils;
 
-import java.time.Instant;
-import java.util.Date;
-
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.DAYS;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.HOURS;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.MILLISECONDS;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.MINUTES;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.MONTHS;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.SECONDS;
-import static de.oliver.fancynpcs.api.utils.Interval.Unit.YEARS;
+import java.time.Instant;
+import java.util.Date;
+
+import static de.oliver.fancynpcs.api.utils.Interval.Unit.*;
+
 
 /**
  * {@link Interval} is simple (but not very extensible) object that provides methods for
  * unit conversion and creation of human-readable 'elapsed time' strings.
- *
- * @apiNote This API is for internal use only and can change at any time.
+ * <p>
+ * This API is for internal use only and can change at any time.
  */
 @ApiStatus.Internal
 public final class Interval {
@@ -154,7 +149,8 @@ public final class Interval {
     public @NotNull String toString() {
         // Returning milliseconds for values below 1000. (less than one second)
         if (value < 1000)
-            return value % YEARS.getFactor() % MONTHS.getFactor() % DAYS.getFactor() % HOURS.getFactor() % MINUTES.getFactor() % SECONDS.getFactor() / MILLISECONDS.getFactor() + "ms";;
+            return value % YEARS.getFactor() % MONTHS.getFactor() % DAYS.getFactor() % HOURS.getFactor() % MINUTES.getFactor() % SECONDS.getFactor() / MILLISECONDS.getFactor() + "ms";
+        ;
         // Calculation values, the ugly way.
         final long years = value / YEARS.getFactor();
         final long months = value % YEARS.getFactor() / MONTHS.getFactor();
@@ -196,15 +192,9 @@ public final class Interval {
             this.shortCode = shortCode;
         }
 
-        public long getFactor() {
-            return factor;
-        }
-
-        public @NotNull String getShortCode() {
-            return shortCode;
-        }
-
-        /** Returns {@link Unit} or {@code null} from provided short code. */
+        /**
+         * Returns {@link Unit} or {@code null} from provided short code.
+         */
         public static @Nullable Unit fromShortCode(final @NotNull String shortCode) {
             // Iterating over all units and finding one that matches provided short code.
             for (final Unit unit : Unit.values())
@@ -212,6 +202,14 @@ public final class Interval {
                     return unit;
             // Unit has not been found. Returning null.
             return null;
+        }
+
+        public long getFactor() {
+            return factor;
+        }
+
+        public @NotNull String getShortCode() {
+            return shortCode;
         }
 
     }

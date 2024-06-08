@@ -31,7 +31,6 @@ public enum CollidableCMD {
             translator.translate(finalState ? "npc_collidable_set_true" : "npc_collidable_set_false").replace("npc", npc.getData().getName()).send(sender);
             return;
         }
-        // Otherwise, sending error message to the sender.
         translator.translate("command_npc_modification_cancelled").send(sender);
     }
 

@@ -63,7 +63,7 @@ public enum SkinCMD {
             }
         } else if (isNone) {
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(null);
                 npc.removeForAll();
@@ -82,7 +82,7 @@ public enum SkinCMD {
                 return;
             }
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(skinFetcher);
                 npc.removeForAll();
@@ -98,18 +98,18 @@ public enum SkinCMD {
             final @Nullable UUID uuid = UUIDFetcher.getUUID(skin);
             // Sending error message if message if UUID fetch has (for whatever reason) failed. This can happen eg. when being rate limited.
             if (uuid == null) {
-                translator.translate("npc_skin_failure_invalid_name_or_rate_limit").send(sender);
+                translator.translate("npc_skin_failure_invalid_name_or_rate_limit").replaceStripped("input", skin).send(sender);
                 return;
             }
             // Creating SkinFetcher from the fetched UUID.
             final SkinFetcher skinFetcher = new SkinFetcher(uuid.toString());
             // Sending error message if SkinFetcher has failed to load the skin.
             if (!skinFetcher.isLoaded()) {
-                translator.translate("npc_skin_failure_invalid_name_or_rate_limit").send(sender);
+                translator.translate("npc_skin_failure_invalid_name_or_rate_limit").replaceStripped("input", skin).send(sender);
                 return;
             }
             // Calling events and updating the skin if not cancelled, sending error message otherwise.
-            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
                 npc.getData().setSkin(skinFetcher);
                 npc.removeForAll();

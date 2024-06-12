@@ -35,7 +35,7 @@ public class NpcManagerImpl implements NpcManager {
         this.plugin = plugin;
         this.npcAdapter = npcAdapter;
         npcs = new ConcurrentHashMap<>();
-        npcConfigFile = new File("plugins/FancyNpcs/npcs.yml");
+        npcConfigFile = new File("plugins" + File.separator + "FancyNpcs" + File.separator + "npcs.yml");
         isLoaded = false;
     }
 

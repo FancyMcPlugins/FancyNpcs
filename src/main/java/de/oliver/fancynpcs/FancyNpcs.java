@@ -168,6 +168,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());
 
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", versionConfig::getHash));
+
             fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_player_npcs_fflag", () -> PLAYER_NPCS_FEATURE_FLAG.isEnabled() ? "true" : "false"));

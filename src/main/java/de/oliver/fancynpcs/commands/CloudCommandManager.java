@@ -6,31 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
-import de.oliver.fancynpcs.commands.npc.AttributeCMD;
-import de.oliver.fancynpcs.commands.npc.CollidableCMD;
-import de.oliver.fancynpcs.commands.npc.CopyCMD;
-import de.oliver.fancynpcs.commands.npc.CreateCMD;
-import de.oliver.fancynpcs.commands.npc.DisplayNameCMD;
-import de.oliver.fancynpcs.commands.npc.EquipmentCMD;
-import de.oliver.fancynpcs.commands.npc.FixCMD;
-import de.oliver.fancynpcs.commands.npc.GlowingCMD;
-import de.oliver.fancynpcs.commands.npc.HelpCMD;
-import de.oliver.fancynpcs.commands.npc.InfoCMD;
-import de.oliver.fancynpcs.commands.npc.InteractionCooldownCMD;
-import de.oliver.fancynpcs.commands.npc.ListCMD;
-import de.oliver.fancynpcs.commands.npc.MessageCMD;
-import de.oliver.fancynpcs.commands.npc.MoveHereCMD;
-import de.oliver.fancynpcs.commands.npc.MoveToCMD;
-import de.oliver.fancynpcs.commands.npc.NearbyCMD;
-import de.oliver.fancynpcs.commands.npc.PlayerCommandCMD;
-import de.oliver.fancynpcs.commands.npc.RemoveCMD;
-import de.oliver.fancynpcs.commands.npc.ScaleCMD;
-import de.oliver.fancynpcs.commands.npc.ServerCommandCMD;
-import de.oliver.fancynpcs.commands.npc.ShowInTabCMD;
-import de.oliver.fancynpcs.commands.npc.SkinCMD;
-import de.oliver.fancynpcs.commands.npc.TeleportCMD;
-import de.oliver.fancynpcs.commands.npc.TurnToPlayerCMD;
-import de.oliver.fancynpcs.commands.npc.TypeCMD;
+import de.oliver.fancynpcs.commands.npc.*;
 import de.oliver.fancynpcs.utils.GlowingColor;
 import io.leangen.geantyref.TypeToken;
 import org.bukkit.Bukkit;
@@ -52,11 +28,10 @@ import org.incendo.cloud.execution.ExecutionCoordinator;
 import org.incendo.cloud.paper.LegacyPaperCommandManager;
 import org.incendo.cloud.parser.standard.BooleanParser;
 import org.incendo.cloud.parser.standard.EnumParser;
-
-import java.util.Optional;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 import static org.incendo.cloud.exception.handling.ExceptionHandler.unwrappingHandler;
 
@@ -216,7 +191,7 @@ public final class CloudCommandManager {
 
 
         String mcVersion = Bukkit.getMinecraftVersion();
-        if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6")) {
+        if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6") || mcVersion.equals("1.21")) {
             annotationParser.parse(ScaleCMD.INSTANCE);
         }
 

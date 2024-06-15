@@ -23,6 +23,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
+import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Display;
@@ -43,10 +44,7 @@ import org.bukkit.craftbukkit.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Npc_1_21 extends Npc {
 
@@ -118,7 +116,9 @@ public class Npc_1_21 extends Npc {
             }
         }
 
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc);
+        ServerEntity serverEntity = new ServerEntity(serverPlayer.serverLevel(), npc, 0, false, packet -> {
+        }, Set.of());
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc, serverEntity);
         serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
@@ -273,7 +273,7 @@ public class Npc_1_21 extends Npc {
         }
 
         if (data.getScale() != 1) {
-            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
+            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse("generic.scale")).get();
             AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
             });
             attributeInstance.setBaseValue(data.getScale());
@@ -359,7 +359,9 @@ public class Npc_1_21 extends Npc {
 
         sittingVehicle.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
 
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(sittingVehicle);
+        ServerEntity serverEntity = new ServerEntity(serverPlayer.serverLevel(), sittingVehicle, 0, false, packet -> {
+        }, Set.of());
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(sittingVehicle, serverEntity);
         serverPlayer.connection.send(addEntityPacket);
 
         sittingVehicle.passengers = ImmutableList.of(npc);

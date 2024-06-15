@@ -38,7 +38,7 @@ public class CatAttributes {
 
     private static void setVariant(Npc npc, String value) {
         final Cat cat = ReflectionHelper.getEntity(npc);
-        BuiltInRegistries.CAT_VARIANT.getHolder(ResourceLocation.of(value.toLowerCase(), ':'))
+        BuiltInRegistries.CAT_VARIANT.getHolder(ResourceLocation.parse(value.toLowerCase()))
                 .ifPresent(cat::setVariant);
     }
 

@@ -75,8 +75,8 @@ tasks {
 //        minecraftVersion("1.20.1")
 
         downloadPlugins {
-            hangar("ViaVersion", "4.10.2-SNAPSHOT+347")
-            hangar("ViaBackwards", "4.10.2-SNAPSHOT+208")
+            hangar("ViaVersion", "5.0.0")
+            hangar("ViaBackwards", "5.0.0")
 //            hangar("PlaceholderAPI", "2.11.5")
         }
     }

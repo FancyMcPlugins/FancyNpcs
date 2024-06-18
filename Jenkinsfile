@@ -33,8 +33,8 @@ pipeline {
                     string(credentialsId: 'MODRINTH_PUBLISH_API_TOKEN', variable: 'MODRINTH_PUBLISH_API_TOKEN'),
                     string(credentialsId: 'HANGAR_PUBLISH_API_TOKEN', variable: 'HANGAR_PUBLISH_API_TOKEN')
                 ]) {
-                    sh 'export MODRINTH_PUBLISH_API_TOKEN=${MODRINTH_PUBLISH_API_TOKEN} && ./gradlew modrinth'
-                    echo 'Published to Modrinth!'
+//                     sh 'export MODRINTH_PUBLISH_API_TOKEN=${MODRINTH_PUBLISH_API_TOKEN} && ./gradlew modrinth'
+//                     echo 'Published to Modrinth!'
 
                     sh 'export HANGAR_PUBLISH_API_TOKEN=${HANGAR_PUBLISH_API_TOKEN} && ./gradlew publishAllPublicationsToHangar'
                     echo 'Published to Hangar!'

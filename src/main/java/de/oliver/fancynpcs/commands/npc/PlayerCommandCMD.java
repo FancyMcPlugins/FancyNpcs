@@ -181,7 +181,7 @@ public enum PlayerCommandCMD {
     @Suggestions("PlayerCommandCMD/commands") // Suggests allowed (non-blocked) commands accessible by the command sender.
     public Collection<String> suggestCommand(final CommandContext<CommandSender> context, final CommandInput input) {
         return Bukkit.getServer().getCommandMap().getKnownCommands().values().stream()
-                .filter(command -> !command.getName().contains(":") && command.testPermission(context.sender()) && !hasBlockedCommands(command.getName()))
+                .filter(command -> !command.getName().contains(":") && command.testPermissionSilent(context.sender()) && !hasBlockedCommands(command.getName()))
                 .map(org.bukkit.command.Command::getName)
                 .toList();
     }

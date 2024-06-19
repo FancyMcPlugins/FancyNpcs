@@ -3,7 +3,7 @@ package de.oliver.fancynpcs.listeners;
 import com.plotsquared.core.PlotSquared;
 import com.plotsquared.core.player.PlotPlayer;
 import com.plotsquared.core.plot.Plot;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcCreateEvent;
@@ -18,6 +18,8 @@ import java.util.Map;
 
 public class PlayerNpcsListener implements Listener {
 
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
+
     private static final boolean isUsingPlotSquared = FancyNpcs.getInstance().isUsingPlotSquared();
 
     @EventHandler
@@ -30,7 +32,7 @@ public class PlayerNpcsListener implements Listener {
             PlotPlayer<?> plotPlayer = PlotSquared.platform().playerManager().getPlayer(player.getUniqueId());
             Plot currentPlot = plotPlayer.getCurrentPlot();
             if ((currentPlot == null || !currentPlot.isOwner(player.getUniqueId())) && !player.hasPermission("fancynpcs.admin")) {
-                MessageHelper.error(player, "You are only allowed to create npcs on your plot");
+                translator.translate("player_npcs_create_failure_not_owned_plot").send(player);
                 event.setCancelled(true);
                 return;
             }
@@ -48,7 +50,7 @@ public class PlayerNpcsListener implements Listener {
                 npcAmount++;
         }
         if (npcAmount >= maxNpcs && !player.hasPermission("fancynpcs.admin")) {
-            MessageHelper.error(player, "You have reached the maximum amount of npcs");
+            translator.translate("player_npcs_create_failure_limit_reached").send(player);
             event.setCancelled(true);
             return;
         }
@@ -61,7 +63,7 @@ public class PlayerNpcsListener implements Listener {
         }
 
         if (!event.getNpc().getData().getCreator().equals(player.getUniqueId()) && !player.hasPermission("fancynpcs.admin")) {
-            MessageHelper.error(player, "You can only modify your npcs");
+            translator.translate("player_npcs_cannot_modify_npc").send(player);
             event.setCancelled(true);
             return;
         }
@@ -74,7 +76,7 @@ public class PlayerNpcsListener implements Listener {
         }
 
         if (!event.getNpc().getData().getCreator().equals(player.getUniqueId()) && !player.hasPermission("fancynpcs.admin")) {
-            MessageHelper.error(player, "You can only modify your npcs");
+            translator.translate("player_npcs_cannot_modify_npc").send(player);
             event.setCancelled(true);
             return;
         }
@@ -83,7 +85,7 @@ public class PlayerNpcsListener implements Listener {
             Plot currentPlot = plotPlayer.getCurrentPlot();
 
             if ((currentPlot == null || !currentPlot.isOwner(player.getUniqueId())) && !player.hasPermission("fancynpcs.admin")) {
-                MessageHelper.error(player, "You are only allowed to teleport npcs on your plot");
+                translator.translate("player_npcs_cannot_move_npc").send(player);
                 event.setCancelled(true);
             }
         }

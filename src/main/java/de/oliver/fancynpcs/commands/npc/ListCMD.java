@@ -1,61 +1,81 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Flag;
+import org.incendo.cloud.annotations.Permission;
+
+import java.text.DecimalFormat;
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.text.DecimalFormat;
-import java.util.Collection;
-import java.util.List;
+public enum ListCMD {
+    INSTANCE; // SINGLETON
 
-public class ListCMD implements Subcommand {
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private static final DecimalFormat COORDS_FORMAT = new DecimalFormat("#.##");
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    static {
+        COORDS_FORMAT.setMinimumFractionDigits(2);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (!receiver.hasPermission("fancynpcs.npc.list") && !receiver.hasPermission("fancynpcs.npc.*")) {
-            MessageHelper.error(receiver, lang.get("no-permission-subcommand"));
-            return false;
+    @Command("npc list")
+    @Permission("fancynpcs.command.npc.list")
+    public void onCommand(
+            final @NotNull CommandSender sender,
+            final @Nullable @Flag("type") EntityType type,
+            final @Nullable @Flag("sort") SortType sort
+    ) {
+        Stream<Npc> stream = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs().stream();
+        // Excluding NPCs not created by the sender, if PLAYER_NPCS_FEATURE_FLAG is enabled and sender is a player.
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && sender instanceof Player player)
+            stream = stream.filter(npc -> npc.getData().getCreator().equals(player.getUniqueId()));
+        // Excluding NPCs that are not of a specified type, if desired.
+        if (type != null)
+            stream = stream.filter(npc -> npc.getData().getType() == type);
+        // Sorting based on SortType choice. Defaults to SortType.NAME. There might be more sort types in the future which should be handled here accordingly.
+        switch (sort != null ? sort : SortType.NAME) {
+            case NAME -> stream = stream.sorted(Comparator.comparing(npc -> npc.getData().getName()));
+            case NAME_REVERSED -> stream = stream.sorted(Comparator.comparing(npc -> ((Npc) npc).getData().getName()).reversed()); // This needs a cast for some reason.
         }
-
-        MessageHelper.info(receiver, lang.get("npc-command-list-header"));
-
-        Collection<Npc> allNpcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && receiver instanceof Player player) {
-            allNpcs = allNpcs.stream()
-                    .filter(n -> n.getData().getCreator().equals(player.getUniqueId()))
-                    .toList();
-        }
-
-        if (allNpcs.isEmpty()) {
-            MessageHelper.warning(receiver, lang.get("npc-command-list-no-npcs"));
-        } else {
-            final DecimalFormat df = new DecimalFormat("#########.##");
-            for (Npc n : allNpcs) {
-                MessageHelper.info(receiver, lang.get(
-                                "npc-command-list-tp-hover",
-                                "name", n.getData().getName(),
-                                "x", df.format(n.getData().getLocation().x()),
-                                "y", df.format(n.getData().getLocation().y()),
-                                "z", df.format(n.getData().getLocation().z()),
-                                "tp_cmd", "/tp " + n.getData().getLocation().x() + " " + n.getData().getLocation().y() + " " + n.getData().getLocation().z()
-                        )
-                );
-            }
-        }
-
-        return true;
+        translator.translate("npc_list_header").send(sender);
+        // Using AtomicInteger counter because streams don't expose entry index.
+        final AtomicInteger count = new AtomicInteger(0);
+        // Iterating over each NPC referenced in the stream. Usage of forEachOrdered should presumably preserve element order.
+        stream.forEachOrdered(npc -> {
+            translator.translate("npc_list_entry")
+                    .replace("number", String.valueOf(count.incrementAndGet()))
+                    .replace("npc", npc.getData().getName())
+                    .replace("location_x", COORDS_FORMAT.format(npc.getData().getLocation().x()))
+                    .replace("location_y", COORDS_FORMAT.format(npc.getData().getLocation().y()))
+                    .replace("location_z", COORDS_FORMAT.format(npc.getData().getLocation().z()))
+                    .replace("world", npc.getData().getLocation().getWorld().getName())
+                    .send(sender);
+        });
+        final int totalCount = FancyNpcs.getInstance().getNpcManager().getAllNpcs().size();
+        translator.translate("npc_list_footer")
+                .replace("count", String.valueOf(count))
+                .replace("count_formatted", "· ".repeat(3 - String.valueOf(count).length()) + count)
+                .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
     }
+
+    /**
+     * {@link SortType ListCMD.SortType} enum contains all possible sort types for the {@code /npc list} command.
+     */
+    public enum SortType {
+        NAME, NAME_REVERSED
+    }
+
 }

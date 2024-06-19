@@ -125,6 +125,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void remove(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         if (npc instanceof ServerPlayer npcPlayer) {
@@ -147,6 +151,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void lookAt(Player player, Location location) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setRot(location.getYaw(), location.getPitch());
@@ -164,6 +172,10 @@ public class Npc_1_20_4 extends Npc {
 
     @Override
     public void update(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
@@ -239,7 +251,7 @@ public class Npc_1_20_4 extends Npc {
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
-            move(player);
+            move(player, true);
         }
 
         NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
@@ -275,7 +287,11 @@ public class Npc_1_20_4 extends Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
-    public void move(Player player) {
+    public void move(Player player, boolean swingArm) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setPosRaw(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
@@ -293,6 +309,11 @@ public class Npc_1_20_4 extends Npc {
         float angelMultiplier = 256f / 360f;
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
+
+        if (swingArm && npc instanceof ServerPlayer) {
+            ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
+            serverPlayer.connection.send(animatePacket);
+        }
     }
 
     private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
@@ -315,6 +336,10 @@ public class Npc_1_20_4 extends Npc {
     }
 
     public void setSitting(ServerPlayer serverPlayer) {
+        if (npc == null) {
+            return;
+        }
+
         if (sittingVehicle == null) {
             sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
         }

@@ -4,6 +4,7 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.events.PacketReceivedEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,7 +17,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.util.Vector;
 
 import java.util.List;
 
@@ -45,42 +45,31 @@ public class PacketReader_1_20 implements Listener {
     }
 
     @EventHandler
-    public void onPacketReceived(PacketReceivedEvent event) {
-        if (!(event.getPacket() instanceof ServerboundInteractPacket interactPacket)) {
+    public void onPacketReceived(final PacketReceivedEvent event) {
+        // Skipping packets other than ServerboundInteractPacket...
+        if (!(event.getPacket() instanceof ServerboundInteractPacket interactPacket))
             return;
-        }
-
-        Player p = event.getPlayer();
-
-        String handStr = "MAIN_HAND";
-        if (interactPacket.getActionType() != ServerboundInteractPacket.ActionType.ATTACK) {
-            handStr = ReflectionUtils.getValue(ReflectionUtils.getValue(interactPacket, "b"), "a").toString(); // ServerboundInteractPacket.InteractionAction.hand
-        }
-
-        int entityId = interactPacket.getEntityId();
-        ServerboundInteractPacket.ActionType action = interactPacket.getActionType();
-        boolean isSneaking = interactPacket.isUsingSecondaryAction();
-
-        Npc npc = FancyNpcsPlugin.get().getNpcManager().getNpc(entityId);
-        if (npc == null) {
+        // Getting entity identifier.
+        final int entityId = interactPacket.getEntityId();
+        // Getting NPC from entity identifier.
+        final Npc npc = FancyNpcsPlugin.get().getNpcManager().getNpc(entityId);
+        // Skipping entities that are not FancyNpcs' NPCs...
+        if (npc == null)
             return;
-        }
-
-        EquipmentSlot hand = handStr.equals("MAIN_HAND") ? EquipmentSlot.HAND : EquipmentSlot.OFF_HAND;
-        boolean isAttack = action == ServerboundInteractPacket.ActionType.ATTACK;
-        boolean isInteract = action == ServerboundInteractPacket.ActionType.INTERACT_AT;
-        Vector clickLoc = isInteract ? new Vector(0, 0, 0) : null;
-
-        if (npc.getData().getType() == EntityType.VILLAGER && hand == EquipmentSlot.HAND && clickLoc == null) {
-            npc.interact(event.getPlayer());
-            return;
-        }
-
-        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
-            return;
-        }
-
-        npc.interact(p);
+        // Getting interaction information.
+        final boolean isAttack = (interactPacket.getActionType() == ServerboundInteractPacket.ActionType.ATTACK);
+        final boolean isInteract = (interactPacket.getActionType() == ServerboundInteractPacket.ActionType.INTERACT_AT);
+        final EquipmentSlot hand = (interactPacket.getActionType() == ServerboundInteractPacket.ActionType.ATTACK)
+                ? EquipmentSlot.HAND
+                : ReflectionUtils.getValue(ReflectionUtils.getValue(interactPacket, "b"), "a").toString().equals("MAIN_HAND") // ServerboundInteractPacket.InteractionAction.hand
+                        ? EquipmentSlot.HAND
+                        : EquipmentSlot.OFF_HAND;
+        // This can optionally be ALSO called for OFF-HAND slot. Making sure to run logic only ONCE.
+        if (hand == EquipmentSlot.HAND)
+            // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
+            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND)
+                // Further interaction handling is done by Npc#interact method...
+                npc.interact(event.getPlayer(), isAttack ? NpcInteractEvent.InteractionType.LEFT_CLICK : NpcInteractEvent.InteractionType.RIGHT_CLICK);
     }
 
 }

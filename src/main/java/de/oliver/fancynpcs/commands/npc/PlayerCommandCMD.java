@@ -1,228 +1,207 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.incendo.cloud.annotation.specifier.Greedy;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-public class PlayerCommandCMD implements Subcommand {
+import org.jetbrains.annotations.NotNull;
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+public enum PlayerCommandCMD {
+    INSTANCE; // SINGLETON
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player playedr, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length == 3) {
-            return List.of("add", "set", "remove", "clear");
-        } else if (args.length == 4) {
-            if (args[2].equalsIgnoreCase("set") || args[2].equalsIgnoreCase("remove")) {
-                List<String> commands = new LinkedList<>();
-                for (int i = 0; i < npc.getData().getPlayerCommands().size(); i++) {
-                    commands.add(String.valueOf(i + 1));
-                }
-                return commands;
-            }
-        } else if (args.length == 5) {
-            if (args[2].equalsIgnoreCase("set")) {
-                int index;
-                try {
-                    index = Integer.parseInt(args[3]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-                if (index < 1 || index > npc.getData().getPlayerCommands().size()) {
-                    return null;
-                }
-
-                return List.of(npc.getData().getPlayerCommands().get(index - 1));
-            }
+    @Command("npc player_command <npc> add <command>")
+    @Permission("fancynpcs.command.npc.player_command.add")
+    public void onPlayerCommandAdd(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "PlayerCommandCMD/commands") @Greedy String command
+    ) {
+        // Sending error message in case banned command has been found in the input.
+        if (hasBlockedCommands(command)) {
+            translator.translate("command_input_contains_blocked_command").send(sender);
+            return;
         }
-
-        return null;
-    }
-
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        if (args.length == 3 && args[2].equalsIgnoreCase("clear")) {
-            return clearCommand(receiver, npc, args);
-        }
-
-        if (args.length == 4 && args[2].equalsIgnoreCase("remove")) {
-            return removeCommand(receiver, npc, args);
-        }
-
-        if (args.length >= 4 && args[2].equalsIgnoreCase("add")) {
-            return addCommand(receiver, npc, args);
-        }
-
-        if (args.length >= 5 && args[2].equalsIgnoreCase("set")) {
-            return setCommand(receiver, npc, args);
-        }
-
-        MessageHelper.error(receiver, lang.get("wrong-usage"));
-        return false;
-    }
-
-    private boolean addCommand(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        String command = "";
-        for (int i = 3; i < args.length; i++) {
-            command += args[i] + " ";
-        }
-
-        command = command.substring(0, command.length() - 1);
-
-        if (command.equalsIgnoreCase("none")) {
-            command = "";
-        }
-
-        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && isBlockedCommand(command.toLowerCase())) {
-            MessageHelper.error(receiver, lang.get("illegal-command"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, command, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().addPlayerCommand(command);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+        // Calling the event and adding player command if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND_ADD, command, sender).callEvent()) {
+            npc.getData().getPlayerCommands().add(command);
+            translator.translate("npc_player_command_add_success").replace("total", String.valueOf(npc.getData().getPlayerCommands().size())).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean setCommand(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 4) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+    @Command("npc player_command <npc> set <number> <command>")
+    @Permission("fancynpcs.command.npc.player_command.set")
+    public void onPlayerCommandSet(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "PlayerCommandCMD/number_range") int number,
+            final @NotNull @Argument(suggestions = "PlayerCommandCMD/commands") @Greedy String command
+    ) {
+        // Sending error message in case banned command has been found in the input.
+        if (hasBlockedCommands(command)) {
+            translator.translate("command_input_contains_blocked_command").send(sender);
+            return;
         }
-
-        int index;
-        try {
-            index = Integer.parseInt(args[3]);
-        } catch (NumberFormatException e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+        // Getting the total count of player commands that are currently in the list.
+        final int totalCount = npc.getData().getPlayerCommands().size();
+        // Sending error message if the list is empty.
+        if (totalCount == 0) {
+            translator.translate("npc_player_command_set_failure_list_is_empty").send(sender);
+            return;
         }
-
-        if (index < 1 || index > npc.getData().getPlayerCommands().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index"));
-            return false;
+        // Sending error message if provided number is lower than 0 or higher than the list size.
+        if (number < 1 || number > totalCount) {
+            translator.translate("npc_player_command_set_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
+            return;
         }
-
-        String command = "";
-        for (int i = 4; i < args.length; i++) {
-            command += args[i] + " ";
-        }
-
-        command = command.substring(0, command.length() - 1);
-
-        if (command.equalsIgnoreCase("none")) {
-            command = "";
-        }
-
-        if (isBlockedCommand(command.toLowerCase())) {
-            MessageHelper.error(receiver, lang.get("illegal-command"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, command, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().getPlayerCommands().set(index - 1, command);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+        // User-specified number starts from 1, while index starts from 0. Subtracting 1 from the provided number to get the list index.
+        final int index = number - 1;
+        // Calling the event and setting player command if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND_SET, new Object[]{index, command}, sender).callEvent()) {
+            npc.getData().getPlayerCommands().set(index, command);
+            translator.translate("npc_player_command_set_success")
+                    .replace("number", String.valueOf(number))
+                    .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
+                    .send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean removeCommand(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+    @Command("npc player_command <npc> remove <number>")
+    @Permission("fancynpcs.command.npc.player_command.remove")
+    public void onPlayerCommandRemove(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Argument(suggestions = "PlayerCommandCMD/number_range") int number
+    ) {
+        // Getting the total count of player commands that are currently in the list.
+        final int totalCount = npc.getData().getPlayerCommands().size();
+        // Sending error message if the list is empty.
+        if (totalCount == 0) {
+            translator.translate("npc_player_command_remove_failure_list_is_empty").send(sender);
+            return;
         }
-
-        int index;
-        try {
-            index = Integer.parseInt(args[3]);
-        } catch (NumberFormatException e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
+        // Sending error message if provided number is lower than 0 or higher than the list size.
+        if (number < 1 || number > totalCount) {
+            translator.translate("npc_player_command_remove_failure_not_in_range").replace("input", String.valueOf(number)).replace("max", String.valueOf(totalCount)).send(sender);
+            return;
         }
-
-        if (index < 1 || index > npc.getData().getPlayerCommands().size()) {
-            MessageHelper.error(receiver, lang.get("npc-command-playercommand-invalid-index"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, "", receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().removePlayerCommand(index - 1);
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+        // User-specified number starts from 1, while index starts from 0. Subtracting 1 from the provided number to get the list index.
+        final int index = number - 1;
+        // Getting the message to pass to the NpcModifyEvent.
+        final String command = npc.getData().getPlayerCommands().get(index);
+        // Calling the event and removing player command if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND_REMOVE, new Object[]{index, command}, sender).callEvent()) {
+            npc.getData().getPlayerCommands().remove(index);
+            // Sending success message to the sender.
+            translator.translate("npc_player_command_remove_success")
+                    .replace("number", String.valueOf(number))
+                    .replace("total", String.valueOf(totalCount)) // Total count remains the same, no entry has been added/removed from the list.
+                    .send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean clearCommand(CommandSender receiver, Npc npc, String[] args) {
-        if (args.length < 2) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND, "", receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
+    @Command("npc player_command <npc> clear")
+    @Permission("fancynpcs.command.npc.player_command.clear")
+    public void onPlayerCommandClear(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
+        final int total = npc.getData().getPlayerCommands().size();
+        // Calling the event and clearing player commands if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.PLAYER_COMMAND_CLEAR, null, sender).callEvent()) {
             npc.getData().getPlayerCommands().clear();
-            MessageHelper.success(receiver, lang.get("npc-command-playercommand-updated"));
+            translator.translate("npc_player_command_clear_success").replace("total", String.valueOf(total)).send(sender);
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
+            translator.translate("command_npc_modification_cancelled").send(sender);
         }
-
-        return true;
     }
 
-    private boolean isBlockedCommand(String cmd) {
-        for (String blockedCommand : FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands()) {
-            if (cmd.equalsIgnoreCase(blockedCommand) || cmd.toLowerCase().startsWith(blockedCommand.toLowerCase() + " ")) {
-                return true;
-            }
+    @Command("npc player_command <npc> list")
+    @Permission("fancynpcs.command.npc.player_command.list")
+    public void onPlayerCommandList(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
+        // Sending error message if the list is empty.
+        if (npc.getData().getPlayerCommands().isEmpty()) {
+            translator.translate("npc_player_command_list_failure_empty").send(sender);
+            return;
         }
+        translator.translate("npc_player_command_list_header").send(sender);
+        // Iterating over all player commands attached to this NPC and sending them to the sender.
+        for (int i = 0; i < npc.getData().getPlayerCommands().size(); i++) {
+            final String command = npc.getData().getPlayerCommands().get(i);
+            translator.translate("npc_player_command_list_entry")
+                    .replace("number", String.valueOf(i + 1))
+                    .replace("command", command)
+                    .send(sender);
+        }
+        final int totalCount = npc.getData().getPlayerCommands().size();
+        translator.translate("npc_player_command_list_footer")
+                .replace("total", String.valueOf(totalCount))
+                .replace("total_formatted", "· ".repeat(3 - String.valueOf(totalCount).length()) + totalCount)
+                .send(sender);
+    }
 
+    /* PARSERS AND SUGGESTIONS */
+
+    @Suggestions("PlayerCommandCMD/number_range") // Generates number range suggestions based on the number of player commands.
+    public List<String> suggestNumber(final CommandContext<CommandSender> context, final CommandInput input) {
+        final Npc npc = context.getOrDefault("npc", null);
+        return npc == null || npc.getData().getPlayerCommands().isEmpty()
+                ? Collections.emptyList()
+                : new ArrayList<>() {{
+                    for (int i = 0; i < npc.getData().getPlayerCommands().size(); i++)
+                        add(String.valueOf(i + 1));
+                }};
+    }
+
+    @Suggestions("PlayerCommandCMD/commands") // Suggests allowed (non-blocked) commands accessible by the command sender.
+    public Collection<String> suggestCommand(final CommandContext<CommandSender> context, final CommandInput input) {
+        return Bukkit.getServer().getCommandMap().getKnownCommands().values().stream()
+                .filter(command -> !command.getName().contains(":") && command.testPermissionSilent(context.sender()) && !hasBlockedCommands(command.getName()))
+                .map(org.bukkit.command.Command::getName)
+                .toList();
+    }
+
+    /* UTILITY METHODS */
+
+    /** Returns {@code true} if specified string contains a blocked command, {@code false} otherwise. */
+    private boolean hasBlockedCommands(final @NotNull String string) {
+        // Getting the list of all blocked commands.
+        final List<String> blockedCommands = FancyNpcs.getInstance().getFancyNpcConfig().getBlockedCommands();
+        // Iterating over all elements of the component.
+        for (final String blockedCommand : blockedCommands) {
+            // Transforming the command to a base command with trailed whitespaces and slashes. This also removes namespaced part from the beginning of the command.
+            final String transformedBaseCommand = blockedCommand.replace('/', ' ').strip().split(" ")[0].replaceAll(".*?:+", "");
+            // Comparing click event value with the transformed base command. Returning the result.
+            if (string.replace('/', ' ').strip().split(" ")[0].replaceAll(".*?:+", "").equalsIgnoreCase(transformedBaseCommand))
+                return true;
+        }
+        // Returning false as no blocked commands has been found.
         return false;
     }
+
 }

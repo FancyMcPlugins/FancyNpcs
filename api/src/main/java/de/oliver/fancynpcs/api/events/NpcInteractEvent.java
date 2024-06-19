@@ -22,19 +22,21 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @Nullable
     private final List<String> playerCommands;
     @Nullable
-    private final String serverCommand;
+    private final List<String> serverCommands;
     @NotNull
     private final Consumer<Player> onClick;
     @NotNull
     private final Player player;
+    private final InteractionType interactionType;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable String serverCommand, @NotNull Consumer<Player> onClick, @NotNull Player player) {
+    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable List<String> serverCommands, @NotNull Consumer<Player> onClick, @NotNull Player player, @NotNull InteractionType interactionType) {
         this.npc = npc;
         this.playerCommands = playerCommands;
-        this.serverCommand = serverCommand;
+        this.serverCommands = serverCommands;
         this.onClick = onClick;
         this.player = player;
+        this.interactionType = interactionType;
     }
 
     public static HandlerList getHandlerList() {
@@ -56,10 +58,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the command that the server will run
+     * @return the commands that the server will run
      */
-    public @Nullable String getServerCommand() {
-        return serverCommand;
+    public @Nullable List<String> getServerCommands() {
+        return serverCommands;
     }
 
     /**
@@ -67,6 +69,13 @@ public class NpcInteractEvent extends Event implements Cancellable {
      */
     public @NotNull Consumer<Player> getOnClick() {
         return onClick;
+    }
+
+    /**
+     * @return returns interaction type
+     */
+    public @NotNull InteractionType getInteractionType() {
+        return interactionType;
     }
 
     /**
@@ -89,6 +98,15 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
+    }
+
+    public enum InteractionType {
+        LEFT_CLICK,
+        RIGHT_CLICK,
+        /**
+         * {@link InteractionType#CUSTOM InteractionType#CUSTOM} represents interactions invoked by the API.
+         */
+        CUSTOM
     }
 
 }

@@ -1,70 +1,37 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.commands.Subcommand;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.stream.Stream;
+public enum CollidableCMD {
+    INSTANCE; // SINGLETON
 
-public class CollidableCMD implements Subcommand {
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
-
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length == 3) {
-            return Stream.of("true", "false")
-                    .filter(input -> input.toLowerCase().startsWith(args[2].toLowerCase()))
-                    .toList();
+    @Command("npc collidable <npc> [state]")
+    @Permission("fancynpcs.command.npc.collidable")
+    public void onCollidable(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @Nullable Boolean state
+    ) {
+        // Finalizing the state. If no state has been specified, the current one is inverted.
+        final boolean finalState = (state == null) ? !npc.getData().isCollidable() : state;
+        // Calling the event and updating the state if not cancelled.
+        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, finalState, sender).callEvent()) {
+            npc.getData().setCollidable(finalState);
+            translator.translate(finalState ? "npc_collidable_set_true" : "npc_collidable_set_false").replace("npc", npc.getData().getName()).send(sender);
+            return;
         }
-        
-        return null;
+        translator.translate("command_npc_modification_cancelled").send(sender);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length < 3) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        boolean collidable;
-        try {
-            collidable = Boolean.parseBoolean(args[2]);
-        } catch (Exception e) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, collidable, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().setCollidable(collidable);
-            npc.updateForAll();
-
-            if (collidable) {
-                MessageHelper.success(receiver, lang.get("npc-command-collidable-true"));
-            } else {
-                MessageHelper.success(receiver, lang.get("npc-command-collidable-false"));
-            }
-        } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
-        }
-
-        return true;
-    }
 }

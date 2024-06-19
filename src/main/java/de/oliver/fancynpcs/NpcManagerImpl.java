@@ -15,10 +15,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class NpcManagerImpl implements NpcManager {
@@ -26,19 +28,23 @@ public class NpcManagerImpl implements NpcManager {
     private final JavaPlugin plugin;
     private final Function<NpcData, Npc> npcAdapter;
     private final File npcConfigFile;
-    private final HashMap<String, Npc> npcs; // npc id -> npc
+    private final Map<String, Npc> npcs; // npc id -> npc
     private boolean isLoaded;
 
     public NpcManagerImpl(JavaPlugin plugin, Function<NpcData, Npc> npcAdapter) {
         this.plugin = plugin;
         this.npcAdapter = npcAdapter;
-        npcs = new HashMap<>();
-        npcConfigFile = new File("plugins/FancyNpcs/npcs.yml");
+        npcs = new ConcurrentHashMap<>();
+        npcConfigFile = new File("plugins" + File.separator + "FancyNpcs" + File.separator + "npcs.yml");
         isLoaded = false;
     }
 
     public void registerNpc(Npc npc) {
-        npcs.put(npc.getData().getId(), npc);
+        if (!FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
+            throw new IllegalStateException("An NPC with the name " + npc.getData().getName() + " already exists!");
+        } else {
+            npcs.put(npc.getData().getId(), npc);
+        }
     }
 
     public void removeNpc(Npc npc) {
@@ -53,6 +59,8 @@ public class NpcManagerImpl implements NpcManager {
         }
     }
 
+    @ApiStatus.Internal
+    @Override
     public Npc getNpc(int entityId) {
         for (Npc npc : npcs.values()) {
             if (npc.getEntityId() == entityId) {
@@ -67,6 +75,17 @@ public class NpcManagerImpl implements NpcManager {
     public Npc getNpc(String name) {
         for (Npc npc : npcs.values()) {
             if (npc.getData().getName().equalsIgnoreCase(name)) {
+                return npc;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
+    public Npc getNpcById(String id) {
+        for (Npc npc : npcs.values()) {
+            if (npc.getData().getId().equals(id)) {
                 return npc;
             }
         }
@@ -134,11 +153,14 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
-            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.0.9
+            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".playerCommands", data.getPlayerCommands());
-            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.0.9
+            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.1.1
+            npcConfig.set("npcs." + data.getId() + ".serverCommands", data.getServerCommands());
+            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
+            npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
             npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
@@ -151,10 +173,6 @@ public class NpcManagerImpl implements NpcManager {
                 for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : data.getEquipment().entrySet()) {
                     npcConfig.set("npcs." + data.getId() + ".equipment." + entry.getKey().name(), entry.getValue());
                 }
-            }
-
-            if (data.getServerCommand() != null) {
-                npcConfig.set("npcs." + data.getId() + ".serverCommand", data.getServerCommand());
             }
 
             for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
@@ -173,6 +191,7 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void loadNpcs() {
+        npcs.clear();
         YamlConfiguration npcConfig = YamlConfiguration.loadConfiguration(npcConfigFile);
 
         if (!npcConfig.isConfigurationSection("npcs")) {
@@ -235,17 +254,18 @@ public class NpcManagerImpl implements NpcManager {
             NamedTextColor glowingColor = NamedTextColor.NAMES.value(npcConfig.getString("npcs." + id + ".glowingColor", "white"));
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
             boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
-            String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand");
 
-            @Deprecated(since = "2.0.8")
-            String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.0.9
+            @Deprecated(since = "2.0.8") String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.1.1
             List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
 
-            @Deprecated(since = "2.0.7")
-            String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.0.9
+            @Deprecated(since = "2.0.7") String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.1.1
             List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
 
+            @Deprecated(since = "2.0.10") String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand"); // TODO: remove in 2.1.1
+            List<String> serverCommands = npcConfig.getStringList("npcs." + id + ".serverCommands");
+
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
+            float scale = (float) npcConfig.getDouble("npcs." + id + ".scale", 1);
             boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
@@ -277,7 +297,13 @@ public class NpcManagerImpl implements NpcManager {
                 playerCommands.add(playerCommand);
             }
 
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommand, playerCommands, interactionCooldown, attributes, mirrorSkin);
+            // TODO: remove when the 'serverCommand' field is removed, and just pass in the 'serverCommands'
+            if (serverCommands.isEmpty() && serverCommand != null && !serverCommand.isEmpty()) {
+                serverCommands = new ArrayList<>();
+                serverCommands.add(serverCommand);
+            }
+
+            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommands, playerCommands, interactionCooldown, scale, attributes, mirrorSkin);
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {
@@ -296,7 +322,9 @@ public class NpcManagerImpl implements NpcManager {
     }
 
     public void reloadNpcs() {
-        for (Npc npc : new ArrayList<>(getAllNpcs())) {
+        Collection<Npc> npcCopy = new ArrayList<>(getAllNpcs());
+        npcs.clear();
+        for (Npc npc : npcCopy) {
             npc.removeForAll();
         }
 

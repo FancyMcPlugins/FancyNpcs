@@ -58,10 +58,11 @@ pipeline {
         }
         failure {
             script {
-            withCredentials([
-                string(credentialsId: 'DISC_WEBHOOK_URL', variable: 'DISC_WEBHOOK_URL')
-            ]) {
-                    discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult}", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "FancyNpcs #${env.BUILD_NUMBER}", "${DISC_WEBHOOK_URL}"
+                withCredentials([
+                    string(credentialsId: 'DISC_WEBHOOK_URL', variable: 'DISC_WEBHOOK_URL')
+                ]) {
+                        discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult}", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "FancyNpcs #${env.BUILD_NUMBER}", "${DISC_WEBHOOK_URL}"
+                }
             }
             echo 'Build failed!'
         }

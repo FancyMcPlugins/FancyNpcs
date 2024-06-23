@@ -48,15 +48,14 @@ pipeline {
             archiveArtifacts artifacts: '**/build/libs/FancyNpcs-*.jar', allowEmptyArchive: true
         }
         success {
-            script {
                 discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult} \n**Download:** https://modrinth.com/plugin/fancynpcs/versions",
-                 footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'SUCCESS', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                 footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'SUCCESS', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: env.DISC_WEBHOOK_URL
             }
             echo 'Build was successful!'
         }
         failure {
             script {
-                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult}", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "FancyNpcs #${env.BUILD_NUMBER}", webhookURL: "https://discord.com/api/webhooks/1146819356668477530/LWXgRBXdBzbFPJIf_9KP9AKYdaEFnd2aTIy9l4V0K03R-Xl07vWYahNxuvkRAX5YahwM"
+                discordSend description: "**Build:** ${env.BUILD_NUMBER} \n**Status:** ${currentBuild.currentResult}", footer: "Jenkins Pipeline", link: env.BUILD_URL, result: 'FAILURE', title: "FancyNpcs #${env.BUILD_NUMBER}", env.DISC_WEBHOOK_URL
             }
             echo 'Build failed!'
         }

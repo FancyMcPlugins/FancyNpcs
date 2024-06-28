@@ -13,10 +13,11 @@ import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 public class BlockDisplayAttributes {
 
-    private static final List<String> BLOCKS = Registry.MATERIAL.stream().filter(Material::isBlock).map(it -> it.key().value()).toList();
+    private static final List<String> BLOCKS = StreamSupport.stream(Registry.MATERIAL.spliterator(), false).filter(Material::isBlock).map(it -> it.key().value()).toList();
 
     public static List<NpcAttribute> getAllAttributes() {
         List<NpcAttribute> attributes = new ArrayList<>();

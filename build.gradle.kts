@@ -80,7 +80,7 @@ paper {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
-//        minecraftVersion("1.20.1")
+//        minecraftVersion("1.20.6")
 
         downloadPlugins {
             hangar("ViaVersion", "5.0.0")

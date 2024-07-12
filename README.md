@@ -14,8 +14,8 @@
 
 <br />
 
-Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and *
-*[Folia](https://papermc.io/software/folia)**) servers using packets.
+Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (
+and [Folia](https://papermc.io/software/folia)) servers using packets.
 
 </div>
 
@@ -68,8 +68,8 @@ Official documentation is hosted **[here](https://fancyplugins.de/docs/fancynpcs
 
 ## Developer API
 
-More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and *
-*[Javadocs](https://fancyplugins.de/javadocs/fancynpcs/)**.
+More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)**
+and [Javadocs](https://fancyplugins.de/javadocs/fancynpcs/).
 
 ### Maven
 

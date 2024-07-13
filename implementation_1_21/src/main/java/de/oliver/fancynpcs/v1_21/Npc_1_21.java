@@ -123,6 +123,12 @@ public class Npc_1_21 extends Npc {
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
+
+        FancyNpcsPlugin.get().getScheduler().runTaskLater(null, 5L, () -> {
+            ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
+            serverPlayer.connection.send(playerInfoRemovePacket);
+        });
+
         update(player);
     }
 

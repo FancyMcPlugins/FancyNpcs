@@ -3,7 +3,7 @@ package de.oliver.fancynpcs.api;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
-import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
+import de.oliver.fancynpcs.api.utils.InteractionType;
 import de.oliver.fancynpcs.api.utils.Interval;
 import de.oliver.fancynpcs.api.utils.Interval.Unit;
 import org.bukkit.Bukkit;

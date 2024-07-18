@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.api.events;
 
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -20,9 +21,7 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @NotNull
     private final Npc npc;
     @Nullable
-    private final List<String> playerCommands;
-    @Nullable
-    private final List<String> serverCommands;
+    private final List<NpcAction.NpcActionData> actions;
     @NotNull
     private final Consumer<Player> onClick;
     @NotNull
@@ -30,11 +29,10 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final InteractionType interactionType;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @Nullable List<String> playerCommands, @Nullable List<String> serverCommands, @NotNull Consumer<Player> onClick, @NotNull Player player, @NotNull InteractionType interactionType) {
+    public NpcInteractEvent(@NotNull Npc npc, @NotNull Consumer<Player> onClick, @NotNull List<NpcAction.NpcActionData> actions, @NotNull Player player, @NotNull InteractionType interactionType) {
         this.npc = npc;
-        this.playerCommands = playerCommands;
-        this.serverCommands = serverCommands;
         this.onClick = onClick;
+        this.actions = actions;
         this.player = player;
         this.interactionType = interactionType;
     }
@@ -51,24 +49,17 @@ public class NpcInteractEvent extends Event implements Cancellable {
     }
 
     /**
-     * @return the commands that the player will be forced to run
-     */
-    public @Nullable List<String> getPlayerCommands() {
-        return playerCommands;
-    }
-
-    /**
-     * @return the commands that the server will run
-     */
-    public @Nullable List<String> getServerCommands() {
-        return serverCommands;
-    }
-
-    /**
      * @return the custom on click method that will run
      */
     public @NotNull Consumer<Player> getOnClick() {
         return onClick;
+    }
+
+    /**
+     * @return the actions that will run
+     */
+    public @Nullable List<NpcAction.NpcActionData> getActions() {
+        return actions;
     }
 
     /**

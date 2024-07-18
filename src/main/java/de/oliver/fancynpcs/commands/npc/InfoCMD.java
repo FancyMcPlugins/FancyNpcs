@@ -57,9 +57,7 @@ public enum InfoCMD {
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
                 .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
                 .replace("scale", String.valueOf(npc.getData().getScale()))
-                .replace("messages_total", String.valueOf(npc.getData().getMessages().size()))
-                .replace("player_commands_total", String.valueOf(npc.getData().getPlayerCommands().size()))
-                .replace("server_commands_total", String.valueOf(npc.getData().getServerCommands().size()))
+                .replace("actions_total", String.valueOf(npc.getData().getActions().size()))
                 .send(sender);
     }
 

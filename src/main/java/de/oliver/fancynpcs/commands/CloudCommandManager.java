@@ -175,14 +175,11 @@ public final class CloudCommandManager {
         annotationParser.parse(InfoCMD.INSTANCE);
         annotationParser.parse(InteractionCooldownCMD.INSTANCE);
         annotationParser.parse(ListCMD.INSTANCE);
-        annotationParser.parse(MessageCMD.INSTANCE);
         annotationParser.parse(MoveHereCMD.INSTANCE);
         annotationParser.parse(MoveToCMD.INSTANCE);
         annotationParser.parse(NearbyCMD.INSTANCE);
         annotationParser.parse(HelpCMD.INSTANCE);
-        annotationParser.parse(PlayerCommandCMD.INSTANCE);
         annotationParser.parse(RemoveCMD.INSTANCE);
-        annotationParser.parse(ServerCommandCMD.INSTANCE);
         annotationParser.parse(ShowInTabCMD.INSTANCE);
         annotationParser.parse(SkinCMD.INSTANCE);
         annotationParser.parse(TeleportCMD.INSTANCE);

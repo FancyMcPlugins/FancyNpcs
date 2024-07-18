@@ -3,13 +3,14 @@ package de.oliver.fancynpcs.v1_21.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21.ReflectionHelper;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerType;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VillagerAttributes {
@@ -19,18 +20,14 @@ public class VillagerAttributes {
 
         attributes.add(new NpcAttribute(
                 "profession",
-                Arrays.stream(org.bukkit.entity.Villager.Profession.values())
-                        .map(Enum::name)
-                        .toList(),
+                RegistryAccess.registryAccess().getRegistry(RegistryKey.VILLAGER_PROFESSION).stream().map(variant -> variant.getKey().getKey()).toList(),
                 List.of(EntityType.VILLAGER),
                 VillagerAttributes::setProfession
         ));
 
         attributes.add(new NpcAttribute(
                 "type",
-                Arrays.stream(org.bukkit.entity.Villager.Type.values())
-                        .map(Enum::name)
-                        .toList(),
+                RegistryAccess.registryAccess().getRegistry(RegistryKey.VILLAGER_TYPE).stream().map(variant -> variant.getKey().getKey()).toList(),
                 List.of(EntityType.VILLAGER),
                 VillagerAttributes::setType
         ));

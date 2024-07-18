@@ -2,10 +2,15 @@ package de.oliver.fancynpcs.v1_21.attributes;
 
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
+import de.oliver.fancynpcs.v1_21.ReflectionHelper;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.frog.Frog;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FrogAttributes {
@@ -15,9 +20,7 @@ public class FrogAttributes {
 
         attributes.add(new NpcAttribute(
                 "variant",
-                Arrays.stream(org.bukkit.entity.Frog.Variant.values())
-                        .map(Enum::name)
-                        .toList(),
+                RegistryAccess.registryAccess().getRegistry(RegistryKey.FROG_VARIANT).stream().map(variant -> variant.getKey().getKey()).toList(),
                 List.of(EntityType.FROG),
                 FrogAttributes::setVariant
         ));
@@ -26,16 +29,9 @@ public class FrogAttributes {
     }
 
     private static void setVariant(Npc npc, String value) {
-//        Frog frog = ReflectionHelper.getEntity(npc);
-//
-//        FrogVariant variant;
-//        switch (value.toUpperCase()) {
-//            case "COLD" -> variant = FrogVariant.COLD;
-//            case "WARM" -> variant = FrogVariant.WARM;
-//            default -> variant = FrogVariant.TEMPERATE;
-//        }
-//
-//        frog.setVariant(variant);
+        final Frog frog = ReflectionHelper.getEntity(npc);
+        BuiltInRegistries.FROG_VARIANT.getHolder(ResourceLocation.parse(value.toLowerCase()))
+                .ifPresent(frog::setVariant);
     }
 
 }

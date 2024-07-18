@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.api.events;
 
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.utils.InteractionType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -89,15 +90,6 @@ public class NpcInteractEvent extends Event implements Cancellable {
     @Override
     public @NotNull HandlerList getHandlers() {
         return handlerList;
-    }
-
-    public enum InteractionType {
-        LEFT_CLICK,
-        RIGHT_CLICK,
-        /**
-         * {@link InteractionType#CUSTOM InteractionType#CUSTOM} represents interactions invoked by the API.
-         */
-        CUSTOM
     }
 
 }

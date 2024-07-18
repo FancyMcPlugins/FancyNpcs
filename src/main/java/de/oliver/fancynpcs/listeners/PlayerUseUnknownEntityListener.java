@@ -3,12 +3,11 @@ package de.oliver.fancynpcs.listeners;
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.utils.InteractionType;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.EquipmentSlot;
-
-import static de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 
 public class PlayerUseUnknownEntityListener implements Listener {
 

@@ -22,6 +22,10 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.actions.ConsoleCommandAction;
+import de.oliver.fancynpcs.api.actions.MessageAction;
+import de.oliver.fancynpcs.api.actions.PlayerCommandAction;
+import de.oliver.fancynpcs.api.actions.SendToServerAction;
 import de.oliver.fancynpcs.api.utils.SkinCache;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
@@ -74,6 +78,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
     private SkinCacheYaml skinCache;
+    private ActionManagerImpl actionManager;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
@@ -153,6 +158,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
+        actionManager = new ActionManagerImpl();
+        actionManager.registerAction(new MessageAction());
+        actionManager.registerAction(new PlayerCommandAction());
+        actionManager.registerAction(new ConsoleCommandAction());
+        actionManager.registerAction(new SendToServerAction());
 
         skinCache = new SkinCacheYaml();
         skinCache.loadAndInsertToSkinFetcher();
@@ -376,6 +386,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public SkinCache getSkinCache() {
         return skinCache;
+    }
+
+    @Override
+    public ActionManagerImpl getActionManager() {
+        return actionManager;
     }
 
     @Override

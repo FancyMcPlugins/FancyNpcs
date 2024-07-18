@@ -2,8 +2,9 @@ package de.oliver.fancynpcs.api;
 
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
-import de.oliver.fancynpcs.api.utils.InteractionType;
 import de.oliver.fancynpcs.api.utils.Interval;
 import de.oliver.fancynpcs.api.utils.Interval.Unit;
 import org.bukkit.Bukkit;
@@ -137,10 +138,10 @@ public abstract class Npc {
     }
 
     public void interact(Player player) {
-        interact(player, InteractionType.CUSTOM);
+        interact(player, ActionTrigger.CUSTOM);
     }
 
-    public void interact(Player player, InteractionType interactionType) {
+    public void interact(Player player, ActionTrigger actionTrigger) {
         if (data.getInteractionCooldown() > 0) {
             final long interactionCooldownMillis = (long) (data.getInteractionCooldown() * 1000);
             final long lastInteractionMillis = lastPlayerInteraction.getOrDefault(player.getUniqueId(), 0L);
@@ -156,7 +157,7 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), data.getActions(), player, interactionType);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), data.getActions(actionTrigger), player, actionTrigger);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -169,7 +170,9 @@ public abstract class Npc {
         }
 
         // actions
-        //TODO: Implement actions
+        for (NpcAction.NpcActionData action : data.getActions(actionTrigger)) {
+            action.action().execute(this, player, action.value());
+        }
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

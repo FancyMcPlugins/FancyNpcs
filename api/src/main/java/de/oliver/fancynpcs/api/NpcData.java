@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.api;
 
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class NpcData {
@@ -29,7 +31,7 @@ public class NpcData {
     private EntityType type;
     private Map<NpcEquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
-    private List<NpcAction.NpcActionData> actions;
+    private Map<ActionTrigger, List<NpcAction.NpcActionData>> actions;
     private boolean turnToPlayer;
     private float interactionCooldown;
     private float scale;
@@ -52,7 +54,7 @@ public class NpcData {
             Map<NpcEquipmentSlot, ItemStack> equipment,
             boolean turnToPlayer,
             Consumer<Player> onClick,
-            List<NpcAction.NpcActionData> actions,
+            Map<ActionTrigger, List<NpcAction.NpcActionData>> actions,
             float interactionCooldown,
             float scale,
             Map<NpcAttribute, String> attributes,
@@ -98,7 +100,7 @@ public class NpcData {
         this.glowingColor = NamedTextColor.WHITE;
         this.onClick = p -> {
         };
-        this.actions = new ArrayList<>();
+        this.actions = new ConcurrentHashMap<>();
         this.turnToPlayer = false;
         this.interactionCooldown = 0;
         this.scale = 1;
@@ -237,24 +239,34 @@ public class NpcData {
         return this;
     }
 
-    public List<NpcAction.NpcActionData> getActions() {
+    public Map<ActionTrigger, List<NpcAction.NpcActionData>> getActions() {
         return actions;
     }
 
-    public NpcData setActions(List<NpcAction.NpcActionData> actions) {
+    public NpcData setActions(Map<ActionTrigger, List<NpcAction.NpcActionData>> actions) {
         this.actions = actions;
         isDirty = true;
         return this;
     }
 
-    public NpcData addAction(NpcAction.NpcActionData action) {
-        actions.add(action);
+    public List<NpcAction.NpcActionData> getActions(ActionTrigger trigger) {
+        return actions.getOrDefault(trigger, new ArrayList<>());
+    }
+
+    public NpcData addAction(ActionTrigger trigger, NpcAction action, String value) {
+        List<NpcAction.NpcActionData> a = actions.getOrDefault(trigger, new ArrayList<>());
+        a.add(new NpcAction.NpcActionData(action, value));
+        actions.put(trigger, a);
+
         isDirty = true;
         return this;
     }
 
-    public NpcData removeAction(NpcAction.NpcActionData action) {
-        actions.remove(action);
+    public NpcData removeAction(ActionTrigger trigger, NpcAction action) {
+        List<NpcAction.NpcActionData> a = actions.getOrDefault(trigger, new ArrayList<>());
+        a.removeIf(ad -> ad.action().equals(action));
+        actions.put(trigger, a);
+
         isDirty = true;
         return this;
     }

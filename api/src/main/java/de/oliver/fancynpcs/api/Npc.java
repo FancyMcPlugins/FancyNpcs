@@ -1,25 +1,18 @@
 package de.oliver.fancynpcs.api;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 import de.oliver.fancynpcs.api.utils.Interval;
 import de.oliver.fancynpcs.api.utils.Interval.Unit;
-import me.dave.chatcolorhandler.ChatColorHandler;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
-import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -163,7 +156,7 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommands(), data.getOnClick(), player, interactionType);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), data.getActions(), player, interactionType);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -175,51 +168,8 @@ public abstract class Npc {
             data.getOnClick().accept(player);
         }
 
-        // message
-        if (data.getMessages() != null && !data.getMessages().isEmpty()) {
-            if (data.isSendMessagesRandomly()) {
-                String randomMessage = data.getMessages().get(new Random().nextInt(data.getMessages().size()));
-                player.sendMessage(ModernChatColorHandler.translate(randomMessage, player));
-            } else {
-                for (String msg : data.getMessages()) {
-                    player.sendMessage(ModernChatColorHandler.translate(msg, player));
-                }
-            }
-        }
-
-        // serverCommand
-        for (String command : data.getServerCommands()) {
-            command = command.replace("{player}", player.getName());
-
-            String finalCommand = ChatColorHandler.translate(command, player, List.of(PlaceholderAPIParser.class));
-            FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
-        }
-
-        // playerCommand
-        if (data.getPlayerCommands() != null && !data.getPlayerCommands().isEmpty()) {
-            for (String cmd : data.getPlayerCommands()) {
-                String command = ChatColorHandler.translate(cmd, player, List.of(PlaceholderAPIParser.class));
-
-                if (command.toLowerCase().startsWith("server")) {
-                    String[] args = cmd.split(" ");
-                    if (args.length < 2) {
-                        return;
-                    }
-                    String server = args[1];
-
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Connect");
-                    out.writeUTF(server);
-                    player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
-                    return;
-                }
-
-                FancyNpcsPlugin.get().getScheduler().runTask(
-                        player.getLocation(),
-                        () -> player.chat("/" + command)
-                );
-            }
-        }
+        // actions
+        //TODO: Implement actions
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

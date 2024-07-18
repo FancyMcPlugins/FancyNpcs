@@ -18,4 +18,7 @@ public abstract class NpcAction {
     public String getName() {
         return name;
     }
+
+    public record NpcActionData(String name, String value) {
+    }
 }

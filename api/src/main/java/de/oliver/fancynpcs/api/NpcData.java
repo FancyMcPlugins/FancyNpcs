@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.api;
 
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -28,11 +29,8 @@ public class NpcData {
     private EntityType type;
     private Map<NpcEquipmentSlot, ItemStack> equipment;
     private Consumer<Player> onClick;
+    private List<NpcAction.NpcActionData> actions;
     private boolean turnToPlayer;
-    private List<String> playerCommands;
-    private List<String> serverCommands;
-    private List<String> messages;
-    private boolean sendMessagesRandomly;
     private float interactionCooldown;
     private float scale;
     private Map<NpcAttribute, String> attributes;
@@ -54,10 +52,7 @@ public class NpcData {
             Map<NpcEquipmentSlot, ItemStack> equipment,
             boolean turnToPlayer,
             Consumer<Player> onClick,
-            List<String> messages,
-            boolean sendMessagesRandomly,
-            List<String> serverCommands,
-            List<String> playerCommands,
+            List<NpcAction.NpcActionData> actions,
             float interactionCooldown,
             float scale,
             Map<NpcAttribute, String> attributes,
@@ -77,11 +72,8 @@ public class NpcData {
         this.type = type;
         this.equipment = equipment;
         this.onClick = onClick;
+        this.actions = actions;
         this.turnToPlayer = turnToPlayer;
-        this.serverCommands = serverCommands;
-        this.playerCommands = playerCommands;
-        this.messages = messages;
-        this.sendMessagesRandomly = sendMessagesRandomly;
         this.interactionCooldown = interactionCooldown;
         this.scale = scale;
         this.attributes = attributes;
@@ -106,11 +98,8 @@ public class NpcData {
         this.glowingColor = NamedTextColor.WHITE;
         this.onClick = p -> {
         };
+        this.actions = new ArrayList<>();
         this.turnToPlayer = false;
-        this.messages = new ArrayList<>();
-        this.serverCommands = new ArrayList<>();
-        this.playerCommands = new ArrayList<>();
-        this.sendMessagesRandomly = false;
         this.interactionCooldown = 0;
         this.scale = 1;
         this.equipment = new HashMap<>();
@@ -248,6 +237,28 @@ public class NpcData {
         return this;
     }
 
+    public List<NpcAction.NpcActionData> getActions() {
+        return actions;
+    }
+
+    public NpcData setActions(List<NpcAction.NpcActionData> actions) {
+        this.actions = actions;
+        isDirty = true;
+        return this;
+    }
+
+    public NpcData addAction(NpcAction.NpcActionData action) {
+        actions.add(action);
+        isDirty = true;
+        return this;
+    }
+
+    public NpcData removeAction(NpcAction.NpcActionData action) {
+        actions.remove(action);
+        isDirty = true;
+        return this;
+    }
+
     public boolean isTurnToPlayer() {
         return turnToPlayer;
     }
@@ -256,73 +267,6 @@ public class NpcData {
         this.turnToPlayer = turnToPlayer;
         isDirty = true;
         return this;
-    }
-
-    public List<String> getServerCommands() {
-        return serverCommands;
-    }
-
-    public NpcData setServerCommands(List<String> serverCommands) {
-        this.serverCommands = serverCommands;
-        isDirty = true;
-        return this;
-    }
-
-    public void addServerCommand(String command) {
-        serverCommands.add(command);
-        isDirty = true;
-    }
-
-    public void removeServerCommand(int index) {
-        serverCommands.remove(index);
-        isDirty = true;
-    }
-
-    public List<String> getPlayerCommands() {
-        return playerCommands;
-    }
-
-    public NpcData setPlayerCommands(List<String> playerCommands) {
-        this.playerCommands = playerCommands;
-        isDirty = true;
-        return this;
-    }
-
-    public List<String> getMessages() {
-        return messages;
-    }
-
-    public NpcData setMessages(List<String> messages) {
-        this.messages = messages;
-        return this;
-    }
-
-    public void addPlayerCommand(String command) {
-        playerCommands.add(command);
-        isDirty = true;
-    }
-
-    public void removePlayerCommand(int index) {
-        playerCommands.remove(index);
-        isDirty = true;
-    }
-
-    public boolean isSendMessagesRandomly() {
-        return sendMessagesRandomly;
-    }
-
-    public void setSendMessagesRandomly(boolean sendMessagesRandomly) {
-        this.sendMessagesRandomly = sendMessagesRandomly;
-    }
-
-    public void addMessage(String message) {
-        messages.add(message);
-        isDirty = true;
-    }
-
-    public void removeMessage(int index) {
-        messages.remove(index);
-        isDirty = true;
     }
 
     public float getInteractionCooldown() {

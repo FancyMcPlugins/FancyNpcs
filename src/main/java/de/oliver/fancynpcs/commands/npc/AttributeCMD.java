@@ -88,7 +88,7 @@ public enum AttributeCMD {
         // Getting the 'attribute' argument that should already exist within the command context.
         final NpcAttribute attribute = context.get("attribute");
         // Reading the string, which is supposed to be an attribute name.
-        final String value = input.readString();
+        final String value = input.read(input.remainingLength());
         // Sending error message if attribute is null or cannot accept provided value.
         if (!attribute.isValidValue(value))
             throw ReplyingParseException.replying(() -> translator.translate("command_invalid_attribute_value").replaceStripped("input", value).send(context.sender()));

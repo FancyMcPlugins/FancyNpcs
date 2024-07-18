@@ -19,6 +19,6 @@ public abstract class NpcAction {
         return name;
     }
 
-    public record NpcActionData(String name, String value) {
+    public record NpcActionData(NpcAction action, String value) {
     }
 }

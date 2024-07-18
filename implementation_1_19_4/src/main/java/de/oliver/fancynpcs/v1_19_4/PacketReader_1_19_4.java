@@ -4,8 +4,8 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.events.PacketReceivedEvent;
-import de.oliver.fancynpcs.api.utils.InteractionType;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -67,7 +67,7 @@ public class PacketReader_1_19_4 implements Listener {
             // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
             if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND)
                 // Further interaction handling is done by Npc#interact method...
-                npc.interact(event.getPlayer(), isAttack ? InteractionType.LEFT_CLICK : InteractionType.RIGHT_CLICK);
+                npc.interact(event.getPlayer(), isAttack ? ActionTrigger.LEFT_CLICK : ActionTrigger.RIGHT_CLICK);
     }
 
 }

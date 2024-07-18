@@ -1,8 +1,8 @@
 package de.oliver.fancynpcs.api.events;
 
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
-import de.oliver.fancynpcs.api.utils.InteractionType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -27,15 +27,15 @@ public class NpcInteractEvent extends Event implements Cancellable {
     private final Consumer<Player> onClick;
     @NotNull
     private final Player player;
-    private final InteractionType interactionType;
+    private final ActionTrigger actionTrigger;
     private boolean isCancelled;
 
-    public NpcInteractEvent(@NotNull Npc npc, @NotNull Consumer<Player> onClick, @NotNull List<NpcAction.NpcActionData> actions, @NotNull Player player, @NotNull InteractionType interactionType) {
+    public NpcInteractEvent(@NotNull Npc npc, @NotNull Consumer<Player> onClick, @NotNull List<NpcAction.NpcActionData> actions, @NotNull Player player, @NotNull ActionTrigger actionTrigger) {
         this.npc = npc;
         this.onClick = onClick;
         this.actions = actions;
         this.player = player;
-        this.interactionType = interactionType;
+        this.actionTrigger = actionTrigger;
     }
 
     public static HandlerList getHandlerList() {
@@ -66,8 +66,8 @@ public class NpcInteractEvent extends Event implements Cancellable {
     /**
      * @return returns interaction type
      */
-    public @NotNull InteractionType getInteractionType() {
-        return interactionType;
+    public @NotNull ActionTrigger getInteractionType() {
+        return actionTrigger;
     }
 
     /**

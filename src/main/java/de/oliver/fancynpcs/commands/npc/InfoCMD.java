@@ -13,10 +13,9 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-
-import org.jetbrains.annotations.NotNull;
 
 public enum InfoCMD {
     INSTANCE; // SINGLETON
@@ -33,7 +32,7 @@ public enum InfoCMD {
         final Location loc = npc.getData().getLocation();
         final Interval interactionCooldown = Interval.of(npc.getData().getInteractionCooldown(), Unit.SECONDS);
         // Getting the translated glowing state. This should never throw because all supported NamedTextColor objects has their mapping in GlowingColor enum.
-        final String glowingStateTranslated = (!npc.getData().isGlowing() || npc.getData().getGlowingColor() != null)
+        final String glowingStateTranslated = (npc.getData().isGlowing() && npc.getData().getGlowingColor() != null)
                 ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
                 : ((SimpleMessage) translator.translate("disabled")).getMessage();
         // Getting the creator player profile, this will be completed from cache in order to get name of the player.

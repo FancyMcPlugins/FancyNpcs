@@ -7,6 +7,7 @@ import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.FrogVariant;
 import net.minecraft.world.entity.animal.frog.Frog;
 import org.bukkit.entity.EntityType;
 
@@ -20,7 +21,7 @@ public class FrogAttributes {
 
         attributes.add(new NpcAttribute(
                 "variant",
-                RegistryAccess.registryAccess().getRegistry(RegistryKey.FROG_VARIANT).stream().map(variant -> variant.getKey().getKey()).toList(),
+                BuiltInRegistries.FROG_VARIANT.keySet().stream().map(ResourceLocation::getPath).toList(),
                 List.of(EntityType.FROG),
                 FrogAttributes::setVariant
         ));

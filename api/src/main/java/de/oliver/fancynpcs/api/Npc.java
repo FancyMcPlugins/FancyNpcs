@@ -152,8 +152,12 @@ public abstract class Npc {
             final long interactionCooldownMillis = (long) (data.getInteractionCooldown() * 1000);
             final long lastInteractionMillis = lastPlayerInteraction.getOrDefault(player.getUniqueId(), 0L);
             final Interval interactionCooldownLeft = Interval.between(lastInteractionMillis + interactionCooldownMillis, System.currentTimeMillis(), Unit.MILLISECONDS);
-            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0 && !FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
-                translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0) {
+
+                if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
+                    translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+                }
+
                 return;
             }
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());

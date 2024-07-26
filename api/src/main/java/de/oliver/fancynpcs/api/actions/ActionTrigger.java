@@ -12,5 +12,21 @@ public enum ActionTrigger {
     /**
      * represents interactions invoked by the API.
      */
-    CUSTOM
+    CUSTOM,
+    ;
+
+    /**
+     * Gets the ActionTrigger by its name.
+     *
+     * @param name the name of the ActionTrigger
+     * @return the ActionTrigger or null if not found
+     */
+    public static ActionTrigger getByName(final String name) {
+        for (ActionTrigger trigger : values()) {
+            if (trigger.name().equalsIgnoreCase(name)) {
+                return trigger;
+            }
+        }
+        return null;
+    }
 }

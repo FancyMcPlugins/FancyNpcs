@@ -185,6 +185,7 @@ public final class CloudCommandManager {
         annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
+        annotationParser.parse(ActionCMD.INSTANCE);
 
 
         String mcVersion = Bukkit.getMinecraftVersion();

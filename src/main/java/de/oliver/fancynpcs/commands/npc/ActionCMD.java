@@ -19,10 +19,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public enum ActionCMD {
-    INSTANCE;
+public class ActionCMD {
+    public static final ActionCMD INSTANCE = new ActionCMD();
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
+
+    private ActionCMD() {
+    }
 
     @Command("npc action <npc> <trigger> add <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.add")

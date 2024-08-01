@@ -259,9 +259,9 @@ public class NpcData {
         return this;
     }
 
-    public NpcData addAction(ActionTrigger trigger, NpcAction action, String value) {
+    public NpcData addAction(ActionTrigger trigger, int order, NpcAction action, String value) {
         List<NpcAction.NpcActionData> a = actions.getOrDefault(trigger, new ArrayList<>());
-        a.add(new NpcAction.NpcActionData(action, value));
+        a.add(new NpcAction.NpcActionData(order, action, value));
         actions.put(trigger, a);
 
         isDirty = true;

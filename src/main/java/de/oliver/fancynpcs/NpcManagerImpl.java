@@ -288,6 +288,27 @@ public class NpcManagerImpl implements NpcManager {
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
 
             Map<ActionTrigger, List<NpcAction.NpcActionData>> actions = new ConcurrentHashMap<>();
+
+            //TODO: remove these fields next version
+            boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
+            List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
+            List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
+            List<String> serverCommands = npcConfig.getStringList("npcs." + id + ".serverCommands");
+
+            List<NpcAction.NpcActionData> migrateActionList = new ArrayList<>();
+            int actionOrder = 0;
+            for (String playerCommand : playerCommands) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
+            }
+            for (String serverCommand : serverCommands) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("server_command"), serverCommand));
+            }
+            for (String message : messages) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
+            }
+            actions.put(ActionTrigger.LEFT_CLICK, migrateActionList);
+            actions.put(ActionTrigger.RIGHT_CLICK, migrateActionList);
+
             ConfigurationSection actiontriggerSection = npcConfig.getConfigurationSection("npcs." + id + ".actions");
             if (actiontriggerSection != null) {
                 actiontriggerSection.getKeys(false).forEach(trigger -> {
@@ -320,26 +341,6 @@ public class NpcManagerImpl implements NpcManager {
                     }
                 });
             }
-
-            //TODO: remove these fields next version
-            boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
-            List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
-            List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
-            List<String> serverCommands = npcConfig.getStringList("npcs." + id + ".serverCommands");
-
-            List<NpcAction.NpcActionData> actionList = new ArrayList<>();
-            int actionOrder = 0;
-            for (String playerCommand : playerCommands) {
-                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
-            }
-            for (String serverCommand : serverCommands) {
-                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("server_command"), serverCommand));
-            }
-            for (String message : messages) {
-                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
-            }
-            actions.put(ActionTrigger.LEFT_CLICK, actionList);
-            actions.put(ActionTrigger.RIGHT_CLICK, actionList);
 
             //TODO: add migration for sendMessagesRandomly
 

@@ -38,8 +38,11 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.Random;
 import java.util.function.Function;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
@@ -135,19 +138,23 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         versionConfig.load();
 
-        new Thread(() -> {
-            ComparableVersion newestVersion = versionFetcher.fetchNewestVersion();
-            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-            if (newestVersion == null) {
-                getLogger().warning("Could not fetch latest plugin version");
-            } else if (newestVersion.compareTo(currentVersion) > 0) {
-                getLogger().warning("-------------------------------------------------------");
-                getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
-                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                getLogger().warning(versionFetcher.getDownloadUrl());
-                getLogger().warning("-------------------------------------------------------");
-            }
-        }).start();
+        final ComparableVersion currentVersion = new ComparableVersion(versionConfig.getVersion());
+        supplyAsync(getVersionFetcher()::fetchNewestVersion)
+                .thenApply(Objects::requireNonNull)
+                .whenComplete((newest, error) -> {
+                    if (error != null || newest.compareTo(currentVersion) <= 0) {
+                        return; // could not get the newest version or already on latest
+                    }
+
+                    getLogger().warning("""
+                                                                    
+                            -------------------------------------------------------
+                            You are not using the latest version the FancyNpcs plugin.
+                            Please update to the newest version (%s).
+                            %s
+                            -------------------------------------------------------
+                            """.formatted(newest, getVersionFetcher().getDownloadUrl()));
+                });
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("--------------------------------------------------");

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 public class MessageAction extends NpcAction {
 
     public MessageAction() {
-        super("message");
+        super("message", true);
     }
 
     @Override

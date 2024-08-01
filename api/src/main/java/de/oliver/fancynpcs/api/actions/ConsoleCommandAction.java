@@ -13,7 +13,7 @@ import java.util.List;
 public class ConsoleCommandAction extends NpcAction {
 
     public ConsoleCommandAction() {
-        super("console_command");
+        super("console_command", true);
     }
 
     @Override

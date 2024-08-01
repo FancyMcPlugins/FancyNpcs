@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class SendToServerAction extends NpcAction {
 
     public SendToServerAction() {
-        super("send_to_server");
+        super("send_to_server", true);
     }
 
     @Override

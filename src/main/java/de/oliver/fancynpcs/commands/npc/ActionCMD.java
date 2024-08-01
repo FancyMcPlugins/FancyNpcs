@@ -45,7 +45,9 @@ public class ActionCMD {
             return;
         }
 
-        npc.getData().addAction(trigger, actionType, value);
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions().getOrDefault(trigger, new ArrayList<>());
+
+        npc.getData().addAction(trigger, currentActions.size() + 1, actionType, value);
         translator
                 .translate("npc_action_add_success")
                 .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
@@ -70,7 +72,7 @@ public class ActionCMD {
         }
 
         List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
-        currentActions.set(number - 1, new NpcAction.NpcActionData(actionType, value));
+        currentActions.set(number - 1, new NpcAction.NpcActionData(number, actionType, value));
         npc.getData().setActions(trigger, currentActions);
         translator
                 .translate("npc_action_set_success")
@@ -133,7 +135,7 @@ public class ActionCMD {
             NpcAction.NpcActionData action = actions.get(i);
             translator
                     .translate("npc_action_list_entry")
-                    .replaceStripped("number", String.valueOf(i + 1))
+                    .replaceStripped("number", String.valueOf(action.order()))
                     .replaceStripped("action", action.action().getName())
                     .replaceStripped("value", action.value())
                     .send(sender);

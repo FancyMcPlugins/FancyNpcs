@@ -25,6 +25,6 @@ public abstract class NpcAction {
         return requiresValue;
     }
 
-    public record NpcActionData(NpcAction action, String value) {
+    public record NpcActionData(int order, NpcAction action, String value) {
     }
 }

@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -185,6 +186,17 @@ public class NpcManagerImpl implements NpcManager {
                 npcConfig.set("npcs." + data.getId() + ".attributes." + attribute.getName(), value);
             }
 
+            for (Map.Entry<ActionTrigger, List<NpcAction.NpcActionData>> entry : npc.getData().getActions().entrySet()) {
+                for (NpcAction.NpcActionData actionData : entry.getValue()) {
+                    if (actionData == null) {
+                        continue;
+                    }
+
+                    npcConfig.set("npcs." + data.getId() + ".actions." + entry.getKey().name() + "." + actionData.order() + ".action", actionData.action().getName());
+                    npcConfig.set("npcs." + data.getId() + ".actions." + entry.getKey().name() + "." + actionData.order() + ".value", actionData.value());
+                }
+            }
+
             npc.setDirty(false);
         }
 
@@ -276,7 +288,38 @@ public class NpcManagerImpl implements NpcManager {
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
 
             Map<ActionTrigger, List<NpcAction.NpcActionData>> actions = new ConcurrentHashMap<>();
-            //TODO: parse new action fileds
+            ConfigurationSection actiontriggerSection = npcConfig.getConfigurationSection("npcs." + id + ".actions");
+            if (actiontriggerSection != null) {
+                actiontriggerSection.getKeys(false).forEach(trigger -> {
+                    ActionTrigger actionTrigger = ActionTrigger.getByName(trigger);
+                    if (actionTrigger == null) {
+                        System.out.println("Could not find action trigger: " + trigger);
+                        return;
+                    }
+
+                    List<NpcAction.NpcActionData> actionList = new ArrayList<>();
+                    ConfigurationSection actionsSection = npcConfig.getConfigurationSection("npcs." + id + ".actions." + trigger);
+                    if (actionsSection != null) {
+                        actionsSection.getKeys(false).forEach(order -> {
+                            String actionName = npcConfig.getString("npcs." + id + ".actions." + trigger + "." + order + ".action");
+                            String value = npcConfig.getString("npcs." + id + ".actions." + trigger + "." + order + ".value");
+                            NpcAction action = FancyNpcs.getInstance().getActionManager().getActionByName(actionName);
+                            if (action == null) {
+                                System.out.println("Could not find action: " + actionName);
+                                return;
+                            }
+
+                            try {
+                                actionList.add(new NpcAction.NpcActionData(Integer.parseInt(order), action, value));
+                            } catch (NumberFormatException e) {
+                                System.out.println("Could not parse order: " + order);
+                            }
+                        });
+
+                        actions.put(actionTrigger, actionList);
+                    }
+                });
+            }
 
             //TODO: remove these fields next version
             boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
@@ -285,14 +328,15 @@ public class NpcManagerImpl implements NpcManager {
             List<String> serverCommands = npcConfig.getStringList("npcs." + id + ".serverCommands");
 
             List<NpcAction.NpcActionData> actionList = new ArrayList<>();
+            int actionOrder = 0;
             for (String playerCommand : playerCommands) {
-                actionList.add(new NpcAction.NpcActionData(FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
+                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
             }
             for (String serverCommand : serverCommands) {
-                actionList.add(new NpcAction.NpcActionData(FancyNpcs.getInstance().getActionManager().getActionByName("server_command"), serverCommand));
+                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("server_command"), serverCommand));
             }
             for (String message : messages) {
-                actionList.add(new NpcAction.NpcActionData(FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
+                actionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
             }
             actions.put(ActionTrigger.LEFT_CLICK, actionList);
             actions.put(ActionTrigger.RIGHT_CLICK, actionList);

@@ -35,26 +35,17 @@ public class ActionCMD {
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger,
-            final @NotNull String actionType,
+            final @NotNull NpcAction actionType,
             final @Nullable @Greedy String value
     ) {
-        NpcAction action = PLUGIN.getActionManager().getActionByName(actionType);
-        if (action == null) {
-            translator
-                    .translate("command_invalid_action_type")
-                    .replaceStripped("input", actionType)
-                    .send(sender);
-            return;
-        }
-
-        if (action.requiresValue() && (value == null || value.isEmpty())) {
+        if (actionType.requiresValue() && (value == null || value.isEmpty())) {
             translator
                     .translate("npc_action_requires_value")
                     .send(sender);
             return;
         }
 
-        npc.getData().addAction(trigger, action, value);
+        npc.getData().addAction(trigger, actionType, value);
         translator
                 .translate("npc_action_add_success")
                 .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
@@ -68,46 +59,95 @@ public class ActionCMD {
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger,
             final @NotNull @Argument(suggestions = "ActionCMD/number_range") Integer number,
-            final @NotNull String actionType,
+            final @NotNull NpcAction actionType,
             final @Nullable @Greedy String value
     ) {
-        //TODO: Implement this method
+        if (actionType.requiresValue() && (value == null || value.isEmpty())) {
+            translator
+                    .translate("npc_action_requires_value")
+                    .send(sender);
+            return;
+        }
+
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        currentActions.set(number - 1, new NpcAction.NpcActionData(actionType, value));
+        npc.getData().setActions(trigger, currentActions);
+        translator
+                .translate("npc_action_set_success")
+                .replaceStripped("number", String.valueOf(number))
+                .send(sender);
     }
 
     @Command("npc action <npc> <trigger> remove <number>")
     @Permission("fancynpcs.command.npc.action.remove")
-    public void onMessageRemove(
+    public void onActionRemove(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger,
             final @Argument(suggestions = "ActionCMD/number_range") int number
     ) {
-        //TODO: Implement this method
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+
+        currentActions.remove(number - 1);
+        npc.getData().setActions(trigger, currentActions);
+        translator
+                .translate("npc_action_remove_success")
+                .replaceStripped("number", String.valueOf(number))
+                .send(sender);
     }
 
     @Command("npc action <npc> <trigger> clear")
     @Permission("fancynpcs.command.npc.action.clear")
-    public void onMessageClear(
+    public void onActionClear(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger
     ) {
-        //TODO: Implement this method
+        npc.getData().setActions(trigger, new ArrayList<>());
+        translator
+                .translate("npc_action_clear_success")
+                .send(sender);
     }
 
-    @Command("npc message <npc> <trigger> list")
+    @Command("npc action <npc> <trigger> list")
     @Permission("fancynpcs.command.npc.action.list")
-    public void onMessageList(
+    public void onActionList(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger
     ) {
-        //TODO: Implement this method
+        List<NpcAction.NpcActionData> actions = npc.getData().getActions(trigger);
+        if (actions.isEmpty()) {
+            translator
+                    .translate("npc_action_list_failure_empty")
+                    .send(sender);
+            return;
+        }
+
+        translator
+                .translate("npc_action_list_header")
+                .replaceStripped("trigger", trigger.name())
+                .send(sender);
+
+        for (int i = 0; i < actions.size(); i++) {
+            NpcAction.NpcActionData action = actions.get(i);
+            translator
+                    .translate("npc_action_list_entry")
+                    .replaceStripped("number", String.valueOf(i + 1))
+                    .replaceStripped("action", action.action().getName())
+                    .replaceStripped("value", action.value())
+                    .send(sender);
+        }
+
+        translator
+                .translate("npc_action_list_footer")
+                .replaceStripped("total", String.valueOf(actions.size()))
+                .send(sender);
     }
 
-    @Command("npc message <npc> <trigger> send_randomly [state]")
+    @Command("npc action <npc> <trigger> send_randomly [state]")
     @Permission("fancynpcs.command.npc.action.send_randomly")
-    public void onMessageSendRandomly(
+    public void onActionSendRandomly(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
             final @NotNull ActionTrigger trigger,

@@ -13,10 +13,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public enum ActionTriggerArgument {
-    INSTANCE;
+public class ActionTriggerArgument {
 
+    public static final ActionTriggerArgument INSTANCE = new ActionTriggerArgument();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
+
+    private ActionTriggerArgument() {
+    }
 
     @Parser(name = "", suggestions = "action_trigger")
     public ActionTrigger parse(final CommandContext<CommandSender> context, final CommandInput input) {

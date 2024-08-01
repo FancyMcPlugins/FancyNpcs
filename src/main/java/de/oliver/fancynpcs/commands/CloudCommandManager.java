@@ -4,6 +4,7 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.Message;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.commands.arguments.ActionTriggerArgument;
+import de.oliver.fancynpcs.commands.arguments.ActionTypeArgument;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
@@ -65,6 +66,7 @@ public final class CloudCommandManager {
         annotationParser.parse(NpcArgument.INSTANCE);
         annotationParser.parse(LocationArgument.INSTANCE);
         annotationParser.parse(ActionTriggerArgument.INSTANCE);
+        annotationParser.parse(ActionTypeArgument.INSTANCE);
         return this;
     }
 

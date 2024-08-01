@@ -253,6 +253,12 @@ public class NpcData {
         return actions.getOrDefault(trigger, new ArrayList<>());
     }
 
+    public NpcData setActions(ActionTrigger trigger, List<NpcAction.NpcActionData> actions) {
+        this.actions.put(trigger, actions);
+        isDirty = true;
+        return this;
+    }
+
     public NpcData addAction(ActionTrigger trigger, NpcAction action, String value) {
         List<NpcAction.NpcActionData> a = actions.getOrDefault(trigger, new ArrayList<>());
         a.add(new NpcAction.NpcActionData(action, value));

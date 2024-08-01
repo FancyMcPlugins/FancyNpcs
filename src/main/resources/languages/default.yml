@@ -324,7 +324,14 @@ messages:
 
   # Commands (npc action)
   npc_action_add_success: "<dark_gray>› <gray>Action has been added. There is {warningColor}{total}<gray> actions in total."
+  npc_action_set_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> actions in total."
   npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
+  npc_action_remove_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> actions in total."
+  npc_action_clear_success: "<dark_gray>› <gray>Actions have been cleared."
+  npc_action_list_header: "<dark_gray><st>------------------</st>  <gray>Actions  <dark_gray><st>------------------</st><newline>"
+  npc_action_list_entry: " <#848484>{number}. <gray>{action}: {value}"
+  npc_action_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total}<gray> entries  <dark_gray><st>-------------</st>"
+  npc_action_list_failure_empty: "<dark_gray>› {errorColor}There are no actions in the list. Use {warningColor}/npc action (npc) add (action){errorColor} to add your first action."
 
   # Commands (npc show_in_tab)
   npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."

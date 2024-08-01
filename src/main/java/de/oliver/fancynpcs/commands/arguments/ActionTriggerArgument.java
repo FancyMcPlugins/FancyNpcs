@@ -11,7 +11,6 @@ import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public enum ActionTriggerArgument {
@@ -30,6 +29,9 @@ public enum ActionTriggerArgument {
 
     @Suggestions("action_trigger")
     public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
-        return Arrays.stream(ActionTrigger.values()).map(Enum::name).toList();
+        return List.of(
+                ActionTrigger.LEFT_CLICK.name().toLowerCase(),
+                ActionTrigger.RIGHT_CLICK.name().toLowerCase()
+        );
     }
 }

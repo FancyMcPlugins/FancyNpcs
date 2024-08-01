@@ -14,7 +14,7 @@ import java.util.List;
 public class PlayerCommandAction extends NpcAction {
 
     public PlayerCommandAction() {
-        super("player_command");
+        super("player_command", true);
     }
 
     @Override

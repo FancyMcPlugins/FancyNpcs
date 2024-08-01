@@ -4,6 +4,7 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class ActionCMD {
     public static final ActionCMD INSTANCE = new ActionCMD();
+    private final static FancyNpcs PLUGIN = FancyNpcs.getInstance();
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
@@ -36,8 +38,27 @@ public class ActionCMD {
             final @NotNull String actionType,
             final @Nullable @Greedy String value
     ) {
-        //TODO: Implement this method
-        sender.sendMessage("hello world");
+        NpcAction action = PLUGIN.getActionManager().getActionByName(actionType);
+        if (action == null) {
+            translator
+                    .translate("command_invalid_action_type")
+                    .replaceStripped("input", actionType)
+                    .send(sender);
+            return;
+        }
+
+        if (action.requiresValue() && (value == null || value.isEmpty())) {
+            translator
+                    .translate("npc_action_requires_value")
+                    .send(sender);
+            return;
+        }
+
+        npc.getData().addAction(trigger, action, value);
+        translator
+                .translate("npc_action_add_success")
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
     }
 
     @Command("npc action <npc> <trigger> set <number> <actionType> [value]")

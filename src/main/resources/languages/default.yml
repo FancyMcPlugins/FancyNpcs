@@ -69,6 +69,8 @@ messages:
   command_invalid_list_sort_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid sort type."
   command_invalid_nearby_sort_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid sort type."
   command_invalid_entity_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid entity type."
+  command_invalid_action_trigger: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid action trigger."
+  command_invalid_action_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid action type."
   command_invalid_npc: "<dark_gray>› {errorColor}NPC {warningColor}{input}{errorColor} does not exist."
   command_invalid_material: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid material."
   command_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
@@ -319,6 +321,10 @@ messages:
   npc_server_command_list_entry: " <#848484>{number}. <reset>{command}"
   npc_server_command_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
   npc_server_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc server_command (npc) add (command){errorColor} to add your first command."
+
+  # Commands (npc action)
+  npc_action_add_success: "<dark_gray>› <gray>Action has been added. There is {warningColor}{total}<gray> actions in total."
+  npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
 
   # Commands (npc show_in_tab)
   npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."

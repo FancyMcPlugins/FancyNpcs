@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.commands;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.Message;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.commands.arguments.ActionTriggerArgument;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
@@ -63,7 +64,7 @@ public final class CloudCommandManager {
     public @NotNull CloudCommandManager registerArguments() {
         annotationParser.parse(NpcArgument.INSTANCE);
         annotationParser.parse(LocationArgument.INSTANCE);
-        // Returning this instance of CloudCommandManager to keep "builder-like" flow.
+        annotationParser.parse(ActionTriggerArgument.INSTANCE);
         return this;
     }
 

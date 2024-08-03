@@ -18,7 +18,7 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.2.1" + (if (buildId != null) ".$buildId" else "")
+    version = "2.2.1-DEV" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -83,8 +83,8 @@ tasks {
 //        minecraftVersion("1.20.6")
 
         downloadPlugins {
-            hangar("ViaVersion", "5.0.0")
-            hangar("ViaBackwards", "5.0.0")
+            hangar("ViaVersion", "5.0.2")
+            hangar("ViaBackwards", "5.0.2")
 //            hangar("PlaceholderAPI", "2.11.5")
         }
     }

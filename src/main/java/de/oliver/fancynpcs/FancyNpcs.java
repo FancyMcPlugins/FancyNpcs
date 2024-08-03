@@ -120,7 +120,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        FancyLib.setPlugin(instance);
+        FancyLib.setPlugin(instance, getFile());
 
         String mcVersion = Bukkit.getMinecraftVersion();
 

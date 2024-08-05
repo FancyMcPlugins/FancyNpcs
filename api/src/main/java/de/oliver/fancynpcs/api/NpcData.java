@@ -17,7 +17,7 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-    private SkinFetcher skin;
+    private SkinFetcher.SkinData skin;
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
@@ -43,7 +43,7 @@ public class NpcData {
             String name,
             UUID creator,
             String displayName,
-            SkinFetcher skin,
+            SkinFetcher.SkinData skin,
             Location location,
             boolean showInTab,
             boolean spawnEntity,
@@ -141,11 +141,11 @@ public class NpcData {
         return this;
     }
 
-    public SkinFetcher getSkin() {
+    public SkinFetcher.SkinData getSkin() {
         return skin;
     }
 
-    public NpcData setSkin(SkinFetcher skin) {
+    public NpcData setSkin(SkinFetcher.SkinData skin) {
         this.skin = skin;
         isDirty = true;
         return this;

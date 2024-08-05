@@ -68,9 +68,9 @@ public class Npc_1_20_1 extends Npc {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""));
             ((ServerPlayer) npc).gameProfile = gameProfile;
 
-            if (data.getSkin() != null && data.getSkin().isLoaded()) {
+            if (data.getSkin() != null && data.getSkin().value() != null && data.getSkin().signature() != null) {
                 // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
+                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().value(), data.getSkin().signature())));
             }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));

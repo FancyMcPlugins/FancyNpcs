@@ -3,122 +3,165 @@ package de.oliver.fancynpcs.api.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import de.oliver.fancylib.UUIDFetcher;
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
+import me.dave.chatcolorhandler.ChatColorHandler;
+import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
-public class SkinFetcher {
-    public static Map<String, SkinFetcher> skinCache = new HashMap<>();
+public final class SkinFetcher {
+    public static Map<String, SkinData> skinCache = new HashMap<>(); // identifier -> skinData
 
-    private final SkinType skinType;
-    private final String identifier; // uuid or url
-    private String value;
-    private String signature;
-    private boolean loaded;
+    private SkinFetcher() {
+    }
 
-    public SkinFetcher(String identifier) {
-        this.skinType = SkinType.getType(identifier);
-        this.identifier = identifier;
-
+    /**
+     * Fetches the skin data from the Mojang API.
+     *
+     * @param identifier The identifier of the skin. This can be a UUID, username, URL or a placeholder by PAPI.
+     * @throws IOException If the skin data could not be fetched.
+     */
+    public static SkinData fetchSkin(String identifier) throws IOException {
         if (skinCache.containsKey(identifier)) {
-            SkinFetcher cached = skinCache.get(identifier);
-            this.value = cached.getValue();
-            this.signature = cached.getSignature();
-            this.loaded = true;
-            return;
+            return skinCache.get(identifier);
         }
 
-        this.loaded = false;
-        load();
+        if (isPlaceholder(identifier)) {
+            String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.class));
+            return fetchSkin(parsedIdentifier);
+        }
+
+        if (isURL(identifier)) {
+            return fetchSkinByURL(identifier);
+        }
+
+        if (isUUID(identifier)) {
+            return fetchSkinByUUID(identifier);
+        }
+
+        // assume it's a username
+        UUID uuid = UUIDFetcher.getUUID(identifier);
+        if (uuid != null) {
+            return fetchSkinByUUID(uuid.toString());
+        }
+
+        return null;
     }
 
-    public SkinFetcher(String identifier, String value, String signature) {
-        this.skinType = SkinType.getType(identifier);
-        this.identifier = identifier;
-        this.value = value;
-        this.signature = signature;
-        this.loaded = true;
+    /**
+     * Fetches the skin data from the Mojang API.
+     *
+     * @throws IOException If the skin data could not be fetched.
+     */
+    public static SkinData fetchSkinByUUID(String uuid) throws IOException {
+        URL url = new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+
+        String json = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A").next();
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(json).getAsJsonObject();
+
+        String value = obj.getAsJsonArray("properties").get(0).getAsJsonObject().getAsJsonPrimitive("value").getAsString();
+        String signature = obj.getAsJsonArray("properties").get(0).getAsJsonObject().getAsJsonPrimitive("signature").getAsString();
+        SkinData skinData = new SkinData(uuid, value, signature);
+
+        skinCache.put(uuid, skinData);
+        return skinData;
     }
 
+    /**
+     * Fetches the skin data from the Mojang API.
+     *
+     * @throws IOException If the skin data could not be fetched.
+     */
+    public static SkinData fetchSkinByURL(String skinURL) throws IOException {
+        URL url = new URL("https://api.mineskin.org/generate/url");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setDoOutput(true);
+        DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream());
+        outputStream.writeBytes("url=" + URLEncoder.encode(skinURL, StandardCharsets.UTF_8));
+        outputStream.close();
 
-    public void load() {
-        this.loaded = false;
-        try {
-            URL url = new URL(skinType.getRequestUrl().replace("{uuid}", identifier));
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod(skinType.getRequestMethod());
-            if (skinType == SkinType.URL) {
-                conn.setDoOutput(true);
-                DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream());
-                outputStream.writeBytes("url=" + URLEncoder.encode(identifier, StandardCharsets.UTF_8));
-                outputStream.close();
+        String json = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A").next();
+        JsonParser parser = new JsonParser();
+        JsonObject obj = parser.parse(json).getAsJsonObject();
+
+        String value = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("value").getAsString();
+        String signature = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("signature").getAsString();
+        SkinData skinData = new SkinData(skinURL, value, signature);
+
+        skinCache.put(skinURL, skinData);
+        return skinData;
+    }
+
+    private static boolean isURL(String identifier) {
+        return identifier.startsWith("http");
+    }
+
+    private static boolean isPlaceholder(String identifier) {
+        return identifier.startsWith("%") && identifier.endsWith("%") || identifier.startsWith("{") && identifier.endsWith("}");
+    }
+
+    private static boolean isUUID(String identifier) {
+        return identifier.length() == 36 && identifier.contains("-");
+    }
+
+    /**
+     * Represents all required data for a skin.
+     *
+     * @param identifier The identifier of the skin. This can be a UUID, username, URL or a placeholder by PAPI.
+     * @param value      The value of the skin. If {@code null}, the skin will be fetched from the Mojang API.
+     * @param signature  The signature of the skin. If {@code null}, the skin will be fetched from the Mojang API.
+     */
+    public record SkinData(@NotNull String identifier, @Nullable String value, @Nullable String signature) {
+
+        /**
+         * Fetches the skin data from the Mojang API if the value or signature is {@code null}.
+         *
+         * @return The value of the skin or {@code null} if the skin data could not be fetched.
+         */
+        @Override
+        public String value() {
+            if (value == null || value.isEmpty()) {
+                try {
+                    SkinData skinData = fetchSkin(identifier);
+                    return skinData == null ? null : skinData.value();
+                } catch (IOException e) {
+                    FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for " + identifier);
+                }
             }
 
-            String json = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A").next();
-            JsonParser parser = new JsonParser();
-            JsonObject obj = parser.parse(json).getAsJsonObject();
-            if (skinType == SkinType.UUID) {
-                this.value = obj.getAsJsonArray("properties").get(0).getAsJsonObject().getAsJsonPrimitive("value").getAsString();
-                this.signature = obj.getAsJsonArray("properties").get(0).getAsJsonObject().getAsJsonPrimitive("signature").getAsString();
-            } else if (skinType == SkinType.URL) {
-                this.value = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("value").getAsString();
-                this.signature = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("signature").getAsString();
+            return value;
+        }
+
+        /**
+         * Fetches the skin data from the Mojang API if the value or signature is {@code null}.
+         *
+         * @return The signature of the skin or {@code null} if the skin data could not be fetched.
+         */
+        @Override
+        public String signature() {
+            if (signature == null || signature.isEmpty()) {
+                try {
+                    SkinData skinData = fetchSkin(identifier);
+                    return skinData == null ? null : skinData.signature();
+                } catch (IOException e) {
+                    FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for " + identifier);
+                }
             }
-            this.loaded = true;
-            skinCache.put(identifier, this);
-        } catch (Exception e) {
-            this.loaded = false;
-        }
-    }
 
-    public SkinType getSkinType() {
-        return skinType;
-    }
-
-    public String getIdentifier() {
-        return identifier;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public String getSignature() {
-        return signature;
-    }
-
-    public boolean isLoaded() {
-        return loaded;
-    }
-
-    public enum SkinType {
-        UUID("https://sessionserver.mojang.com/session/minecraft/profile/{uuid}?unsigned=false", "GET"),
-        URL("https://api.mineskin.org/generate/url", "POST");
-
-        private final String requestUrl;
-        private final String requestMethod;
-
-        SkinType(String requestUrl, String requestMethod) {
-            this.requestUrl = requestUrl;
-            this.requestMethod = requestMethod;
-        }
-
-        public static SkinType getType(String s) {
-            return s.startsWith("http") ? URL : UUID;
-        }
-
-        public String getRequestUrl() {
-            return requestUrl;
-        }
-
-        public String getRequestMethod() {
-            return requestMethod;
+            return signature;
         }
     }
 }

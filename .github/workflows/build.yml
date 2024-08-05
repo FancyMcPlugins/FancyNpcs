@@ -2,7 +2,9 @@ name: Build plugin
 
 on:
   push:
-
+  pull_request:
+    types:
+      - opened
 jobs:
   build-plugin:
     runs-on: ubuntu-latest

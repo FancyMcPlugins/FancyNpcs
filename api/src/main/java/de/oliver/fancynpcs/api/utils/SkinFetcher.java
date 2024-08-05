@@ -16,10 +16,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public final class SkinFetcher {
-    public static Map<String, SkinData> skinCache = new HashMap<>(); // identifier -> skinData
+    public static final Map<String, SkinData> skinCache = new ConcurrentHashMap<>(); // identifier -> skinData
 
     private SkinFetcher() {
     }

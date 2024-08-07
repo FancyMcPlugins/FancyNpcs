@@ -85,7 +85,7 @@ tasks {
         downloadPlugins {
             hangar("ViaVersion", "5.0.2")
             hangar("ViaBackwards", "5.0.2")
-//            hangar("PlaceholderAPI", "2.11.5")
+            hangar("PlaceholderAPI", "2.11.6")
         }
     }
 

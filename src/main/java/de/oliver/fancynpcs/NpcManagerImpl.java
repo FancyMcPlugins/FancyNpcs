@@ -164,9 +164,9 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.value", data.getSkin().getValue());
-                npcConfig.set("npcs." + data.getId() + ".skin.signature", data.getSkin().getSignature());
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
+                npcConfig.set("npcs." + data.getId() + ".skin.value", data.getSkin().value());
+                npcConfig.set("npcs." + data.getId() + ".skin.signature", data.getSkin().signature());
             }
 
             if (data.getEquipment() != null) {
@@ -242,9 +242,9 @@ public class NpcManagerImpl implements NpcManager {
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
             String skinValue = npcConfig.getString("npcs." + id + ".skin.value");
             String skinSignature = npcConfig.getString("npcs." + id + ".skin.signature");
-            SkinFetcher skin = null;
-            if (skinIdentifier.length() > 0) {
-                skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
+            SkinFetcher.SkinData skin = null;
+            if (!skinIdentifier.isEmpty()) {
+                skin = new SkinFetcher.SkinData(skinIdentifier, skinValue, skinSignature);
             }
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");

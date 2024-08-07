@@ -18,7 +18,7 @@ runPaper.folia.registerTask()
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.2.2" + (if (buildId != null) ".$buildId" else "")
+    version = "2.2.1-DEV" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {

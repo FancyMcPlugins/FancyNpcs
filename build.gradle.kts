@@ -197,7 +197,7 @@ hangarPublish {
             paper {
                 jar = tasks.shadowJar.flatMap { it.archiveFile }
                 platformVersions =
-                    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21")
+                    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1")
             }
         }
     }
@@ -209,6 +209,6 @@ modrinth {
     versionNumber.set(project.version.toString())
     versionType.set("alpha")
     uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
-    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"))
+    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1"))
     loaders.add("paper")
 }

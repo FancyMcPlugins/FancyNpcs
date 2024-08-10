@@ -46,7 +46,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"};
+    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
     public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
@@ -90,7 +90,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
-            case "1.21" -> npcAdapter = Npc_1_21::new;
+            case "1.21", "1.21.1" -> npcAdapter = Npc_1_21::new;
             case "1.20.5", "1.20.6" -> npcAdapter = Npc_1_20_6::new;
             case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
             case "1.20.2" -> npcAdapter = Npc_1_20_2::new;

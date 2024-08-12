@@ -15,6 +15,9 @@ plugins {
 
 runPaper.folia.registerTask()
 
+val supportedVersions =
+    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1")
+
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
@@ -34,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
-    implementation(project(":implementation_1_21"))
+    implementation(project(":implementation_1_21_1"))
     implementation(project(":implementation_1_20_6"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))
     implementation(project(":implementation_1_20_2", configuration = "reobf"))
@@ -83,9 +86,10 @@ tasks {
 //        minecraftVersion("1.20.6")
 
         downloadPlugins {
-            hangar("ViaVersion", "5.0.2")
-            hangar("ViaBackwards", "5.0.2")
-//            hangar("PlaceholderAPI", "2.11.5")
+            hangar("ViaVersion", "5.0.3")
+            hangar("ViaBackwards", "5.0.3")
+            hangar("PlaceholderAPI", "2.11.6")
+            modrinth("multiverse-core", "4.3.11")
         }
     }
 
@@ -196,8 +200,7 @@ hangarPublish {
         platforms {
             paper {
                 jar = tasks.shadowJar.flatMap { it.archiveFile }
-                platformVersions =
-                    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21")
+                platformVersions.set(supportedVersions)
             }
         }
     }
@@ -209,6 +212,6 @@ modrinth {
     versionNumber.set(project.version.toString())
     versionType.set("alpha")
     uploadFile.set(file("build/libs/${project.name}-${project.version}.jar"))
-    gameVersions.addAll(listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"))
+    gameVersions.addAll(supportedVersions)
     loaders.add("paper")
 }

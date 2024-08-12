@@ -81,7 +81,7 @@ public enum SkinCMD {
             try {
                 skinData = new SkinFetcher.SkinData(skin, null, null);
             } catch (Exception e) {
-                translator.translate("npc_skin_failure_invalid_url").replaceStripped("input", skin).send(sender);
+                translator.translate("npc_skin_failure_invalid").replaceStripped("input", skin).send(sender);
                 return;
             }
 
@@ -91,7 +91,7 @@ public enum SkinCMD {
                 npc.removeForAll();
                 npc.create();
                 npc.spawnForAll();
-                translator.translate("npc_skin_set_url").replace("npc", npc.getData().getName()).send(sender);
+                translator.translate("npc_skin_set").replace("npc", npc.getData().getName()).send(sender);
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }

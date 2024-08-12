@@ -323,13 +323,10 @@ messages:
   npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer shown in player-list."
 
   # Commands (npc skin)
-  npc_skin_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using {warningColor}{name}'s<gray> skin."
-  npc_skin_set_url: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using skin from specified URL."
+  npc_skin_set: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using the {warningColor}{name}<gray> skin."
   npc_skin_set_mirror: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now mirroring player skin."
   npc_skin_set_none: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer using any skin."
-  npc_skin_failure_invalid_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is invalid or unsupported URL."
-  npc_skin_failure_invalid_name_or_url: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid player name or URL."
-  npc_skin_failure_invalid_name_or_rate_limit: "<dark_gray>› {errorColor}Could not find {warningColor}{input}'s{errorColor} skin. Either the account does not exist or you're being rate limited."
+  npc_skin_failure_invalid: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is invalid. Common issues: invalid URL, player not found, player has no skin."
 
   # Commands (npc teleport)
   npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."

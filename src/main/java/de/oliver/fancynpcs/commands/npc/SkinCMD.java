@@ -91,7 +91,10 @@ public enum SkinCMD {
                 npc.removeForAll();
                 npc.create();
                 npc.spawnForAll();
-                translator.translate("npc_skin_set").replace("npc", npc.getData().getName()).send(sender);
+                translator.translate("npc_skin_set")
+                        .replace("npc", npc.getData().getName())
+                        .replace("name", skinData.identifier())
+                        .send(sender);
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }

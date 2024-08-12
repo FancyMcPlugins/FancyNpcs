@@ -86,6 +86,7 @@ public final class SkinFetcher {
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for UUID " + uuid);
+                FancyNpcsPlugin.get().getPlugin().getLogger().warning(e.getMessage());
                 return null;
             }
         });
@@ -121,6 +122,7 @@ public final class SkinFetcher {
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for URL " + skinURL);
+                FancyNpcsPlugin.get().getPlugin().getLogger().warning(e.getMessage());
                 return null;
             }
         });

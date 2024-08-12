@@ -136,6 +136,13 @@ public class NpcManagerImpl implements NpcManager {
 
             NpcData data = npc.getData();
 
+            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.value", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.signature", null); //TODO: remove in next version
+
             npcConfig.set("npcs." + data.getId() + ".name", data.getName());
             npcConfig.set("npcs." + data.getId() + ".creator", data.getCreator().toString());
             npcConfig.set("npcs." + data.getId() + ".displayName", data.getDisplayName());
@@ -153,21 +160,18 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
-            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".playerCommands", data.getPlayerCommands());
-            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".serverCommands", data.getServerCommands());
-            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
-            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.value", data.getSkin().value());
-                npcConfig.set("npcs." + data.getId() + ".skin.signature", data.getSkin().signature());
+            } else {
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
+            npcConfig.set("npcs." + data.getId() + ".skin.mirrorSkin", data.isMirrorSkin());
 
             if (data.getEquipment() != null) {
                 for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : data.getEquipment().entrySet()) {
@@ -240,12 +244,13 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
-            String skinValue = npcConfig.getString("npcs." + id + ".skin.value");
-            String skinSignature = npcConfig.getString("npcs." + id + ".skin.signature");
             SkinFetcher.SkinData skin = null;
             if (!skinIdentifier.isEmpty()) {
-                skin = new SkinFetcher.SkinData(skinIdentifier, skinValue, skinSignature);
+                skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
             }
+
+            boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version
+            boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + "skin.mirrorSkin");
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + id + ".spawnEntity");
@@ -266,7 +271,6 @@ public class NpcManagerImpl implements NpcManager {
 
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
             float scale = (float) npcConfig.getDouble("npcs." + id + ".scale", 1);
-            boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {

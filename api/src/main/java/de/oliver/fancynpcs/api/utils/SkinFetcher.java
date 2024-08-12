@@ -41,7 +41,6 @@ public final class SkinFetcher {
             return skinCache.get(parsedIdentifier);
         }
 
-
         if (isURL(parsedIdentifier)) {
             return fetchSkinByURL(parsedIdentifier);
         }

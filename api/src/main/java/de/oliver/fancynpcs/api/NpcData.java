@@ -18,6 +18,7 @@ public class NpcData {
     private final UUID creator;
     private String displayName;
     private SkinFetcher.SkinData skin;
+    private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
@@ -36,7 +37,6 @@ public class NpcData {
     private float scale;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
-    private boolean mirrorSkin;
 
     public NpcData(
             String id,

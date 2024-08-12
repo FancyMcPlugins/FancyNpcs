@@ -35,25 +35,23 @@ public final class SkinFetcher {
      * @throws IOException If the skin data could not be fetched.
      */
     public static SkinData fetchSkin(String identifier) throws IOException {
-        if (skinCache.containsKey(identifier)) {
-            return skinCache.get(identifier);
+        String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.class));
+
+        if (skinCache.containsKey(parsedIdentifier)) {
+            return skinCache.get(parsedIdentifier);
         }
 
-        if (isPlaceholder(identifier)) {
-            String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.class));
-            return fetchSkin(parsedIdentifier);
+
+        if (isURL(parsedIdentifier)) {
+            return fetchSkinByURL(parsedIdentifier);
         }
 
-        if (isURL(identifier)) {
-            return fetchSkinByURL(identifier);
-        }
-
-        if (isUUID(identifier)) {
-            return fetchSkinByUUID(identifier);
+        if (isUUID(parsedIdentifier)) {
+            return fetchSkinByUUID(parsedIdentifier);
         }
 
         // assume it's a username
-        UUID uuid = UUIDFetcher.getUUID(identifier);
+        UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
         if (uuid != null) {
             return fetchSkinByUUID(uuid.toString());
         }

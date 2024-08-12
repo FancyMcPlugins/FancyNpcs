@@ -130,7 +130,7 @@ public final class SkinFetcher {
         return identifier.startsWith("http");
     }
 
-    private static boolean isPlaceholder(String identifier) {
+    public static boolean isPlaceholder(String identifier) {
         return identifier.startsWith("%") && identifier.endsWith("%") || identifier.startsWith("{") && identifier.endsWith("}");
     }
 

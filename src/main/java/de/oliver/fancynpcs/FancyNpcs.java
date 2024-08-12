@@ -22,6 +22,7 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
@@ -40,6 +41,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.Executors;
@@ -294,6 +297,27 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
+
+        int npcUpdateInterval = config.getNpcUpdateInterval();
+        scheduler.runTaskTimerAsynchronously(npcUpdateInterval * 60L * 20L, npcUpdateInterval * 60L * 20L, () -> {
+            List<Npc> npcs = new ArrayList<>(npcManager.getAllNpcs());
+            for (Npc npc : npcs) {
+                boolean skinUpdated = npc.getData().getSkin() != null &&
+                        !npc.getData().getSkin().identifier().isEmpty() &&
+                        SkinFetcher.isPlaceholder(npc.getData().getSkin().identifier());
+
+                boolean displayNameUpdated = npc.getData().getDisplayName() != null &&
+                        !npc.getData().getDisplayName().isEmpty() &&
+                        SkinFetcher.isPlaceholder(npc.getData().getDisplayName());
+
+                if (skinUpdated || displayNameUpdated) {
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                }
+            }
+        });
+
         // Creating new instance of CloudCommandManager and registering all needed components.
         // NOTE: Brigadier is disabled by default. More detailed information about that can be found in CloudCommandManager class.
         commandManager = new CloudCommandManager(this, false)

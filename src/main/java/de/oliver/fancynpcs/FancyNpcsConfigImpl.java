@@ -40,6 +40,12 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int autoSaveInterval;
 
     /**
+     * The interval at which the NPC is updated.
+     * Only if the skin or displayName is a placeholder.
+     */
+    private int npcUpdateInterval;
+
+    /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
@@ -87,6 +93,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         config.setInlineComments("autosave_interval", List.of("The interval at which autosave is performed in minutes."));
+
+        npcUpdateInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_interval", 30);
+        config.setInlineComments("npc_update_skin_interval", List.of("The interval at which the NPC is updated (in minutes). Only if the skin or displayName is a placeholder."));
 
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
@@ -141,6 +150,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public int getAutoSaveInterval() {
         return autoSaveInterval;
+    }
+
+    public int getNpcUpdateInterval() {
+        return npcUpdateInterval;
     }
 
     public boolean isRegisterCommands() {

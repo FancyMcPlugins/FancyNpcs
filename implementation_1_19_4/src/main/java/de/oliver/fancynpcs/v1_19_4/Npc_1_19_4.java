@@ -66,11 +66,6 @@ public class Npc_1_19_4 extends Npc {
         if (data.getType() == org.bukkit.entity.EntityType.PLAYER) {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""));
             ((ServerPlayer) npc).gameProfile = gameProfile;
-
-            if (data.getSkin() != null && data.getSkin().value() != null && data.getSkin().signature() != null) {
-                // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().value(), data.getSkin().signature())));
-            }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, MappingKeys1_19_4.ENTITY_TYPE__FACTORY.getMapping()); // EntityType.factory
@@ -88,6 +83,11 @@ public class Npc_1_19_4 extends Npc {
 
         if (!data.getLocation().getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())) {
             return;
+        }
+
+        if (data.getSkin() != null && data.getSkin().value() != null && data.getSkin().signature() != null) {
+            // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
+            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().value(), data.getSkin().signature())));
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);

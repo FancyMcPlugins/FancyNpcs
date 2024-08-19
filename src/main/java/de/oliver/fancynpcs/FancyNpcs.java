@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.MetricSupplier;
 import de.oliver.fancylib.FancyLib;
@@ -56,6 +57,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
+    private final FancyAnalyticsAPI fancyAnalytics;
     private CloudCommandManager commandManager;
     private TextConfig textConfig;
     private Translator translator;
@@ -73,6 +75,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         this.config = new FancyNpcsConfigImpl();
         this.versionFetcher = new MasterVersionFetcher(getName());
         this.versionConfig = new VersionConfig(this, versionFetcher);
+
+        fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
+        FancyAnalyticsAPI.setDisableLogging(true);
+
         this.featureFlagConfig = new FeatureFlagConfig(this);
     }
 
@@ -104,9 +110,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         if (npcAdapter == null) {
+            fancyAnalytics.sendEvent(new Event("pluginLoadingWithUnsupportedVersion")
+                    .withProperty("version", mcVersion)
+                    .withProperty("pluginVersion", getPluginMeta().getVersion())
+            );
+
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
+            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS));
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
@@ -149,7 +160,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                     getLogger().warning("""
                             
                             -------------------------------------------------------
-                            You are not using the latest version the FancyNpcs plugin.
+                            You are not using the latest version of the FancyNpcs plugin.
                             Please update to the newest version (%s).
                             %s
                             -------------------------------------------------------
@@ -174,8 +185,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
         if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() || isDevelopmentBuild || randomRes < 15) {
-            FancyAnalyticsAPI.setDisableLogging(true);
-            FancyAnalyticsAPI fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
             fancyAnalytics.registerDefaultPluginMetrics(instance);
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());

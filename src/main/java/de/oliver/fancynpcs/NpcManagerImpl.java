@@ -41,7 +41,7 @@ public class NpcManagerImpl implements NpcManager {
 
     public void registerNpc(Npc npc) {
         if (!FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
-            throw new IllegalStateException("An NPC with the name " + npc.getData().getName() + " already exists!");
+            throw new IllegalStateException("An NPC with this name already exists");
         } else {
             npcs.put(npc.getData().getId(), npc);
         }

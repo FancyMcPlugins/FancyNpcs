@@ -22,11 +22,13 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.utils.SkinCache;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
+import de.oliver.fancynpcs.utils.SkinCacheYaml;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
@@ -71,6 +73,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
+    private SkinCacheYaml skinCache;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
@@ -150,6 +153,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
+
+        skinCache = new SkinCacheYaml();
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
@@ -361,6 +366,15 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public AttributeManagerImpl getAttributeManager() {
         return attributeManager;
+    }
+
+    public SkinCacheYaml getSkinCacheYaml() {
+        return skinCache;
+    }
+
+    @Override
+    public SkinCache getSkinCache() {
+        return skinCache;
     }
 
     @Override

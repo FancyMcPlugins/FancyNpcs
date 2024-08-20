@@ -1,0 +1,112 @@
+package de.oliver.fancynpcs.utils;
+
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.utils.SkinCache;
+import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SkinCacheYaml implements SkinCache {
+
+    private final static File file = new File("plugins/FancyNpcs/.skinCache.yml");
+
+    private static YamlConfiguration loadYaml() {
+        if (!file.exists()) {
+            return null;
+        }
+
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    @Override
+    public List<SkinFetcher.SkinCacheData> load() {
+        YamlConfiguration yaml = loadYaml();
+        if (yaml == null) {
+            return new ArrayList<>(0);
+        }
+
+        ConfigurationSection skinsSection = yaml.getConfigurationSection("skins");
+
+        if (skinsSection == null) {
+            return new ArrayList<>(0);
+        }
+
+        List<SkinFetcher.SkinCacheData> cache = new ArrayList<>();
+
+        for (String identifier : skinsSection.getKeys(false)) {
+            ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifier);
+            if (skinSection == null) {
+                continue;
+            }
+
+            String value = skinSection.getString("value");
+            String signature = skinSection.getString("signature");
+            if (value == null || signature == null) {
+                continue;
+            }
+
+            SkinFetcher.SkinData skinData = new SkinFetcher.SkinData(identifier, value, signature);
+
+            long lastUpdated = skinSection.getLong("lastUpdated");
+            long timeToLive = skinSection.getLong("timeToLive");
+
+            SkinFetcher.SkinCacheData skinCacheData = new SkinFetcher.SkinCacheData(skinData, lastUpdated, timeToLive);
+            if (skinCacheData.isExpired()) {
+                delete(identifier);
+                continue;
+            }
+
+            cache.add(skinCacheData);
+        }
+
+
+        return cache;
+    }
+
+    @Override
+    public void upsert(SkinFetcher.SkinCacheData skinCacheData) {
+        YamlConfiguration yaml = loadYaml();
+        if (yaml == null) {
+            yaml = new YamlConfiguration();
+        }
+
+        ConfigurationSection skinsSection = yaml.getConfigurationSection("skins");
+        if (skinsSection == null) {
+            skinsSection = yaml.createSection("skins");
+        }
+
+        ConfigurationSection skinSection = skinsSection.getConfigurationSection(skinCacheData.skinData().identifier());
+        if (skinSection == null) {
+            skinSection = skinsSection.createSection(skinCacheData.skinData().identifier());
+        }
+
+        skinSection.set("value", skinCacheData.skinData().value());
+        skinSection.set("signature", skinCacheData.skinData().signature());
+        skinSection.set("lastUpdated", System.currentTimeMillis());
+        skinSection.set("timeToLive", skinCacheData.timeToLive());
+
+        try {
+            yaml.save(file);
+        } catch (Exception e) {
+            FancyNpcs.getInstance().getLogger().warning("Failed to save skin cache");
+        }
+    }
+
+    public void delete(String identifier) {
+        YamlConfiguration yaml = loadYaml();
+        if (yaml == null) {
+            return;
+        }
+
+        ConfigurationSection skinsSection = yaml.getConfigurationSection("skins");
+        if (skinsSection == null) {
+            return;
+        }
+
+        skinsSection.set(identifier, null);
+    }
+}

@@ -6,6 +6,7 @@ import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -185,6 +186,20 @@ public final class SkinFetcher {
             }
 
             return signature;
+        }
+    }
+
+    /**
+     * Represents the cached skin data. For internal use only.
+     *
+     * @param skinData    The skin data.
+     * @param lastUpdated The timestamp when the skin data was last updated.
+     * @param timeToLive  The time to live of the skin data in milliseconds.
+     */
+    @ApiStatus.Internal
+    public record SkinCacheData(@NotNull SkinData skinData, long lastUpdated, long timeToLive) {
+        public boolean isExpired() {
+            return System.currentTimeMillis() - lastUpdated > timeToLive;
         }
     }
 }

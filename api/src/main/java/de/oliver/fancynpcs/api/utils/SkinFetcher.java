@@ -84,6 +84,9 @@ public final class SkinFetcher {
                 SkinData skinData = new SkinData(uuid, value, signature);
 
                 skinCache.put(uuid, skinData);
+
+                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 7)); //TODO: add some randomization
+
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for UUID " + uuid);
@@ -118,6 +121,8 @@ public final class SkinFetcher {
                 String value = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("value").getAsString();
                 String signature = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("signature").getAsString();
                 SkinData skinData = new SkinData(skinURL, value, signature);
+
+                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 30 * 12));
 
                 skinCache.put(skinURL, skinData);
                 return skinData;

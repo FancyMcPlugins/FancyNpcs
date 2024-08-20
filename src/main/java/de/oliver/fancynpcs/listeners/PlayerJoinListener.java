@@ -1,9 +1,7 @@
 package de.oliver.fancynpcs.listeners;
 
-import com.destroystokyo.paper.profile.ProfileProperty;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import org.bukkit.Bukkit;
@@ -36,24 +34,6 @@ public class PlayerJoinListener implements Listener {
             FancyNpcs.getInstance().getScheduler().runTaskAsynchronously(
                     () -> FancyNpcs.getInstance().getVersionConfig().checkVersionAndDisplay(event.getPlayer(), true)
             );
-        }
-
-        for (ProfileProperty property : event.getPlayer().getPlayerProfile().getProperties()) {
-            if (property.getName().equals("textures")) {
-                SkinFetcher.SkinData skinData = new SkinFetcher.SkinData(
-                        event.getPlayer().getUniqueId().toString(),
-                        property.getValue(),
-                        property.getSignature()
-                );
-
-                SkinFetcher.skinCache.put(event.getPlayer().getUniqueId().toString(), skinData);
-
-                FancyNpcs.getInstance().getSkinCache().upsert(new SkinFetcher.SkinCacheData(
-                        skinData,
-                        System.currentTimeMillis(),
-                        1000L * 60 * 60 * 24 * 30 * 6
-                ));
-            }
         }
     }
 }

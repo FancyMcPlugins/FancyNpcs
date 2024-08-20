@@ -155,6 +155,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         attributeManager = new AttributeManagerImpl();
 
         skinCache = new SkinCacheYaml();
+        skinCache.loadAndInsertToSkinFetcher();
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);

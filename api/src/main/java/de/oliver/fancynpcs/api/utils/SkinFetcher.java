@@ -54,6 +54,10 @@ public final class SkinFetcher {
             // assume it's a username
             UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
             if (uuid != null) {
+                if (skinCache.containsKey(uuid.toString())) {
+                    return skinCache.get(uuid.toString());
+                }
+
                 return fetchSkinByUUID(uuid.toString()).join();
             }
 

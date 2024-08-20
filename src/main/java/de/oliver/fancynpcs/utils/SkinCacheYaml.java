@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 public class SkinCacheYaml implements SkinCache {
@@ -37,11 +38,13 @@ public class SkinCacheYaml implements SkinCache {
 
         List<SkinFetcher.SkinCacheData> cache = new ArrayList<>();
 
-        for (String identifier : skinsSection.getKeys(false)) {
-            ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifier);
+        for (String identifierBase64 : skinsSection.getKeys(false)) {
+            ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifierBase64);
             if (skinSection == null) {
                 continue;
             }
+
+            String identifier = new String(Base64.getDecoder().decode(identifierBase64));
 
             String value = skinSection.getString("value");
             String signature = skinSection.getString("signature");
@@ -79,11 +82,14 @@ public class SkinCacheYaml implements SkinCache {
             skinsSection = yaml.createSection("skins");
         }
 
-        ConfigurationSection skinSection = skinsSection.getConfigurationSection(skinCacheData.skinData().identifier());
+        String identifier = Base64.getEncoder().encodeToString(skinCacheData.skinData().identifier().getBytes());
+
+        ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifier);
         if (skinSection == null) {
-            skinSection = skinsSection.createSection(skinCacheData.skinData().identifier());
+            skinSection = skinsSection.createSection(identifier);
         }
 
+        skinSection.set("identifier", skinCacheData.skinData().identifier());
         skinSection.set("value", skinCacheData.skinData().value());
         skinSection.set("signature", skinCacheData.skinData().signature());
         skinSection.set("lastUpdated", System.currentTimeMillis());
@@ -108,5 +114,12 @@ public class SkinCacheYaml implements SkinCache {
         }
 
         skinsSection.set(identifier, null);
+    }
+
+    public void loadAndInsertToSkinFetcher() {
+        List<SkinFetcher.SkinCacheData> cache = load();
+        for (SkinFetcher.SkinCacheData skinCacheData : cache) {
+            SkinFetcher.skinCache.put(skinCacheData.skinData().identifier(), skinCacheData.skinData());
+        }
     }
 }

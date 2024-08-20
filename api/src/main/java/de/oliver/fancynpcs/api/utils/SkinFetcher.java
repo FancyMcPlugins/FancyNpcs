@@ -48,12 +48,16 @@ public final class SkinFetcher {
             }
 
             if (isUUID(parsedIdentifier)) {
+                //TODO check if player is online and use the skin from the player
+
                 return fetchSkinByUUID(parsedIdentifier).join();
             }
 
             // assume it's a username
             UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
             if (uuid != null) {
+                //TODO check if player is online and use the skin from the player
+                
                 if (skinCache.containsKey(uuid.toString())) {
                     return skinCache.get(uuid.toString());
                 }

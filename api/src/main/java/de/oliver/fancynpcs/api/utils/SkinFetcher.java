@@ -19,10 +19,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -51,10 +48,13 @@ public final class SkinFetcher {
             }
 
             if (isUUID(parsedIdentifier)) {
-                boolean isPlayerOnline = Bukkit.getOnlinePlayers().stream().anyMatch(player -> player.getUniqueId().toString().equals(parsedIdentifier));
-                if (isPlayerOnline) {
-                    Player player = Bukkit.getPlayer(UUID.fromString(parsedIdentifier));
-                    SkinData skinData = getSkinByOnlinePlayer(player);
+                Optional<? extends Player> onlinePlayer = Bukkit.getOnlinePlayers()
+                        .stream()
+                        .filter(player -> player.getUniqueId().toString().equals(parsedIdentifier))
+                        .findFirst();
+
+                if (onlinePlayer.isPresent()) {
+                    SkinData skinData = getSkinByOnlinePlayer(onlinePlayer.get());
                     if (skinData != null) {
                         return skinData;
                     }
@@ -66,10 +66,13 @@ public final class SkinFetcher {
             // assume it's a username
             UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
             if (uuid != null) {
-                boolean isPlayerOnline = Bukkit.getOnlinePlayers().stream().anyMatch(player -> player.getName().equals(parsedIdentifier));
-                if (isPlayerOnline) {
-                    Player player = Bukkit.getPlayer(UUID.fromString(parsedIdentifier));
-                    SkinData skinData = getSkinByOnlinePlayer(player);
+                Optional<? extends Player> onlinePlayer = Bukkit.getOnlinePlayers()
+                        .stream()
+                        .filter(player -> player.getName().equals(parsedIdentifier))
+                        .findFirst();
+
+                if (onlinePlayer.isPresent()) {
+                    SkinData skinData = getSkinByOnlinePlayer(onlinePlayer.get());
                     if (skinData != null) {
                         return skinData;
                     }

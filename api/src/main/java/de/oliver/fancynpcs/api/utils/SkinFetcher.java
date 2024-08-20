@@ -1,11 +1,14 @@
 package de.oliver.fancynpcs.api.utils;
 
+import com.destroystokyo.paper.profile.ProfileProperty;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -48,7 +51,14 @@ public final class SkinFetcher {
             }
 
             if (isUUID(parsedIdentifier)) {
-                //TODO check if player is online and use the skin from the player
+                boolean isPlayerOnline = Bukkit.getOnlinePlayers().stream().anyMatch(player -> player.getUniqueId().toString().equals(parsedIdentifier));
+                if (isPlayerOnline) {
+                    Player player = Bukkit.getPlayer(UUID.fromString(parsedIdentifier));
+                    SkinData skinData = getSkinByOnlinePlayer(player);
+                    if (skinData != null) {
+                        return skinData;
+                    }
+                }
 
                 return fetchSkinByUUID(parsedIdentifier).join();
             }
@@ -56,8 +66,15 @@ public final class SkinFetcher {
             // assume it's a username
             UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
             if (uuid != null) {
-                //TODO check if player is online and use the skin from the player
-                
+                boolean isPlayerOnline = Bukkit.getOnlinePlayers().stream().anyMatch(player -> player.getName().equals(parsedIdentifier));
+                if (isPlayerOnline) {
+                    Player player = Bukkit.getPlayer(UUID.fromString(parsedIdentifier));
+                    SkinData skinData = getSkinByOnlinePlayer(player);
+                    if (skinData != null) {
+                        return skinData;
+                    }
+                }
+
                 if (skinCache.containsKey(uuid.toString())) {
                     return skinCache.get(uuid.toString());
                 }
@@ -67,6 +84,26 @@ public final class SkinFetcher {
 
             return null;
         });
+    }
+
+    /**
+     * Fetches the skin data from the online player.
+     *
+     * @param player The player.
+     * @return The SkinData or {@code null} if the skin data could not be fetched.
+     */
+    public static SkinData getSkinByOnlinePlayer(Player player) {
+        if (player == null) {
+            return null;
+        }
+
+        for (ProfileProperty property : player.getPlayerProfile().getProperties()) {
+            if (property.getName().equals("textures")) {
+                return new SkinData(player.getUniqueId().toString(), property.getValue(), property.getSignature());
+            }
+        }
+
+        return null;
     }
 
     /**

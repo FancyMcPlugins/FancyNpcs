@@ -71,7 +71,7 @@ public class SkinCacheYaml implements SkinCache {
     }
 
     @Override
-    public void upsert(SkinFetcher.SkinCacheData skinCacheData) {
+    public void upsert(SkinFetcher.SkinCacheData skinCacheData, boolean onlyIfExists) {
         YamlConfiguration yaml = loadYaml();
         if (yaml == null) {
             yaml = new YamlConfiguration();
@@ -86,6 +86,10 @@ public class SkinCacheYaml implements SkinCache {
 
         ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifier);
         if (skinSection == null) {
+            if (onlyIfExists) {
+                return; // only update if it already exists
+            }
+
             skinSection = skinsSection.createSection(identifier);
         }
 

@@ -39,6 +39,7 @@ public final class SkinFetcher {
         return CompletableFuture.supplyAsync(() -> {
             String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.class));
 
+            // try to get skin from cache
             if (skinCache.containsKey(parsedIdentifier)) {
                 return skinCache.get(parsedIdentifier);
             }
@@ -48,6 +49,7 @@ public final class SkinFetcher {
             }
 
             if (isUUID(parsedIdentifier)) {
+                // try to get skin from online player
                 Optional<? extends Player> onlinePlayer = Bukkit.getOnlinePlayers()
                         .stream()
                         .filter(player -> player.getUniqueId().toString().equals(parsedIdentifier))
@@ -56,6 +58,7 @@ public final class SkinFetcher {
                 if (onlinePlayer.isPresent()) {
                     SkinData skinData = getSkinByOnlinePlayer(onlinePlayer.get());
                     if (skinData != null) {
+                        skinCache.put(parsedIdentifier, skinData);
                         return skinData;
                     }
                 }
@@ -66,6 +69,7 @@ public final class SkinFetcher {
             // assume it's a username
             UUID uuid = UUIDFetcher.getUUID(parsedIdentifier);
             if (uuid != null) {
+                // try to get skin from online player
                 Optional<? extends Player> onlinePlayer = Bukkit.getOnlinePlayers()
                         .stream()
                         .filter(player -> player.getName().equals(parsedIdentifier))
@@ -74,10 +78,12 @@ public final class SkinFetcher {
                 if (onlinePlayer.isPresent()) {
                     SkinData skinData = getSkinByOnlinePlayer(onlinePlayer.get());
                     if (skinData != null) {
+                        skinCache.put(uuid.toString(), skinData);
                         return skinData;
                     }
                 }
 
+                // try to get skin from cache with UUID
                 if (skinCache.containsKey(uuid.toString())) {
                     return skinCache.get(uuid.toString());
                 }
@@ -133,8 +139,8 @@ public final class SkinFetcher {
 
                 skinCache.put(uuid, skinData);
 
-                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 7)); //TODO: add some randomization
-
+                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 12)); //TODO: add some randomization
+                FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for UUID " + uuid);
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for UUID " + uuid);
@@ -173,6 +179,7 @@ public final class SkinFetcher {
                 FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 30 * 12));
 
                 skinCache.put(skinURL, skinData);
+                FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for URL " + skinURL);
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for URL " + skinURL);

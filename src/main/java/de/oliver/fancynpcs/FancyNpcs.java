@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.MetricSupplier;
@@ -41,6 +42,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 import static java.util.concurrent.CompletableFuture.supplyAsync;
@@ -52,6 +56,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
+    private final ScheduledExecutorService npcThread;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
     private final VersionConfig versionConfig;
@@ -69,6 +74,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public FancyNpcs() {
         instance = this;
+        this.npcThread = Executors.newSingleThreadScheduledExecutor(
+                new ThreadFactoryBuilder()
+                        .setNameFormat("FancyNpcs-Npcs")
+                        .build()
+        );
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
@@ -278,8 +288,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         visibilityTracker = new VisibilityTracker();
 
-        scheduler.runTaskTimerAsynchronously(0, 1, new TurnToPlayerTracker());
-        scheduler.runTaskTimerAsynchronously(0, 20, visibilityTracker);
+        npcThread.scheduleAtFixedRate(new TurnToPlayerTracker(), 0, 50, TimeUnit.MILLISECONDS);
+        npcThread.scheduleAtFixedRate(visibilityTracker, 0, 1, TimeUnit.SECONDS);
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
@@ -299,6 +309,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (npcManager != null) {
             npcManager.saveNpcs(true);
         }
+    }
+
+    @Override
+    public ScheduledExecutorService getNpcThread() {
+        return npcThread;
     }
 
     @Override

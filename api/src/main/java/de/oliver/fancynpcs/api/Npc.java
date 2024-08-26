@@ -56,7 +56,7 @@ public abstract class Npc {
     public abstract void spawn(Player player);
 
     public void spawnForAll() {
-        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 spawn(onlinePlayer);
             }
@@ -105,7 +105,7 @@ public abstract class Npc {
     }
 
     public void checkAndUpdateVisibility(Player player) {
-        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
             boolean shouldBeVisible = shouldBeVisible(player);
             boolean wasVisible = isVisibleForPlayer.getOrDefault(player.getUniqueId(), false);
 

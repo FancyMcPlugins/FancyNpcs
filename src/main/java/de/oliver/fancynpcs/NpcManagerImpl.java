@@ -250,7 +250,7 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version
-            boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + "skin.mirrorSkin");
+            boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + ".skin.mirrorSkin");
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + id + ".spawnEntity");

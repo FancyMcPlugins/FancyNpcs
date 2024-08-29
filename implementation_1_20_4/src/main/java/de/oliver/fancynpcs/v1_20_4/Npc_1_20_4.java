@@ -87,9 +87,15 @@ public class Npc_1_20_4 extends Npc {
             return;
         }
 
-        if (data.getSkin() != null && data.getSkin().value() != null && data.getSkin().signature() != null) {
-            // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().value(), data.getSkin().signature())));
+        if (data.getSkin() != null) {
+            String skinValue = data.getSkin().value();
+            String skinSignature = data.getSkin().signature();
+
+            if (skinValue == null || skinSignature == null) {
+                return;
+            }
+
+            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);

@@ -7,12 +7,23 @@ import de.oliver.fancynpcs.api.Npc;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The SendToServerAction class is a subclass of NpcAction that represents an action
+ * to send data to the server using BungeeCord messaging.
+ */
 public class SendToServerAction extends NpcAction {
 
     public SendToServerAction() {
         super("send_to_server", true);
     }
 
+    /**
+     * Executes the action associated with this NpcAction.
+     *
+     * @param npc    The Npc object on which the action is being executed.
+     * @param player The player involved in the action.
+     * @param value  The value associated with the action.
+     */
     @Override
     public void execute(@NotNull Npc npc, Player player, String value) {
         ByteArrayDataOutput out = ByteStreams.newDataOutput();

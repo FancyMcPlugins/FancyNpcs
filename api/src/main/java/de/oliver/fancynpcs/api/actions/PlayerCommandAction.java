@@ -11,12 +11,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * Represents a player command action that can be executed when triggered by an NPC interaction.
+ */
 public class PlayerCommandAction extends NpcAction {
 
     public PlayerCommandAction() {
         super("player_command", true);
     }
 
+    /**
+     * Executes a player command action when triggered by an NPC interaction.
+     *
+     * @param npc    The NPC that triggered the action.
+     * @param player The player interacting with the NPC.
+     * @param value  The value associated with the action.
+     */
     @Override
     public void execute(@NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {

@@ -10,12 +10,22 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * Represents a console command action that can be executed for an NPC.
+ */
 public class ConsoleCommandAction extends NpcAction {
 
     public ConsoleCommandAction() {
         super("console_command", true);
     }
 
+    /**
+     * Executes the console command action for an NPC.
+     *
+     * @param npc    The NPC object.
+     * @param player The player executing the command.
+     * @param value  The command string to be executed. The value can contain the placeholder "{player}" which will be replaced with the player's name.
+     */
     @Override
     public void execute(@NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {

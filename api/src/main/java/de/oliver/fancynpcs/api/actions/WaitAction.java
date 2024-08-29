@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.api.actions;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class WaitAction extends NpcAction {
 
@@ -18,7 +19,7 @@ public class WaitAction extends NpcAction {
      * @param value  The value representing the time to wait in seconds.
      */
     @Override
-    public void execute(Npc npc, Player player, String value) {
+    public void execute(@NotNull Npc npc, Player player, String value) {
         int time;
         try {
             time = Integer.parseInt(value);

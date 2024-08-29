@@ -170,9 +170,11 @@ public abstract class Npc {
         }
 
         // actions
-        for (NpcAction.NpcActionData action : data.getActions(actionTrigger)) {
-            action.action().execute(this, player, action.value());
-        }
+        new Thread(() -> {
+            for (NpcAction.NpcActionData action : data.getActions(actionTrigger)) {
+                action.action().execute(this, player, action.value());
+            }
+        }, "ExecuteNpcActionsThread").start();
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

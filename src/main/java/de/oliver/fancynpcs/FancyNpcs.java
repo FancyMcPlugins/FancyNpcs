@@ -51,7 +51,6 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
     public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
@@ -127,7 +126,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS));
+            getLogger().warning("This plugin only supports 1.19.4 - 1.21.1");
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);

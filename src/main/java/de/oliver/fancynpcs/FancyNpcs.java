@@ -305,7 +305,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
 
         int npcUpdateInterval = config.getNpcUpdateInterval();
-        scheduler.runTaskTimerAsynchronously(npcUpdateInterval * 60L * 20L, npcUpdateInterval * 60L * 20L, () -> {
+        npcThread.scheduleAtFixedRate(() -> {
             List<Npc> npcs = new ArrayList<>(npcManager.getAllNpcs());
             for (Npc npc : npcs) {
                 boolean skinUpdated = npc.getData().getSkin() != null &&
@@ -322,7 +322,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                     npc.spawnForAll();
                 }
             }
-        });
+        }, 3, npcUpdateInterval, TimeUnit.MINUTES);
 
         // Creating new instance of CloudCommandManager and registering all needed components.
         // NOTE: Brigadier is disabled by default. More detailed information about that can be found in CloudCommandManager class.

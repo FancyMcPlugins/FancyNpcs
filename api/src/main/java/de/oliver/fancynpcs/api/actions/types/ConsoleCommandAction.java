@@ -1,7 +1,8 @@
-package de.oliver.fancynpcs.api.actions;
+package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.Bukkit;

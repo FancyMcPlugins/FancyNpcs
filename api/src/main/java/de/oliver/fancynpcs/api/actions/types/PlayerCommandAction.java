@@ -1,9 +1,10 @@
-package de.oliver.fancynpcs.api.actions;
+package de.oliver.fancynpcs.api.actions.types;
 
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.entity.Player;

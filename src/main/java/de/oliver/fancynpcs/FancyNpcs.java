@@ -22,7 +22,7 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
-import de.oliver.fancynpcs.api.actions.*;
+import de.oliver.fancynpcs.api.actions.types.*;
 import de.oliver.fancynpcs.api.utils.SkinCache;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;

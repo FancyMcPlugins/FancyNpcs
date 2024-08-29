@@ -1,7 +1,8 @@
-package de.oliver.fancynpcs.api.actions;
+package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

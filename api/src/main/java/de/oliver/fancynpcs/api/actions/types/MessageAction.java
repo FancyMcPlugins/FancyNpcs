@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
 import org.bukkit.entity.Player;
@@ -18,12 +19,13 @@ public class MessageAction extends NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param npc    The Npc object on which the action is executed.
-     * @param player The Player object associated with the action.
-     * @param value  The value passed to the action.
+     * @param trigger
+     * @param npc     The Npc object on which the action is executed.
+     * @param player  The Player object associated with the action.
+     * @param value   The value passed to the action.
      */
     @Override
-    public void execute(@NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }

@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -15,12 +16,13 @@ public class WaitAction extends NpcAction {
     /**
      * Executes the "wait" action for an NPC.
      *
-     * @param npc    The NPC on which to execute the action.
-     * @param player The player triggering the action.
-     * @param value  The value representing the time to wait in seconds.
+     * @param trigger
+     * @param npc     The NPC on which to execute the action.
+     * @param player  The player triggering the action.
+     * @param value   The value representing the time to wait in seconds.
      */
     @Override
-    public void execute(@NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }

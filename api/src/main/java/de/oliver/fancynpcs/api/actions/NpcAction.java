@@ -31,11 +31,12 @@ public abstract class NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param npc    The Npc on which the action will be executed.
-     * @param player The Player involved in the action. Can be null if no player is involved.
-     * @param value  The value associated with the action. Can be null if no value is required.
+     * @param trigger The trigger that caused the action to be executed.
+     * @param npc     The Npc on which the action will be executed.
+     * @param player  The Player involved in the action. Can be null if no player is involved.
+     * @param value   The value associated with the action. Can be null if no value is required.
      */
-    public abstract void execute(@NotNull Npc npc, @Nullable Player player, @Nullable String value);
+    public abstract void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, @Nullable Player player, @Nullable String value);
 
     public String getName() {
         return name;

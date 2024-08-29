@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
@@ -23,12 +24,13 @@ public class ConsoleCommandAction extends NpcAction {
     /**
      * Executes the console command action for an NPC.
      *
-     * @param npc    The NPC object.
-     * @param player The player executing the command.
-     * @param value  The command string to be executed. The value can contain the placeholder "{player}" which will be replaced with the player's name.
+     * @param trigger
+     * @param npc     The NPC object.
+     * @param player  The player executing the command.
+     * @param value   The command string to be executed. The value can contain the placeholder "{player}" which will be replaced with the player's name.
      */
     @Override
-    public void execute(@NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }

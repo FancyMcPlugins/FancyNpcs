@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +22,13 @@ public class SendToServerAction extends NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param npc    The Npc object on which the action is being executed.
-     * @param player The player involved in the action.
-     * @param value  The value associated with the action.
+     * @param trigger
+     * @param npc     The Npc object on which the action is being executed.
+     * @param player  The player involved in the action.
+     * @param value   The value associated with the action.
      */
     @Override
-    public void execute(@NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }

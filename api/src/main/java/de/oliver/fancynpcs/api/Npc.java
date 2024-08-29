@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.api;
 
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancynpcs.api.actions.ActionInterruptException;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
@@ -13,6 +14,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -157,7 +159,8 @@ public abstract class Npc {
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), data.getActions(actionTrigger), player, actionTrigger);
+        List<NpcAction.NpcActionData> actions = data.getActions(actionTrigger);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), actions, player, actionTrigger);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -171,8 +174,15 @@ public abstract class Npc {
 
         // actions
         new Thread(() -> {
-            for (NpcAction.NpcActionData action : data.getActions(actionTrigger)) {
-                action.action().execute(this, player, action.value());
+            for (NpcAction.NpcActionData action : actions) {
+                try {
+                    action.action().execute(actionTrigger, this, player, action.value());
+
+                } catch (ActionInterruptException e) {
+                    break;
+                } catch (Exception e) {
+                    FancyNpcsPlugin.get().getLogger().warning("An error occurred while executing an action for NPC " + data.getName() + ": " + e.getMessage());
+                }
             }
         }, "ExecuteNpcActionsThread").start();
     }

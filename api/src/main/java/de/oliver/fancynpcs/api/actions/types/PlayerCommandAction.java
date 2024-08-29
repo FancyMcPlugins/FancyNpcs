@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
@@ -24,12 +25,13 @@ public class PlayerCommandAction extends NpcAction {
     /**
      * Executes a player command action when triggered by an NPC interaction.
      *
-     * @param npc    The NPC that triggered the action.
-     * @param player The player interacting with the NPC.
-     * @param value  The value associated with the action.
+     * @param trigger
+     * @param npc     The NPC that triggered the action.
+     * @param player  The player interacting with the NPC.
+     * @param value   The value associated with the action.
      */
     @Override
-    public void execute(@NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }

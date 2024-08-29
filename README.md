@@ -14,7 +14,7 @@
 
 <br />
 
-Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (
+Simple, lightweight and feature rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (
 and [Folia](https://papermc.io/software/folia)) servers using packets.
 
 </div>

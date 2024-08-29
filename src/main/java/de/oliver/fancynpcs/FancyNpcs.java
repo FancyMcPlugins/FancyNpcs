@@ -96,45 +96,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     }
 
     @Override
-    public void onLoad() {
-        // Load feature flags
-        featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
-        featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
-        featureFlagConfig.load();
-
-        String mcVersion = Bukkit.getMinecraftVersion();
-
-        switch (mcVersion) {
-            case "1.21", "1.21.1" -> npcAdapter = Npc_1_21_1::new;
-            case "1.20.5", "1.20.6" -> npcAdapter = Npc_1_20_6::new;
-            case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
-            case "1.20.2" -> npcAdapter = Npc_1_20_2::new;
-            case "1.20.1", "1.20" -> npcAdapter = Npc_1_20_1::new;
-            case "1.19.4" -> npcAdapter = Npc_1_19_4::new;
-            default -> npcAdapter = null;
-        }
-
-        npcManager = new NpcManagerImpl(this, npcAdapter);
-
-        PluginManager pluginManager = Bukkit.getPluginManager();
-
-        if (npcAdapter == null) {
-            fancyAnalytics.sendEvent(new Event("pluginLoadingWithUnsupportedVersion")
-                    .withProperty("version", mcVersion)
-                    .withProperty("pluginVersion", getPluginMeta().getVersion())
-            );
-
-            getLogger().warning("--------------------------------------------------");
-            getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("This plugin only supports 1.19.4 - 1.21.1");
-            getLogger().warning("Disabling the FancyNpcs plugin.");
-            getLogger().warning("--------------------------------------------------");
-            pluginManager.disablePlugin(this);
-            return;
-        }
-    }
-
-    @Override
     public void onEnable() {
         if (npcAdapter == null) {
             return;

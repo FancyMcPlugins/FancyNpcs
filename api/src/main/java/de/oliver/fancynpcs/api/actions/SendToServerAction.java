@@ -26,6 +26,14 @@ public class SendToServerAction extends NpcAction {
      */
     @Override
     public void execute(@NotNull Npc npc, Player player, String value) {
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+
+        if (player == null) {
+            return;
+        }
+
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(value);

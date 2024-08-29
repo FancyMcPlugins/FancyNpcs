@@ -20,6 +20,10 @@ public class WaitAction extends NpcAction {
      */
     @Override
     public void execute(@NotNull Npc npc, Player player, String value) {
+        if (value == null || value.isEmpty()) {
+            return;
+        }
+
         int time;
         try {
             time = Integer.parseInt(value);

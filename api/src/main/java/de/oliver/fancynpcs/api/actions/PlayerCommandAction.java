@@ -33,6 +33,10 @@ public class PlayerCommandAction extends NpcAction {
             return;
         }
 
+        if (player == null) {
+            return;
+        }
+
         String command = ChatColorHandler.translate(value, player, List.of(PlaceholderAPIParser.class));
 
         if (command.toLowerCase().startsWith("server")) {

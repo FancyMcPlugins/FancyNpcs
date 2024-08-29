@@ -27,6 +27,10 @@ public class MessageAction extends NpcAction {
             return;
         }
 
+        if (player == null) {
+            return;
+        }
+
         player.sendMessage(ModernChatColorHandler.translate(value, player));
     }
 }

@@ -32,7 +32,11 @@ public class ConsoleCommandAction extends NpcAction {
             return;
         }
 
-        String command = value.replace("{player}", player.getName());
+        String command = value;
+        if (player != null) {
+            command = value.replace("{player}", player.getName());
+        }
+
         String finalCommand = ChatColorHandler.translate(command, player, List.of(PlaceholderAPIParser.class));
 
         FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));

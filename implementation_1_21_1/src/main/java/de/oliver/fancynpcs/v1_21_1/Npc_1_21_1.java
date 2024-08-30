@@ -45,6 +45,7 @@ import org.bukkit.craftbukkit.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class Npc_1_21_1 extends Npc {
 
@@ -130,10 +131,10 @@ public class Npc_1_21_1 extends Npc {
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
 
-        FancyNpcsPlugin.get().getScheduler().runTaskLater(null, 5L, () -> {
+        FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
             ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
             serverPlayer.connection.send(playerInfoRemovePacket);
-        });
+        }, 2, TimeUnit.SECONDS);
 
         update(player);
     }

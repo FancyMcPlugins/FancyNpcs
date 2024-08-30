@@ -134,7 +134,7 @@ public class Npc_1_21_1 extends Npc {
         FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
             ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
             serverPlayer.connection.send(playerInfoRemovePacket);
-        }, 2, TimeUnit.SECONDS);
+        }, FancyNpcsPlugin.get().getFancyNpcConfig().getRemoveNpcsFromPlayerlistDelay(), TimeUnit.MILLISECONDS);
 
         update(player);
     }

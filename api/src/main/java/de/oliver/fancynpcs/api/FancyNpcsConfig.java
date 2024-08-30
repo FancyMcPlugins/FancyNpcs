@@ -21,6 +21,8 @@ public interface FancyNpcsConfig {
 
     int getVisibilityDistance();
 
+    int getRemoveNpcsFromPlayerlistDelay();
+
     List<String> getBlockedCommands();
 
     Map<String, Integer> getMaxNpcsPerPermission();

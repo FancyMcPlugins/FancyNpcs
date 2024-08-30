@@ -63,6 +63,12 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int visibilityDistance;
 
     /**
+     * The delay in ticks to remove NPCs from the player list.
+     * Increase this value if you have problems with skins not loading correctly when joining or switching worlds.
+     */
+    private int removeNpcsFromPlayerlistDelay;
+
+    /**
      * The commands that are blocked for NPCs in the message.
      */
     private List<String> blockedCommands;
@@ -105,6 +111,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
         config.setInlineComments("visibility_distance", List.of("The distance at which NPCs are visible."));
+
+        removeNpcsFromPlayerlistDelay = (int) ConfigHelper.getOrDefault(config, "remove_npcs_from_playerlist_delay", 2000);
+        config.setInlineComments("remove_npcs_from_playerlist_delay", List.of("The delay in ticks to remove NPCs from the player list. Increase this value if you have problems with skins not loading correctly when joining or switching worlds."));
 
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
         config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));
@@ -166,6 +175,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public int getVisibilityDistance() {
         return visibilityDistance;
+    }
+
+    public int getRemoveNpcsFromPlayerlistDelay() {
+        return removeNpcsFromPlayerlistDelay;
     }
 
     public List<String> getBlockedCommands() {

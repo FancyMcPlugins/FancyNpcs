@@ -44,13 +44,11 @@ public class ActionExecutionContext {
             return;
         }
 
-        actionIndex++;
-
-        run(actionIndex);
+        run(actionIndex++);
     }
 
     public boolean hasNext() {
-        return actionIndex > 0 && actionIndex < actions.size();
+        return actionIndex >= 0 && actionIndex < actions.size();
     }
 
     public void reset() {

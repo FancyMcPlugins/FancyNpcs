@@ -147,17 +147,6 @@ public class ActionCMD {
                 .send(sender);
     }
 
-    @Command("npc action <npc> <trigger> send_randomly [state]")
-    @Permission("fancynpcs.command.npc.action.send_randomly")
-    public void onActionSendRandomly(
-            final @NotNull CommandSender sender,
-            final @NotNull Npc npc,
-            final @NotNull ActionTrigger trigger,
-            final @Nullable Boolean state
-    ) {
-        //TODO: Implement this method
-    }
-
 
     /* PARSERS AND SUGGESTIONS */
 

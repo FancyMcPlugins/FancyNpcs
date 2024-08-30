@@ -16,23 +16,21 @@ import java.util.Random;
 public class ExecuteRandomActionAction extends NpcAction {
 
     public ExecuteRandomActionAction() {
-        super("execute_random_action", true);
+        super("execute_random_action", false);
     }
 
     /**
      * Executes a random action triggered by the given action trigger on the specified NPC and player.
-     *
-     * @param value the value associated with the action
      */
     @Override
     public void execute(@NotNull ActionExecutionContext context, String value) {
         int currentIndex = context.getActionIndex();
         int actionCount = context.getActions().size();
 
-        int randomIndex = getRandomIndex(currentIndex + 1, actionCount);
+        int randomIndex = getRandomIndex(currentIndex, actionCount);
 
         NpcActionData action = context.getActions().get(randomIndex);
-        action.action().execute(context, value);
+        action.action().execute(context, action.value());
 
         context.terminate();
     }

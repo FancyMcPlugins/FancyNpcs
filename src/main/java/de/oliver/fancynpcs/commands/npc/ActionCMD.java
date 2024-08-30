@@ -137,7 +137,7 @@ public class ActionCMD {
                     .translate("npc_action_list_entry")
                     .replaceStripped("number", String.valueOf(action.order()))
                     .replaceStripped("action", action.action().getName())
-                    .replaceStripped("value", action.value())
+                    .replaceStripped("value", action.value() != null ? action.value() : "")
                     .send(sender);
         }
 

@@ -2,9 +2,10 @@ package de.oliver.fancynpcs.api;
 
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
-import de.oliver.fancynpcs.api.actions.ActionInterruptException;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutor;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.utils.Interval;
 import de.oliver.fancynpcs.api.utils.Interval.Unit;
@@ -173,18 +174,7 @@ public abstract class Npc {
         }
 
         // actions
-        new Thread(() -> {
-            for (NpcAction.NpcActionData action : actions) {
-                try {
-                    action.action().execute(actionTrigger, this, player, action.value());
-
-                } catch (ActionInterruptException e) {
-                    break;
-                } catch (Exception e) {
-                    FancyNpcsPlugin.get().getLogger().warning("An error occurred while executing an action for NPC " + data.getName() + ": " + e.getMessage());
-                }
-            }
-        }, "ExecuteNpcActionsThread").start();
+        ActionExecutor.execute(new ActionExecutionContext(actionTrigger, this, player));
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

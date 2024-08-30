@@ -1,13 +1,9 @@
 package de.oliver.fancynpcs.api.actions.types;
 
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.actions.ActionInterruptException;
-import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
-import org.bukkit.entity.Player;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,25 +22,22 @@ public class ExecuteRandomActionAction extends NpcAction {
     /**
      * Executes a random action triggered by the given action trigger on the specified NPC and player.
      *
-     * @param trigger the action trigger that triggered the execution of this method
-     * @param npc     the NPC on which the action will be executed
-     * @param player  the player involved in the action execution
-     * @param value   the value associated with the action
+     * @param value the value associated with the action
      */
     @Override
-    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
-        List<NpcActionData> actions = npc.getData().getActions(trigger).stream()
-                .filter(data -> !(data.action() instanceof ExecuteRandomActionAction)) // Prevent infinite recursion
-                .toList();
-        if (actions.isEmpty()) {
-            return;
-        }
+    public void execute(@NotNull ActionExecutionContext context, String value) {
+        int currentIndex = context.getActionIndex();
+        int actionCount = context.getActions().size();
 
-        NpcActionData action = actions.get(new Random().nextInt(actions.size()));
-        try {
-            action.action().execute(trigger, npc, player, value);
-        } catch (ActionInterruptException e) {
-            throw new ActionInterruptException(npc, action.action());
-        }
+        int randomIndex = getRandomIndex(currentIndex + 1, actionCount);
+
+        NpcActionData action = context.getActions().get(randomIndex);
+        action.action().execute(context, value);
+
+        context.terminate();
+    }
+
+    private int getRandomIndex(int from, int to) {
+        return new Random().nextInt(to - from) + from;
     }
 }

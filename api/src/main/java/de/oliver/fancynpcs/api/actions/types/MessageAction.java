@@ -1,10 +1,8 @@
 package de.oliver.fancynpcs.api.actions.types;
 
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import me.dave.chatcolorhandler.ModernChatColorHandler;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -19,21 +17,18 @@ public class MessageAction extends NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param trigger
-     * @param npc     The Npc object on which the action is executed.
-     * @param player  The Player object associated with the action.
-     * @param value   The value passed to the action.
+     * @param value The value passed to the action.
      */
     @Override
-    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionExecutionContext context, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }
 
-        if (player == null) {
+        if (context.getPlayer() == null) {
             return;
         }
 
-        player.sendMessage(ModernChatColorHandler.translate(value, player));
+        context.getPlayer().sendMessage(ModernChatColorHandler.translate(value, context.getPlayer()));
     }
 }

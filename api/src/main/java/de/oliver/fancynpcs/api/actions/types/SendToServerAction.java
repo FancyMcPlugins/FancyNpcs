@@ -3,10 +3,8 @@ package de.oliver.fancynpcs.api.actions.types;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
-import org.bukkit.entity.Player;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -22,24 +20,21 @@ public class SendToServerAction extends NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param trigger
-     * @param npc     The Npc object on which the action is being executed.
-     * @param player  The player involved in the action.
-     * @param value   The value associated with the action.
+     * @param value The value associated with the action.
      */
     @Override
-    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionExecutionContext context, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }
 
-        if (player == null) {
+        if (context.getPlayer() == null) {
             return;
         }
 
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
         out.writeUTF("Connect");
         out.writeUTF(value);
-        player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
+        context.getPlayer().sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
     }
 }

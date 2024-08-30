@@ -1,7 +1,6 @@
 package de.oliver.fancynpcs.api.actions;
 
-import de.oliver.fancynpcs.api.Npc;
-import org.bukkit.entity.Player;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,12 +30,10 @@ public abstract class NpcAction {
     /**
      * Executes the action associated with this NpcAction.
      *
-     * @param trigger The trigger that caused the action to be executed.
-     * @param npc     The Npc on which the action will be executed.
-     * @param player  The Player involved in the action. Can be null if no player is involved.
+     * @param context The context in which the action is being executed.
      * @param value   The value associated with the action. Can be null if no value is required.
      */
-    public abstract void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, @Nullable Player player, @Nullable String value);
+    public abstract void execute(@NotNull ActionExecutionContext context, @Nullable String value);
 
     public String getName() {
         return name;

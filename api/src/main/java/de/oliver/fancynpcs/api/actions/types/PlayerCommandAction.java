@@ -3,12 +3,10 @@ package de.oliver.fancynpcs.api.actions.types;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -24,23 +22,18 @@ public class PlayerCommandAction extends NpcAction {
 
     /**
      * Executes a player command action when triggered by an NPC interaction.
-     *
-     * @param trigger
-     * @param npc     The NPC that triggered the action.
-     * @param player  The player interacting with the NPC.
-     * @param value   The value associated with the action.
      */
     @Override
-    public void execute(@NotNull ActionTrigger trigger, @NotNull Npc npc, Player player, String value) {
+    public void execute(@NotNull ActionExecutionContext context, String value) {
         if (value == null || value.isEmpty()) {
             return;
         }
 
-        if (player == null) {
+        if (context.getPlayer() == null) {
             return;
         }
 
-        String command = ChatColorHandler.translate(value, player, List.of(PlaceholderAPIParser.class));
+        String command = ChatColorHandler.translate(value, context.getPlayer(), List.of(PlaceholderAPIParser.class));
 
         if (command.toLowerCase().startsWith("server")) {
             String[] args = value.split(" ");
@@ -52,13 +45,13 @@ public class PlayerCommandAction extends NpcAction {
             ByteArrayDataOutput out = ByteStreams.newDataOutput();
             out.writeUTF("Connect");
             out.writeUTF(server);
-            player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
+            context.getPlayer().sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
             return;
         }
 
         FancyNpcsPlugin.get().getScheduler().runTask(
-                player.getLocation(),
-                () -> player.chat("/" + command)
+                context.getPlayer().getLocation(),
+                () -> context.getPlayer().chat("/" + command)
         );
     }
 }

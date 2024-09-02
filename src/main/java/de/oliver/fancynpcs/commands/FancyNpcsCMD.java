@@ -4,7 +4,11 @@ import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.tests.FancyNpcsTests;
+import de.oliver.fancynpcs.tests.api.CreateNpcTest;
+import de.oliver.fancynpcs.tests.commands.CreateCMDTest;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +23,25 @@ public enum FancyNpcsCMD {
     @Permission("fancynpcs.command.fancynpcs.version")
     public void onVersion(final CommandSender sender) {
         plugin.getVersionConfig().checkVersionAndDisplay(sender, false);
+
+        new FancyNpcsTests()
+                .addTest(new CreateNpcTest())
+                .test((Player) sender);
+    }
+
+    @Command("fancynpcs test")
+    @Permission("fancynpcs.command.fancynpcs.test")
+    public void onTest(final Player player) {
+        boolean tested = new FancyNpcsTests()
+                .addTest(new CreateNpcTest())
+                .addTest(new CreateCMDTest())
+                .test(player);
+
+        if (tested) {
+            player.sendMessage("Tested successfully!");
+        } else {
+            player.sendMessage("Test failed!");
+        }
     }
 
     @Command("fancynpcs reload")

@@ -139,7 +139,7 @@ public final class SkinFetcher {
 
                 skinCache.put(uuid, skinData);
 
-                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 12)); //TODO: add some randomization
+                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 + randomFromTo(15, 30))); // 15-30 days
                 FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for UUID " + uuid);
                 return skinData;
             } catch (IOException e) {
@@ -176,7 +176,7 @@ public final class SkinFetcher {
                 String signature = obj.getAsJsonObject("data").getAsJsonObject("texture").getAsJsonPrimitive("signature").getAsString();
                 SkinData skinData = new SkinData(skinURL, value, signature);
 
-                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * 30 * 12));
+                FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * randomFromTo(30, 30 * 3))); // 1-3 months
 
                 skinCache.put(skinURL, skinData);
                 FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for URL " + skinURL);
@@ -199,6 +199,10 @@ public final class SkinFetcher {
 
     private static boolean isUUID(String identifier) {
         return identifier.length() == 36 && identifier.contains("-");
+    }
+
+    private static long randomFromTo(long from, long to) {
+        return from + (long) (Math.random() * (to - from));
     }
 
     /**

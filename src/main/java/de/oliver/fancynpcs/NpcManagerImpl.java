@@ -1,9 +1,6 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.NpcAttribute;
-import de.oliver.fancynpcs.api.NpcData;
-import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -247,6 +244,18 @@ public class NpcManagerImpl implements NpcManager {
             SkinFetcher.SkinData skin = null;
             if (!skinIdentifier.isEmpty()) {
                 skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
+            }
+
+            if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
+                String value = npcConfig.getString("npcs." + id + ".skin.value");
+                String signature = npcConfig.getString("npcs." + id + ".skin.signature");
+
+                if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
+                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
+                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
+                }
             }
 
             boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version

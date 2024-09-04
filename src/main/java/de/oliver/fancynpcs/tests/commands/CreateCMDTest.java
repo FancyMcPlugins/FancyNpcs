@@ -9,6 +9,8 @@ import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import static de.oliver.fancynpcs.tests.FNTestUtils.*;
+
 public class CreateCMDTest {
 
     private static final NpcManager NPC_MANAGER = FancyNpcsPlugin.get().getNpcManager();
@@ -25,9 +27,7 @@ public class CreateCMDTest {
     @FNAfterEach
     public void tearDown(Player player) {
         NPC_MANAGER.removeNpc(createdNpc);
-        if (NPC_MANAGER.getNpc(npcName) != null) {
-            throw new IllegalStateException("Npc was not removed");
-        }
+        assertNull(NPC_MANAGER.getNpc(npcName));
 
         createdNpc = null;
         npcName = null;
@@ -36,36 +36,30 @@ public class CreateCMDTest {
     @FNTest(name = "Create npc")
     public void createNpc(Player player) {
         if (!player.performCommand("npc create " + npcName)) {
-            throw new IllegalStateException("Command failed");
+            failTest("Command failed");
         }
 
         createdNpc = NPC_MANAGER.getNpc(npcName);
-        if (createdNpc == null) {
-            throw new IllegalStateException("Npc was not created");
-        }
+        assertNotNull(createdNpc);
 
         if (createdNpc.getEntityId() < 0) {
-            throw new IllegalStateException("Npc entity was not created");
+            failTest("Npc entity was not created");
         }
     }
 
     @FNTest(name = "Create npc with type")
     public void createNpcWithType(Player player) {
         if (!player.performCommand("npc create " + npcName + " --type PIG")) {
-            throw new IllegalStateException("Command failed");
+            failTest("Command failed");
         }
 
         createdNpc = NPC_MANAGER.getNpc(npcName);
-        if (createdNpc == null) {
-            throw new IllegalStateException("Npc was not created");
-        }
+        assertNotNull(createdNpc);
 
         if (createdNpc.getEntityId() < 0) {
-            throw new IllegalStateException("Npc entity was not created");
+            failTest("Npc entity was not created");
         }
 
-        if (createdNpc.getData().getType() != EntityType.PIG) {
-            throw new IllegalStateException("Npc entity type is not correct");
-        }
+        assertEqual(createdNpc.getData().getType(), EntityType.PIG);
     }
 }

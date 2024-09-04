@@ -5,50 +5,30 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FancyNpcsTests implements FancyNpcsTest {
+public class FancyNpcsTests {
 
-    private final List<FancyNpcsTest> tests;
+    private final List<FNTestClass> tests = new ArrayList<>();
 
     public FancyNpcsTests() {
-        this.tests = new ArrayList<>();
+
     }
 
-    public FancyNpcsTests addTest(FancyNpcsTest test) {
-        tests.add(test);
+    public FancyNpcsTests addTest(Class<?> testClass) {
+        tests.add(FNTestClass.fromClass(testClass));
         return this;
     }
 
-
-    @Override
-    public boolean before(Player player) {
-        return true;
-    }
-
-    @Override
-    public boolean test(Player player) {
-        for (FancyNpcsTest test : tests) {
-            long testStart = System.currentTimeMillis();
-
+    public boolean runAllTests(Player player) {
+        for (FNTestClass test : tests) {
+            System.out.println("Running tests for " + test.testClass().getSimpleName());
             try {
-                if (!test.before(player)) return false;
-                if (!test.test(player)) return false;
-                if (!test.after(player)) return false;
+                if (!test.runTests(player)) {
+                    return false;
+                }
             } catch (Exception e) {
-                System.out.println("Test " + test.getClass().getSimpleName() + " failed with exception: " + e.getMessage());
-                player.sendMessage("Test " + test.getClass().getSimpleName() + " failed with exception: " + e.getMessage());
-                e.printStackTrace();
                 return false;
             }
-
-            long testEnd = System.currentTimeMillis();
-            System.out.println("Test " + test.getClass().getSimpleName() + " took " + (testEnd - testStart) + "ms");
-            player.sendMessage("Test " + test.getClass().getSimpleName() + " took " + (testEnd - testStart) + "ms");
         }
-        return true;
-    }
-
-    @Override
-    public boolean after(Player player) {
         return true;
     }
 }

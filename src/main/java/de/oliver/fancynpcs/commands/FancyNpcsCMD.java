@@ -23,19 +23,15 @@ public enum FancyNpcsCMD {
     @Permission("fancynpcs.command.fancynpcs.version")
     public void onVersion(final CommandSender sender) {
         plugin.getVersionConfig().checkVersionAndDisplay(sender, false);
-
-        new FancyNpcsTests()
-                .addTest(new CreateNpcTest())
-                .test((Player) sender);
     }
 
     @Command("fancynpcs test")
     @Permission("fancynpcs.command.fancynpcs.test")
     public void onTest(final Player player) {
         boolean tested = new FancyNpcsTests()
-                .addTest(new CreateNpcTest())
-                .addTest(new CreateCMDTest())
-                .test(player);
+                .addTest(CreateNpcTest.class)
+                .addTest(CreateCMDTest.class)
+                .runAllTests(player);
 
         if (tested) {
             player.sendMessage("Tested successfully!");

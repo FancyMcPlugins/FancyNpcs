@@ -92,6 +92,12 @@ public record FNTestClass(
             long testEnd = System.currentTimeMillis();
             System.out.println("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
             player.sendMessage("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         return true;

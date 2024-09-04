@@ -113,7 +113,7 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         config.setInlineComments("visibility_distance", List.of("The distance at which NPCs are visible."));
 
         removeNpcsFromPlayerlistDelay = (int) ConfigHelper.getOrDefault(config, "remove_npcs_from_playerlist_delay", 2000);
-        config.setInlineComments("remove_npcs_from_playerlist_delay", List.of("The delay in ticks to remove NPCs from the player list. Increase this value if you have problems with skins not loading correctly when joining or switching worlds."));
+        config.setInlineComments("remove_npcs_from_playerlist_delay", List.of("The delay in ticks to remove NPCs from the player list. Increase this value if you have problems with skins not loading correctly when joining or switching worlds. You can set it to -1, if you don't have any npcs using the show_in_tab feature."));
 
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
         config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));

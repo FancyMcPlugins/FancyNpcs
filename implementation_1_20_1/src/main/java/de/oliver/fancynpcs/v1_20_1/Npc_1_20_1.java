@@ -131,11 +131,12 @@ public class Npc_1_20_1 extends Npc {
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
-        if (!data.isShowInTab()) {
+        int removeNpcsFromPlayerlistDelay = FancyNpcsPlugin.get().getFancyNpcConfig().getRemoveNpcsFromPlayerlistDelay();
+        if (!data.isShowInTab() && removeNpcsFromPlayerlistDelay > 0) {
             FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
                 ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
                 serverPlayer.connection.send(playerInfoRemovePacket);
-            }, FancyNpcsPlugin.get().getFancyNpcConfig().getRemoveNpcsFromPlayerlistDelay(), TimeUnit.MILLISECONDS);
+            }, removeNpcsFromPlayerlistDelay, TimeUnit.MILLISECONDS);
         }
 
         update(player);

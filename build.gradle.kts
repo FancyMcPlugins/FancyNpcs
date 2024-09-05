@@ -89,7 +89,7 @@ tasks {
             hangar("ViaVersion", "5.0.3")
             hangar("ViaBackwards", "5.0.3")
             hangar("PlaceholderAPI", "2.11.6")
-            modrinth("multiverse-core", "4.3.11")
+//            modrinth("multiverse-core", "4.3.11")
         }
     }
 

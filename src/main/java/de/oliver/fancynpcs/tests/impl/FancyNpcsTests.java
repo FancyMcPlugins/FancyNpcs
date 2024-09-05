@@ -3,6 +3,8 @@ package de.oliver.fancynpcs.tests.impl;
 import de.oliver.fancynpcs.tests.FNTestClass;
 import de.oliver.fancynpcs.tests.impl.api.CreateNpcTest;
 import de.oliver.fancynpcs.tests.impl.commands.CreateCMDTest;
+import de.oliver.fancynpcs.tests.impl.commands.DisplayNameCMDTest;
+import de.oliver.fancynpcs.tests.impl.commands.TurnToPlayerCMDTest;
 import de.oliver.fancynpcs.tests.impl.commands.TypeCMDTest;
 import org.bukkit.entity.Player;
 
@@ -24,6 +26,8 @@ public class FancyNpcsTests {
         // command tests
         addTest(CreateCMDTest.class);
         addTest(TypeCMDTest.class);
+        addTest(DisplayNameCMDTest.class);
+        addTest(TurnToPlayerCMDTest.class);
     }
 
     /**

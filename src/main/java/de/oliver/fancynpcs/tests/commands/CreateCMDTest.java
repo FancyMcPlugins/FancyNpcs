@@ -9,7 +9,7 @@ import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-import static de.oliver.fancynpcs.tests.FNTestUtils.*;
+import static de.oliver.fancynpcs.tests.Expectable.expect;
 
 public class CreateCMDTest {
 
@@ -27,7 +27,7 @@ public class CreateCMDTest {
     @FNAfterEach
     public void tearDown(Player player) {
         NPC_MANAGER.removeNpc(createdNpc);
-        assertNull(NPC_MANAGER.getNpc(npcName));
+        expect(NPC_MANAGER.getNpc(npcName)).toBeNull();
 
         createdNpc = null;
         npcName = null;
@@ -35,31 +35,23 @@ public class CreateCMDTest {
 
     @FNTest(name = "Create npc")
     public void createNpc(Player player) {
-        if (!player.performCommand("npc create " + npcName)) {
-            failTest("Command failed");
-        }
+        expect(player.performCommand("npc create " + npcName)).toBe(true);
 
         createdNpc = NPC_MANAGER.getNpc(npcName);
-        assertNotNull(createdNpc);
+        expect(createdNpc).toBeDefined();
 
-        if (createdNpc.getEntityId() < 0) {
-            failTest("Npc entity was not created");
-        }
+        expect(createdNpc.getEntityId()).toBeGreaterThan(-1);
     }
 
     @FNTest(name = "Create npc with type")
     public void createNpcWithType(Player player) {
-        if (!player.performCommand("npc create " + npcName + " --type PIG")) {
-            failTest("Command failed");
-        }
+        expect(player.performCommand("npc create " + npcName + " --type PIG")).toBe(true);
 
         createdNpc = NPC_MANAGER.getNpc(npcName);
-        assertNotNull(createdNpc);
+        expect(createdNpc).toBeDefined();
 
-        if (createdNpc.getEntityId() < 0) {
-            failTest("Npc entity was not created");
-        }
+        expect(createdNpc.getEntityId()).toBeGreaterThan(-1);
 
-        assertEqual(createdNpc.getData().getType(), EntityType.PIG);
+        expect(createdNpc.getData().getType()).toEqual(EntityType.PIG);
     }
 }

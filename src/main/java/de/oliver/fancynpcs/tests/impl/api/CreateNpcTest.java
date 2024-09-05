@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.tests.api;
+package de.oliver.fancynpcs.tests.impl.api;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
@@ -8,9 +8,12 @@ import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
 import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
 import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
+
+import static de.oliver.fancynpcs.tests.Expectable.expect;
 
 public class CreateNpcTest {
 
@@ -32,10 +35,11 @@ public class CreateNpcTest {
 
     @FNAfterEach
     public void tearDown(Player player) {
-        NPC_MANAGER.removeNpc(createdNpc);
-        if (NPC_MANAGER.getNpc(npcName) != null) {
-            throw new IllegalStateException("Npc was not removed");
+        if (createdNpc != null) {
+            NPC_MANAGER.removeNpc(createdNpc);
         }
+
+        expect(NPC_MANAGER.getNpc(npcName)).toBeNull();
 
         createdNpc = null;
         npcName = null;
@@ -47,22 +51,17 @@ public class CreateNpcTest {
     public void createAndRegisterNpc(Player player) {
         NpcData data = new NpcData(npcName, creatorUUID, location);
         createdNpc = FancyNpcsPlugin.get().getNpcAdapter().apply(data);
-
-        if (createdNpc == null) {
-            throw new IllegalStateException("Npc was not created");
-        }
+        expect(createdNpc).toBeDefined();
 
         createdNpc.create();
-
-        if (createdNpc.getEntityId() < 0) {
-            throw new IllegalStateException("Npc was not created");
-        }
+        expect(createdNpc.getEntityId()).toBeGreaterThan(-1);
+        expect(createdNpc.getData().getName()).toEqual(npcName);
+        expect(createdNpc.getData().getCreator()).toEqual(creatorUUID);
+        expect(createdNpc.getData().getLocation()).toEqual(location);
+        expect(createdNpc.getData().getType()).toEqual(EntityType.PLAYER);
 
         NPC_MANAGER.registerNpc(createdNpc);
-
-        if (NPC_MANAGER.getNpc(npcName) == null) {
-            throw new IllegalStateException("Npc was not created");
-        }
+        expect(NPC_MANAGER.getNpc(npcName)).toBeDefined();
     }
 
 }

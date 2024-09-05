@@ -1,7 +1,9 @@
-package de.oliver.fancynpcs.tests;
+package de.oliver.fancynpcs.tests.impl;
 
-import de.oliver.fancynpcs.tests.api.CreateNpcTest;
-import de.oliver.fancynpcs.tests.commands.CreateCMDTest;
+import de.oliver.fancynpcs.tests.FNTestClass;
+import de.oliver.fancynpcs.tests.impl.api.CreateNpcTest;
+import de.oliver.fancynpcs.tests.impl.commands.CreateCMDTest;
+import de.oliver.fancynpcs.tests.impl.commands.TypeCMDTest;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class FancyNpcsTests {
 
         // command tests
         addTest(CreateCMDTest.class);
+        addTest(TypeCMDTest.class);
     }
 
     /**

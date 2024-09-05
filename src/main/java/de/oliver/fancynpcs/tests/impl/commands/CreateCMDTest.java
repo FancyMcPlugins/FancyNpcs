@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.tests.commands;
+package de.oliver.fancynpcs.tests.impl.commands;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
@@ -32,7 +32,7 @@ public class CreateCMDTest {
         if (createdNpc != null) {
             NPC_MANAGER.removeNpc(createdNpc);
         }
-        
+
         expect(NPC_MANAGER.getNpc(npcName)).toBeNull();
 
         createdNpc = null;
@@ -47,6 +47,12 @@ public class CreateCMDTest {
         expect(createdNpc).toBeDefined();
 
         expect(createdNpc.getEntityId()).toBeGreaterThan(-1);
+
+        expect(createdNpc.getData().getName()).toEqual(npcName);
+        expect(createdNpc.getData().getType()).toEqual(EntityType.PLAYER);
+        expect(createdNpc.getData().getLocation()).toBeDefined();
+        expect(createdNpc.getData().getLocation().getWorld().getName()).toEqual(player.getWorld().getName());
+        expect(createdNpc.getData().getCreator()).toEqual(player.getUniqueId());
     }
 
     @FNTest(name = "Create npc with type")

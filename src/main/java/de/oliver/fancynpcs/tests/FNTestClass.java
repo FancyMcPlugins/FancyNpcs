@@ -9,6 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * FNTestClass is a record that encapsulates information about a test class and its associated test methods.
@@ -25,6 +26,8 @@ public record FNTestClass(
         Method afterEach,
         List<Method> testMethods
 ) {
+
+    private static final Logger logger = Logger.getLogger(FNTestClass.class.getName());
 
     /**
      * Creates an instance of FNTestClass by inspecting the provided test class for methods annotated
@@ -74,20 +77,21 @@ public record FNTestClass(
      * @return true if all tests completed successfully, false if any test failed or an unexpected exception occurred.
      */
     public boolean runTests(Player player) {
+        logger.info("Running tests for " + testClass.getSimpleName());
+
         for (Method testMethod : testMethods) {
             Object testClassObj;
             try {
                 testClassObj = testClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
-                System.out.println("Failed to create test class instance: " + e.getMessage());
+                logger.warning("Failed to create test class instance: " + e.getMessage());
                 player.sendMessage("Failed to create test class instance: " + e.getMessage());
-                e.printStackTrace();
                 return false;
             }
 
             FNTest fnTest = testMethod.getAnnotation(FNTest.class);
             if (fnTest.skip()) {
-                System.out.println("Skipping test " + displayName(testMethod));
+                logger.info("Skipping test " + displayName(testMethod));
                 player.sendMessage("Skipping test " + displayName(testMethod));
                 continue;
             }
@@ -102,24 +106,22 @@ public record FNTestClass(
 
                 if (afterEach != null) afterEach.invoke(testClassObj, player);
             } catch (InvocationTargetException e) {
-                System.out.println("Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage());
+                logger.warning("Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage());
                 player.sendMessage("Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage());
-                e.getCause().printStackTrace();
                 return false;
             } catch (Exception e) {
-                System.out.println("Unexpected exception in test " + fnTest.name() + ": " + e.getMessage());
-                e.printStackTrace();
+                logger.warning("Unexpected exception in test " + fnTest.name() + ": " + e.getMessage());
                 return false;
             }
 
             long testEnd = System.currentTimeMillis();
-            System.out.println("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
+            logger.info("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
             player.sendMessage("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
 
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.warning("Thread interrupted while waiting between tests: " + e.getMessage());
             }
         }
 

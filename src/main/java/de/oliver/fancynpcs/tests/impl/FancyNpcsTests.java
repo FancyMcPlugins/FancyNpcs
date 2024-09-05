@@ -45,7 +45,6 @@ public class FancyNpcsTests {
      */
     public boolean runAllTests(Player player) {
         for (FNTestClass test : tests) {
-            System.out.println("Running tests for " + test.testClass().getSimpleName());
             try {
                 if (!test.runTests(player)) {
                     return false;

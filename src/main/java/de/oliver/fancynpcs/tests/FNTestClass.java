@@ -10,6 +10,15 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * FNTestClass is a record that encapsulates information about a test class and its associated test methods.
+ * This class supports running tests annotated with {@link FNTest}.
+ *
+ * @param testClass   the test class to run tests for (must be annotated with {@link FNTest})
+ * @param beforeEach  the method annotated with {@link FNBeforeEach} to run before each test
+ * @param afterEach   the method annotated with {@link FNAfterEach} to run after each test
+ * @param testMethods the list of test methods annotated with {@link FNTest}
+ */
 public record FNTestClass(
         Class<?> testClass,
         Method beforeEach,
@@ -17,6 +26,14 @@ public record FNTestClass(
         List<Method> testMethods
 ) {
 
+    /**
+     * Creates an instance of FNTestClass by inspecting the provided test class for methods annotated
+     * with FNTest, FNBeforeEach, and FNAfterEach annotations.
+     * These methods are used to define the setup, teardown, and test methods for the class.
+     *
+     * @param testClass the class to be inspected for annotated methods
+     * @return an instance of FNTestClass containing the test class and its annotated methods
+     */
     public static FNTestClass fromClass(Class<?> testClass) {
         Method beforeEach = null;
         Method afterEach = null;
@@ -50,6 +67,12 @@ public record FNTestClass(
         return new FNTestClass(testClass, beforeEach, afterEach, testMethods);
     }
 
+    /**
+     * Runs the test methods belonging to the test class, performing any necessary setup and teardown operations.
+     *
+     * @param player The player context to pass to the test methods.
+     * @return true if all tests completed successfully, false if any test failed or an unexpected exception occurred.
+     */
     public boolean runTests(Player player) {
         for (Method testMethod : testMethods) {
             Object testClassObj;
@@ -103,6 +126,12 @@ public record FNTestClass(
         return true;
     }
 
+    /**
+     * Generates a display name for a given test method, incorporating annotation details if present.
+     *
+     * @param m the method for which to generate the display name
+     * @return a display name that includes the test class and method name, and optionally the value of the FNTest annotation's name attribute if the annotation is present
+     */
     public String displayName(Method m) {
         if (!m.isAnnotationPresent(FNTest.class)) {
             return testClass.getSimpleName() + "#" + m.getName();

@@ -5,8 +5,6 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.tests.FancyNpcsTests;
-import de.oliver.fancynpcs.tests.api.CreateNpcTest;
-import de.oliver.fancynpcs.tests.commands.CreateCMDTest;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
@@ -28,10 +26,7 @@ public enum FancyNpcsCMD {
     @Command("fancynpcs test")
     @Permission("fancynpcs.command.fancynpcs.test")
     public void onTest(final Player player) {
-        boolean tested = new FancyNpcsTests()
-                .addTest(CreateNpcTest.class)
-                .addTest(CreateCMDTest.class)
-                .runAllTests(player);
+        boolean tested = new FancyNpcsTests().runAllTests(player);
 
         if (tested) {
             player.sendMessage("Tested successfully!");

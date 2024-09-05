@@ -59,4 +59,19 @@ public class FancyNpcsTests {
         }
         return true;
     }
+
+    /**
+     * Returns the current count of test classes registered to be run.
+     *
+     * @return the number of test classes in the list
+     */
+    public int getTestCount() {
+        int count = 0;
+
+        for (FNTestClass test : tests) {
+            count += test.testMethods().size();
+        }
+
+        return count;
+    }
 }

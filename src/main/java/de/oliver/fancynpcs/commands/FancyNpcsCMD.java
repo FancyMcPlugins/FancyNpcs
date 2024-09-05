@@ -11,11 +11,16 @@ import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+
 public enum FancyNpcsCMD {
     INSTANCE; // SINGLETON
 
     private final FancyNpcs plugin = FancyNpcs.getInstance();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Command("fancynpcs version")
     @Permission("fancynpcs.command.fancynpcs.version")
@@ -26,12 +31,20 @@ public enum FancyNpcsCMD {
     @Command("fancynpcs test")
     @Permission("fancynpcs.command.fancynpcs.test")
     public void onTest(final Player player) {
-        boolean tested = new FancyNpcsTests().runAllTests(player);
+        FancyNpcsTests tests = new FancyNpcsTests();
+        boolean tested = tests.runAllTests(player);
 
         if (tested) {
-            player.sendMessage("Tested successfully!");
+            translator.translate("fancynpcs_test_success")
+                    .replace("player", player.getName())
+                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
+                    .replace("count", String.valueOf(tests.getTestCount()))
+                    .send(player);
         } else {
-            player.sendMessage("Test failed!");
+            translator.translate("fancynpcs_test_failure")
+                    .replace("player", player.getName())
+                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
+                    .send(player);
         }
     }
 

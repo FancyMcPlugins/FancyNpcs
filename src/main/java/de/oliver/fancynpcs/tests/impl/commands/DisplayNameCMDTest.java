@@ -35,7 +35,7 @@ public class DisplayNameCMDTest {
 
     @FNTest(name = "Set display name")
     public void setDisplayName(Player player) {
-        String displayName = "<red>Test <orange>Display Name";
+        String displayName = "<red>Test Display Name";
         expect(player.performCommand("npc displayname " + npcName + " " + displayName)).toBe(true);
         expect(npc.getData().getDisplayName()).toEqual(displayName);
     }

@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.tests;
 import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
 import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
 import de.oliver.fancynpcs.tests.annotations.FNTest;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.InvocationTargetException;
@@ -78,6 +79,7 @@ public record FNTestClass(
      */
     public boolean runTests(Player player) {
         logger.info("Running tests for " + testClass.getSimpleName());
+        player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Running tests for " + testClass.getSimpleName()));
 
         for (Method testMethod : testMethods) {
             Object testClassObj;
@@ -85,14 +87,13 @@ public record FNTestClass(
                 testClassObj = testClass.getDeclaredConstructor().newInstance();
             } catch (Exception e) {
                 logger.warning("Failed to create test class instance: " + e.getMessage());
-                player.sendMessage("Failed to create test class instance: " + e.getMessage());
                 return false;
             }
 
             FNTest fnTest = testMethod.getAnnotation(FNTest.class);
             if (fnTest.skip()) {
                 logger.info("Skipping test " + displayName(testMethod));
-                player.sendMessage("Skipping test " + displayName(testMethod));
+                player.sendMessage(MiniMessage.miniMessage().deserialize("<gold>Skipping test " + displayName(testMethod)));
                 continue;
             }
 
@@ -107,7 +108,7 @@ public record FNTestClass(
                 if (afterEach != null) afterEach.invoke(testClassObj, player);
             } catch (InvocationTargetException e) {
                 logger.warning("Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage());
-                player.sendMessage("Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage());
+                player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Test " + displayName(testMethod) + " failed with exception: " + e.getCause().getMessage()));
                 return false;
             } catch (Exception e) {
                 logger.warning("Unexpected exception in test " + fnTest.name() + ": " + e.getMessage());
@@ -116,7 +117,7 @@ public record FNTestClass(
 
             long testEnd = System.currentTimeMillis();
             logger.info("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
-            player.sendMessage("Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms");
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Test " + displayName(testMethod) + " took " + (testEnd - testStart) + "ms"));
 
             try {
                 Thread.sleep(100);

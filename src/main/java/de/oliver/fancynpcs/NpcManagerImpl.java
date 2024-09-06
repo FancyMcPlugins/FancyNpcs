@@ -16,6 +16,8 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -247,6 +249,9 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
+                // using old skin system --> take backup
+                takeBackup(npcConfig);
+
                 String value = npcConfig.getString("npcs." + id + ".skin.value");
                 String signature = npcConfig.getString("npcs." + id + ".skin.signature");
 
@@ -342,5 +347,34 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         loadNpcs();
+    }
+
+    private void takeBackup(YamlConfiguration npcConfig) {
+        String folderPath = "plugins" + File.separator + "FancyNpcs" + File.separator + "/backups";
+        File backupDir = new File(folderPath);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String backupFileName = "npcs-" + formatter.format(now) + ".yml";
+        File backupFile = new File(folderPath + File.separator + backupFileName);
+        if (backupFile.exists()) {
+            backupFile.delete();
+        }
+
+        try {
+            backupFile.createNewFile();
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not create backup file for NPCs");
+        }
+
+        try {
+            npcConfig.save(backupFile);
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not save backup file for NPCs");
+        }
     }
 }

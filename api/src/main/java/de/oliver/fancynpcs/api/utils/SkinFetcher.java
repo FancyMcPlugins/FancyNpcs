@@ -140,7 +140,6 @@ public final class SkinFetcher {
                 skinCache.put(uuid, skinData);
 
                 FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 + randomFromTo(15, 30))); // 15-30 days
-                FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for UUID " + uuid);
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for UUID " + uuid);
@@ -179,7 +178,6 @@ public final class SkinFetcher {
                 FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 * randomFromTo(30, 30 * 3))); // 1-3 months
 
                 skinCache.put(skinURL, skinData);
-                FancyNpcsPlugin.get().getPlugin().getLogger().info("Fetched skin data for URL " + skinURL);
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for URL " + skinURL);

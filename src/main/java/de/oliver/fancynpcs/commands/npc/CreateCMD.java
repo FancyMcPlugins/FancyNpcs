@@ -14,20 +14,18 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public enum CreateCMD {
     INSTANCE; // SINGLETON
 
-    private final Translator translator = FancyNpcs.getInstance().getTranslator();
-
     private static final Pattern NPC_NAME_PATTERN = Pattern.compile("^[A-Za-z0-9/_-]*$");
-    private static final UUID EMPTY_UUID = new UUID(0,0);
+    private static final UUID EMPTY_UUID = new UUID(0, 0);
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Command("npc create <name>")
     @Permission("fancynpcs.command.npc.create")
@@ -46,7 +44,7 @@ public enum CreateCMD {
         // Getting the NPC creator unique identifier. The UUID is always empty (all zeroes) for non-player senders.
         final UUID creator = (sender instanceof Player player) ? player.getUniqueId() : EMPTY_UUID;
         // Sending error message if NPC with such name already exist.
-        if ((FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && FancyNpcs.getInstance().getNpcManager().getNpc(name, creator) != null) || FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
+        if (FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && FancyNpcs.getInstance().getNpcManager().getNpc(name, creator) != null || !FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && FancyNpcs.getInstance().getNpcManager().getNpc(name) != null) {
             translator.translate("npc_create_failure_already_exists").replace("npc", FancyNpcs.getInstance().getNpcManager().getNpc(name).getData().getName()).send(sender);
             return;
         }

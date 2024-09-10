@@ -1,9 +1,6 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.NpcAttribute;
-import de.oliver.fancynpcs.api.NpcData;
-import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -19,6 +16,8 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -136,6 +135,13 @@ public class NpcManagerImpl implements NpcManager {
 
             NpcData data = npc.getData();
 
+            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.value", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.signature", null); //TODO: remove in next version
+
             npcConfig.set("npcs." + data.getId() + ".name", data.getName());
             npcConfig.set("npcs." + data.getId() + ".creator", data.getCreator().toString());
             npcConfig.set("npcs." + data.getId() + ".displayName", data.getDisplayName());
@@ -153,21 +159,18 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
             npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
-            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".playerCommands", data.getPlayerCommands());
-            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".serverCommands", data.getServerCommands());
-            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in 2.1.1
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
-            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.value", data.getSkin().getValue());
-                npcConfig.set("npcs." + data.getId() + ".skin.signature", data.getSkin().getSignature());
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
+            } else {
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
+            npcConfig.set("npcs." + data.getId() + ".skin.mirrorSkin", data.isMirrorSkin());
 
             if (data.getEquipment() != null) {
                 for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : data.getEquipment().entrySet()) {
@@ -240,12 +243,28 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
-            String skinValue = npcConfig.getString("npcs." + id + ".skin.value");
-            String skinSignature = npcConfig.getString("npcs." + id + ".skin.signature");
-            SkinFetcher skin = null;
-            if (skinIdentifier.length() > 0) {
-                skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
+            SkinFetcher.SkinData skin = null;
+            if (!skinIdentifier.isEmpty()) {
+                skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
             }
+
+            if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
+                // using old skin system --> take backup
+                takeBackup(npcConfig);
+
+                String value = npcConfig.getString("npcs." + id + ".skin.value");
+                String signature = npcConfig.getString("npcs." + id + ".skin.signature");
+
+                if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
+                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
+                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
+                }
+            }
+
+            boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version
+            boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + ".skin.mirrorSkin");
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + id + ".spawnEntity");
@@ -266,7 +285,6 @@ public class NpcManagerImpl implements NpcManager {
 
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
             float scale = (float) npcConfig.getDouble("npcs." + id + ".scale", 1);
-            boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -329,5 +347,34 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         loadNpcs();
+    }
+
+    private void takeBackup(YamlConfiguration npcConfig) {
+        String folderPath = "plugins" + File.separator + "FancyNpcs" + File.separator + "/backups";
+        File backupDir = new File(folderPath);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String backupFileName = "npcs-" + formatter.format(now) + ".yml";
+        File backupFile = new File(folderPath + File.separator + backupFileName);
+        if (backupFile.exists()) {
+            backupFile.delete();
+        }
+
+        try {
+            backupFile.createNewFile();
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not create backup file for NPCs");
+        }
+
+        try {
+            npcConfig.save(backupFile);
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not save backup file for NPCs");
+        }
     }
 }

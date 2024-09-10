@@ -40,6 +40,12 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int autoSaveInterval;
 
     /**
+     * The interval at which the NPC is updated.
+     * Only if the skin or displayName is a placeholder.
+     */
+    private int npcUpdateInterval;
+
+    /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
@@ -55,6 +61,12 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
      * The distance at which NPCs are visible.
      */
     private int visibilityDistance;
+
+    /**
+     * The delay in ticks to remove NPCs from the player list.
+     * Increase this value if you have problems with skins not loading correctly when joining or switching worlds.
+     */
+    private int removeNpcsFromPlayerlistDelay;
 
     /**
      * The commands that are blocked for NPCs in the message.
@@ -88,6 +100,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         autoSaveInterval = (int) ConfigHelper.getOrDefault(config, "autosave_interval", 15);
         config.setInlineComments("autosave_interval", List.of("The interval at which autosave is performed in minutes."));
 
+        npcUpdateInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_interval", 30);
+        config.setInlineComments("npc_update_skin_interval", List.of("The interval at which the NPC is updated (in minutes). Only if the skin or displayName is a placeholder."));
+
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
 
@@ -96,6 +111,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
         config.setInlineComments("visibility_distance", List.of("The distance at which NPCs are visible."));
+
+        removeNpcsFromPlayerlistDelay = (int) ConfigHelper.getOrDefault(config, "remove_npcs_from_playerlist_delay", 2000);
+        config.setInlineComments("remove_npcs_from_playerlist_delay", List.of("The delay in ticks to remove NPCs from the player list. Increase this value if you have problems with skins not loading correctly when joining or switching worlds. You can set it to -1, if you don't have any npcs using the show_in_tab feature."));
 
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
         config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));
@@ -143,6 +161,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         return autoSaveInterval;
     }
 
+    public int getNpcUpdateInterval() {
+        return npcUpdateInterval;
+    }
+
     public boolean isRegisterCommands() {
         return registerCommands;
     }
@@ -153,6 +175,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public int getVisibilityDistance() {
         return visibilityDistance;
+    }
+
+    public int getRemoveNpcsFromPlayerlistDelay() {
+        return removeNpcsFromPlayerlistDelay;
     }
 
     public List<String> getBlockedCommands() {

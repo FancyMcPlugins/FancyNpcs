@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Npc_1_19_4 extends Npc {
 
@@ -66,11 +67,6 @@ public class Npc_1_19_4 extends Npc {
         if (data.getType() == org.bukkit.entity.EntityType.PLAYER) {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""));
             ((ServerPlayer) npc).gameProfile = gameProfile;
-
-            if (data.getSkin() != null && data.getSkin().isLoaded()) {
-                // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
-            }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, MappingKeys1_19_4.ENTITY_TYPE__FACTORY.getMapping()); // EntityType.factory
@@ -88,6 +84,17 @@ public class Npc_1_19_4 extends Npc {
 
         if (!data.getLocation().getWorld().getName().equalsIgnoreCase(serverPlayer.getLevel().getWorld().getName())) {
             return;
+        }
+
+        if (data.getSkin() != null) {
+            String skinValue = data.getSkin().value();
+            String skinSignature = data.getSkin().signature();
+
+            if (skinValue == null || skinSignature == null) {
+                return;
+            }
+
+            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);
@@ -123,10 +130,13 @@ public class Npc_1_19_4 extends Npc {
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
-        FancyNpcsPlugin.get().getScheduler().runTaskLater(null, 5L, () -> {
-            ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
-            serverPlayer.connection.send(playerInfoRemovePacket);
-        });
+        int removeNpcsFromPlayerlistDelay = FancyNpcsPlugin.get().getFancyNpcConfig().getRemoveNpcsFromPlayerlistDelay();
+        if (!data.isShowInTab() && removeNpcsFromPlayerlistDelay > 0) {
+            FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
+                ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
+                serverPlayer.connection.send(playerInfoRemovePacket);
+            }, removeNpcsFromPlayerlistDelay, TimeUnit.MILLISECONDS);
+        }
 
         update(player);
     }

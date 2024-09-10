@@ -17,7 +17,8 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-    private SkinFetcher skin;
+    private SkinFetcher.SkinData skin;
+    private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;
     private boolean spawnEntity;
@@ -36,14 +37,13 @@ public class NpcData {
     private float scale;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
-    private boolean mirrorSkin;
 
     public NpcData(
             String id,
             String name,
             UUID creator,
             String displayName,
-            SkinFetcher skin,
+            SkinFetcher.SkinData skin,
             Location location,
             boolean showInTab,
             boolean spawnEntity,
@@ -141,11 +141,11 @@ public class NpcData {
         return this;
     }
 
-    public SkinFetcher getSkin() {
+    public SkinFetcher.SkinData getSkin() {
         return skin;
     }
 
-    public NpcData setSkin(SkinFetcher skin) {
+    public NpcData setSkin(SkinFetcher.SkinData skin) {
         this.skin = skin;
         isDirty = true;
         return this;

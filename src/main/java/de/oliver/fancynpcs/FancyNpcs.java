@@ -193,7 +193,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() || isDevelopmentBuild || randomRes < 15) {
+        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() && (isDevelopmentBuild || randomRes < 30)) {
             fancyAnalytics.registerDefaultPluginMetrics(instance);
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());

@@ -129,6 +129,8 @@ messages:
   fancynpcs_feature_flags_header: "<dark_gray><st>-------------------</st>   <gray>Feature Flags  <dark_gray><st>------------------</st><newline>"
   fancynpcs_feature_flags_entry: " <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
   fancynpcs_feature_flags_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
+  fancynpcs_test_success: "<dark_gray>› {successColor}All {count} tests have passed successfully (ran by {player} at {time})."
+  fancynpcs_test_failure: "<dark_gray>› {errorColor}Some tests have failed (ran by {player} at {time})."
 
   # Commands (npc help)
   npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"

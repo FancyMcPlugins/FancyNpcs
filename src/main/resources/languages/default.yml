@@ -324,6 +324,8 @@ messages:
 
   # Commands (npc action)
   npc_action_add_success: "<dark_gray>› <gray>Action has been added. There is {warningColor}{total}<gray> actions in total."
+  npc_action_add_before_success: "<dark_gray>› <gray>Action has been added before action {warningColor}{number}<gray>. There is {warningColor}{total}<gray> actions in total."
+  npc_action_add_after_success: "<dark_gray>› <gray>Action has been added after action {warningColor}{number}<gray>. There is {warningColor}{total}<gray> actions in total."
   npc_action_set_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> actions in total."
   npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
   npc_action_remove_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> actions in total."

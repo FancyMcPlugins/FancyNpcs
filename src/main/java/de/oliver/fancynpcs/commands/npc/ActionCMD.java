@@ -54,6 +54,62 @@ public class ActionCMD {
                 .send(sender);
     }
 
+    @Command("npc action <npc> <trigger> addBefore <index> <actionType> [value]")
+    @Permission("fancynpcs.command.npc.action.addBefore")
+    public void onActionAddBefore(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int index,
+            final @NotNull NpcAction actionType,
+            final @Nullable @Greedy String value
+    ) {
+        if (actionType.requiresValue() && (value == null || value.isEmpty())) {
+            translator
+                    .translate("npc_action_requires_value")
+                    .send(sender);
+            return;
+        }
+
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        currentActions.add(Math.clamp(index - 1, 0, currentActions.size()), new NpcAction.NpcActionData(index, actionType, value));
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_add_before_success")
+                .replaceStripped("number", String.valueOf(index))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
+    @Command("npc action <npc> <trigger> addAfter <index> <actionType> [value]")
+    @Permission("fancynpcs.command.npc.action.addAfter")
+    public void onActionAddAfter(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int index,
+            final @NotNull NpcAction actionType,
+            final @Nullable @Greedy String value
+    ) {
+        if (actionType.requiresValue() && (value == null || value.isEmpty())) {
+            translator
+                    .translate("npc_action_requires_value")
+                    .send(sender);
+            return;
+        }
+
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        currentActions.add(Math.clamp(index, 0, currentActions.size() + 1), new NpcAction.NpcActionData(index, actionType, value));
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_add_after_success")
+                .replaceStripped("number", String.valueOf(index))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
     @Command("npc action <npc> <trigger> set <number> <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.set")
     public void onActionSet(
@@ -89,12 +145,13 @@ public class ActionCMD {
             final @Argument(suggestions = "ActionCMD/number_range") int number
     ) {
         List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
-
         currentActions.remove(number - 1);
-        npc.getData().setActions(trigger, currentActions);
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
         translator
                 .translate("npc_action_remove_success")
                 .replaceStripped("number", String.valueOf(number))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
                 .send(sender);
     }
 
@@ -145,6 +202,15 @@ public class ActionCMD {
                 .translate("npc_action_list_footer")
                 .replaceStripped("total", String.valueOf(actions.size()))
                 .send(sender);
+    }
+
+    private List<NpcAction.NpcActionData> reorderActions(List<NpcAction.NpcActionData> actions) {
+        List<NpcAction.NpcActionData> newActions = new ArrayList<>();
+        for (int i = 0; i < actions.size(); i++) {
+            NpcAction.NpcActionData a = actions.get(i);
+            newActions.add(new NpcAction.NpcActionData(i + 1, a.action(), a.value()));
+        }
+        return newActions;
     }
 
 

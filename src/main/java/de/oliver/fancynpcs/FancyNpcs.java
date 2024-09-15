@@ -59,7 +59,6 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
-    public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
     private final ExtendedFancyLogger fancyLogger = new ExtendedFancyLogger("FancyNpcs");
@@ -109,7 +108,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
-        featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
         featureFlagConfig.load();
 
         String mcVersion = Bukkit.getMinecraftVersion();
@@ -214,7 +212,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() && (isDevelopmentBuild || randomRes < 30)) {
+        if (isDevelopmentBuild || randomRes < 30) {
             fancyAnalytics.registerDefaultPluginMetrics(instance);
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());
@@ -272,6 +270,16 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 long count = npcManager.getAllNpcs().stream()
                         .filter(npc -> !npc.getData().getAttributes().isEmpty())
                         .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npc_actions", () -> {
+                long count = 0;
+
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    count += npc.getData().getActions().values().size();
+                }
 
                 return (double) count;
             }));

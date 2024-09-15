@@ -158,6 +158,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         actionManager = new ActionManagerImpl();
         actionManager.registerAction(new MessageAction());
         actionManager.registerAction(new PlayerCommandAction());
+        actionManager.registerAction(new PlayerCommandAsOpAction());
         actionManager.registerAction(new ConsoleCommandAction());
         actionManager.registerAction(new SendToServerAction());
         actionManager.registerAction(new WaitAction());

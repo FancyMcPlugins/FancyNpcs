@@ -1,44 +1,6 @@
 import net.minecrell.pluginyml.paper.PaperPluginDescription
-import org.gradle.api.artifacts.repositories.PasswordCredentials
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.authentication.http.BasicAuthentication
-import org.gradle.jvm.toolchain.JavaLanguageVersion
-import org.gradle.kotlin.dsl.annotationProcessor
-import org.gradle.kotlin.dsl.compileJava
-import org.gradle.kotlin.dsl.compileOnly
-import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.credentials
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.get
-import org.gradle.kotlin.dsl.hangarPublish
-import org.gradle.kotlin.dsl.implementation
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.kotlin.dsl.java
-import org.gradle.kotlin.dsl.javadoc
-import org.gradle.kotlin.dsl.maven
-import org.gradle.kotlin.dsl.modrinth
-import org.gradle.kotlin.dsl.paper
-import org.gradle.kotlin.dsl.processResources
-import org.gradle.kotlin.dsl.project
-import org.gradle.kotlin.dsl.publishAllPublicationsToHangar
-import org.gradle.kotlin.dsl.publishing
-import org.gradle.kotlin.dsl.repositories
-import org.gradle.kotlin.dsl.runPaper
-import org.gradle.kotlin.dsl.runServer
-import org.gradle.kotlin.dsl.shadowJar
-import org.gradle.kotlin.dsl.version
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.ProcessBuilder
-import java.lang.System
-import kotlin.IllegalStateException
-import kotlin.String
-import kotlin.collections.listOf
-import kotlin.collections.mapOf
-import kotlin.text.Charsets
-import kotlin.text.ifEmpty
-import kotlin.to
-import kotlin.toString
 
 plugins {
     id("java-library")
@@ -59,7 +21,7 @@ val supportedVersions =
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.2.2-NIS" + (if (buildId != null) ".$buildId" else "")
+    version = "2.2.2-NIS2" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {

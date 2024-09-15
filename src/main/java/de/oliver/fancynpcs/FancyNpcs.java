@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.MetricSupplier;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -61,6 +62,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
+    private final ExtendedFancyLogger fancyLogger = new ExtendedFancyLogger("FancyNpcs");
     private final ScheduledExecutorService npcThread;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
@@ -348,6 +350,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (npcManager != null) {
             npcManager.saveNpcs(true);
         }
+    }
+
+    public ExtendedFancyLogger getFancyLogger() {
+        return fancyLogger;
     }
 
     @Override

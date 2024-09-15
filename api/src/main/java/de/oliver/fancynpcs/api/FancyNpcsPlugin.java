@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.api;
 
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.actions.ActionManager;
@@ -27,6 +28,8 @@ public interface FancyNpcsPlugin {
     JavaPlugin getPlugin();
 
     Logger getLogger();
+
+    ExtendedFancyLogger getFancyLogger();
 
     ScheduledExecutorService getNpcThread();
 

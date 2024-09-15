@@ -37,6 +37,12 @@ public class ConsoleCommandAction extends NpcAction {
 
         String finalCommand = ChatColorHandler.translate(command, context.getPlayer(), List.of(PlaceholderAPIParser.class));
 
-        FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
+        FancyNpcsPlugin.get().getScheduler().runTask(null, () -> {
+            try {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand);
+            } catch (Exception e) {
+                FancyNpcsPlugin.get().getFancyLogger().warn("Failed to execute command: " + finalCommand);
+            }
+        });
     }
 }

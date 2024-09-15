@@ -51,7 +51,12 @@ public class PlayerCommandAction extends NpcAction {
 
         FancyNpcsPlugin.get().getScheduler().runTask(
                 context.getPlayer().getLocation(),
-                () -> context.getPlayer().chat("/" + command)
-        );
+                () -> {
+                    try {
+                        context.getPlayer().chat("/" + command);
+                    } catch (Exception e) {
+                        FancyNpcsPlugin.get().getFancyLogger().warn("Failed to execute command: " + command);
+                    }
+                });
     }
 }

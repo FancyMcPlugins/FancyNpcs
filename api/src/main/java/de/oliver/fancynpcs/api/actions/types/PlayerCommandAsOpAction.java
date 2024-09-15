@@ -57,6 +57,8 @@ public class PlayerCommandAsOpAction extends NpcAction {
                     context.getPlayer().setOp(true);
                     try {
                         context.getPlayer().chat("/" + command);
+                    } catch (Exception e) {
+                        FancyNpcsPlugin.get().getFancyLogger().warn("Failed to execute command: " + command);
                     } finally {
                         context.getPlayer().setOp(wasOp);
                     }

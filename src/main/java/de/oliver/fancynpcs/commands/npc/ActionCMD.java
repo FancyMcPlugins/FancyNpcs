@@ -54,7 +54,7 @@ public class ActionCMD {
                 .send(sender);
     }
 
-    @Command("npc action <npc> <trigger> addBefore <index> <actionType> [value]")
+    @Command("npc action <npc> <trigger> add_before <index> <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.addBefore")
     public void onActionAddBefore(
             final @NotNull CommandSender sender,
@@ -82,7 +82,7 @@ public class ActionCMD {
                 .send(sender);
     }
 
-    @Command("npc action <npc> <trigger> addAfter <index> <actionType> [value]")
+    @Command("npc action <npc> <trigger> add_after <index> <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.addAfter")
     public void onActionAddAfter(
             final @NotNull CommandSender sender,
@@ -154,6 +154,63 @@ public class ActionCMD {
                 .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
                 .send(sender);
     }
+
+    @Command("npc action <npc> <trigger> move_up <number>")
+    @Permission("fancynpcs.command.npc.action.moveUp")
+    public void onActionMoveUp(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int number
+    ) {
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        if (number <= 1) {
+            translator
+                    .translate("npc_action_move_up_failure")
+                    .send(sender);
+            return;
+        }
+
+        NpcAction.NpcActionData action = currentActions.get(number - 1);
+        currentActions.remove(number - 1);
+        currentActions.add(number - 2, action);
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_move_up_success")
+                .replaceStripped("number", String.valueOf(number))
+                .replaceStripped("number", String.valueOf(number))
+                .send(sender);
+    }
+
+    @Command("npc action <npc> <trigger> move_down <number>")
+    @Permission("fancynpcs.command.npc.action.moveDown")
+    public void onActionMoveDown(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int number
+    ) {
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        if (number >= currentActions.size()) {
+            translator
+                    .translate("npc_action_move_down_failure")
+                    .replaceStripped("number", String.valueOf(number))
+                    .send(sender);
+            return;
+        }
+
+        NpcAction.NpcActionData action = currentActions.get(number - 1);
+        currentActions.remove(number - 1);
+        currentActions.add(number, action);
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_move_down_success")
+                .replaceStripped("number", String.valueOf(number))
+                .send(sender);
+    }
+
 
     @Command("npc action <npc> <trigger> clear")
     @Permission("fancynpcs.command.npc.action.clear")

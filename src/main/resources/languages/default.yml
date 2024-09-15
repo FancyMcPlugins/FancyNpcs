@@ -263,22 +263,6 @@ messages:
   npc_list_failure_sort_requires_player: "<dark_gray>› {errorColor}This sort type cannot be used from the console."
   npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
 
-  # Commands (npc message)
-  npc_message_add_success: "<dark_gray>› <gray>Message has been added. There is {warningColor}{total}<gray> messages in total."
-  npc_message_set_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> messages in total."
-  npc_message_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_message_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
-  npc_message_remove_success: "<dark_gray>› <gray>Message {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> messages in total."
-  npc_message_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_message_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
-  npc_message_clear_success: "<dark_gray>› <gray>Messages have been cleared. There was {warningColor}{total}<gray> messages in total."
-  npc_message_send_randomly_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now sending messages randomly."
-  npc_message_send_randomly_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer sending messages randomly."
-  npc_message_list_header: "<dark_gray><st>---------------------</st>   <gray>Messages  <dark_gray><st>--------------------</st><newline>"
-  npc_message_list_entry: " <#848484>{number}. <reset>{message}"
-  npc_message_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
-  npc_message_list_failure_empty: "<dark_gray>› {errorColor}There are no messages in the list. Use {warningColor}/npc message (npc) add (none | message){errorColor} to add your first message."
-
   # Commands (npc move_here)
   npc_move_here_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to your location."
 
@@ -291,36 +275,8 @@ messages:
   npc_nearby_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
   npc_nearby_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
 
-  # Commands (npc player_command)
-  npc_player_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
-  npc_player_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
-  npc_player_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_player_command_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
-  npc_player_command_remove_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> commands in total."
-  npc_player_command_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_player_command_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
-  npc_player_command_clear_success: "<dark_gray>› <gray>Commands have been cleared. There was {warningColor}{total}<gray> commands in total."
-  npc_player_command_list_header: "<dark_gray><st>------------------</st>   <gray>Player Commands  <dark_gray><st>-----------------</st><newline>"
-  npc_player_command_list_entry: " <#848484>{number}. <reset>{command}"
-  npc_player_command_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
-  npc_player_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc player_command (npc) add (command){errorColor} to add your first command."
-
   # Commands (npc remove)
   npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
-
-  # Commands (npc server_command)
-  npc_server_command_add_success: "<dark_gray>› <gray>Command has been added. There is {warningColor}{total}<gray> commands in total."
-  npc_server_command_set_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> commands in total."
-  npc_server_command_set_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_server_command_set_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc server_command (npc) add (command){errorColor} to add your first command."
-  npc_server_command_remove_success: "<dark_gray>› <gray>Command {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> commands in total."
-  npc_server_command_remove_failure_not_in_range: "<dark_gray>› {errorColor}Number {warningColor}{input}{errorColor} must be in range between {warningColor}1{errorColor} and {warningColor}{max}{errorColor}."
-  npc_server_command_remove_failure_list_is_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc server_command (npc) add (command){errorColor} to add your first command."
-  npc_server_command_clear_success: "<dark_gray>› <gray>Commands have been cleared. There was {warningColor}{total}<gray> commands in total."
-  npc_server_command_list_header: "<dark_gray><st>------------------</st>  <gray>Server Commands  <dark_gray><st>-----------------</st><newline>"
-  npc_server_command_list_entry: " <#848484>{number}. <reset>{command}"
-  npc_server_command_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
-  npc_server_command_list_failure_empty: "<dark_gray>› {errorColor}There are no commands in the list. Use {warningColor}/npc server_command (npc) add (command){errorColor} to add your first command."
 
   # Commands (npc action)
   npc_action_add_success: "<dark_gray>› <gray>Action has been added. There is {warningColor}{total}<gray> actions in total."

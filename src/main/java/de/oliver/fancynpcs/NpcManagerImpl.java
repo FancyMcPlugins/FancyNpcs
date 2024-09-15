@@ -186,6 +186,7 @@ public class NpcManagerImpl implements NpcManager {
                 npcConfig.set("npcs." + data.getId() + ".attributes." + attribute.getName(), value);
             }
 
+            npcConfig.set("npcs." + data.getId() + ".actions", null);
             for (Map.Entry<ActionTrigger, List<NpcAction.NpcActionData>> entry : npc.getData().getActions().entrySet()) {
                 for (NpcAction.NpcActionData actionData : entry.getValue()) {
                     if (actionData == null) {

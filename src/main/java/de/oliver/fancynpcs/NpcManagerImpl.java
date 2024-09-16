@@ -307,8 +307,11 @@ public class NpcManagerImpl implements NpcManager {
             for (String message : messages) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
             }
-            actions.put(ActionTrigger.LEFT_CLICK, migrateActionList);
-            actions.put(ActionTrigger.RIGHT_CLICK, migrateActionList);
+            if (!migrateActionList.isEmpty()) {
+                takeBackup(npcConfig);
+                actions.put(ActionTrigger.LEFT_CLICK, migrateActionList);
+                actions.put(ActionTrigger.RIGHT_CLICK, migrateActionList);
+            }
 
             ConfigurationSection actiontriggerSection = npcConfig.getConfigurationSection("npcs." + id + ".actions");
             if (actiontriggerSection != null) {

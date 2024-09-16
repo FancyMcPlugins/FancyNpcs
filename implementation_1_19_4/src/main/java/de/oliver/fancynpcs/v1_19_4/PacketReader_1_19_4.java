@@ -63,11 +63,13 @@ public class PacketReader_1_19_4 implements Listener {
                 ? EquipmentSlot.HAND
                 : EquipmentSlot.OFF_HAND;
         // This can optionally be ALSO called for OFF-HAND slot. Making sure to run logic only ONCE.
-        if (hand == EquipmentSlot.HAND)
+        if (hand == EquipmentSlot.HAND) {
             // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
-            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND)
-                // Further interaction handling is done by Npc#interact method...
+            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND) {
+                npc.interact(event.getPlayer(), ActionTrigger.ANY_CLICK);
                 npc.interact(event.getPlayer(), isAttack ? ActionTrigger.LEFT_CLICK : ActionTrigger.RIGHT_CLICK);
+            }
+        }
     }
 
 }

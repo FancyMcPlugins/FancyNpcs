@@ -309,8 +309,7 @@ public class NpcManagerImpl implements NpcManager {
             }
             if (!migrateActionList.isEmpty()) {
                 takeBackup(npcConfig);
-                actions.put(ActionTrigger.LEFT_CLICK, migrateActionList);
-                actions.put(ActionTrigger.RIGHT_CLICK, migrateActionList);
+                actions.put(ActionTrigger.ANY_CLICK, migrateActionList);
             }
 
             ConfigurationSection actiontriggerSection = npcConfig.getConfigurationSection("npcs." + id + ".actions");

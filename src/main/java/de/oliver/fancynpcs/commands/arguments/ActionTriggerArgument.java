@@ -33,6 +33,7 @@ public class ActionTriggerArgument {
     @Suggestions("action_trigger")
     public List<String> suggestions(final CommandContext<CommandSender> context, final CommandInput input) {
         return List.of(
+                ActionTrigger.ANY_CLICK.name().toLowerCase(),
                 ActionTrigger.LEFT_CLICK.name().toLowerCase(),
                 ActionTrigger.RIGHT_CLICK.name().toLowerCase()
         );

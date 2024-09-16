@@ -2,6 +2,10 @@ package de.oliver.fancynpcs.api.actions;
 
 public enum ActionTrigger {
     /**
+     * represents any click interaction by a player.
+     */
+    ANY_CLICK,
+    /**
      * represents a left click interaction by a player.
      */
     LEFT_CLICK,

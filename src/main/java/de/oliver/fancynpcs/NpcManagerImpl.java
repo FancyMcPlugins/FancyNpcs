@@ -298,15 +298,23 @@ public class NpcManagerImpl implements NpcManager {
 
             List<NpcAction.NpcActionData> migrateActionList = new ArrayList<>();
             int actionOrder = 0;
+
             for (String playerCommand : playerCommands) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
             }
+
             for (String serverCommand : serverCommands) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("console_command"), serverCommand));
             }
+
+            if (sendMessagesRandomly && !messages.isEmpty()) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("execute_random_action"), ""));
+            }
+            
             for (String message : messages) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
             }
+
             if (!migrateActionList.isEmpty()) {
                 takeBackup(npcConfig);
                 actions.put(ActionTrigger.ANY_CLICK, migrateActionList);

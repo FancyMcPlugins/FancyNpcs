@@ -60,9 +60,12 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
     implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
+
+    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}") // is shaded into the api
+    implementation("org.lushplugins.pluginupdater:PluginUpdater-API:${findProperty("pluginUpdaterVersion")}")
+
     implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
     implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
     implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
@@ -110,7 +113,7 @@ tasks {
 
     shadowJar {
         relocate("org.incendo", "de.oliver")
-        relocate("org.lushplugins.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
+        relocate("org.lushplugins", "de.oliver")
         archiveClassifier.set("")
         dependsOn(":api:shadowJar")
     }

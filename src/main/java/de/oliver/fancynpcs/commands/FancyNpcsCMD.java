@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
+import org.lushplugins.pluginupdater.api.updater.Updater;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -85,12 +86,42 @@ public enum FancyNpcsCMD {
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
+
+        translator.translate("fancynpcs_feature_flags_entry")
+                .replace("number", "2")
+                .replace("name", "Enable plugin updater")
+                .replace("id", FancyNpcs.ENABLE_PLUGIN_UPDATER_FEATURE_FLAG.getName())
+                .replace("state", getTranslatedState(FancyNpcs.ENABLE_PLUGIN_UPDATER_FEATURE_FLAG.isEnabled()))
+                .send(sender);
         translator.translate("fancynpcs_feature_flags_footer")
                 .replace("count", "2")
                 .replace("count_formatted", "· · 2")
                 .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
                 .replace("total_formatted", "· · 2")
                 .send(sender);
+    }
+
+    @Command("fancynpcs update")
+    @Permission("fancynpcs.command.fancynpcs.update")
+    public void onUpdate(final CommandSender sender) {
+        Updater updater = plugin.getUpdater();
+
+        System.out.println("Is already downloaded: " + updater.isAlreadyDownloaded());
+        System.out.println("Is update available: " + updater.isUpdateAvailable());
+        if (updater.isAlreadyDownloaded() || !updater.isUpdateAvailable()) {
+            sender.sendMessage("It looks like there is no new update available!");
+            return;
+        }
+
+        sender.sendMessage("Attempting to update plugin...");
+
+        updater.attemptDownload().thenAccept(success -> {
+            if (success) {
+                sender.sendMessage("Successfully updated plugin, restart the server to apply changes!");
+            } else {
+                sender.sendMessage("Failed to update plugin!");
+            }
+        });
     }
 
     // NOTE: Might need to be improved later down the line, should get work done for now.

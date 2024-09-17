@@ -27,9 +27,9 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven(url = "https://repo.papermc.io/repository/maven-public/")
-        maven(url = "https://repo.fancyplugins.de/releases")
-        maven(url = "https://repo.smrt-1.com/releases")
+        maven("https://repo.papermc.io/repository/maven-public/")
+        maven("https://repo.fancyplugins.de/releases")
+        maven("https://repo.lushplugins.org/releases/")
     }
 }
 
@@ -46,8 +46,11 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
     implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
+
+    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}") // is shaded into the api
+    implementation("org.lushplugins.pluginupdater:PluginUpdater-API:${findProperty("pluginUpdaterVersion")}")
+
     implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
     implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
     implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
@@ -95,6 +98,7 @@ tasks {
 
     shadowJar {
         relocate("org.incendo", "de.oliver")
+        relocate("org.lushplugins", "de.oliver")
         archiveClassifier.set("")
         dependsOn(":api:shadowJar")
     }

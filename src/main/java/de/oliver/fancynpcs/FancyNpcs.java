@@ -42,6 +42,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.lushplugins.pluginupdater.api.updater.Updater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +59,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
     public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
+    public static final FeatureFlag ENABLE_PLUGIN_UPDATER_FEATURE_FLAG = new FeatureFlag("enable-plugin-updater", "Enables the plugin updater / notifier", false);
 
     private static FancyNpcs instance;
     private final ScheduledExecutorService npcThread;
@@ -67,6 +69,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
     private final FancyAnalyticsAPI fancyAnalytics;
+    private Updater updater;
     private CloudCommandManager commandManager;
     private TextConfig textConfig;
     private Translator translator;
@@ -106,6 +109,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
         featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(ENABLE_PLUGIN_UPDATER_FEATURE_FLAG);
         featureFlagConfig.load();
 
         String mcVersion = Bukkit.getMinecraftVersion();
@@ -191,6 +195,18 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             getLogger().warning("Because you are not using paper, the plugin");
             getLogger().warning("might not work correctly.");
             getLogger().warning("--------------------------------------------------");
+        }
+
+        if (ENABLE_PLUGIN_UPDATER_FEATURE_FLAG.isEnabled()) {
+            updater = new Updater.Builder(instance)
+                    .modrinth("fancynpcs", true)
+                    .hangar("FancyNpcs")
+                    .github("FancyMcPlugins/FancyNpcs")
+                    .checkSchedule(config.isMuteVersionNotification() ? -1 : 5)
+                    .notify(!config.isMuteVersionNotification())
+                    .notificationPermission("fancynpcs.admin")
+                    .notificationMessage("<color:#ffe27a>A new</color> <color:#e0c01b>%plugin%</color> <color:#ffe27a>update is now available!</color> <color:#e0c01b>%current_version%</color> <color:#ffe27a>-></color> <color:#e0c01b>%latest_version%</color> <color:#adadad>(<u><click:run_command:'/fancynpcs update'>click here to download</click></u>)</color>")
+                    .build();
         }
 
         // register bStats and sentry
@@ -419,5 +435,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public JavaPlugin getPlugin() {
         return instance;
+    }
+
+    public Updater getUpdater() {
+        return updater;
     }
 }

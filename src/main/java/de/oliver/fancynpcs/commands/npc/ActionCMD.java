@@ -128,6 +128,13 @@ public class ActionCMD {
         }
 
         List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        if (number < 1 || number > currentActions.size()) {
+            translator
+                    .translate("npc_action_set_failure")
+                    .send(sender);
+            return;
+        }
+
         currentActions.set(number - 1, new NpcAction.NpcActionData(number, actionType, value));
         npc.getData().setActions(trigger, currentActions);
         translator
@@ -145,6 +152,13 @@ public class ActionCMD {
             final @Argument(suggestions = "ActionCMD/number_range") int number
     ) {
         List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        if (number < 1 || number > currentActions.size()) {
+            translator
+                    .translate("npc_action_remove_failure")
+                    .send(sender);
+            return;
+        }
+
         currentActions.remove(number - 1);
 
         npc.getData().setActions(trigger, reorderActions(currentActions));

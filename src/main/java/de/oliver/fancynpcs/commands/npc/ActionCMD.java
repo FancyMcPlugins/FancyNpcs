@@ -13,21 +13,18 @@ import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ActionCMD {
-    public static final ActionCMD INSTANCE = new ActionCMD();
-    private final static FancyNpcs PLUGIN = FancyNpcs.getInstance();
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+public enum ActionCMD {
+    INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
-
-    private ActionCMD() {
-    }
 
     @Command("npc action <npc> <trigger> add <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.add")
@@ -131,6 +128,7 @@ public class ActionCMD {
         if (number < 1 || number > currentActions.size()) {
             translator
                     .translate("npc_action_set_failure")
+                    .replaceStripped("number", String.valueOf(number))
                     .send(sender);
             return;
         }
@@ -155,6 +153,7 @@ public class ActionCMD {
         if (number < 1 || number > currentActions.size()) {
             translator
                     .translate("npc_action_remove_failure")
+                    .replaceStripped("number", String.valueOf(number))
                     .send(sender);
             return;
         }
@@ -181,6 +180,7 @@ public class ActionCMD {
         if (number <= 1) {
             translator
                     .translate("npc_action_move_up_failure")
+                    .replaceStripped("number", String.valueOf(number))
                     .send(sender);
             return;
         }
@@ -192,7 +192,6 @@ public class ActionCMD {
         npc.getData().setActions(trigger, reorderActions(currentActions));
         translator
                 .translate("npc_action_move_up_success")
-                .replaceStripped("number", String.valueOf(number))
                 .replaceStripped("number", String.valueOf(number))
                 .send(sender);
     }

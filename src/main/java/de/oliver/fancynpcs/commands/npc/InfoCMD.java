@@ -13,9 +13,11 @@ import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.util.Collection;
+
+import org.jetbrains.annotations.NotNull;
 
 public enum InfoCMD {
     INSTANCE; // SINGLETON
@@ -31,6 +33,7 @@ public enum InfoCMD {
     ) {
         final Location loc = npc.getData().getLocation();
         final Interval interactionCooldown = Interval.of(npc.getData().getInteractionCooldown(), Unit.SECONDS);
+        final int actionsTotal = npc.getData().getActions().values().stream().mapToInt(Collection::size).sum();
         // Getting the translated glowing state. This should never throw because all supported NamedTextColor objects has their mapping in GlowingColor enum.
         final String glowingStateTranslated = (npc.getData().isGlowing() && npc.getData().getGlowingColor() != null)
                 ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
@@ -57,7 +60,7 @@ public enum InfoCMD {
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
                 .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
                 .replace("scale", String.valueOf(npc.getData().getScale()))
-                .replace("actions_total", String.valueOf(npc.getData().getActions().size()))
+                .replace("actions_total", String.valueOf(actionsTotal))
                 .send(sender);
     }
 

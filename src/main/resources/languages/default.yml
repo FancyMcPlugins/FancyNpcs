@@ -110,22 +110,9 @@ messages:
     npc_interaction_cooldown: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
     npc_scale: "<dark_gray>› <gray>Syntax: {primaryColor}/npc scale {secondaryColor}(npc) (factor)"
     npc_list: "<dark_gray>› <gray>Syntax: {primaryColor}/npc list {secondaryColor}[filters...]"
-    npc_message: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}(add | set | remove | clear | list | send_randomly)"
-    npc_message_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}add {secondaryColor}(@none | message)"
-    npc_message_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}remove {secondaryColor}(number)"
-    npc_message_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}set {secondaryColor}(number) (@none | message)"
-    npc_message_send_randomly: "<dark_gray>› <gray>Syntax: {primaryColor}/npc message {secondaryColor}(npc) {primaryColor}send_randomly {secondaryColor}[state]"
     npc_move_here: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_here {secondaryColor}(npc)"
     npc_move_to: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world]"
     npc_nearby: "<dark_gray>› <gray>Syntax: {primaryColor}/npc nearby {secondaryColor}[filters...]"
-    npc_player_command: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) {primaryColor}(add | set | remove | clear | list)"
-    npc_player_command_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) {primaryColor}add {secondaryColor}(command)"
-    npc_player_command_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) {primaryColor}remove {secondaryColor}(number)"
-    npc_player_command_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc player_command {secondaryColor}(npc) {primaryColor}set {secondaryColor}(number) (command)"
-    npc_server_command: "<dark_gray>› <gray>Syntax: {primaryColor}/npc server_command {secondaryColor}(npc) {primaryColor}(add | set | remove | clear | list)"
-    npc_server_command_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc server_command {secondaryColor}(npc) {primaryColor}add {secondaryColor}(command)"
-    npc_server_command_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc server_command {secondaryColor}(npc) {primaryColor}remove {secondaryColor}(number)"
-    npc_server_command_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc server_command {secondaryColor}(npc) {primaryColor}set {secondaryColor}(number) (command)"
     npc_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc remove {secondaryColor}(npc)"
     npc_show_in_tab: "<dark_gray>› <gray>Syntax: {primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
     npc_skin: "<dark_gray>› <gray>Syntax: {primaryColor}/npc skin {secondaryColor}(npc) (@none | @mirror | name | url)"
@@ -178,6 +165,25 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Teleports you to the specified NPC.'>{primaryColor}/npc teleport {secondaryColor}(npc)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC should turn to the player when in range.'>{primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes the type of the NPC.'>{primaryColor}/npc type {secondaryColor}(npc) (type)"
+
+  # Commands (npc action)
+  npc_action_add_success: "<dark_gray>› <gray>Action has been added. There are {warningColor}{total}<gray> actions in total."
+  npc_action_add_before_success: "<dark_gray>› <gray>Action has been added before action {warningColor}{number}<gray>. There are {warningColor}{total}<gray> actions in total."
+  npc_action_add_after_success: "<dark_gray>› <gray>Action has been added after action {warningColor}{number}<gray>. There are {warningColor}{total}<gray> actions in total."
+  npc_action_set_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been updated. There are {warningColor}{total}<gray> actions in total."
+  npc_action_set_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
+  npc_action_move_up_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved up."
+  npc_action_move_up_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the top."
+  npc_action_move_down_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved down."
+  npc_action_move_down_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the bottom."
+  npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
+  npc_action_remove_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been removed. There are {warningColor}{total}<gray> actions in total."
+  npc_action_remove_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
+  npc_action_clear_success: "<dark_gray>› <gray>Actions have been cleared."
+  npc_action_list_header: "<dark_gray><st>---------------------</st>  <gray>Actions  <dark_gray><st>---------------------</st><newline>"
+  npc_action_list_entry: " <#848484>{number}. {warningColor}{action}<dark_gray>: <gray>{value}"
+  npc_action_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total}<gray> entries  <dark_gray><st>-------------</st>"
+  npc_action_list_failure_empty: "<dark_gray>› {errorColor}There are no actions in the list. Use {warningColor}/npc action (npc) (trigger) add (action){errorColor} to add your first action."
 
   # Commands (npc attribute)
   npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
@@ -243,7 +249,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Equipment of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><gray>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
     - "<dark_gray>› <hover:show_text:'<gray>Modified attributes of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><#848484>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
     - ""
-    - "<dark_gray>› <hover:show_text:'<gray>Use commands in {warningColor}/npc action (npc) (trigger)<gray> group to manage actions.'><gray>There are {warningColor}{actions_total}<gray> actions associated with this NPC.</hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Use commands from {warningColor}/npc action (npc) (trigger)<gray> group to manage actions.'><gray>There are {warningColor}{actions_total}<gray> actions associated with this NPC.</hover>"
     - ""
     - "<dark_gray>› {primaryColor}Can't find what you're looking for?"
     - "<dark_gray>› <gray>Open the chat window to see all information."
@@ -252,9 +258,6 @@ messages:
   # Commands (npc interaction_cooldown)
   npc_interaction_cooldown_set: "<dark_gray>› <gray>Interaction cooldown has been set to {warningColor}{time}<gray>."
   npc_interaction_cooldown_disabled: "<dark_gray>› <gray>Interaction cooldown has been disabled."
-
-  # Commands (scale)
-  npc_scale_set_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been scaled to {warningColor}{scale}<gray>."
 
   # Commands (npc list)
   npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"
@@ -278,24 +281,8 @@ messages:
   # Commands (npc remove)
   npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
 
-  # Commands (npc action)
-  npc_action_add_success: "<dark_gray>› <gray>Action has been added. There is {warningColor}{total}<gray> actions in total."
-  npc_action_add_before_success: "<dark_gray>› <gray>Action has been added before action {warningColor}{number}<gray>. There is {warningColor}{total}<gray> actions in total."
-  npc_action_add_after_success: "<dark_gray>› <gray>Action has been added after action {warningColor}{number}<gray>. There is {warningColor}{total}<gray> actions in total."
-  npc_action_set_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been updated. There is {warningColor}{total}<gray> actions in total."
-  npc_action_set_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
-  npc_action_move_up_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved up."
-  npc_action_move_up_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the top."
-  npc_action_move_down_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved down."
-  npc_action_move_down_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the bottom."
-  npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
-  npc_action_remove_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been removed. There is {warningColor}{total}<gray> actions in total."
-  npc_action_remove_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
-  npc_action_clear_success: "<dark_gray>› <gray>Actions have been cleared."
-  npc_action_list_header: "<dark_gray><st>---------------------</st>  <gray>Actions  <dark_gray><st>---------------------</st><newline>"
-  npc_action_list_entry: " <#848484>{number}. <gray>{action}: {value}"
-  npc_action_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total}<gray> entries  <dark_gray><st>-------------</st>"
-  npc_action_list_failure_empty: "<dark_gray>› {errorColor}There are no actions in the list. Use {warningColor}/npc action (npc) add (action){errorColor} to add your first action."
+  # Commands (scale)
+  npc_scale_set_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been scaled to {warningColor}{scale}<gray>."
 
   # Commands (npc show_in_tab)
   npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."

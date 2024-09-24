@@ -85,12 +85,6 @@ public enum FancyNpcsCMD {
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
-        translator.translate("fancynpcs_feature_flags_entry")
-                .replace("number", "2")
-                .replace("name", "FancyAnalytics")
-                .replace("id", FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.getName())
-                .replace("state", getTranslatedState(FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled()))
-                .send(sender);
         translator.translate("fancynpcs_feature_flags_footer")
                 .replace("count", "2")
                 .replace("count_formatted", "· · 2")

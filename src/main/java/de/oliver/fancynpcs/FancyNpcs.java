@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.MetricSupplier;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -22,6 +23,7 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.actions.types.*;
 import de.oliver.fancynpcs.api.utils.SkinCache;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
@@ -57,9 +59,9 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
-    public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
+    private final ExtendedFancyLogger fancyLogger = new ExtendedFancyLogger("FancyNpcs");
     private final ScheduledExecutorService npcThread;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
@@ -74,6 +76,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
     private SkinCacheYaml skinCache;
+    private ActionManagerImpl actionManager;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
@@ -105,7 +108,6 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
-        featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
         featureFlagConfig.load();
 
         String mcVersion = Bukkit.getMinecraftVersion();
@@ -153,6 +155,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
+        actionManager = new ActionManagerImpl();
+        actionManager.registerAction(new MessageAction());
+        actionManager.registerAction(new PlayerCommandAction());
+        actionManager.registerAction(new PlayerCommandAsOpAction());
+        actionManager.registerAction(new ConsoleCommandAction());
+        actionManager.registerAction(new SendToServerAction());
+        actionManager.registerAction(new WaitAction());
+        actionManager.registerAction(new ExecuteRandomActionAction());
 
         skinCache = new SkinCacheYaml();
         skinCache.loadAndInsertToSkinFetcher();
@@ -202,7 +212,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() && (isDevelopmentBuild || randomRes < 30)) {
+        if (isDevelopmentBuild || randomRes < 30) {
             fancyAnalytics.registerDefaultPluginMetrics(instance);
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());
@@ -260,6 +270,16 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 long count = npcManager.getAllNpcs().stream()
                         .filter(npc -> !npc.getData().getAttributes().isEmpty())
                         .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npc_actions", () -> {
+                long count = 0;
+
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    count += npc.getData().getActions().values().size();
+                }
 
                 return (double) count;
             }));
@@ -340,6 +360,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
     }
 
+    public ExtendedFancyLogger getFancyLogger() {
+        return fancyLogger;
+    }
+
     @Override
     public ScheduledExecutorService getNpcThread() {
         return npcThread;
@@ -376,6 +400,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public SkinCache getSkinCache() {
         return skinCache;
+    }
+
+    @Override
+    public ActionManagerImpl getActionManager() {
+        return actionManager;
     }
 
     @Override

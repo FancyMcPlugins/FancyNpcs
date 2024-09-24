@@ -3,6 +3,8 @@ package de.oliver.fancynpcs.commands;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.Message;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.commands.arguments.ActionTriggerArgument;
+import de.oliver.fancynpcs.commands.arguments.ActionTypeArgument;
 import de.oliver.fancynpcs.commands.arguments.LocationArgument;
 import de.oliver.fancynpcs.commands.arguments.NpcArgument;
 import de.oliver.fancynpcs.commands.exceptions.ReplyingParseException;
@@ -63,7 +65,8 @@ public final class CloudCommandManager {
     public @NotNull CloudCommandManager registerArguments() {
         annotationParser.parse(NpcArgument.INSTANCE);
         annotationParser.parse(LocationArgument.INSTANCE);
-        // Returning this instance of CloudCommandManager to keep "builder-like" flow.
+        annotationParser.parse(ActionTriggerArgument.INSTANCE);
+        annotationParser.parse(ActionTypeArgument.INSTANCE);
         return this;
     }
 
@@ -175,19 +178,17 @@ public final class CloudCommandManager {
         annotationParser.parse(InfoCMD.INSTANCE);
         annotationParser.parse(InteractionCooldownCMD.INSTANCE);
         annotationParser.parse(ListCMD.INSTANCE);
-        annotationParser.parse(MessageCMD.INSTANCE);
         annotationParser.parse(MoveHereCMD.INSTANCE);
         annotationParser.parse(MoveToCMD.INSTANCE);
         annotationParser.parse(NearbyCMD.INSTANCE);
         annotationParser.parse(HelpCMD.INSTANCE);
-        annotationParser.parse(PlayerCommandCMD.INSTANCE);
         annotationParser.parse(RemoveCMD.INSTANCE);
-        annotationParser.parse(ServerCommandCMD.INSTANCE);
         annotationParser.parse(ShowInTabCMD.INSTANCE);
         annotationParser.parse(SkinCMD.INSTANCE);
         annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
+        annotationParser.parse(ActionCMD.INSTANCE);
 
 
         String mcVersion = Bukkit.getMinecraftVersion();

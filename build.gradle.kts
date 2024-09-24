@@ -21,7 +21,7 @@ val supportedVersions =
 allprojects {
     group = "de.oliver"
     val buildId = System.getenv("BUILD_ID")
-    version = "2.2.2" + (if (buildId != null) ".$buildId" else "")
+    version = "2.2.2-NIS3" + (if (buildId != null) ".$buildId" else "")
     description = "Simple, lightweight and fast NPC plugin using packets"
 
     repositories {
@@ -48,6 +48,7 @@ dependencies {
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
     implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
+    implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
     implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
     implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
     implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")

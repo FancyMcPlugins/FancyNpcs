@@ -14,8 +14,7 @@
 
 <br />
 
-Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (
-and [Folia](https://papermc.io/software/folia)) servers using packets.
+Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and **[Folia](https://papermc.io/software/folia)**) servers using packets.
 
 </div>
 
@@ -24,11 +23,11 @@ and [Folia](https://papermc.io/software/folia)) servers using packets.
 With this plugin you can create NPCs with customizable properties like:
 
 - **Type** (Cow, Pig, Player, etc.)
-- **Skin** (from username or texture URL)
+- **Skin** (from username, texture URL or placeholder)
 - **Glowing** (in all colors)
 - **Attributes** (pose, visibility, variant, etc.)
 - **Equipment** (eg. holding a diamond sword and wearing leather armor)
-- **Interactions** (player commands, console commands, messages)
+- **Interactions** (execute commands, send messages etc.)
 - ...and much more!
 
 Check out **[images section](#images)** down below.
@@ -68,8 +67,7 @@ Official documentation is hosted **[here](https://fancyplugins.de/docs/fancynpcs
 
 ## Developer API
 
-More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)**
-and [Javadocs](https://fancyplugins.de/javadocs/fancynpcs/).
+More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and **[Javadocs](https://fancyplugins.de/javadocs/fancynpcs/)**.
 
 ### Maven
 

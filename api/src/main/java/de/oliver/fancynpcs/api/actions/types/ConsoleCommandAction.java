@@ -3,12 +3,10 @@ package de.oliver.fancynpcs.api.actions.types;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
-import me.dave.chatcolorhandler.ChatColorHandler;
-import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+import org.lushplugins.chatcolorhandler.ChatColorHandler;
+import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * Represents a console command action that can be executed for an NPC.
@@ -35,7 +33,7 @@ public class ConsoleCommandAction extends NpcAction {
             command = value.replace("{player}", context.getPlayer().getName());
         }
 
-        String finalCommand = ChatColorHandler.translate(command, context.getPlayer(), List.of(PlaceholderAPIParser.class));
+        String finalCommand = ChatColorHandler.translate(command, context.getPlayer(), ParserTypes.placeholder());
 
         FancyNpcsPlugin.get().getScheduler().runTask(null, () -> {
             try {

@@ -29,7 +29,7 @@ allprojects {
         mavenCentral()
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
-        maven(url = "https://repo.smrt-1.com/releases")
+        maven(url = "https://repo.lushplugins.org/releases")
     }
 }
 
@@ -46,7 +46,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
     implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
     implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")

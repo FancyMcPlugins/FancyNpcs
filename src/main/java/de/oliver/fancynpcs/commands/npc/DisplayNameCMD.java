@@ -4,7 +4,7 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentIteratorType;
 import net.kyori.adventure.text.event.ClickEvent;

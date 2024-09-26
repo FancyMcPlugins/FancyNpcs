@@ -2,7 +2,7 @@ package de.oliver.fancynpcs.api.actions.types;
 
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import org.jetbrains.annotations.NotNull;
 
 /**

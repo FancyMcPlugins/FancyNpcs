@@ -12,7 +12,7 @@ import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.Optionull;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;

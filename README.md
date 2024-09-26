@@ -14,8 +14,7 @@
 
 <br />
 
-Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and *
-*[Folia](https://papermc.io/software/folia)**) servers using packets.
+Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and **[Folia](https://papermc.io/software/folia)**) servers using packets.
 
 </div>
 
@@ -24,11 +23,11 @@ Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io
 With this plugin you can create NPCs with customizable properties like:
 
 - **Type** (Cow, Pig, Player, etc.)
-- **Skin** (from username or texture URL)
+- **Skin** (from username, texture URL or placeholder)
 - **Glowing** (in all colors)
 - **Attributes** (pose, visibility, variant, etc.)
 - **Equipment** (eg. holding a diamond sword and wearing leather armor)
-- **Interactions** (player commands, console commands, messages)
+- **Interactions** (execute commands, send messages etc.)
 - ...and much more!
 
 Check out **[images section](#images)** down below.
@@ -37,7 +36,7 @@ Check out **[images section](#images)** down below.
 
 ## Installation
 
-Paper **1.19.4** - **1.21** with **Java 21** (or higher) is required. Plugin should also work on **Paper** forks.
+Paper **1.19.4** - **1.21.1** with **Java 21** (or higher) is required. Plugin should also work on **Paper** forks.
 
 **Spigot** is **not** supported.
 
@@ -68,8 +67,7 @@ Official documentation is hosted **[here](https://fancyplugins.de/docs/fancynpcs
 
 ## Developer API
 
-More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and *
-*[Javadocs](https://fancyplugins.de/javadocs/fancynpcs/)**.
+More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and **[Javadocs](https://fancyplugins.de/javadocs/fancynpcs/)**.
 
 ### Maven
 

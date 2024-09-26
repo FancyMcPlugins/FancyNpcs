@@ -15,9 +15,13 @@ public interface FancyNpcsConfig {
 
     int getAutoSaveInterval();
 
+    int getNpcUpdateInterval();
+
     int getTurnToPlayerDistance();
 
     int getVisibilityDistance();
+
+    int getRemoveNpcsFromPlayerlistDelay();
 
     List<String> getBlockedCommands();
 

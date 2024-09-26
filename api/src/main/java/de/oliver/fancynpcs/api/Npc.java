@@ -1,16 +1,14 @@
 package de.oliver.fancynpcs.api;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
+import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutor;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
-import de.oliver.fancynpcs.api.events.NpcInteractEvent.InteractionType;
 import de.oliver.fancynpcs.api.utils.Interval;
 import de.oliver.fancynpcs.api.utils.Interval.Unit;
-import me.dave.chatcolorhandler.ChatColorHandler;
-import me.dave.chatcolorhandler.ModernChatColorHandler;
-import me.dave.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -19,7 +17,6 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,7 +53,7 @@ public abstract class Npc {
     public abstract void spawn(Player player);
 
     public void spawnForAll() {
-        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 spawn(onlinePlayer);
             }
@@ -105,7 +102,7 @@ public abstract class Npc {
     }
 
     public void checkAndUpdateVisibility(Player player) {
-        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
             boolean shouldBeVisible = shouldBeVisible(player);
             boolean wasVisible = isVisibleForPlayer.getOrDefault(player.getUniqueId(), false);
 
@@ -144,22 +141,27 @@ public abstract class Npc {
     }
 
     public void interact(Player player) {
-        interact(player, InteractionType.CUSTOM);
+        interact(player, ActionTrigger.CUSTOM);
     }
 
-    public void interact(Player player, InteractionType interactionType) {
+    public void interact(Player player, ActionTrigger actionTrigger) {
         if (data.getInteractionCooldown() > 0) {
             final long interactionCooldownMillis = (long) (data.getInteractionCooldown() * 1000);
             final long lastInteractionMillis = lastPlayerInteraction.getOrDefault(player.getUniqueId(), 0L);
             final Interval interactionCooldownLeft = Interval.between(lastInteractionMillis + interactionCooldownMillis, System.currentTimeMillis(), Unit.MILLISECONDS);
-            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0 && !FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
-                translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0) {
+
+                if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
+                    translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+                }
+
                 return;
             }
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommands(), data.getServerCommands(), data.getOnClick(), player, interactionType);
+        List<NpcAction.NpcActionData> actions = data.getActions(actionTrigger);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), actions, player, actionTrigger);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -171,51 +173,8 @@ public abstract class Npc {
             data.getOnClick().accept(player);
         }
 
-        // message
-        if (data.getMessages() != null && !data.getMessages().isEmpty()) {
-            if (data.isSendMessagesRandomly()) {
-                String randomMessage = data.getMessages().get(new Random().nextInt(data.getMessages().size()));
-                player.sendMessage(ModernChatColorHandler.translate(randomMessage, player));
-            } else {
-                for (String msg : data.getMessages()) {
-                    player.sendMessage(ModernChatColorHandler.translate(msg, player));
-                }
-            }
-        }
-
-        // serverCommand
-        for (String command : data.getServerCommands()) {
-            command = command.replace("{player}", player.getName());
-
-            String finalCommand = ChatColorHandler.translate(command, player, List.of(PlaceholderAPIParser.class));
-            FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
-        }
-
-        // playerCommand
-        if (data.getPlayerCommands() != null && !data.getPlayerCommands().isEmpty()) {
-            for (String cmd : data.getPlayerCommands()) {
-                String command = ChatColorHandler.translate(cmd, player, List.of(PlaceholderAPIParser.class));
-
-                if (command.toLowerCase().startsWith("server")) {
-                    String[] args = cmd.split(" ");
-                    if (args.length < 2) {
-                        return;
-                    }
-                    String server = args[1];
-
-                    ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                    out.writeUTF("Connect");
-                    out.writeUTF(server);
-                    player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
-                    return;
-                }
-
-                FancyNpcsPlugin.get().getScheduler().runTask(
-                        player.getLocation(),
-                        () -> player.chat("/" + command)
-                );
-            }
-        }
+        // actions
+        ActionExecutor.execute(new ActionExecutionContext(actionTrigger, this, player));
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

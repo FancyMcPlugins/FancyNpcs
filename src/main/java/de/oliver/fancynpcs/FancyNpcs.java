@@ -1,7 +1,10 @@
 package de.oliver.fancynpcs;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.MetricSupplier;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -20,10 +23,14 @@ import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.actions.types.*;
+import de.oliver.fancynpcs.api.utils.SkinCache;
+import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
+import de.oliver.fancynpcs.utils.SkinCacheYaml;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
@@ -31,44 +38,65 @@ import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
-import de.oliver.fancynpcs.v1_21.Npc_1_21;
+import de.oliver.fancynpcs.v1_21_1.Npc_1_21_1;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
-    public static final String[] SUPPORTED_VERSIONS = new String[]{"1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21"};
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
-    public static final FeatureFlag USE_FANCYANALYTICS_FEATURE_FLAG = new FeatureFlag("use-fancyanalytics", "Use FancyAnalytics to report plugin usage and errors", false);
 
     private static FancyNpcs instance;
+    private final ExtendedFancyLogger fancyLogger = new ExtendedFancyLogger("FancyNpcs");
+    private final ScheduledExecutorService npcThread;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
     private final VersionConfig versionConfig;
     private final FeatureFlagConfig featureFlagConfig;
     private final VersionFetcher versionFetcher;
+    private final FancyAnalyticsAPI fancyAnalytics;
     private CloudCommandManager commandManager;
     private TextConfig textConfig;
     private Translator translator;
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
+    private SkinCacheYaml skinCache;
+    private ActionManagerImpl actionManager;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
 
     public FancyNpcs() {
         instance = this;
+        this.npcThread = Executors.newSingleThreadScheduledExecutor(
+                new ThreadFactoryBuilder()
+                        .setNameFormat("FancyNpcs-Npcs")
+                        .build()
+        );
         this.scheduler = ServerSoftware.isFolia()
                 ? new FoliaScheduler(instance)
                 : new BukkitScheduler(instance);
         this.config = new FancyNpcsConfigImpl();
         this.versionFetcher = new MasterVersionFetcher(getName());
         this.versionConfig = new VersionConfig(this, versionFetcher);
+
+        fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
+        FancyAnalyticsAPI.setDisableLogging(true);
+
         this.featureFlagConfig = new FeatureFlagConfig(this);
     }
 
@@ -80,13 +108,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
-        featureFlagConfig.addFeatureFlag(USE_FANCYANALYTICS_FEATURE_FLAG);
         featureFlagConfig.load();
 
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
-            case "1.21" -> npcAdapter = Npc_1_21::new;
+            case "1.21", "1.21.1" -> npcAdapter = Npc_1_21_1::new;
             case "1.20.5", "1.20.6" -> npcAdapter = Npc_1_20_6::new;
             case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
             case "1.20.2" -> npcAdapter = Npc_1_20_2::new;
@@ -100,9 +127,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         PluginManager pluginManager = Bukkit.getPluginManager();
 
         if (npcAdapter == null) {
+            fancyAnalytics.sendEvent(new Event("pluginLoadingWithUnsupportedVersion")
+                    .withProperty("version", mcVersion)
+                    .withProperty("pluginVersion", getPluginMeta().getVersion())
+            );
+
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("Please update the server to " + String.join(" / ", SUPPORTED_VERSIONS) + ".");
+            getLogger().warning("This plugin only supports 1.19.4 - 1.21.1");
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
@@ -116,13 +148,24 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             return;
         }
 
-        FancyLib.setPlugin(instance);
+        FancyLib.setPlugin(instance, getFile());
 
         String mcVersion = Bukkit.getMinecraftVersion();
 
         config.reload();
 
         attributeManager = new AttributeManagerImpl();
+        actionManager = new ActionManagerImpl();
+        actionManager.registerAction(new MessageAction());
+        actionManager.registerAction(new PlayerCommandAction());
+        actionManager.registerAction(new PlayerCommandAsOpAction());
+        actionManager.registerAction(new ConsoleCommandAction());
+        actionManager.registerAction(new SendToServerAction());
+        actionManager.registerAction(new WaitAction());
+        actionManager.registerAction(new ExecuteRandomActionAction());
+
+        skinCache = new SkinCacheYaml();
+        skinCache.loadAndInsertToSkinFetcher();
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
@@ -134,19 +177,23 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         versionConfig.load();
 
-        new Thread(() -> {
-            ComparableVersion newestVersion = versionFetcher.fetchNewestVersion();
-            ComparableVersion currentVersion = new ComparableVersion(getDescription().getVersion());
-            if (newestVersion == null) {
-                getLogger().warning("Could not fetch latest plugin version");
-            } else if (newestVersion.compareTo(currentVersion) > 0) {
-                getLogger().warning("-------------------------------------------------------");
-                getLogger().warning("You are not using the latest version the FancyNpcs plugin.");
-                getLogger().warning("Please update to the newest version (" + newestVersion + ").");
-                getLogger().warning(versionFetcher.getDownloadUrl());
-                getLogger().warning("-------------------------------------------------------");
-            }
-        }).start();
+        final ComparableVersion currentVersion = new ComparableVersion(versionConfig.getVersion());
+        supplyAsync(getVersionFetcher()::fetchNewestVersion)
+                .thenApply(Objects::requireNonNull)
+                .whenComplete((newest, error) -> {
+                    if (error != null || newest.compareTo(currentVersion) <= 0) {
+                        return; // could not get the newest version or already on latest
+                    }
+
+                    getLogger().warning("""
+                            
+                            -------------------------------------------------------
+                            You are not using the latest version of the FancyNpcs plugin.
+                            Please update to the newest version (%s).
+                            %s
+                            -------------------------------------------------------
+                            """.formatted(newest, getVersionFetcher().getDownloadUrl()));
+                });
 
         if (!ServerSoftware.isPaper()) {
             getLogger().warning("--------------------------------------------------");
@@ -164,13 +211,13 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
-        if (USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled() || isDevelopmentBuild) {
-            FancyAnalyticsAPI fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
+        int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
+        if (isDevelopmentBuild || randomRes < 30) {
             fancyAnalytics.registerDefaultPluginMetrics(instance);
             fancyAnalytics.registerLogger(getLogger());
             fancyAnalytics.registerLogger(Bukkit.getLogger());
 
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", versionConfig::getHash));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
 
             fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
@@ -227,6 +274,16 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 return (double) count;
             }));
 
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npc_actions", () -> {
+                long count = 0;
+
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    count += npc.getData().getActions().values().size();
+                }
+
+                return (double) count;
+            }));
+
 
             fancyAnalytics.initialize();
         }
@@ -259,13 +316,34 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         visibilityTracker = new VisibilityTracker();
 
-        scheduler.runTaskTimerAsynchronously(0, 1, new TurnToPlayerTracker());
-        scheduler.runTaskTimerAsynchronously(0, 20, visibilityTracker);
+        npcThread.scheduleAtFixedRate(new TurnToPlayerTracker(), 0, 50, TimeUnit.MILLISECONDS);
+        npcThread.scheduleAtFixedRate(visibilityTracker, 0, 1, TimeUnit.SECONDS);
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
             scheduler.runTaskTimerAsynchronously(60L * 20L, autosaveInterval * 60L * 20L, () -> npcManager.saveNpcs(false));
         }
+
+        int npcUpdateInterval = config.getNpcUpdateInterval();
+        npcThread.scheduleAtFixedRate(() -> {
+            List<Npc> npcs = new ArrayList<>(npcManager.getAllNpcs());
+            for (Npc npc : npcs) {
+                boolean skinUpdated = npc.getData().getSkin() != null &&
+                        !npc.getData().getSkin().identifier().isEmpty() &&
+                        SkinFetcher.isPlaceholder(npc.getData().getSkin().identifier());
+
+                boolean displayNameUpdated = npc.getData().getDisplayName() != null &&
+                        !npc.getData().getDisplayName().isEmpty() &&
+                        SkinFetcher.isPlaceholder(npc.getData().getDisplayName());
+
+                if (skinUpdated || displayNameUpdated) {
+                    npc.removeForAll();
+                    npc.create();
+                    npc.spawnForAll();
+                }
+            }
+        }, 3, npcUpdateInterval, TimeUnit.MINUTES);
+
         // Creating new instance of CloudCommandManager and registering all needed components.
         // NOTE: Brigadier is disabled by default. More detailed information about that can be found in CloudCommandManager class.
         commandManager = new CloudCommandManager(this, false)
@@ -280,6 +358,15 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (npcManager != null) {
             npcManager.saveNpcs(true);
         }
+    }
+
+    public ExtendedFancyLogger getFancyLogger() {
+        return fancyLogger;
+    }
+
+    @Override
+    public ScheduledExecutorService getNpcThread() {
+        return npcThread;
     }
 
     @Override
@@ -304,6 +391,20 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     @Override
     public AttributeManagerImpl getAttributeManager() {
         return attributeManager;
+    }
+
+    public SkinCacheYaml getSkinCacheYaml() {
+        return skinCache;
+    }
+
+    @Override
+    public SkinCache getSkinCache() {
+        return skinCache;
+    }
+
+    @Override
+    public ActionManagerImpl getActionManager() {
+        return actionManager;
     }
 
     @Override

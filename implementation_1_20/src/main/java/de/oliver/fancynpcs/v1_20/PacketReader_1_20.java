@@ -4,7 +4,7 @@ import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.ReflectionUtils;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.events.NpcInteractEvent;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.events.PacketReceivedEvent;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -62,14 +62,16 @@ public class PacketReader_1_20 implements Listener {
         final EquipmentSlot hand = (interactPacket.getActionType() == ServerboundInteractPacket.ActionType.ATTACK)
                 ? EquipmentSlot.HAND
                 : ReflectionUtils.getValue(ReflectionUtils.getValue(interactPacket, "b"), "a").toString().equals("MAIN_HAND") // ServerboundInteractPacket.InteractionAction.hand
-                        ? EquipmentSlot.HAND
-                        : EquipmentSlot.OFF_HAND;
+                ? EquipmentSlot.HAND
+                : EquipmentSlot.OFF_HAND;
         // This can optionally be ALSO called for OFF-HAND slot. Making sure to run logic only ONCE.
-        if (hand == EquipmentSlot.HAND)
+        if (hand == EquipmentSlot.HAND) {
             // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
-            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND)
-                // Further interaction handling is done by Npc#interact method...
-                npc.interact(event.getPlayer(), isAttack ? NpcInteractEvent.InteractionType.LEFT_CLICK : NpcInteractEvent.InteractionType.RIGHT_CLICK);
+            if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND) {
+                npc.interact(event.getPlayer(), ActionTrigger.ANY_CLICK);
+                npc.interact(event.getPlayer(), isAttack ? ActionTrigger.LEFT_CLICK : ActionTrigger.RIGHT_CLICK);
+            }
+        }
     }
 
 }

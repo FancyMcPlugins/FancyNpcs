@@ -1,13 +1,14 @@
 plugins {
     id("java-library")
     id("maven-publish")
-    id("io.github.goooler.shadow") version "8.1.7"
+    id("io.github.goooler.shadow") version "8.1.8"
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
 
     implementation("me.dave:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }

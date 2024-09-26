@@ -1,9 +1,8 @@
 package de.oliver.fancynpcs;
 
-import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.NpcAttribute;
-import de.oliver.fancynpcs.api.NpcData;
-import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.fancynpcs.api.*;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
+import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -11,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -19,6 +19,8 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -41,7 +43,7 @@ public class NpcManagerImpl implements NpcManager {
 
     public void registerNpc(Npc npc) {
         if (!FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled() && npcs.values().stream().anyMatch(npc1 -> npc1.getData().getName().equals(npc.getData().getName()))) {
-            throw new IllegalStateException("An NPC with the name " + npc.getData().getName() + " already exists!");
+            throw new IllegalStateException("An NPC with this name already exists");
         } else {
             npcs.put(npc.getData().getId(), npc);
         }
@@ -136,6 +138,13 @@ public class NpcManagerImpl implements NpcManager {
 
             NpcData data = npc.getData();
 
+            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in when new interaction system is added
+            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.value", null); //TODO: remove in next version
+            npcConfig.set("npcs." + data.getId() + ".skin.signature", null); //TODO: remove in next version
+
             npcConfig.set("npcs." + data.getId() + ".name", data.getName());
             npcConfig.set("npcs." + data.getId() + ".creator", data.getCreator().toString());
             npcConfig.set("npcs." + data.getId() + ".displayName", data.getDisplayName());
@@ -152,22 +161,19 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".glowing", data.isGlowing());
             npcConfig.set("npcs." + data.getId() + ".glowingColor", data.getGlowingColor().toString());
             npcConfig.set("npcs." + data.getId() + ".turnToPlayer", data.isTurnToPlayer());
-            npcConfig.set("npcs." + data.getId() + ".messages", data.getMessages());
-            npcConfig.set("npcs." + data.getId() + ".message", null); //TODO: remove in 2.1.1
-            npcConfig.set("npcs." + data.getId() + ".playerCommands", data.getPlayerCommands());
-            npcConfig.set("npcs." + data.getId() + ".playerCommand", null); //TODO: remove in 2.1.1
-            npcConfig.set("npcs." + data.getId() + ".serverCommands", data.getServerCommands());
-            npcConfig.set("npcs." + data.getId() + ".serverCommand", null); //TODO: remove in 2.1.1
-            npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", data.isSendMessagesRandomly());
+            npcConfig.set("npcs." + data.getId() + ".messages", null);
+            npcConfig.set("npcs." + data.getId() + ".playerCommands", null);
+            npcConfig.set("npcs." + data.getId() + ".serverCommands", null);
+            npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", null);
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
-            npcConfig.set("npcs." + data.getId() + ".mirrorSkin", data.isMirrorSkin());
 
             if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.value", data.getSkin().getValue());
-                npcConfig.set("npcs." + data.getId() + ".skin.signature", data.getSkin().getSignature());
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
+            } else {
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
+            npcConfig.set("npcs." + data.getId() + ".skin.mirrorSkin", data.isMirrorSkin());
 
             if (data.getEquipment() != null) {
                 for (Map.Entry<NpcEquipmentSlot, ItemStack> entry : data.getEquipment().entrySet()) {
@@ -178,6 +184,18 @@ public class NpcManagerImpl implements NpcManager {
             for (NpcAttribute attribute : FancyNpcs.getInstance().getAttributeManager().getAllAttributesForEntityType(data.getType())) {
                 String value = data.getAttributes().getOrDefault(attribute, null);
                 npcConfig.set("npcs." + data.getId() + ".attributes." + attribute.getName(), value);
+            }
+
+            npcConfig.set("npcs." + data.getId() + ".actions", null);
+            for (Map.Entry<ActionTrigger, List<NpcAction.NpcActionData>> entry : npc.getData().getActions().entrySet()) {
+                for (NpcAction.NpcActionData actionData : entry.getValue()) {
+                    if (actionData == null) {
+                        continue;
+                    }
+
+                    npcConfig.set("npcs." + data.getId() + ".actions." + entry.getKey().name() + "." + actionData.order() + ".action", actionData.action().getName());
+                    npcConfig.set("npcs." + data.getId() + ".actions." + entry.getKey().name() + "." + actionData.order() + ".value", actionData.value());
+                }
             }
 
             npc.setDirty(false);
@@ -240,12 +258,28 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
-            String skinValue = npcConfig.getString("npcs." + id + ".skin.value");
-            String skinSignature = npcConfig.getString("npcs." + id + ".skin.signature");
-            SkinFetcher skin = null;
-            if (skinIdentifier.length() > 0) {
-                skin = new SkinFetcher(skinIdentifier, skinValue, skinSignature);
+            SkinFetcher.SkinData skin = null;
+            if (!skinIdentifier.isEmpty()) {
+                skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
             }
+
+            if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
+                // using old skin system --> take backup
+                takeBackup(npcConfig);
+
+                String value = npcConfig.getString("npcs." + id + ".skin.value");
+                String signature = npcConfig.getString("npcs." + id + ".skin.signature");
+
+                if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
+                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
+                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
+                }
+            }
+
+            boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version
+            boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + ".skin.mirrorSkin");
 
             boolean showInTab = npcConfig.getBoolean("npcs." + id + ".showInTab");
             boolean spawnEntity = npcConfig.getBoolean("npcs." + id + ".spawnEntity");
@@ -253,20 +287,76 @@ public class NpcManagerImpl implements NpcManager {
             boolean glowing = npcConfig.getBoolean("npcs." + id + ".glowing");
             NamedTextColor glowingColor = NamedTextColor.NAMES.value(npcConfig.getString("npcs." + id + ".glowingColor", "white"));
             boolean turnToPlayer = npcConfig.getBoolean("npcs." + id + ".turnToPlayer");
+
+            Map<ActionTrigger, List<NpcAction.NpcActionData>> actions = new ConcurrentHashMap<>();
+
+            //TODO: remove these fields next version
             boolean sendMessagesRandomly = npcConfig.getBoolean("npcs." + id + ".sendMessagesRandomly", false);
-
-            @Deprecated(since = "2.0.8") String playerCommand = npcConfig.getString("npcs." + id + ".playerCommand"); //TODO: remove in 2.1.1
             List<String> playerCommands = npcConfig.getStringList("npcs." + id + ".playerCommands");
-
-            @Deprecated(since = "2.0.7") String message = npcConfig.getString("npcs." + id + ".message"); // TODO: remove in 2.1.1
             List<String> messages = npcConfig.getStringList("npcs." + id + ".messages");
-
-            @Deprecated(since = "2.0.10") String serverCommand = npcConfig.getString("npcs." + id + ".serverCommand"); // TODO: remove in 2.1.1
             List<String> serverCommands = npcConfig.getStringList("npcs." + id + ".serverCommands");
+
+            List<NpcAction.NpcActionData> migrateActionList = new ArrayList<>();
+            int actionOrder = 0;
+
+            for (String playerCommand : playerCommands) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("player_command"), playerCommand));
+            }
+
+            for (String serverCommand : serverCommands) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("console_command"), serverCommand));
+            }
+
+            if (sendMessagesRandomly && !messages.isEmpty()) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("execute_random_action"), ""));
+            }
+            
+            for (String message : messages) {
+                migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
+            }
+
+            if (!migrateActionList.isEmpty()) {
+                takeBackup(npcConfig);
+                actions.put(ActionTrigger.ANY_CLICK, migrateActionList);
+            }
+
+            ConfigurationSection actiontriggerSection = npcConfig.getConfigurationSection("npcs." + id + ".actions");
+            if (actiontriggerSection != null) {
+                actiontriggerSection.getKeys(false).forEach(trigger -> {
+                    ActionTrigger actionTrigger = ActionTrigger.getByName(trigger);
+                    if (actionTrigger == null) {
+                        System.out.println("Could not find action trigger: " + trigger);
+                        return;
+                    }
+
+                    List<NpcAction.NpcActionData> actionList = new ArrayList<>();
+                    ConfigurationSection actionsSection = npcConfig.getConfigurationSection("npcs." + id + ".actions." + trigger);
+                    if (actionsSection != null) {
+                        actionsSection.getKeys(false).forEach(order -> {
+                            String actionName = npcConfig.getString("npcs." + id + ".actions." + trigger + "." + order + ".action");
+                            String value = npcConfig.getString("npcs." + id + ".actions." + trigger + "." + order + ".value");
+                            NpcAction action = FancyNpcs.getInstance().getActionManager().getActionByName(actionName);
+                            if (action == null) {
+                                System.out.println("Could not find action: " + actionName);
+                                return;
+                            }
+
+                            try {
+                                actionList.add(new NpcAction.NpcActionData(Integer.parseInt(order), action, value));
+                            } catch (NumberFormatException e) {
+                                System.out.println("Could not parse order: " + order);
+                            }
+                        });
+
+                        actions.put(actionTrigger, actionList);
+                    }
+                });
+            }
+
+            //TODO: add migration for sendMessagesRandomly
 
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
             float scale = (float) npcConfig.getDouble("npcs." + id + ".scale", 1);
-            boolean mirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin");
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -285,25 +375,28 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
-            // TODO: remove when the 'message' field is removed, and just pass in the 'messages'
-            if (messages.isEmpty() && message != null && !message.isEmpty()) {
-                messages = new ArrayList<>();
-                messages.add(message);
-            }
-
-            // TODO: remove when the 'playerCommand' field is removed, and just pass in the 'playerCommands'
-            if (playerCommands.isEmpty() && playerCommand != null && !playerCommand.isEmpty()) {
-                playerCommands = new ArrayList<>();
-                playerCommands.add(playerCommand);
-            }
-
-            // TODO: remove when the 'serverCommand' field is removed, and just pass in the 'serverCommands'
-            if (serverCommands.isEmpty() && serverCommand != null && !serverCommand.isEmpty()) {
-                serverCommands = new ArrayList<>();
-                serverCommands.add(serverCommand);
-            }
-
-            NpcData data = new NpcData(id, name, creator, displayName, skin, location, showInTab, spawnEntity, collidable, glowing, glowingColor, type, new HashMap<>(), turnToPlayer, null, messages, sendMessagesRandomly, serverCommands, playerCommands, interactionCooldown, scale, attributes, mirrorSkin);
+            NpcData data = new NpcData(
+                    id,
+                    name,
+                    creator,
+                    displayName,
+                    skin,
+                    location,
+                    showInTab,
+                    spawnEntity,
+                    collidable,
+                    glowing,
+                    glowingColor,
+                    type,
+                    new HashMap<>(),
+                    turnToPlayer,
+                    null,
+                    actions,
+                    interactionCooldown,
+                    scale,
+                    attributes,
+                    mirrorSkin
+            );
             Npc npc = npcAdapter.apply(data);
 
             if (npcConfig.isConfigurationSection("npcs." + id + ".equipment")) {
@@ -329,5 +422,34 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         loadNpcs();
+    }
+
+    private void takeBackup(YamlConfiguration npcConfig) {
+        String folderPath = "plugins" + File.separator + "FancyNpcs" + File.separator + "/backups";
+        File backupDir = new File(folderPath);
+        if (!backupDir.exists()) {
+            backupDir.mkdirs();
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        String backupFileName = "npcs-" + formatter.format(now) + ".yml";
+        File backupFile = new File(folderPath + File.separator + backupFileName);
+        if (backupFile.exists()) {
+            backupFile.delete();
+        }
+
+        try {
+            backupFile.createNewFile();
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not create backup file for NPCs");
+        }
+
+        try {
+            npcConfig.save(backupFile);
+        } catch (IOException e) {
+            FancyNpcs.getInstance().getLogger().severe("Could not save backup file for NPCs");
+        }
     }
 }

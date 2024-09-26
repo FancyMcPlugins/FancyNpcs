@@ -4,21 +4,48 @@ import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.tests.impl.FancyNpcsTests;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
+
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 public enum FancyNpcsCMD {
     INSTANCE; // SINGLETON
 
     private final FancyNpcs plugin = FancyNpcs.getInstance();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Command("fancynpcs version")
     @Permission("fancynpcs.command.fancynpcs.version")
     public void onVersion(final CommandSender sender) {
         plugin.getVersionConfig().checkVersionAndDisplay(sender, false);
+    }
+
+    @Command("fancynpcs test")
+    @Permission("fancynpcs.command.fancynpcs.test")
+    public void onTest(final Player player) {
+        FancyNpcsTests tests = new FancyNpcsTests();
+        boolean tested = tests.runAllTests(player);
+
+        if (tested) {
+            translator.translate("fancynpcs_test_success")
+                    .replace("player", player.getName())
+                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
+                    .replace("count", String.valueOf(tests.getTestCount()))
+                    .send(player);
+        } else {
+            translator.translate("fancynpcs_test_failure")
+                    .replace("player", player.getName())
+                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
+                    .send(player);
+        }
     }
 
     @Command("fancynpcs reload")
@@ -57,12 +84,6 @@ public enum FancyNpcsCMD {
                 .replace("name", "Player NPCs")
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
-                .send(sender);
-        translator.translate("fancynpcs_feature_flags_entry")
-                .replace("number", "2")
-                .replace("name", "FancyAnalytics")
-                .replace("id", FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.getName())
-                .replace("state", getTranslatedState(FancyNpcs.USE_FANCYANALYTICS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
         translator.translate("fancynpcs_feature_flags_footer")
                 .replace("count", "2")

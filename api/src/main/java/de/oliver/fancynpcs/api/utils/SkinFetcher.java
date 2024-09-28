@@ -5,13 +5,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
-import org.lushplugins.chatcolorhandler.ChatColorHandler;
-import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lushplugins.chatcolorhandler.ChatColorHandler;
+import org.lushplugins.chatcolorhandler.parsers.custom.MiniMessagePlaceholderParser;
+import org.lushplugins.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -37,7 +38,7 @@ public final class SkinFetcher {
      */
     public static CompletableFuture<SkinData> fetchSkin(String identifier) {
         return CompletableFuture.supplyAsync(() -> {
-            String parsedIdentifier = ChatColorHandler.translate(identifier, ParserTypes.placeholder());
+            String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.INSTANCE, MiniMessagePlaceholderParser.INSTANCE));
 
             // try to get skin from cache
             if (skinCache.containsKey(parsedIdentifier)) {

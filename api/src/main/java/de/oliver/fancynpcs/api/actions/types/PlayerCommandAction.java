@@ -5,9 +5,12 @@ import com.google.common.io.ByteStreams;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
-import org.lushplugins.chatcolorhandler.ChatColorHandler;
-import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 import org.jetbrains.annotations.NotNull;
+import org.lushplugins.chatcolorhandler.ChatColorHandler;
+import org.lushplugins.chatcolorhandler.parsers.custom.MiniMessagePlaceholderParser;
+import org.lushplugins.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+
+import java.util.List;
 
 /**
  * Represents a player command action that can be executed when triggered by an NPC interaction.
@@ -31,7 +34,7 @@ public class PlayerCommandAction extends NpcAction {
             return;
         }
 
-        String command = ChatColorHandler.translate(value, context.getPlayer(), ParserTypes.placeholder());
+        String command = ChatColorHandler.translate(value, context.getPlayer(), List.of(PlaceholderAPIParser.INSTANCE, MiniMessagePlaceholderParser.INSTANCE));
 
         if (command.toLowerCase().startsWith("server")) {
             String[] args = value.split(" ");

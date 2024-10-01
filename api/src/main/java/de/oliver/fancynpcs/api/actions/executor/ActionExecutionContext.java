@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.api.actions.executor;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.types.BlockUntilDoneAction;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
@@ -139,6 +140,16 @@ public class ActionExecutionContext {
      */
     public boolean isTerminated() {
         return actionIndex == -1;
+    }
+
+    public boolean shouldBlockUntilDone() {
+        for (NpcAction.NpcActionData action : actions) {
+            if (action.action() instanceof BlockUntilDoneAction) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public ActionTrigger getTrigger() {

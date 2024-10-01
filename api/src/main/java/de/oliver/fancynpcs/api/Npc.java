@@ -4,7 +4,6 @@ import de.oliver.fancylib.RandomUtils;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
-import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutor;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
 import de.oliver.fancynpcs.api.utils.Interval;
@@ -174,7 +173,7 @@ public abstract class Npc {
         }
 
         // actions
-        ActionExecutor.execute(new ActionExecutionContext(actionTrigger, this, player));
+        ActionExecutor.execute(actionTrigger, this, player);
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

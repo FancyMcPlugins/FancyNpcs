@@ -11,8 +11,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
-import org.lushplugins.chatcolorhandler.parsers.custom.MiniMessagePlaceholderParser;
-import org.lushplugins.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
+import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -20,7 +19,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -38,7 +40,7 @@ public final class SkinFetcher {
      */
     public static CompletableFuture<SkinData> fetchSkin(String identifier) {
         return CompletableFuture.supplyAsync(() -> {
-            String parsedIdentifier = ChatColorHandler.translate(identifier, List.of(PlaceholderAPIParser.INSTANCE, MiniMessagePlaceholderParser.INSTANCE));
+            String parsedIdentifier = ChatColorHandler.translate(identifier, ParserTypes.placeholder());
 
             // try to get skin from cache
             if (skinCache.containsKey(parsedIdentifier)) {

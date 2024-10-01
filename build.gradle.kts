@@ -96,6 +96,7 @@ tasks {
 
     shadowJar {
         relocate("org.incendo", "de.oliver")
+        relocate("org.lushplugins.chatcolorhandler", "de.oliver.fancynpcs.libs.chatcolorhandler")
         archiveClassifier.set("")
         dependsOn(":api:shadowJar")
     }

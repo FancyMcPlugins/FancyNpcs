@@ -7,10 +7,7 @@ import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
 import org.jetbrains.annotations.NotNull;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
-import org.lushplugins.chatcolorhandler.parsers.custom.MiniMessagePlaceholderParser;
-import org.lushplugins.chatcolorhandler.parsers.custom.PlaceholderAPIParser;
-
-import java.util.List;
+import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 
 /**
  * PlayerCommandAsOpAction is a npc action that allows a player to execute a command as an operator when triggered by an NPC interaction.
@@ -34,7 +31,7 @@ public class PlayerCommandAsOpAction extends NpcAction {
             return;
         }
 
-        String command = ChatColorHandler.translate(value, context.getPlayer(), List.of(PlaceholderAPIParser.INSTANCE, MiniMessagePlaceholderParser.INSTANCE));
+        String command = ChatColorHandler.translate(value, context.getPlayer(), ParserTypes.placeholder());
 
         if (command.toLowerCase().startsWith("server")) {
             String[] args = value.split(" ");

@@ -1,9 +1,9 @@
 package de.oliver.fancynpcs;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import de.oliver.fancyanalytics.api.Event;
 import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
-import de.oliver.fancyanalytics.api.MetricSupplier;
+import de.oliver.fancyanalytics.api.events.Event;
+import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
@@ -94,8 +94,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         this.versionFetcher = new MasterVersionFetcher(getName());
         this.versionConfig = new VersionConfig(this, versionFetcher);
 
-        fancyAnalytics = new FancyAnalyticsAPI("34c5a33d-0ff0-48b1-8b1c-53620a690c6e", "ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
-        FancyAnalyticsAPI.setDisableLogging(true);
+        fancyAnalytics = new FancyAnalyticsAPI("ca2baf32-1fd2-4baa-a38a-f12ed8ab24a4", "Y7EP2jJjYWExZjdmMDkwNTQ5ZmRbIGUI");
+        fancyAnalytics.getConfig().setDisableLogging(true);
 
         this.featureFlagConfig = new FeatureFlagConfig(this);
     }
@@ -214,9 +214,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
         if (isDevelopmentBuild || randomRes < 30) {
-            fancyAnalytics.registerDefaultPluginMetrics(instance);
-            fancyAnalytics.registerLogger(getLogger());
-            fancyAnalytics.registerLogger(Bukkit.getLogger());
+            fancyAnalytics.registerMinecraftPluginMetrics(instance);
+            fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
+            fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
 
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
 

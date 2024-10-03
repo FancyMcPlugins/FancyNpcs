@@ -5,6 +5,10 @@ import de.oliver.fancyanalytics.api.FancyAnalyticsAPI;
 import de.oliver.fancyanalytics.api.events.Event;
 import de.oliver.fancyanalytics.api.metrics.MetricSupplier;
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
+import de.oliver.fancyanalytics.logger.LogLevel;
+import de.oliver.fancyanalytics.logger.appender.Appender;
+import de.oliver.fancyanalytics.logger.appender.ConsoleAppender;
+import de.oliver.fancyanalytics.logger.appender.JsonAppender;
 import de.oliver.fancylib.FancyLib;
 import de.oliver.fancylib.Metrics;
 import de.oliver.fancylib.VersionConfig;
@@ -45,10 +49,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Random;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -61,7 +64,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
 
     private static FancyNpcs instance;
-    private final ExtendedFancyLogger fancyLogger = new ExtendedFancyLogger("FancyNpcs");
+    private final ExtendedFancyLogger fancyLogger;
     private final ScheduledExecutorService npcThread;
     private final FancyScheduler scheduler;
     private final FancyNpcsConfigImpl config;
@@ -82,6 +85,21 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public FancyNpcs() {
         instance = this;
+
+        Appender consoleAppender = new ConsoleAppender("[{loggerName}] ({threadName}) {logLevel}: {message}");
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+        File logsFile = new File("plugins/FancyNpcs/logs/FN-logs-" + date + ".json");
+        if (!logsFile.exists()) {
+            try {
+                logsFile.getParentFile().mkdirs();
+                logsFile.createNewFile();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
+        this.fancyLogger = new ExtendedFancyLogger("FancyNpcs", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
+
         this.npcThread = Executors.newSingleThreadScheduledExecutor(
                 new ThreadFactoryBuilder()
                         .setNameFormat("FancyNpcs-Npcs")
@@ -132,6 +150,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                     .withProperty("pluginVersion", getPluginMeta().getVersion())
             );
 
+            fancyLogger.error("Unsupported minecraft server version.");
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
             getLogger().warning("This plugin only supports 1.19.4 - 1.21.1");
@@ -186,6 +205,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                         return; // could not get the newest version or already on latest
                     }
 
+                    fancyLogger.warn("You are not using the latest version of the FancyNpcs plugin.");
                     getLogger().warning("""
                             
                             -------------------------------------------------------
@@ -197,6 +217,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 });
 
         if (!ServerSoftware.isPaper()) {
+            fancyLogger.warn("You are not using Paper as server software.");
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("It is recommended to use Paper as server software.");
             getLogger().warning("Because you are not using paper, the plugin");
@@ -351,6 +372,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 .registerArguments()
                 .registerExceptionHandlers()
                 .registerCommands();
+
+        fancyLogger.info("FancyNpcs (" + versionConfig.getVersion() + ") has been enabled.");
     }
 
     @Override
@@ -359,6 +382,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         if (npcManager != null) {
             npcManager.saveNpcs(true);
         }
+
+        fancyLogger.info("FancyNpcs has been disabled.");
     }
 
     public ExtendedFancyLogger getFancyLogger() {

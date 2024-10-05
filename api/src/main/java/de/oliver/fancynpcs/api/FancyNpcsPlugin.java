@@ -11,7 +11,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
-import java.util.logging.Logger;
 
 public interface FancyNpcsPlugin {
 
@@ -26,8 +25,6 @@ public interface FancyNpcsPlugin {
     }
 
     JavaPlugin getPlugin();
-
-    Logger getLogger();
 
     ExtendedFancyLogger getFancyLogger();
 

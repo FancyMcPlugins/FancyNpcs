@@ -90,7 +90,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         Appender consoleAppender = new ConsoleAppender("[{loggerName}] ({threadName}) {logLevel}: {message}");
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
-        File logsFile = new File("plugins/FancyNpcs/logs/FN-logs-" + date + ".json");
+        File logsFile = new File("plugins/FancyNpcs/logs/FN-logs-" + date + ".txt");
         if (!logsFile.exists()) {
             try {
                 logsFile.getParentFile().mkdirs();

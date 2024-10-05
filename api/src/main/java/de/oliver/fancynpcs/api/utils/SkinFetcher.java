@@ -145,8 +145,8 @@ public final class SkinFetcher {
                 FancyNpcsPlugin.get().getSkinCache().upsert(new SkinCacheData(skinData, System.currentTimeMillis(), 1000L * 60 * 60 * 24 + randomFromTo(15, 30))); // 15-30 days
                 return skinData;
             } catch (IOException e) {
-                FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for UUID " + uuid);
-                FancyNpcsPlugin.get().getPlugin().getLogger().warning(e.getMessage());
+                FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for UUID " + uuid);
+                FancyNpcsPlugin.get().getFancyLogger().warn(e.getMessage());
                 return null;
             }
         });
@@ -183,8 +183,8 @@ public final class SkinFetcher {
                 skinCache.put(skinURL, skinData);
                 return skinData;
             } catch (IOException e) {
-                FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for URL " + skinURL);
-                FancyNpcsPlugin.get().getPlugin().getLogger().warning(e.getMessage());
+                FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for URL " + skinURL);
+                FancyNpcsPlugin.get().getFancyLogger().warn(e.getMessage());
                 return null;
             }
         });
@@ -227,7 +227,7 @@ public final class SkinFetcher {
                     SkinData skinData = fetchSkin(identifier).join();
                     return skinData == null ? null : skinData.value();
                 } catch (Exception e) {
-                    FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for " + identifier);
+                    FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for " + identifier);
                 }
             }
 
@@ -246,7 +246,7 @@ public final class SkinFetcher {
                     SkinData skinData = fetchSkin(identifier).join();
                     return skinData == null ? null : skinData.signature();
                 } catch (Exception e) {
-                    FancyNpcsPlugin.get().getPlugin().getLogger().warning("Failed to fetch skin data for " + identifier);
+                    FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for " + identifier);
                 }
             }
 

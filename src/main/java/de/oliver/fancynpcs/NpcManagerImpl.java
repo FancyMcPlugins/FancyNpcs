@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs;
 
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
@@ -28,6 +29,7 @@ import java.util.function.Function;
 public class NpcManagerImpl implements NpcManager {
 
     private final JavaPlugin plugin;
+    private final ExtendedFancyLogger logger;
     private final Function<NpcData, Npc> npcAdapter;
     private final File npcConfigFile;
     private final Map<String, Npc> npcs; // npc id -> npc
@@ -35,6 +37,7 @@ public class NpcManagerImpl implements NpcManager {
 
     public NpcManagerImpl(JavaPlugin plugin, Function<NpcData, Npc> npcAdapter) {
         this.plugin = plugin;
+        this.logger = FancyNpcs.getInstance().getFancyLogger();
         this.npcAdapter = npcAdapter;
         npcs = new ConcurrentHashMap<>();
         npcConfigFile = new File("plugins" + File.separator + "FancyNpcs" + File.separator + "npcs.yml");
@@ -57,7 +60,8 @@ public class NpcManagerImpl implements NpcManager {
         try {
             npcConfig.save(npcConfigFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Could not save npc config file");
+            logger.error(e);
         }
     }
 
@@ -119,7 +123,8 @@ public class NpcManagerImpl implements NpcManager {
             try {
                 npcConfigFile.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error("Could not create npc config file");
+                logger.error(e);
                 return;
             }
         }
@@ -232,6 +237,7 @@ public class NpcManagerImpl implements NpcManager {
             try {
                 location = npcConfig.getLocation("npcs." + id + ".location");
             } catch (Exception ignored) {
+                logger.warn("Could not load location for npc '" + id + "'");
             }
 
             if (location == null) {
@@ -239,12 +245,12 @@ public class NpcManagerImpl implements NpcManager {
                 World world = Bukkit.getWorld(worldName);
 
                 if (world == null) {
-                    plugin.getLogger().info("Trying to load the world: '" + worldName + "'");
+                    logger.info("Trying to load the world: '" + worldName + "'");
                     world = new WorldCreator(worldName).createWorld();
                 }
 
                 if (world == null) {
-                    plugin.getLogger().info("Could not load npc '" + id + "', because the world '" + worldName + "' is not loaded");
+                    logger.info("Could not load npc '" + id + "', because the world '" + worldName + "' is not loaded");
                     continue;
                 }
 
@@ -310,7 +316,7 @@ public class NpcManagerImpl implements NpcManager {
             if (sendMessagesRandomly && !messages.isEmpty()) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("execute_random_action"), ""));
             }
-            
+
             for (String message : messages) {
                 migrateActionList.add(new NpcAction.NpcActionData(++actionOrder, FancyNpcs.getInstance().getActionManager().getActionByName("message"), message));
             }
@@ -325,7 +331,7 @@ public class NpcManagerImpl implements NpcManager {
                 actiontriggerSection.getKeys(false).forEach(trigger -> {
                     ActionTrigger actionTrigger = ActionTrigger.getByName(trigger);
                     if (actionTrigger == null) {
-                        System.out.println("Could not find action trigger: " + trigger);
+                        logger.warn("Could not find action trigger: " + trigger);
                         return;
                     }
 
@@ -337,14 +343,14 @@ public class NpcManagerImpl implements NpcManager {
                             String value = npcConfig.getString("npcs." + id + ".actions." + trigger + "." + order + ".value");
                             NpcAction action = FancyNpcs.getInstance().getActionManager().getActionByName(actionName);
                             if (action == null) {
-                                System.out.println("Could not find action: " + actionName);
+                                logger.warn("Could not find action: " + actionName);
                                 return;
                             }
 
                             try {
                                 actionList.add(new NpcAction.NpcActionData(Integer.parseInt(order), action, value));
                             } catch (NumberFormatException e) {
-                                System.out.println("Could not parse order: " + order);
+                                logger.warn("Could not parse order: " + order);
                             }
                         });
 
@@ -363,11 +369,13 @@ public class NpcManagerImpl implements NpcManager {
                 for (String attrName : npcConfig.getConfigurationSection("npcs." + id + ".attributes").getKeys(false)) {
                     NpcAttribute attribute = FancyNpcs.getInstance().getAttributeManager().getAttributeByName(type, attrName);
                     if (attribute == null) {
+                        logger.warn("Could not find attribute: " + attrName);
                         continue;
                     }
 
                     String value = npcConfig.getString("npcs." + id + ".attributes." + attrName);
                     if (!attribute.isValidValue(value)) {
+                        logger.warn("Invalid value for attribute: " + attrName);
                         continue;
                     }
 
@@ -443,13 +451,13 @@ public class NpcManagerImpl implements NpcManager {
         try {
             backupFile.createNewFile();
         } catch (IOException e) {
-            FancyNpcs.getInstance().getLogger().severe("Could not create backup file for NPCs");
+            logger.error("Could not create backup file for NPCs");
         }
 
         try {
             npcConfig.save(backupFile);
         } catch (IOException e) {
-            FancyNpcs.getInstance().getLogger().severe("Could not save backup file for NPCs");
+            logger.error("Could not save backup file for NPCs");
         }
     }
 }

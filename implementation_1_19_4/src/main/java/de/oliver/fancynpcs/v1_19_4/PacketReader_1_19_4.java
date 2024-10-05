@@ -37,7 +37,7 @@ public class PacketReader_1_19_4 implements Listener {
                 out.add(msg);
 
                 PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(msg, player);
-                FancyLib.getScheduler().runTaskLater(null, 1L, packetReceivedEvent::callEvent);
+                FancyLib.getInstance().getScheduler().runTaskLater(null, 1L, packetReceivedEvent::callEvent);
             }
         });
 

@@ -50,6 +50,8 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.Executors;
@@ -225,90 +227,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             getLogger().warning("--------------------------------------------------");
         }
 
-        // register bStats and sentry
-        boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
-
-        Metrics metrics = new Metrics(this, 17543);
-        metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
-        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
-        metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
-
-        int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (isDevelopmentBuild || randomRes < 30) {
-            fancyAnalytics.registerMinecraftPluginMetrics(instance);
-            fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
-            fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
-
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_player_npcs_fflag", () -> PLAYER_NPCS_FEATURE_FLAG.isEnabled() ? "true" : "false"));
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
-            fancyAnalytics.registerStringMetric(new MetricSupplier<>("language", selectedLanguage::getLanguageCode));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("avg_interaction_cooldown", () -> {
-                double sum = 0;
-                int count = 0;
-                for (Npc npc : npcManager.getAllNpcs()) {
-                    if (npc.getData().getInteractionCooldown() > 0) {
-                        sum += npc.getData().getInteractionCooldown();
-                        count++;
-                    }
-                }
-
-                if (count == 0) {
-                    return 0.0;
-                }
-
-                return sum / count;
-            }));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_interaction_cooldown_longer_than_5min", () -> {
-                long count = npcManager.getAllNpcs().stream()
-                        .filter(npc -> npc.getData().getInteractionCooldown() > 300)
-                        .count();
-
-                return (double) count;
-            }));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_non_persistent_npcs", () -> {
-                long count = npcManager.getAllNpcs().stream()
-                        .filter(npc -> !npc.isSaveToFile())
-                        .count();
-
-                return (double) count;
-            }));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_not_player_npcs", () -> {
-                long count = npcManager.getAllNpcs().stream()
-                        .filter(npc -> npc.getData().getType() != EntityType.PLAYER)
-                        .count();
-
-                return (double) count;
-            }));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_having_attributes", () -> {
-                long count = npcManager.getAllNpcs().stream()
-                        .filter(npc -> !npc.getData().getAttributes().isEmpty())
-                        .count();
-
-                return (double) count;
-            }));
-
-            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npc_actions", () -> {
-                long count = 0;
-
-                for (Npc npc : npcManager.getAllNpcs()) {
-                    count += npc.getData().getActions().values().size();
-                }
-
-                return (double) count;
-            }));
-
-
-            fancyAnalytics.initialize();
-        }
+        registerMetrics();
+        checkIfPluginVersionUpdated();
 
         PluginManager pluginManager = Bukkit.getPluginManager();
         usingPlotSquared = pluginManager.isPluginEnabled("PlotSquared");
@@ -384,6 +304,129 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         }
 
         fancyLogger.info("FancyNpcs has been disabled.");
+    }
+
+    private void registerMetrics() {
+        boolean isDevelopmentBuild = !versionConfig.getBuild().equalsIgnoreCase("undefined");
+
+        Metrics metrics = new Metrics(this, 17543);
+        metrics.addCustomChart(new Metrics.SingleLineChart("total_npcs", () -> npcManager.getAllNpcs().size()));
+        metrics.addCustomChart(new Metrics.SimplePie("update_notifications", () -> config.isMuteVersionNotification() ? "No" : "Yes"));
+        metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
+
+        int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
+        if (isDevelopmentBuild || randomRes < 30) {
+            fancyAnalytics.registerMinecraftPluginMetrics(instance);
+            fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
+            fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
+
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_player_npcs_fflag", () -> PLAYER_NPCS_FEATURE_FLAG.isEnabled() ? "true" : "false"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("using_development_build", () -> isDevelopmentBuild ? "true" : "false"));
+            fancyAnalytics.registerStringMetric(new MetricSupplier<>("language", () -> translator.getSelectedLanguage().getLanguageCode()));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("avg_interaction_cooldown", () -> {
+                double sum = 0;
+                int count = 0;
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    if (npc.getData().getInteractionCooldown() > 0) {
+                        sum += npc.getData().getInteractionCooldown();
+                        count++;
+                    }
+                }
+
+                if (count == 0) {
+                    return 0.0;
+                }
+
+                return sum / count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_interaction_cooldown_longer_than_5min", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> npc.getData().getInteractionCooldown() > 300)
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_non_persistent_npcs", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> !npc.isSaveToFile())
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_not_player_npcs", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> npc.getData().getType() != EntityType.PLAYER)
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_having_attributes", () -> {
+                long count = npcManager.getAllNpcs().stream()
+                        .filter(npc -> !npc.getData().getAttributes().isEmpty())
+                        .count();
+
+                return (double) count;
+            }));
+
+            fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npc_actions", () -> {
+                long count = 0;
+
+                for (Npc npc : npcManager.getAllNpcs()) {
+                    count += npc.getData().getActions().values().size();
+                }
+
+                return (double) count;
+            }));
+
+
+            fancyAnalytics.initialize();
+        }
+    }
+
+    private void checkIfPluginVersionUpdated() {
+        String currentVersion = versionConfig.getVersion();
+        String lastVersion = "N/A";
+
+        File versionFile = new File(getDataFolder(), "version.yml");
+        if (!versionFile.exists()) {
+            try {
+                Files.write(versionFile.toPath(), currentVersion.getBytes());
+            } catch (IOException e) {
+                fancyLogger.warn("Could not write version file.");
+                return;
+            }
+        } else {
+            try {
+                lastVersion = new String(Files.readAllBytes(versionFile.toPath()));
+            } catch (IOException e) {
+                fancyLogger.warn("Could not read version file.");
+                return;
+            }
+        }
+
+        if (!lastVersion.equals(currentVersion)) {
+            fancyLogger.info("Plugin has been updated from version " + lastVersion + " to " + currentVersion + ".");
+            fancyAnalytics.sendEvent(
+                    new Event("PluginVersionUpdated")
+                            .withProperty("from", lastVersion)
+                            .withProperty("to", currentVersion)
+            );
+
+            try {
+                Files.write(versionFile.toPath(), currentVersion.getBytes());
+            } catch (IOException e) {
+                fancyLogger.warn("Could not write version file.");
+            }
+        }
     }
 
     public ExtendedFancyLogger getFancyLogger() {

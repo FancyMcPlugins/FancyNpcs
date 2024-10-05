@@ -11,6 +11,7 @@ import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 // TO-DO: Console support with --position and --world parameter flags.
@@ -40,20 +41,20 @@ public enum CopyCMD {
                         sender.getUniqueId(),
                         npc.getData().getDisplayName(),
                         npc.getData().getSkin(),
-                        sender.getLocation(),
+                        sender.getLocation().clone(),
                         npc.getData().isShowInTab(),
                         npc.getData().isSpawnEntity(),
                         npc.getData().isCollidable(),
                         npc.getData().isGlowing(),
                         npc.getData().getGlowingColor(),
                         npc.getData().getType(),
-                        npc.getData().getEquipment(),
+                        new ConcurrentHashMap<>(npc.getData().getEquipment()),
                         npc.getData().isTurnToPlayer(),
                         npc.getData().getOnClick(),
-                        npc.getData().getActions(),
+                        new ConcurrentHashMap<>(npc.getData().getActions()),
                         npc.getData().getInteractionCooldown(),
                         npc.getData().getScale(),
-                        npc.getData().getAttributes(),
+                        new ConcurrentHashMap<>(npc.getData().getAttributes()),
                         npc.getData().isMirrorSkin()
                 ));
         // Calling the event and creating + registering copied NPC if not cancelled.

@@ -10,7 +10,10 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -104,8 +107,8 @@ public class NpcData {
         this.turnToPlayer = false;
         this.interactionCooldown = 0;
         this.scale = 1;
-        this.equipment = new HashMap<>();
-        this.attributes = new HashMap<>();
+        this.equipment = new ConcurrentHashMap<>();
+        this.attributes = new ConcurrentHashMap<>();
         this.mirrorSkin = false;
         this.isDirty = true;
     }

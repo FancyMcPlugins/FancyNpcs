@@ -123,7 +123,6 @@ public final class SkinFetcher {
      *
      * @param uuid The UUID of the player.
      * @return A CompletableFuture that will contain the SkinData.
-     * @throws IOException If the skin data could not be fetched.
      */
     public static CompletableFuture<SkinData> fetchSkinByUUID(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
@@ -157,7 +156,6 @@ public final class SkinFetcher {
      *
      * @param skinURL The URL of the skin.
      * @return A CompletableFuture that will contain the SkinData.
-     * @throws IOException If the skin data could not be fetched.
      */
     public static CompletableFuture<SkinData> fetchSkinByURL(String skinURL) {
         return CompletableFuture.supplyAsync(() -> {

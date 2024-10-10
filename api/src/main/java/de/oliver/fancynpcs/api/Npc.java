@@ -11,6 +11,7 @@ import de.oliver.fancynpcs.api.utils.Interval.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -183,6 +184,8 @@ public abstract class Npc {
     public NpcData getData() {
         return data;
     }
+
+    public abstract<T extends Entity> T getEntity();
 
     public abstract float getEyeHeight();
 

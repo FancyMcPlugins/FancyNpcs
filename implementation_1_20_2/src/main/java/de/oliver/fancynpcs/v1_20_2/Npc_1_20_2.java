@@ -381,6 +381,11 @@ public class Npc_1_20_2 extends Npc {
         return npc.getId();
     }
 
+    @Override
+    public <T extends org.bukkit.entity.Entity> T getEntity() {
+        return (T) npc.getBukkitEntity();
+    }
+
     public Entity getNpc() {
         return npc;
     }

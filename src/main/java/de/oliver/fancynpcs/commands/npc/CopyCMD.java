@@ -8,11 +8,12 @@ import de.oliver.fancynpcs.api.events.NpcCreateEvent;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+
+import org.jetbrains.annotations.NotNull;
 
 // TO-DO: Console support with --position and --world parameter flags.
 public enum CopyCMD {
@@ -62,7 +63,7 @@ public enum CopyCMD {
             copied.create();
             FancyNpcs.getInstance().getNpcManagerImpl().registerNpc(copied);
             copied.spawnForAll();
-            translator.translate("npc_command_copy_success").replace("npc", npc.getData().getName()).replace("new_npc", copied.getData().getName()).send(sender);
+            translator.translate("npc_copy_success").replace("npc", npc.getData().getName()).replace("new_npc", copied.getData().getName()).send(sender);
         } else {
             translator.translate("command_npc_modification_cancelled").send(sender);
         }

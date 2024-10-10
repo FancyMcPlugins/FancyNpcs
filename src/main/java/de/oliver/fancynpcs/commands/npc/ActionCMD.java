@@ -138,6 +138,7 @@ public enum ActionCMD {
         translator
                 .translate("npc_action_set_success")
                 .replaceStripped("number", String.valueOf(number))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
                 .send(sender);
     }
 

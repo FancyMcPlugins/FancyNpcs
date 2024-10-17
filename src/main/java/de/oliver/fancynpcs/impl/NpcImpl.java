@@ -103,7 +103,6 @@ public class NpcImpl extends Npc {
                             Component.empty()
                     ))
             ).send(fsPlayer);
-            System.out.println("create player");
         }
 
         if (data.isShowInTab()) {
@@ -125,7 +124,6 @@ public class NpcImpl extends Npc {
 
         npc.setLocation(data.getLocation());
         FancySitula.ENTITY_FACTORY.spawnEntityFor(fsPlayer, npc);
-        System.out.println("spawn entity");
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 

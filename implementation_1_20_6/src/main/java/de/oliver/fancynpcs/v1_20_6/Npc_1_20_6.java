@@ -281,15 +281,13 @@ public class Npc_1_20_6 extends Npc {
 
         }
 
-        if (data.getScale() != 1) {
-            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
-            AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
-            });
-            attributeInstance.setBaseValue(data.getScale());
+        Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
+        AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
+        });
+        attributeInstance.setBaseValue(data.getScale());
 
-            ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
-            serverPlayer.connection.send(updateAttributesPacket);
-        }
+        ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
+        serverPlayer.connection.send(updateAttributesPacket);
     }
 
     @Override

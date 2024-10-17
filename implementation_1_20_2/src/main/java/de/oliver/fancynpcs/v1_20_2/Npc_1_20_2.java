@@ -13,7 +13,6 @@ import de.oliver.fancynpcs.api.events.NpcSpawnEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 import net.minecraft.Optionull;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -31,6 +30,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,6 +40,7 @@ import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -198,35 +199,26 @@ public class Npc_1_20_2 extends Npc {
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
+        PlayerTeam team = new PlayerTeam(new Scoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
-
-        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
-        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
-
-        if (!isTeamCreatedForPlayer) {
-            isTeamCreated.put(serverPlayer.getUUID(), true);
-        }
-
+        team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
         if (!data.isCollidable()) {
             team.setCollisionRule(Team.CollisionRule.NEVER);
         }
-
-        team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
 
         net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
         Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
+        } else {
+            npc.setCustomName(null);
+            npc.setCustomNameVisible(false);
         }
 
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
-            npc.setCustomName(null);
-            npc.setCustomNameVisible(false);
             team.setNameTagVisibility(Team.Visibility.NEVER);
         } else {
-            npc.setCustomNameVisible(true);
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }
 
@@ -243,6 +235,8 @@ public class Npc_1_20_2 extends Npc {
             ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
+
+        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true));
 
         npc.setGlowingTag(data.isGlowing());
 

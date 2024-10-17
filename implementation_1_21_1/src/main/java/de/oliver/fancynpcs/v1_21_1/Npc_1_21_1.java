@@ -32,6 +32,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team;
@@ -124,9 +125,19 @@ public class Npc_1_21_1 extends Npc {
             }
         }
 
-        ServerEntity serverEntity = new ServerEntity(serverPlayer.serverLevel(), npc, 0, false, packet -> {
-        }, Set.of());
-        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(npc, serverEntity);
+        ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(
+                npc.getId(),
+                npc.getUUID(),
+                data.getLocation().x(),
+                data.getLocation().y(),
+                data.getLocation().z(),
+                data.getLocation().getPitch(),
+                data.getLocation().getYaw(),
+                npc.getType(),
+                0,
+                Vec3.ZERO,
+                data.getLocation().getYaw()
+        );
         serverPlayer.connection.send(addEntityPacket);
 
         isVisibleForPlayer.put(player.getUniqueId(), true);

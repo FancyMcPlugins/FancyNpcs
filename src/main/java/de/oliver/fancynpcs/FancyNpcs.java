@@ -31,6 +31,7 @@ import de.oliver.fancynpcs.api.actions.types.*;
 import de.oliver.fancynpcs.api.utils.SkinCache;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
+import de.oliver.fancynpcs.impl.NpcImpl;
 import de.oliver.fancynpcs.listeners.*;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
@@ -41,8 +42,7 @@ import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import de.oliver.fancynpcs.v1_20_1.Npc_1_20_1;
 import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
-import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
-import de.oliver.fancynpcs.v1_21_1.Npc_1_21_1;
+import de.oliver.fancysitula.api.IFancySitula;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -102,6 +102,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
         this.fancyLogger = new ExtendedFancyLogger("FancyNpcs", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
 
+        IFancySitula.LOGGER.setCurrentLevel(LogLevel.DEBUG);
+
         this.npcThread = Executors.newSingleThreadScheduledExecutor(
                 new ThreadFactoryBuilder()
                         .setNameFormat("FancyNpcs-Npcs")
@@ -133,8 +135,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
-            case "1.21", "1.21.1" -> npcAdapter = Npc_1_21_1::new;
-            case "1.20.5", "1.20.6" -> npcAdapter = Npc_1_20_6::new;
+            case "1.20.5", "1.20.6", "1.21", "1.21.1" -> npcAdapter = NpcImpl::new;
             case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
             case "1.20.2" -> npcAdapter = Npc_1_20_2::new;
             case "1.20.1", "1.20" -> npcAdapter = Npc_1_20_1::new;

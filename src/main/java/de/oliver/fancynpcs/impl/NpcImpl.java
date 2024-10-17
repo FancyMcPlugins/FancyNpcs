@@ -73,7 +73,18 @@ public class NpcImpl extends Npc {
         }
 
         if (npc instanceof FS_Player) {
-            // TODO add skin
+            Map<String, FS_GameProfile.Property> properties = new HashMap<>();
+            if (data.getSkin() != null) {
+                String skinValue = data.getSkin().value();
+                String skinSignature = data.getSkin().signature();
+
+                if (skinValue == null || skinSignature == null) {
+                    return;
+                }
+
+                properties.put("textures", new FS_GameProfile.Property("textures", skinValue, skinSignature));
+            }
+
             FancySitula.PACKET_FACTORY.createPlayerInfoUpdatePacket(
                     EnumSet.of(
                             FS_ClientboundPlayerInfoUpdatePacket.Action.ADD_PLAYER,
@@ -81,7 +92,11 @@ public class NpcImpl extends Npc {
                     ),
                     List.of(new FS_ClientboundPlayerInfoUpdatePacket.Entry(
                             npc.getUuid(),
-                            new FS_GameProfile(npc.getUuid(), internalName),
+                            new FS_GameProfile(
+                                    npc.getUuid(),
+                                    internalName,
+                                    properties
+                            ),
                             false,
                             420,
                             FS_GameType.CREATIVE,

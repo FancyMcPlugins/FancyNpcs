@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,6 +27,8 @@ public enum CollidableCMD {
         // Calling the event and updating the state if not cancelled.
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.COLLIDABLE, finalState, sender).callEvent()) {
             npc.getData().setCollidable(finalState);
+            npc.removeForAll();
+            npc.spawnForAll();
             translator.translate(finalState ? "npc_collidable_set_true" : "npc_collidable_set_false").replace("npc", npc.getData().getName()).send(sender);
             return;
         }

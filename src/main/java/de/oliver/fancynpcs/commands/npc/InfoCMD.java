@@ -1,68 +1,77 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
+import com.destroystokyo.paper.profile.PlayerProfile;
+import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.commands.Subcommand;
+import de.oliver.fancynpcs.api.utils.Interval;
+import de.oliver.fancynpcs.api.utils.Interval.Unit;
+import de.oliver.fancynpcs.utils.GlowingColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+
+import java.text.DecimalFormat;
+import java.util.Collection;
+
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+public enum InfoCMD {
+    INSTANCE; // SINGLETON
 
-public class InfoCMD implements Subcommand {
+    private static final DecimalFormat COORDS_FORMAT = new DecimalFormat("#.##");
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
-
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    @Command("npc info <npc>")
+    @Permission("fancynpcs.command.npc.info")
+    public void onInfo(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc
+    ) {
+        final Location loc = npc.getData().getLocation();
+        final Interval interactionCooldown = Interval.of(npc.getData().getInteractionCooldown(), Unit.SECONDS);
+        final int actionsTotal = npc.getData().getActions().values().stream().mapToInt(Collection::size).sum();
+        // Getting the translated glowing state. This should never throw because all supported NamedTextColor objects has their mapping in GlowingColor enum.
+        final String glowingStateTranslated = (npc.getData().isGlowing() && npc.getData().getGlowingColor() != null)
+                ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
+                : ((SimpleMessage) translator.translate("disabled")).getMessage();
+        // Getting the creator player profile, this will be completed from cache in order to get name of the player.
+        final PlayerProfile creatorProfile = Bukkit.createProfile(npc.getData().getCreator());
+        translator.translate("npc_info_general")
+                .replace("name", npc.getData().getName())
+                .replace("id", npc.getData().getId())
+                .replace("id_short", npc.getData().getId().substring(0, 13) + "...")
+                .replace("creator_uuid", npc.getData().getCreator().toString())
+                .replace("creator_uuid_short", creatorProfile.completeFromCache() ? npc.getData().getCreator().toString().substring(0, 13) + "..." : npc.getData().getCreator().toString().substring(0, 13))
+                .replace("creator_name", creatorProfile.getName() != null ? creatorProfile.getName() : ((SimpleMessage) translator.translate("unknown")).getMessage())
+                .replace("displayname", npc.getData().getDisplayName())
+                .replace("type", "<lang:" + npc.getData().getType().translationKey() + ">") // Not ideal solution but should work fine for now.
+                .replace("location_x", COORDS_FORMAT.format(loc.x()))
+                .replace("location_y", COORDS_FORMAT.format(loc.y()))
+                .replace("location_z", COORDS_FORMAT.format(loc.z()))
+                .replace("world", loc.getWorld().getName())
+                .replace("glow", glowingStateTranslated)
+                .replace("is_collidable", getTranslatedBoolean(npc.getData().isCollidable()))
+                .replace("is_turn_to_player", getTranslatedBoolean(npc.getData().isTurnToPlayer()))
+                .replace("is_show_in_tab", getTranslatedBoolean(npc.getData().isShowInTab()))
+                .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
+                .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
+                .replace("scale", String.valueOf(npc.getData().getScale()))
+                .replace("actions_total", String.valueOf(actionsTotal))
+                .send(sender);
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
-        Location loc = npc.getData().getLocation();
-
-        MessageHelper.info(receiver, "<b>NPC: " + npc.getData().getName());
-        MessageHelper.info(receiver, " - Id: <gray>" + npc.getData().getId());
-        MessageHelper.info(receiver, " - Creator: <gray>" + npc.getData().getCreator());
-        MessageHelper.info(receiver, " - Display name: <gray>" + npc.getData().getDisplayName());
-        MessageHelper.info(receiver, " - Location: <gray>" + loc.getWorld().getName() + " " + loc.getBlockX() + "/" + loc.getBlockY() + "/" + loc.getBlockZ());
-        MessageHelper.info(receiver, " - Type: <gray>" + npc.getData().getType().name());
-        MessageHelper.info(receiver, " - Show in tab: <gray>" + npc.getData().isShowInTab());
-        MessageHelper.info(receiver, " - Turn to player: <gray>" + npc.getData().isTurnToPlayer());
-        MessageHelper.info(receiver, " - Is glowing: <gray>" + npc.getData().isGlowing());
-        MessageHelper.info(receiver, " - Glowing color: <gray>" + npc.getData().getGlowingColor().toString());
-        MessageHelper.info(receiver, " - Is collidable: <gray>" + npc.getData().isCollidable());
-        MessageHelper.info(receiver, " - Interaction cooldown: <gray>" + npc.getData().getInteractionCooldown() + " seconds");
-        MessageHelper.info(receiver, " - Player Command: <gray>" + npc.getData().getPlayerCommand());
-        MessageHelper.info(receiver, " - Server Command: <gray>" + npc.getData().getServerCommand());
-
-        if (!npc.getData().getMessages().isEmpty()) {
-            MessageHelper.info(receiver, " - Messages:");
-            for (int i = 0; i < npc.getData().getMessages().size(); i++) {
-                MessageHelper.info(receiver, " <gray>" + (i + 1) + ": " + npc.getData().getMessages().get(i));
-            }
-
-        }
-
-
-        npc.getData().getEquipment().forEach((slot, item) ->
-                MessageHelper.info(receiver, " - Equipment: <gray>" + slot.name() + " -> " + item.getType().name())
-        );
-
-        npc.getData().getAttributes().forEach((attribute, value) ->
-                MessageHelper.info(receiver, " - Attribute: <gray>" + attribute.getName() + " -> " + value)
-        );
-
-        return false;
+    // NOTE: Might need to be improved later down the line, should get work done for now.
+    private @NotNull String getTranslatedBoolean(final boolean bool) {
+        return (bool) ? ((SimpleMessage) translator.translate("true")).getMessage() : ((SimpleMessage) translator.translate("false")).getMessage();
     }
+
+    // NOTE: Might need to be improved later down the line, should get work done for now.
+    private @NotNull String getTranslatedState(final boolean bool) {
+        return (bool) ? ((SimpleMessage) translator.translate("enabled")).getMessage() : ((SimpleMessage) translator.translate("disabled")).getMessage();
+    }
+
 }

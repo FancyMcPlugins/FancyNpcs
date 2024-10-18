@@ -1,11 +1,15 @@
 package de.oliver.fancynpcs.api;
 
-import de.oliver.fancylib.LanguageConfig;
+import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.serverSoftware.schedulers.FancyScheduler;
+import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancynpcs.api.actions.ActionManager;
+import de.oliver.fancynpcs.api.utils.SkinCache;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
 
 public interface FancyNpcsPlugin {
@@ -22,7 +26,9 @@ public interface FancyNpcsPlugin {
 
     JavaPlugin getPlugin();
 
-    boolean isUsingPlaceholderAPI();
+    ExtendedFancyLogger getFancyLogger();
+
+    ScheduledExecutorService getNpcThread();
 
     FancyScheduler getScheduler();
 
@@ -34,5 +40,9 @@ public interface FancyNpcsPlugin {
 
     AttributeManager getAttributeManager();
 
-    LanguageConfig getLanguageConfig();
+    ActionManager getActionManager();
+
+    Translator getTranslator();
+
+    SkinCache getSkinCache();
 }

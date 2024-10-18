@@ -1,0 +1,307 @@
+# ========================================================================
+# THIS FILE IS A TEMPLATE, ANY MODIFICATIONS MADE HERE MAY NOT BE APPLIED.
+# ========================================================================
+# HOW TO CREATE CUSTOM LANGUAGE:
+#   1. Copy this file and name it eg. "en.yml"
+#   2. Change "language_name" property to eg. "english" and update "language" property inside config.yml to match this value.
+#   3. Modify contents to your liking.
+#   4. Reload the plugin using "/fancynpcs reload" command.
+# ========================================================================
+
+# Language name. This value can be used to specify "language" property in the config.yml file.
+language_name: default
+
+# Messages support MiniMessage formatting: https://docs.advntr.dev/minimessage/format.html
+messages:
+  # Common (States)
+  true: "{successColor}True"
+  enabled: "{successColor}Enabled"
+  false: "{errorColor}False"
+  disabled: "{errorColor}Disabled"
+
+  # Common (Equipment Slots)
+  main_hand: "Main Hand"
+  off_hand: "Off Hand"
+  head: "Head"
+  chest: "Chest"
+  legs: "Legs"
+  feet: "Feet"
+
+  # Common (Availability)
+  unknown: "Unknown"
+  not_available: "N/A"
+
+  # Common (Colors)
+  color_black: "<dark_gray>Black"
+  color_dark_blue: "<dark_blue>Dark Blue"
+  color_dark_green: "<dark_green>Dark Green"
+  color_dark_aqua: "<dark_aqua>Dark Aqua"
+  color_dark_red: "<dark_red>Dark Red"
+  color_dark_purple: "<dark_purple>Dark Purple"
+  color_gold: "<gold>Gold"
+  color_gray: "<gray>Gray"
+  color_dark_gray: "<dark_gray>Dark Gray"
+  color_blue: "<blue>Blue"
+  color_green: "<green>Green"
+  color_aqua: "<aqua>Aqua"
+  color_red: "<red>Red"
+  color_light_purple: "<light_purple>Light Purple"
+  color_yellow: "<yellow>Yellow"
+  color_white: "<white>White"
+
+  # Common (Other)
+  interaction_on_cooldown: "<dark_gray>› {errorColor}You're currently on cooldown. {warningColor}{time}{errorColor} remaining."
+  player_npcs_cannot_modify_npc: "<dark_gray>› {errorColor}You can only modify NPCs you own."
+  player_npcs_cannot_move_npc: "<dark_gray>› {errorColor}You are only allowed to teleport NPCs to your plot."
+  player_npcs_create_failure_limit_reached: "<dark_gray>› {errorColor}You have reached maximum number of NPCs."
+  player_npcs_create_failure_not_owned_plot: "<dark_gray>› {errorColor}You can only create NPCs on your plot."
+
+  # Commands (Common Replies)
+  command_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot use this command."
+  command_wrong_usage: "<dark_gray>› {errorColor}This sub-command does not exist. Use {warningColor}/npc help{errorColor} to view available commands."
+  command_incomplete_usage: "<dark_gray>› {errorColor}Incomplete command. Use {warningColor}/npc help{errorColor} to view correct syntax."
+  command_player_only: "<dark_gray>› {errorColor}This command can only be executed by in-game players."
+  command_invalid_boolean: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} must be either {warningColor}true{errorColor} or {warningColor}false{errorColor}."
+  command_invalid_number: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid number."
+  command_invalid_location: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid location."
+  command_invalid_world: "<dark_gray>› {errorColor}World named {warningColor}{input}{errorColor} does not exist or is not loaded."
+  command_invalid_glowing_color: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid glowing color."
+  command_invalid_list_sort_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid sort type."
+  command_invalid_nearby_sort_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid sort type."
+  command_invalid_entity_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid entity type."
+  command_invalid_action_trigger: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid action trigger."
+  command_invalid_action_type: "<dark_gray>› {errorColor}Argument named {warningColor}{input}{errorColor} is not a valid action type."
+  command_invalid_npc: "<dark_gray>› {errorColor}NPC {warningColor}{input}{errorColor} does not exist."
+  command_invalid_material: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid material."
+  command_invalid_attribute: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid attribute."
+  command_invalid_attribute_value: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not valid for this attribute."
+  command_invalid_equipment_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid slot."
+  command_invalid_interval: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid duration of time."
+  command_invalid_enum_generic: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid {enum}."
+  command_unsupported_npc_type: "<dark_gray>› {errorColor}This NPC type does not support this feature."
+  command_input_contains_blocked_command: "<dark_gray>› {errorColor}This command is not allowed for use in interactions."
+  command_npc_modification_cancelled: "<dark_gray>› {errorColor}NPC modification has been cancelled by the API."
+
+  # Generic Syntax Message (syntax is provided by Cloud and may not be human-friendly)
+  command_invalid_syntax_generic: "<dark_gray>› <gray>Syntax: {warningColor}/{syntax}"
+
+  # Command Syntaxes
+  command_syntax:
+    fancynpcs: "<dark_gray>› <gray>Syntax: {primaryColor}/fancynpcs {secondaryColor}(version | reload | save | feature_flags)"
+    npc: "<dark_gray>› {errorColor}Unknown command. Use {warningColor}/npc help{errorColor} to view available commands."
+    npc_action: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}(add | add_after | add_before | clear | list | move_down | move_up | remove | set)"
+    npc_action_add: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add {secondaryColor}(type) [value]"
+    npc_action_add_after: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add_after {secondaryColor}(index) (type) [value]"
+    npc_action_add_before: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add_before {secondaryColor}(index) (type) [value]"
+    npc_action_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}remove {secondaryColor}(number)"
+    npc_action_move_down: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}move_down {secondaryColor}(index)"
+    npc_action_move_up: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}move_down {secondaryColor}(index)"
+    npc_action_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}set {secondaryColor}(index) (type) [value]"
+    npc_attribute: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}(set | list)"
+    npc_attribute_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}set {secondaryColor}(attribute) (value)"
+    npc_collidable: "<dark_gray>› <gray>Syntax: {primaryColor}/npc collidable {secondaryColor}(npc) (state)"
+    npc_copy: "<dark_gray>› <gray>Syntax: {primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
+    npc_create: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc) [--type] [--position] [--world]"
+    npc_displayname: "<dark_gray>› <gray>Syntax: {primaryColor}/npc displayname {secondaryColor}(npc) (name)"
+    npc_equipment: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}(set | clear | list)"
+    npc_equipment_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (@hand | @none | item)"
+    npc_glowing: "<dark_gray>› <gray>Syntax: {primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
+    npc_info: "<dark_gray>› <gray>Syntax: {primaryColor}/npc info {secondaryColor}(npc)"
+    npc_interaction_cooldown: "<dark_gray>› <gray>Syntax: {primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
+    npc_scale: "<dark_gray>› <gray>Syntax: {primaryColor}/npc scale {secondaryColor}(npc) (factor)"
+    npc_list: "<dark_gray>› <gray>Syntax: {primaryColor}/npc list {secondaryColor}[filters...]"
+    npc_move_here: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_here {secondaryColor}(npc)"
+    npc_move_to: "<dark_gray>› <gray>Syntax: {primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world]"
+    npc_nearby: "<dark_gray>› <gray>Syntax: {primaryColor}/npc nearby {secondaryColor}[filters...]"
+    npc_remove: "<dark_gray>› <gray>Syntax: {primaryColor}/npc remove {secondaryColor}(npc)"
+    npc_show_in_tab: "<dark_gray>› <gray>Syntax: {primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
+    npc_skin: "<dark_gray>› <gray>Syntax: {primaryColor}/npc skin {secondaryColor}(npc) (@none | @mirror | name | url)"
+    npc_teleport: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc)"
+    npc_turn_to_player: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
+    npc_type: "<dark_gray>› <gray>Syntax: {primaryColor}/npc type {secondaryColor}(npc) (type)"
+
+  # Commands (fancynpcs)
+  fancynpcs_reload_success: "<dark_gray>› {successColor}Plugin has been reloaded."
+  fancynpcs_save_success: "<dark_gray>› {successColor}NPCs have been saved."
+  fancynpcs_feature_flags_header: "<dark_gray><st>-------------------</st>   <gray>Feature Flags  <dark_gray><st>------------------</st><newline>"
+  fancynpcs_feature_flags_entry: " <#848484>{number}. {warningColor}{name} <#848484>({id})<dark_gray>: {state}"
+  fancynpcs_feature_flags_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
+  fancynpcs_test_success: "<dark_gray>› {successColor}All {count} tests have passed successfully (ran by {player} at {time})."
+  fancynpcs_test_failure: "<dark_gray>› {errorColor}Some tests have failed (ran by {player} at {time})."
+
+  # Commands (npc help)
+  npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"
+  npc_help_page_footer: "<newline><dark_gray><st>-----------</st>  <gray>Click {primaryColor}<click:OPEN_URL:https://fancyplugins.de/docs/fn-commands.html>here</click><gray> to open documentation  <dark_gray><st>-----------</st>"
+  npc_help_contents:
+    - "<dark_gray>› <hover:show_text:'<gray>Adds new action to the list.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add {secondaryColor}(index) [value]"
+    - "<dark_gray>› <hover:show_text:'<gray>Adds new action to the list after specified position.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add_after {secondaryColor}(index) [value]"
+    - "<dark_gray>› <hover:show_text:'<gray>Adds new action to the list before specified position.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}add_before {secondaryColor}(index) [value]"
+    - "<dark_gray>› <hover:show_text:'<gray>Clears all actions of the specified trigger.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}clear"
+    - "<dark_gray>› <hover:show_text:'<gray>Lists all actions of the specified trigger.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}list"
+    - "<dark_gray>› <hover:show_text:'<gray>Moves action at specified index down in the list.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}move_down {secondaryColor}(index)"
+    - "<dark_gray>› <hover:show_text:'<gray>Moves action at specified index up in the list.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}move_up {secondaryColor}(index)"
+    - "<dark_gray>› <hover:show_text:'<gray>Removes action from the list.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}remove {secondaryColor}(index)"
+    - "<dark_gray>› <hover:show_text:'<gray>Adds new action to the list at specified position.'>{primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}set {secondaryColor}(index) [value]"
+    - "<dark_gray>› <hover:show_text:'<gray>Sets an attribute of the NPC.'>{primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}set {secondaryColor}(attribute) (value)"
+    - "<dark_gray>› <hover:show_text:'<gray>Lists all modified attributes of the NPC.'>{primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}list"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC can collide with other entities.'>{primaryColor}/npc collidable {secondaryColor}(npc) [state]"
+    - "<dark_gray>› <hover:show_text:'<gray>Copies (duplicates) specified NPC.'>{primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
+    - "<dark_gray>› <hover:show_text:'<gray>Creates a new NPC. Can be customized with flags.'>{primaryColor}/npc create {secondaryColor}(npc) [--type] [--location] [--world]"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes displayname of the NPC. Supports MiniMessage, PlaceholderAPI and MiniPlaceholders.'>{primaryColor}/npc displayname {secondaryColor}(npc) (name)"
+    - "<dark_gray>› <hover:show_text:'<gray>Sets equipment slot of the NPC to item currently held in main hand, none or a specific item type.'>{primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (@hand | @none | item)"
+    - "<dark_gray>› <hover:show_text:'<gray>Clears all equipment slots of the NPC.'>{primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}clear"
+    - "<dark_gray>› <hover:show_text:'<gray>Lists all equipment of the NPC.'>{primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}list"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes glowing state and color of the NPC.'>{primaryColor}/npc glowing {secondaryColor}(npc) (disabled | color)"
+    - "<dark_gray>› <hover:show_text:'<gray>Shows information about specified NPC.'>{primaryColor}/npc info {secondaryColor}(npc)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes duration between interactions (cooldown) of the NPC.'>{primaryColor}/npc interaction_cooldown {secondaryColor}(npc) (disabled | time)"
+    - "<dark_gray>› <hover:show_text:'<gray>Lists all NPCs in all worlds. Can be filtered and sorted.'>{primaryColor}/npc list {secondaryColor}[--type] [--sort]"
+    - "<dark_gray>› <hover:show_text:'<gray>Teleports specified NPC to your location.'>{primaryColor}/npc move_here {secondaryColor}(npc)"
+    - "<dark_gray>› <hover:show_text:'<gray>Teleports NPC to specified location.'>{primaryColor}/npc move_to {secondaryColor}(npc) (x) (y) (z) [world]"
+    - "<dark_gray>› <hover:show_text:'<gray>Lists all NPCs in your world. Can be filtered and sorted.'>{primaryColor}/npc nearby {secondaryColor}[--radius] [--type] [--sort]"
+    - "<dark_gray>› <hover:show_text:'<gray>Removes (deletes) specified NPC.'>{primaryColor}/npc remove {secondaryColor}(npc)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes the scale of the size of the NPC.'>{primaryColor}/npc scale {secondaryColor}(npc) (factor)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC is shown in the player-list. This works only on NPCs of PLAYER type.<newline><newline>{errorColor}Re-connecting to the server might be required for changes to take effect.'>{primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes skin of the NPC.<newline><gray>Supports PlaceholderAPI and MiniPlaceholders.<newline><newline>{warningColor}@none <dark_gray>- <gray>removes the skin<newline>{warningColor}@mirror <dark_gray>- <gray>mirrors player skin<newline>{warningColor}(name) <dark_gray>- <gray>name of any player<newline>{warningColor}(url) <dark_gray>- <gray>url of the skin texture'>{primaryColor}/npc skin {secondaryColor}(npc) (@none | @mirror | name | url)"
+    - "<dark_gray>› <hover:show_text:'<gray>Teleports you to the specified NPC.'>{primaryColor}/npc teleport {secondaryColor}(npc)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC should turn to the player when in range.'>{primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes the type of the NPC.'>{primaryColor}/npc type {secondaryColor}(npc) (type)"
+
+  # Commands (npc action)
+  npc_action_add_success: "<dark_gray>› <gray>Action has been added. There are {warningColor}{total}<gray> actions in total."
+  npc_action_add_before_success: "<dark_gray>› <gray>Action has been added before action {warningColor}{number}<gray>. There are {warningColor}{total}<gray> actions in total."
+  npc_action_add_after_success: "<dark_gray>› <gray>Action has been added after action {warningColor}{number}<gray>. There are {warningColor}{total}<gray> actions in total."
+  npc_action_set_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been updated. There are {warningColor}{total}<gray> actions in total."
+  npc_action_set_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
+  npc_action_move_up_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved up."
+  npc_action_move_up_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the top."
+  npc_action_move_down_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been moved down."
+  npc_action_move_down_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} is already at the bottom."
+  npc_action_requires_value: "<dark_gray>› {errorColor}You must specify a value for this action."
+  npc_action_remove_success: "<dark_gray>› <gray>Action trigger {warningColor}{number}<gray> has been removed. There are {warningColor}{total}<gray> actions in total."
+  npc_action_remove_failure: "<dark_gray>› {errorColor}Action trigger {warningColor}{number}{errorColor} does not exist."
+  npc_action_clear_success: "<dark_gray>› <gray>Actions have been cleared."
+  npc_action_list_header: "<dark_gray><st>---------------------</st>  <gray>Actions  <dark_gray><st>---------------------</st><newline>"
+  npc_action_list_entry: " <#848484>{number}. {warningColor}{action}<dark_gray>: <gray>{value}"
+  npc_action_list_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total}<gray> entries  <dark_gray><st>-------------</st>"
+  npc_action_list_failure_empty: "<dark_gray>› {errorColor}There are no actions in the list. Use {warningColor}/npc action (npc) (trigger) add (action){errorColor} to add your first action."
+
+  # Commands (npc attribute)
+  npc_attribute_set: "<dark_gray>› <gray>Attribute {warningColor}{attribute}<gray> has been set to {warningColor}{value}<gray>."
+  npc_attribute_set_invalid_for_this_entity_type: "<dark_gray>› {errorColor}Attribute {warningColor}{input}{errorColor} is not valid attribute for this entity type."
+  npc_attribute_list_header: "<dark_gray><st>--------------------</st>  <gray>Attributes  <dark_gray><st>--------------------</st><newline>"
+  npc_attribute_list_entry: " <dark_gray>› <#848484>{attribute}<dark_gray>: {warningColor}{value}"
+  npc_attribute_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_attribute_list_failure_empty: "<dark_gray>› {errorColor}There are no attributes set. Use {warningColor}/npc attribute (npc) set (attribute) (value){errorColor} to set an attribute."
+
+  # Commands (npc collidable)
+  npc_collidable_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now collidable<gray>."
+  npc_collidable_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer collidable<gray>."
+
+  # Commands (npc copy)
+  npc_copy_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been copied to {warningColor}{new_npc}<gray>."
+
+  # Commands (npc create)
+  npc_create_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been created."
+  npc_create_failure_invalid_name: "<dark_gray>› {errorColor}Name contains illegal characters. Only [{warningColor}A-Z{errorColor}, {warningColor}a-z{errorColor}, {warningColor}0-9{errorColor}, {warningColor}_{errorColor}, {warningColor}-{errorColor}, {warningColor}/{errorColor}] characters are allowed."
+  npc_create_failure_already_exists: "<dark_gray>› {errorColor}NPC {warningColor}{npc}{errorColor} already exists."
+  npc_create_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
+
+  # Commands (npc displayname)
+  npc_displayname_set_name: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using <reset>{name}<reset><gray> as their display name."
+  npc_displayname_set_empty: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer showing display name."
+
+  # Commands (npc equipment)
+  npc_equipment_set_item: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been set to <reset><item><gray>."
+  npc_equipment_set_empty: "<dark_gray>› <gray>Equipment slot {warningColor}{slot}<gray> has been removed."
+  npc_equipment_set_failure_invalid_slot: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is not a valid equipment slot."
+  npc_equipment_clear_success: "<dark_gray>› <gray>Equipment has been cleared."
+  npc_equipment_list_header: "<dark_gray><st>--------------------</st>  <gray>Equipment  <dark_gray><st>--------------------</st><newline>"
+  npc_equipment_list_entry: " <#848484>{slot}<dark_gray>: <reset><item>"
+  npc_equipment_list_footer: "<newline><dark_gray><st>---------------------------------------------------</st>"
+  npc_equipment_list_failure_empty: "<dark_gray>› {errorColor}There are no equipment slots set. Use {warningColor}/npc equipment (npc) set (slot) (@hand | @none | material){errorColor} to set an equipment slot."
+
+  # Commands (npc fix)
+  npc_fix_success: "<dark_gray>› <gray>Attempted to fix NPC {warningColor}{npc}<gray>... Still having issues? Please let us know."
+
+  # Commands (npc glowing)
+  npc_glowing_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now glowing."
+  npc_glowing_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer glowing."
+  npc_glowing_set_color_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now glowing in {color}<gray>."
+  npc_glowing_set_color_failure_invalid_color: "<dark_gray>› {errorColor}Specified value {warningColor}{input}{errorColor} is not a valid color."
+
+  # Commands (npc info)
+  npc_info_general:
+    - ""
+    - "<dark_gray>› <hover:show_text:'<gray>Unique, permanent identifier of the NPC.'><#848484>Identifier</hover>: <hover:show_text:'<gray>Click to copy UUID to clipboard.'><click:copy_to_clipboard:'{id}'>{warningColor}{id}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Identifier of player who created this NPC.'><gray>Creator</hover>: <hover:show_text:'<gray>Click to copy creator UUID to clipboard.'><click:copy_to_clipboard:'{creator_uuid}'>{warningColor}{creator_uuid_short}<gray> ({creator_name})</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Name of the NPC, used in commands and displayed above their head if display name is not set.'><#848484>Name</hover>: {warningColor}{name}"
+    - "<dark_gray>› <hover:show_text:'<gray>Display name of the NPC, displayed above their head.'><gray>Display Name</hover>: <reset>{displayname}<reset>"
+    - "<dark_gray>› <hover:show_text:'<gray>Entity type of the NPC.'><#848484>Type</hover><dark_gray>: {warningColor}{type}"
+    - "<dark_gray>› <hover:show_text:'<gray>Current location of the NPC.'><gray>Location</hover>: <hover:show_text:'<gray>Click to copy location to clipboard.'><click:copy_to_clipboard:'{location_x} {location_y} {location_z}'>{warningColor}{location_x}<gray>, {warningColor}{location_y}<gray>, {warningColor}{location_z}<gray> in {warningColor}{world}</click></hover>"
+    - "<dark_gray>› <hover:show_text:'<gray>Glowing state of the NPC. Can be a {warningColor}color<gray> or {errorColor}disabled<gray>.'><#848484>Glow</hover><dark_gray>: {glow}"
+    - "<dark_gray>› <hover:show_text:'<gray>Whether the NPC should turn to player. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Turns to Player</hover><dark_gray>: {is_turn_to_player}"
+    - "<dark_gray>› <hover:show_text:'<gray>Whether the NPC should be shown in player-list. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Shown in TAB</hover>: {is_show_in_tab}"
+    - "<dark_gray>› <hover:show_text:'<gray>Collidable state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><gray>Collidable</hover><dark_gray>: {is_collidable}"
+    - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
+    - "<dark_gray>› <hover:show_text:'<gray>Cooldown between interactions.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
+    - "<dark_gray>› <hover:show_text:'<gray>Scale factor for the NPC size.'><#848484>Scale</hover><dark_gray>: {warningColor}x{scale}"
+    - ""
+    - "<dark_gray>› <hover:show_text:'<gray>Equipment of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><gray>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
+    - "<dark_gray>› <hover:show_text:'<gray>Modified attributes of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><#848484>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
+    - ""
+    - "<dark_gray>› <hover:show_text:'<gray>Use commands from {warningColor}/npc action (npc) (trigger)<gray> group to manage actions.'><gray>There are {warningColor}{actions_total}<gray> actions associated with this NPC.</hover>"
+    - ""
+    - "<dark_gray>› {primaryColor}Can't find what you're looking for?"
+    - "<dark_gray>› <gray>Open the chat window to see all information."
+    - ""
+
+  # Commands (npc interaction_cooldown)
+  npc_interaction_cooldown_set: "<dark_gray>› <gray>Interaction cooldown has been set to {warningColor}{time}<gray>."
+  npc_interaction_cooldown_disabled: "<dark_gray>› <gray>Interaction cooldown has been disabled."
+
+  # Commands (npc list)
+  npc_list_header: "<dark_gray><st>------------------</st>  <gray>List Query Result  <dark_gray><st>------------------</st><newline>"
+  npc_list_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({location_x}, {location_y}, {location_z} in {world})"
+  npc_list_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
+  npc_list_failure_sort_requires_player: "<dark_gray>› {errorColor}This sort type cannot be used from the console."
+  npc_list_failure_requires_world_flag: "<dark_gray>› {errorColor}You must specify {warningColor}--world{errorColor} flag when running this command from the console."
+
+  # Commands (npc move_here)
+  npc_move_here_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to your location."
+
+  # Commands (npc move_to)
+  npc_move_to_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been moved to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray> in {warningColor}{world}<gray>."
+  npc_move_to_failure_must_specify_world: "<dark_gray>› {errorColor}You must specify world when running this command from the console."
+
+  # Commands (npc nearby)
+  npc_nearby_header: "<dark_gray><st>----------------</st>  <gray>Nearby Query Result  <dark_gray><st>-----------------</st><newline>"
+  npc_nearby_entry: " <#848484>{number}. <click:RUN_COMMAND:'/npc info {npc}'><hover:show_text:'<gray>Click to see more details.'>{warningColor}{npc}</hover></click> <click:RUN_COMMAND:'/npc teleport {npc}'><hover:show_text:'<gray>Click to teleport.'><#848484>({distance} blocks away)</hover></click>"
+  npc_nearby_footer: "<newline><dark_gray><st>----------</st>  <gray>Showing {warningColor}{count_formatted}<gray> out of total {warningColor}{total_formatted}<gray> entries  <dark_gray><st>----------</st>"
+
+  # Commands (npc remove)
+  npc_remove_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been removed."
+
+  # Commands (scale)
+  npc_scale_set_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been scaled to {warningColor}{scale}<gray>."
+
+  # Commands (npc show_in_tab)
+  npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."
+  npc_show_in_tab_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer shown in player-list."
+
+  # Commands (npc skin)
+  npc_skin_set: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using the {warningColor}{name}<gray> skin."
+  npc_skin_set_mirror: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now mirroring player skin."
+  npc_skin_set_none: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer using any skin."
+  npc_skin_failure_invalid: "<dark_gray>› {errorColor}Argument {warningColor}{input}{errorColor} is invalid. Common issues: invalid URL, player not found, player has no skin."
+
+  # Commands (npc teleport)
+  npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."
+  npc_teleport_failure_exception: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Check console for errors."
+  npc_teleport_failure_world_not_loaded: "<dark_gray>› {errorColor}An error occurred while trying to teleport to NPC. Destination world is not loaded."
+
+  # Commands (npc turn_to_player)
+  npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now turning to player."
+  npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer turning to player."
+
+  # Commands (npc type)
+  npc_type_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> type has been changed to {warningColor}{type}<gray>."

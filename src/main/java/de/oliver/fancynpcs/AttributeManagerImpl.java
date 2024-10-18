@@ -6,6 +6,8 @@ import de.oliver.fancynpcs.v1_19_4.attributes.Attributes_1_19_4;
 import de.oliver.fancynpcs.v1_20_1.attributes.Attributes_1_20_1;
 import de.oliver.fancynpcs.v1_20_2.attributes.Attributes_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.attributes.Attributes_1_20_4;
+import de.oliver.fancynpcs.v1_20_6.attributes.Attributes_1_20_5;
+import de.oliver.fancynpcs.v1_21_1.attributes.Attributes_1_21_1;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 
@@ -24,6 +26,8 @@ public class AttributeManagerImpl implements AttributeManager {
     private void init() {
         String mcVersion = Bukkit.getMinecraftVersion();
         switch (mcVersion) {
+            case "1.21", "1.21.1" -> attributes = Attributes_1_21_1.getAllAttributes();
+            case "1.20.5", "1.20.6" -> attributes = Attributes_1_20_5.getAllAttributes();
             case "1.20.3", "1.20.4" -> attributes = Attributes_1_20_4.getAllAttributes();
             case "1.20.2" -> attributes = Attributes_1_20_2.getAllAttributes();
             case "1.20.1", "1.20" -> attributes = Attributes_1_20_1.getAllAttributes();

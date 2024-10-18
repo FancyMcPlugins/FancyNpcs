@@ -25,12 +25,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.Team;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -40,11 +42,13 @@ import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_20_R2.inventory.CraftItemStack;
 import org.bukkit.craftbukkit.v1_20_R2.util.CraftNamespacedKey;
 import org.bukkit.entity.Player;
+import org.lushplugins.chatcolorhandler.ModernChatColorHandler;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Npc_1_20_2 extends Npc {
 
@@ -69,11 +73,6 @@ public class Npc_1_20_2 extends Npc {
         if (data.getType() == org.bukkit.entity.EntityType.PLAYER) {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""), ClientInformation.createDefault());
             ((ServerPlayer) npc).gameProfile = gameProfile;
-
-            if (data.getSkin() != null && data.getSkin().isLoaded()) {
-                // sessionserver.mojang.com/session/minecraft/profile/<UUID>?unsigned=false
-                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", data.getSkin().getValue(), data.getSkin().getSignature())));
-            }
         } else {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, MappingKeys1_20_2.ENTITY_TYPE__FACTORY.getMapping()); // EntityType.factory
@@ -97,6 +96,17 @@ public class Npc_1_20_2 extends Npc {
             return;
         }
 
+        if (data.getSkin() != null) {
+            String skinValue = data.getSkin().value();
+            String skinSignature = data.getSkin().signature();
+
+            if (skinValue == null || skinSignature == null) {
+                return;
+            }
+
+            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
+        }
+
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);
         spawnEvent.callEvent();
         if (spawnEvent.isCancelled()) {
@@ -112,7 +122,7 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
 
             if (data.isSpawnEntity()) {
@@ -125,11 +135,23 @@ public class Npc_1_20_2 extends Npc {
 
         isVisibleForPlayer.put(player.getUniqueId(), true);
 
+        int removeNpcsFromPlayerlistDelay = FancyNpcsPlugin.get().getFancyNpcConfig().getRemoveNpcsFromPlayerlistDelay();
+        if (!data.isShowInTab() && removeNpcsFromPlayerlistDelay > 0) {
+            FancyNpcsPlugin.get().getNpcThread().schedule(() -> {
+                ClientboundPlayerInfoRemovePacket playerInfoRemovePacket = new ClientboundPlayerInfoRemovePacket(List.of(npc.getUUID()));
+                serverPlayer.connection.send(playerInfoRemovePacket);
+            }, removeNpcsFromPlayerlistDelay, TimeUnit.MILLISECONDS);
+        }
+
         update(player);
     }
 
     @Override
     public void remove(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         if (npc instanceof ServerPlayer npcPlayer) {
@@ -152,6 +174,10 @@ public class Npc_1_20_2 extends Npc {
 
     @Override
     public void lookAt(Player player, Location location) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setRot(location.getYaw(), location.getPitch());
@@ -169,23 +195,20 @@ public class Npc_1_20_2 extends Npc {
 
     @Override
     public void update(Player player) {
+        if (npc == null) {
+            return;
+        }
+
         if (!isVisibleForPlayer.getOrDefault(player.getUniqueId(), false)) {
             return;
         }
 
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
-        PlayerTeam team = new PlayerTeam(serverPlayer.getScoreboard(), "npc-" + localName);
+        PlayerTeam team = new PlayerTeam(new Scoreboard(), "npc-" + localName);
         team.getPlayers().clear();
         team.getPlayers().add(npc instanceof ServerPlayer npcPlayer ? npcPlayer.getGameProfile().getName() : npc.getStringUUID());
-
-        boolean isTeamCreatedForPlayer = isTeamCreated.getOrDefault(serverPlayer.getUUID(), false);
-        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
-
-        if (!isTeamCreatedForPlayer) {
-            isTeamCreated.put(serverPlayer.getUUID(), true);
-        }
-
+        team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
         if (!data.isCollidable()) {
             team.setCollisionRule(Team.CollisionRule.NEVER);
         }
@@ -198,13 +221,14 @@ public class Npc_1_20_2 extends Npc {
         Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
+        } else {
+            npc.setCustomName(null);
+            npc.setCustomNameVisible(false);
         }
 
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
-            npc.setCustomNameVisible(false);
             team.setNameTagVisibility(Team.Visibility.NEVER);
         } else {
-            npc.setCustomNameVisible(true);
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }
 
@@ -218,9 +242,11 @@ public class Npc_1_20_2 extends Npc {
                 actions.add(ClientboundPlayerInfoUpdatePacket.Action.UPDATE_LISTED);
             }
 
-            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer));
+            ClientboundPlayerInfoUpdatePacket playerInfoPacket = new ClientboundPlayerInfoUpdatePacket(actions, getEntry(npcPlayer, serverPlayer));
             serverPlayer.connection.send(playerInfoPacket);
         }
+
+        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true));
 
         npc.setGlowingTag(data.isGlowing());
 
@@ -245,12 +271,22 @@ public class Npc_1_20_2 extends Npc {
         refreshEntityData(player);
 
         if (data.isSpawnEntity() && data.getLocation() != null) {
-            move(player);
+            move(player, true);
         }
 
         NpcAttribute playerPoseAttr = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(org.bukkit.entity.EntityType.PLAYER, "pose");
-        if (data.getAttributes().containsKey(playerPoseAttr) && data.getAttributes().get(playerPoseAttr).equals("sitting")) {
-            setSitting(serverPlayer);
+        if (data.getAttributes().containsKey(playerPoseAttr)) {
+            String pose = data.getAttributes().get(playerPoseAttr);
+
+            if (pose.equals("sitting")) {
+                setSitting(serverPlayer);
+            } else {
+                if (sittingVehicle != null) {
+                    ClientboundRemoveEntitiesPacket removeSittingVehiclePacket = new ClientboundRemoveEntitiesPacket(sittingVehicle.getId());
+                    serverPlayer.connection.send(removeSittingVehiclePacket);
+                }
+            }
+
         }
     }
 
@@ -271,7 +307,11 @@ public class Npc_1_20_2 extends Npc {
         serverPlayer.connection.send(setEntityDataPacket);
     }
 
-    public void move(Player player) {
+    public void move(Player player, boolean swingArm) {
+        if (npc == null) {
+            return;
+        }
+
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         npc.setPosRaw(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
@@ -289,12 +329,24 @@ public class Npc_1_20_2 extends Npc {
         float angelMultiplier = 256f / 360f;
         ClientboundRotateHeadPacket rotateHeadPacket = new ClientboundRotateHeadPacket(npc, (byte) (data.getLocation().getYaw() * angelMultiplier));
         serverPlayer.connection.send(rotateHeadPacket);
+
+        if (swingArm && npc instanceof ServerPlayer) {
+            ClientboundAnimatePacket animatePacket = new ClientboundAnimatePacket(npc, 0);
+            serverPlayer.connection.send(animatePacket);
+        }
     }
 
-    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer) {
+    private ClientboundPlayerInfoUpdatePacket.Entry getEntry(ServerPlayer npcPlayer, ServerPlayer viewer) {
+        GameProfile profile = npcPlayer.getGameProfile();
+        if (data.isMirrorSkin() && ServerLoginPacketListenerImpl.isValidUsername(viewer.getGameProfile().getName())) {
+            GameProfile newProfile = new GameProfile(profile.getId(), profile.getName());
+            newProfile.getProperties().putAll(viewer.getGameProfile().getProperties());
+            profile = newProfile;
+        }
+
         return new ClientboundPlayerInfoUpdatePacket.Entry(
                 npcPlayer.getUUID(),
-                npcPlayer.getGameProfile(),
+                profile,
                 data.isShowInTab(),
                 69,
                 npcPlayer.gameMode.getGameModeForPlayer(),
@@ -304,6 +356,10 @@ public class Npc_1_20_2 extends Npc {
     }
 
     public void setSitting(ServerPlayer serverPlayer) {
+        if (npc == null) {
+            return;
+        }
+
         if (sittingVehicle == null) {
             sittingVehicle = new Display.TextDisplay(EntityType.TEXT_DISPLAY, ((CraftWorld) data.getLocation().getWorld()).getHandle());
         }

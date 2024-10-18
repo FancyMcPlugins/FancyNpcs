@@ -1,34 +1,33 @@
 package de.oliver.fancynpcs.api;
 
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
 import de.oliver.fancylib.RandomUtils;
+import de.oliver.fancylib.translations.Translator;
+import de.oliver.fancynpcs.api.actions.ActionTrigger;
+import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.executor.ActionExecutor;
 import de.oliver.fancynpcs.api.events.NpcInteractEvent;
-import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import de.oliver.fancynpcs.api.utils.Interval;
+import de.oliver.fancynpcs.api.utils.Interval.Unit;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.util.Vector;
 
-import java.text.DecimalFormat;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Npc {
 
-    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##");
+    private static final NpcAttribute INVISIBLE_ATTRIBUTE = FancyNpcsPlugin.get().getAttributeManager().getAttributeByName(EntityType.PLAYER, "invisible");
     private static final char[] localNameChars = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'k', 'l', 'm', 'n', 'o', 'r'};
-    protected final Map<UUID, Boolean> isTeamCreated = new HashMap<>();
-    protected final Map<UUID, Boolean> isVisibleForPlayer = new HashMap<>();
-    protected final Map<UUID, Boolean> isLookingAtPlayer = new HashMap<>();
-    protected final Map<UUID, Long> lastPlayerInteraction = new HashMap<>();
-    private final LanguageConfig lang = FancyNpcsPlugin.get().getLanguageConfig();
+    protected final Map<UUID, Boolean> isTeamCreated = new ConcurrentHashMap<>();
+    protected final Map<UUID, Boolean> isVisibleForPlayer = new ConcurrentHashMap<>();
+    protected final Map<UUID, Boolean> isLookingAtPlayer = new ConcurrentHashMap<>();
+    protected final Map<UUID, Long> lastPlayerInteraction = new ConcurrentHashMap<>();
+    private final Translator translator = FancyNpcsPlugin.get().getTranslator();
     protected NpcData data;
     protected boolean saveToFile;
 
@@ -53,8 +52,7 @@ public abstract class Npc {
     public abstract void spawn(Player player);
 
     public void spawnForAll() {
-        // TODO: check for each player if NPC should be visible (see distance thing - PlayerMoveListener)
-        FancyNpcsPlugin.get().getScheduler().runTaskAsynchronously(() -> {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 spawn(onlinePlayer);
             }
@@ -69,6 +67,52 @@ public abstract class Npc {
         }
     }
 
+    /**
+     * Checks if the NPC should be visible for the player.
+     *
+     * @param player The player to check for.
+     * @return True if the NPC should be visible for the player, otherwise false.
+     */
+    protected boolean shouldBeVisible(Player player) {
+        int visibilityDistance = FancyNpcsPlugin.get().getFancyNpcConfig().getVisibilityDistance();
+
+        if (!data.isSpawnEntity()) {
+            return false;
+        }
+
+        if (data.getLocation() == null) {
+            return false;
+        }
+
+        if (player.getLocation().getWorld() != data.getLocation().getWorld()) {
+            return false;
+        }
+
+        double distanceSquared = data.getLocation().distanceSquared(player.getLocation());
+        if (distanceSquared > visibilityDistance * visibilityDistance) {
+            return false;
+        }
+
+        if (FancyNpcsPlugin.get().getFancyNpcConfig().isSkipInvisibleNpcs() && data.getAttributes().getOrDefault(INVISIBLE_ATTRIBUTE, "false").equalsIgnoreCase("true") && !data.isGlowing() && data.getEquipment().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public void checkAndUpdateVisibility(Player player) {
+        FancyNpcsPlugin.get().getNpcThread().submit(() -> {
+            boolean shouldBeVisible = shouldBeVisible(player);
+            boolean wasVisible = isVisibleForPlayer.getOrDefault(player.getUniqueId(), false);
+
+            if (shouldBeVisible && !wasVisible) {
+                spawn(player);
+            } else if (!shouldBeVisible && wasVisible) {
+                remove(player);
+            }
+        });
+    }
+
     public abstract void lookAt(Player player, Location location);
 
     public abstract void update(Player player);
@@ -79,36 +123,44 @@ public abstract class Npc {
         }
     }
 
-    public abstract void move(Player player);
+    public abstract void move(Player player, boolean swingArm);
 
-    public void moveForAll() {
+    public void move(Player player) {
+        move(player, true);
+    }
+
+    public void moveForAll(boolean swingArm) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            move(onlinePlayer);
+            move(onlinePlayer, swingArm);
         }
     }
 
-    public void interact(Player player, boolean isAttack, EquipmentSlot hand, Vector clickLoc) {
-        if (!isAttack && (hand == EquipmentSlot.HAND || clickLoc != null)) {
-            return;
-        }
+    public void moveForAll() {
+        moveForAll(true);
+    }
 
+    public void interact(Player player) {
+        interact(player, ActionTrigger.CUSTOM);
+    }
+
+    public void interact(Player player, ActionTrigger actionTrigger) {
         if (data.getInteractionCooldown() > 0) {
-            if (lastPlayerInteraction.containsKey(player.getUniqueId())) {
-                long nextAllowedInteraction = lastPlayerInteraction.get(player.getUniqueId()) + Math.round(data.getInteractionCooldown() * 1000L);
-                if (nextAllowedInteraction > System.currentTimeMillis()) {
-                    if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
-                        float timeLeft = (nextAllowedInteraction - System.currentTimeMillis()) / 1000F;
-                        String cooldownMessage = lang.get("on-interaction-cooldown", "time", DECIMAL_FORMAT.format(timeLeft));
-                        MessageHelper.warning(player, cooldownMessage);
-                    }
-                    return;
-                }
-            }
+            final long interactionCooldownMillis = (long) (data.getInteractionCooldown() * 1000);
+            final long lastInteractionMillis = lastPlayerInteraction.getOrDefault(player.getUniqueId(), 0L);
+            final Interval interactionCooldownLeft = Interval.between(lastInteractionMillis + interactionCooldownMillis, System.currentTimeMillis(), Unit.MILLISECONDS);
+            if (interactionCooldownLeft.as(Unit.MILLISECONDS) > 0) {
 
+                if (!FancyNpcsPlugin.get().getFancyNpcConfig().isInteractionCooldownMessageDisabled()) {
+                    translator.translate("interaction_on_cooldown").replace("time", interactionCooldownLeft.toString()).send(player);
+                }
+
+                return;
+            }
             lastPlayerInteraction.put(player.getUniqueId(), System.currentTimeMillis());
         }
 
-        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getPlayerCommand(), data.getServerCommand(), data.getOnClick(), player);
+        List<NpcAction.NpcActionData> actions = data.getActions(actionTrigger);
+        NpcInteractEvent npcInteractEvent = new NpcInteractEvent(this, data.getOnClick(), actions, player, actionTrigger);
         npcInteractEvent.callEvent();
 
         if (npcInteractEvent.isCancelled()) {
@@ -120,59 +172,8 @@ public abstract class Npc {
             data.getOnClick().accept(player);
         }
 
-        // message
-        if (data.getMessages() != null && !data.getMessages().isEmpty()) {
-            for (String msg : data.getMessages()) {
-                if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                    msg = PlaceholderAPI.setPlaceholders(player, msg);
-                }
-
-                player.sendMessage(MiniMessage.miniMessage().deserialize(msg));
-            }
-        }
-
-        // serverCommand
-        if (data.getServerCommand() != null && data.getServerCommand().length() > 0) {
-            String command = data.getServerCommand();
-            command = command.replace("{player}", player.getName());
-
-            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                command = PlaceholderAPI.setPlaceholders(player, command);
-            }
-
-            String finalCommand = command;
-            FancyNpcsPlugin.get().getScheduler().runTask(null, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), finalCommand));
-        }
-
-        // playerCommand
-        if (data.getPlayerCommand() != null && data.getPlayerCommand().length() > 0) {
-            String command;
-
-            if (FancyNpcsPlugin.get().isUsingPlaceholderAPI()) {
-                command = PlaceholderAPI.setPlaceholders(player, data.getPlayerCommand());
-            } else {
-                command = data.getPlayerCommand();
-            }
-
-            if (command.toLowerCase().startsWith("server")) {
-                String[] args = data.getPlayerCommand().split(" ");
-                if (args.length < 2) {
-                    return;
-                }
-                String server = args[1];
-
-                ByteArrayDataOutput out = ByteStreams.newDataOutput();
-                out.writeUTF("Connect");
-                out.writeUTF(server);
-                player.sendPluginMessage(FancyNpcsPlugin.get().getPlugin(), "BungeeCord", out.toByteArray());
-                return;
-            }
-
-            FancyNpcsPlugin.get().getScheduler().runTask(
-                    player.getLocation(),
-                    () -> player.chat("/" + command)
-            );
-        }
+        // actions
+        ActionExecutor.execute(actionTrigger, this, player);
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

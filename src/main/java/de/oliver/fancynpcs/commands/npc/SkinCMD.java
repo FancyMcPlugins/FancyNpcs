@@ -1,81 +1,115 @@
 package de.oliver.fancynpcs.commands.npc;
 
-import de.oliver.fancylib.LanguageConfig;
-import de.oliver.fancylib.MessageHelper;
-import de.oliver.fancylib.UUIDFetcher;
+import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
-import de.oliver.fancynpcs.commands.Subcommand;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
+import org.incendo.cloud.context.CommandInput;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-public class SkinCMD implements Subcommand {
+public enum SkinCMD {
+    INSTANCE; // SINGLETON
 
-    private final LanguageConfig lang = FancyNpcs.getInstance().getLanguageConfig();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
-    @Override
-    public List<String> tabcompletion(@NotNull Player player, @Nullable Npc npc, @NotNull String[] args) {
-        return null;
+    /**
+     * Returns {@code true} if provided string can be parsed to an {@link URL} object.
+     */
+    private static boolean isURL(final @NotNull String url) {
+        try {
+            new URL(url);
+            return true;
+        } catch (final MalformedURLException e) {
+            return false;
+        }
     }
 
-    @Override
-    public boolean run(@NotNull CommandSender receiver, @Nullable Npc npc, @NotNull String[] args) {
-        if (args.length != 3 && args.length != 2) {
-            MessageHelper.error(receiver, lang.get("wrong-usage"));
-            return false;
-        }
+    /* PARSERS AND SUGGESTIONS */
 
-        String skinName = args.length == 3 ? args[2] : receiver instanceof Player player ? player.getName() : "Steve";
-
-
-        if (npc == null) {
-            MessageHelper.error(receiver, lang.get("npc-not-found"));
-            return false;
-        }
-
+    @Command("npc skin <npc> <skin>")
+    @Permission("fancynpcs.command.npc.skin")
+    public void onSkin(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull @Argument(suggestions = "SkinCMD/skin") String skin
+    ) {
         if (npc.getData().getType() != EntityType.PLAYER) {
-            MessageHelper.error(receiver, lang.get("npc-must-be-player"));
-            return false;
+            translator.translate("command_unsupported_npc_type").send(sender);
+            return;
         }
 
-        if (SkinFetcher.SkinType.getType(skinName) == SkinFetcher.SkinType.UUID) {
-            UUID uuid = UUIDFetcher.getUUID(skinName);
-            if (uuid == null) {
-                MessageHelper.error(receiver, lang.get("npc-command-skin-invalid"));
-                return false;
+        final boolean isMirror = skin.equalsIgnoreCase("@mirror");
+        final boolean isNone = skin.equalsIgnoreCase("@none");
+        if (isMirror) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.MIRROR_SKIN, true, sender).callEvent()) {
+                npc.getData().setMirrorSkin(true);
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+                translator.translate("npc_skin_set_mirror").replace("npc", npc.getData().getName()).send(sender);
+            } else {
+                translator.translate("command_npc_modification_cancelled").send(sender);
             }
-            skinName = uuid.toString();
-        }
-
-        SkinFetcher skinFetcher = new SkinFetcher(skinName);
-        if (!skinFetcher.isLoaded()) {
-            MessageHelper.error(receiver, lang.get("npc-command-message-failed_header"));
-            MessageHelper.error(receiver, lang.get("npc-command-skin-failed_url"));
-            MessageHelper.error(receiver, lang.get("npc-command-skin-failed_limited"));
-            return false;
-        }
-
-        NpcModifyEvent npcModifyEvent = new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinFetcher, receiver);
-        npcModifyEvent.callEvent();
-
-        if (!npcModifyEvent.isCancelled()) {
-            npc.getData().setSkin(skinFetcher);
-            npc.removeForAll();
-            npc.create();
-            npc.spawnForAll();
-            MessageHelper.success(receiver, lang.get("npc-command-skin-updated"));
+        } else if (isNone) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
+                npc.getData().setMirrorSkin(false);
+                npc.getData().setSkin(null);
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+                translator.translate("npc_skin_set_none").replace("npc", npc.getData().getName()).send(sender);
+            } else {
+                translator.translate("command_npc_modification_cancelled").send(sender);
+            }
         } else {
-            MessageHelper.error(receiver, lang.get("npc-command-modification-cancelled"));
-        }
+            SkinFetcher.SkinData skinData;
+            try {
+                skinData = new SkinFetcher.SkinData(skin, null, null);
+            } catch (Exception e) {
+                translator.translate("npc_skin_failure_invalid").replaceStripped("input", skin).send(sender);
+                return;
+            }
 
-        return true;
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinData, sender).callEvent()) {
+                npc.getData().setMirrorSkin(false);
+                npc.getData().setSkin(skinData);
+                npc.removeForAll();
+                npc.create();
+                npc.spawnForAll();
+                translator.translate("npc_skin_set")
+                        .replace("npc", npc.getData().getName())
+                        .replace("name", skinData.identifier())
+                        .send(sender);
+            } else {
+                translator.translate("command_npc_modification_cancelled").send(sender);
+            }
+        }
     }
+
+    /* UTILITY METHODS */
+
+    @Suggestions("SkinCMD/skin")
+    public List<String> suggestSkin(final CommandContext<CommandSender> context, final CommandInput input) {
+        return new ArrayList<>() {{
+            add("@none");
+            add("@mirror");
+            Bukkit.getOnlinePlayers().stream().map(Player::getName).forEach(this::add);
+        }};
+    }
+
 }

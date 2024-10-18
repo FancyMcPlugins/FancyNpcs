@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.5.11"
+    id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
 val minecraftVersion = "1.20.4"
@@ -10,7 +10,7 @@ dependencies {
 
     compileOnly(project(":api"))
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("com.github.CoolDCB:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 
 
@@ -25,7 +25,7 @@ tasks {
 
     compileJava {
         options.encoding = Charsets.UTF_8.name()
+        options.release = 17
 
-        options.release.set(17)
     }
 }

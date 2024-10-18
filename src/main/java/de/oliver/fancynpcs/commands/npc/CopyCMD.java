@@ -56,7 +56,9 @@ public enum CopyCMD {
                         npc.getData().getInteractionCooldown(),
                         npc.getData().getScale(),
                         new ConcurrentHashMap<>(npc.getData().getAttributes()),
-                        npc.getData().isMirrorSkin()
+                        npc.getData().isMirrorSkin(),
+                        npc.getData().isOnlyVisibleToEnabled(),
+                        npc.getData().getOnlyVisibleToPlayers()
                 ));
         // Calling the event and creating + registering copied NPC if not cancelled.
         if (new NpcCreateEvent(copied, sender).callEvent()) {

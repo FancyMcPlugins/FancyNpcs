@@ -39,6 +39,8 @@ public class NpcData {
     private float interactionCooldown;
     private float scale;
     private Map<NpcAttribute, String> attributes;
+    private boolean onlyVisibleToEnabled;
+    private final List<String> onlyVisibleTo;
     private boolean isDirty;
 
     public NpcData(
@@ -62,6 +64,8 @@ public class NpcData {
             float scale,
             Map<NpcAttribute, String> attributes,
             boolean mirrorSkin
+            boolean onlyVisibleToEnabled,
+            List<String> onlyVisibleTo
     ) {
         this.id = id;
         this.name = name;
@@ -83,6 +87,8 @@ public class NpcData {
         this.scale = scale;
         this.attributes = attributes;
         this.mirrorSkin = mirrorSkin;
+        this.onlyVisibleToEnabled = onlyVisibleToEnabled;
+        this.onlyVisibleTo = onlyVisibleTo;
         this.isDirty = true;
     }
 
@@ -110,6 +116,10 @@ public class NpcData {
         this.equipment = new ConcurrentHashMap<>();
         this.attributes = new ConcurrentHashMap<>();
         this.mirrorSkin = false;
+        this.equipment = new HashMap<>();
+        this.attributes = new HashMap<>();
+        this.onlyVisibleToEnabled = false;
+        this.onlyVisibleTo = new ArrayList<>();
         this.isDirty = true;
     }
 
@@ -330,8 +340,32 @@ public class NpcData {
 
     public NpcData setMirrorSkin(boolean mirrorSkin) {
         this.mirrorSkin = mirrorSkin;
+    public boolean isOnlyVisibleToEnabled() {
+        return onlyVisibleToEnabled;
+    }
+
+    public NpcData setOnlyVisibleTo(boolean isEnabled) {
+        this.onlyVisibleToEnabled = isEnabled;
+        if (!isEnabled) onlyVisibleTo.clear();
         isDirty = true;
         return this;
+    }
+
+    public List<String> getOnlyVisibleToPlayers() {
+        return onlyVisibleTo;
+    }
+
+    public void showToPlayer(UUID uuid) {
+        if (!onlyVisibleToEnabled) setOnlyVisibleTo(true);
+        if (!onlyVisibleTo.contains(uuid.toString())) {
+            onlyVisibleTo.add(uuid.toString());
+            isDirty = true;
+        }
+    }
+
+    public void hideFromPlayer(UUID uuid) {
+        if (onlyVisibleTo.remove(uuid.toString())) isDirty = true;
+        if (onlyVisibleTo.isEmpty()) setOnlyVisibleTo(false);
     }
 
     public boolean isDirty() {

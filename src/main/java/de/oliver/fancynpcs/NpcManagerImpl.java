@@ -172,6 +172,8 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", null);
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
+            npcConfig.set("npcs." + data.getId() + ".onlyVisibleToEnabled", data.isOnlyVisibleToEnabled());
+            npcConfig.set("npcs." + data.getId() + ".onlyVisibleTo", data.getOnlyVisibleToPlayers());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
@@ -383,27 +385,45 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
+            boolean onlyVisibleToEnabled = false;
+            if (npcConfig.isConfigurationSection("npcs." + id + ".onlyVisibleToEnabled")) {
+                onlyVisibleToEnabled = npcConfig.getBoolean("npcs." + id + ".onlyVisibleToEnabled");
+            }
+
+            List<String> onlyVisibleTo = new ArrayList<>();
+            if (npcConfig.isConfigurationSection("npcs." + id + ".onlyVisibleTo")) {
+                onlyVisibleTo = npcConfig.getStringList("npcs." + id + ".onlyVisibleTo");
+            }
+
+            // TODO: remove when the 'message' field is removed, and just pass in the 'messages'
+            if (messages.isEmpty() && message != null && !message.isEmpty()) {
+                messages = new ArrayList<>();
+                messages.add(message);
+            }
+
             NpcData data = new NpcData(
-                    id,
-                    name,
-                    creator,
-                    displayName,
-                    skin,
-                    location,
-                    showInTab,
-                    spawnEntity,
-                    collidable,
-                    glowing,
-                    glowingColor,
-                    type,
-                    new HashMap<>(),
-                    turnToPlayer,
-                    null,
-                    actions,
-                    interactionCooldown,
-                    scale,
-                    attributes,
-                    mirrorSkin
+                id, 
+                name, 
+                creator, 
+                displayName, 
+                skin, 
+                location, 
+                showInTab, 
+                spawnEntity, 
+                collidable, 
+                glowing, 
+                glowingColor, 
+                type, 
+                new HashMap<>(), 
+                turnToPlayer, 
+                null, 
+                actions,
+                interactionCooldown, 
+                scale,
+                attributes, 
+                mirrorSkin,
+                onlyVisibleToEnabled, 
+                onlyVisibleTo
             );
             Npc npc = npcAdapter.apply(data);
 

@@ -14,6 +14,8 @@ import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import io.papermc.paper.adventure.PaperAdventure;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.Optionull;
+import me.dave.chatcolorhandler.ModernChatColorHandler;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.RemoteChatSession;
@@ -81,6 +83,10 @@ public class Npc_1_20_1 extends Npc {
         ServerPlayer serverPlayer = ((CraftPlayer) player).getHandle();
 
         if (npc == null) {
+            return;
+        }
+
+        if (data.isOnlyVisibleToEnabled() && !data.getOnlyVisibleToPlayers().contains(player.getUniqueId().toString())) {
             return;
         }
 
@@ -166,7 +172,7 @@ public class Npc_1_20_1 extends Npc {
             serverPlayer.connection.send(removeSittingVehiclePacket);
         }
 
-        isVisibleForPlayer.put(serverPlayer.getUUID(), false);
+        isVisibleForPlayer.remove(player.getUniqueId());
     }
 
     @Override
@@ -210,7 +216,11 @@ public class Npc_1_20_1 extends Npc {
             team.setCollisionRule(Team.CollisionRule.NEVER);
         }
 
-        net.kyori.adventure.text.Component displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
+        team.setColor(PaperAdventure.asVanilla(data.getGlowingColor()));
+
+        net.kyori.adventure.text.Component displayName;
+        if (data.getDisplayName().equalsIgnoreCase("<empty>")) displayName = MiniMessage.miniMessage().deserialize("<white>NPC</white>");
+        else displayName = ModernChatColorHandler.translate(data.getDisplayName(), serverPlayer.getBukkitEntity());
         Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);

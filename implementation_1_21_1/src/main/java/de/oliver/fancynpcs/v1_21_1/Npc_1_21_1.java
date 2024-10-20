@@ -250,7 +250,9 @@ public class Npc_1_21_1 extends Npc {
             serverPlayer.connection.send(playerInfoPacket);
         }
 
-        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, true));
+        boolean isTeamCreatedForPlayer = this.isTeamCreated.getOrDefault(player.getUniqueId(), false);
+        serverPlayer.connection.send(ClientboundSetPlayerTeamPacket.createAddOrModifyPacket(team, !isTeamCreatedForPlayer));
+        isTeamCreated.put(player.getUniqueId(), true);
 
         npc.setGlowingTag(data.isGlowing());
 

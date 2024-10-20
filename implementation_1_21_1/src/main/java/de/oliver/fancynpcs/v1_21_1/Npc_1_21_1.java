@@ -76,6 +76,7 @@ public class Npc_1_21_1 extends Npc {
             EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, "factory"); // EntityType.factory
             npc = factory.create(nmsType, serverLevel);
+            isTeamCreated.clear();
         }
     }
 

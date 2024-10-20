@@ -93,11 +93,9 @@ public class Npc_1_20_1 extends Npc {
             String skinValue = data.getSkin().value();
             String skinSignature = data.getSkin().signature();
 
-            if (skinValue == null || skinSignature == null) {
-                return;
+            if (skinValue != null && !skinValue.isEmpty() && skinSignature != null && !skinSignature.isEmpty()) {
+                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
             }
-
-            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);

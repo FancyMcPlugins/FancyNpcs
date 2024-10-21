@@ -21,7 +21,6 @@ public class PlayerUseUnknownEntityListener implements Listener {
         if (event.getHand() == EquipmentSlot.HAND) {
             // PlayerUseUnknownEntityEvent can be called multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
             if (event.isAttack() || event.getClickedRelativePosition() == null || npc.getData().getType() == EntityType.ARMOR_STAND) {
-                npc.interact(event.getPlayer(), ActionTrigger.ANY_CLICK);
                 npc.interact(event.getPlayer(), event.isAttack() ? ActionTrigger.LEFT_CLICK : ActionTrigger.RIGHT_CLICK);
             }
         }

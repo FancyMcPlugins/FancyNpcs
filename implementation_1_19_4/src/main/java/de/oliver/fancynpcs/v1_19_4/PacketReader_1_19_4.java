@@ -66,7 +66,6 @@ public class PacketReader_1_19_4 implements Listener {
         if (hand == EquipmentSlot.HAND) {
             // This packet can be sent multiple times for interactions that are NOT attacks, making sure to run logic only ONCE.
             if (isAttack || !isInteract || npc.getData().getType() == EntityType.ARMOR_STAND) {
-                npc.interact(event.getPlayer(), ActionTrigger.ANY_CLICK);
                 npc.interact(event.getPlayer(), isAttack ? ActionTrigger.LEFT_CLICK : ActionTrigger.RIGHT_CLICK);
             }
         }

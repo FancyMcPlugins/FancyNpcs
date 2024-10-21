@@ -174,6 +174,10 @@ public abstract class Npc {
 
         // actions
         ActionExecutor.execute(actionTrigger, this, player);
+        
+        if (actionTrigger == ActionTrigger.LEFT_CLICK || actionTrigger == ActionTrigger.RIGHT_CLICK) {
+            ActionExecutor.execute(ActionTrigger.ANY_CLICK, this, player);
+        }
     }
 
     protected abstract void refreshEntityData(Player serverPlayer);

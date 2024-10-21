@@ -12,6 +12,7 @@ dependencies {
 
     compileOnly(project(":api"))
     compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
+    compileOnly("de.oliver:FancySitula:${findProperty("fancySitulaVersion")}")
     compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
 }
 

@@ -24,10 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Display;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.item.ItemStack;
@@ -282,13 +279,15 @@ public class Npc_1_20_6 extends Npc {
 
         }
 
-        Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
-        AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
-        });
-        attributeInstance.setBaseValue(data.getScale());
+        if (npc instanceof LivingEntity) {
+            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(new ResourceLocation("generic.scale")).get();
+            AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
+            });
+            attributeInstance.setBaseValue(data.getScale());
 
-        ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
-        serverPlayer.connection.send(updateAttributesPacket);
+            ClientboundUpdateAttributesPacket updateAttributesPacket = new ClientboundUpdateAttributesPacket(npc.getId(), List.of(attributeInstance));
+            serverPlayer.connection.send(updateAttributesPacket);
+        }
     }
 
     @Override

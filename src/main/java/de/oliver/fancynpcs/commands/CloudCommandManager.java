@@ -192,7 +192,7 @@ public final class CloudCommandManager {
 
 
         String mcVersion = Bukkit.getMinecraftVersion();
-        if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6") || mcVersion.equals("1.21") || mcVersion.equals("1.21.1") || mcVersion.equals("1.21.2")) {
+        if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6") || mcVersion.equals("1.21") || mcVersion.equals("1.21.1") || mcVersion.equals("1.21.2") || mcVersion.equals("1.21.3")) {
             annotationParser.parse(ScaleCMD.INSTANCE);
         }
 

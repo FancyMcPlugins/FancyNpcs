@@ -369,6 +369,13 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
                 return (double) count;
             }));
 
+            fancyAnalytics.registerStringArrayMetric(new MetricSupplier<>("npc_type", () -> {
+                return npcManager.getAllNpcs().stream()
+                        .map(npc -> npc.getData().getType().name())
+                        .toArray(String[]::new);
+            }));
+
+
             fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs_having_attributes", () -> {
                 long count = npcManager.getAllNpcs().stream()
                         .filter(npc -> !npc.getData().getAttributes().isEmpty())

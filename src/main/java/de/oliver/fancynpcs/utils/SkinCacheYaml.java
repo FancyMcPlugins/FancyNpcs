@@ -103,6 +103,7 @@ public class SkinCacheYaml implements SkinCache {
             yaml.save(file);
         } catch (Exception e) {
             FancyNpcs.getInstance().getFancyLogger().error("Failed to save skin cache");
+            FancyNpcs.getInstance().getFancyLogger().error(e);
         }
     }
 

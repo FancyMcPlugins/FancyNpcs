@@ -145,7 +145,7 @@ public final class SkinFetcher {
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for UUID " + uuid);
-                FancyNpcsPlugin.get().getFancyLogger().warn(e.getMessage());
+                FancyNpcsPlugin.get().getFancyLogger().warn(e);
                 return null;
             }
         });
@@ -182,7 +182,7 @@ public final class SkinFetcher {
                 return skinData;
             } catch (IOException e) {
                 FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for URL " + skinURL);
-                FancyNpcsPlugin.get().getFancyLogger().warn(e.getMessage());
+                FancyNpcsPlugin.get().getFancyLogger().warn(e);
                 return null;
             }
         });
@@ -226,6 +226,7 @@ public final class SkinFetcher {
                     return skinData == null ? null : skinData.value();
                 } catch (Exception e) {
                     FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for " + identifier);
+                    FancyNpcsPlugin.get().getFancyLogger().warn(e);
                 }
             }
 
@@ -245,6 +246,7 @@ public final class SkinFetcher {
                     return skinData == null ? null : skinData.signature();
                 } catch (Exception e) {
                     FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for " + identifier);
+                    FancyNpcsPlugin.get().getFancyLogger().warn(e);
                 }
             }
 

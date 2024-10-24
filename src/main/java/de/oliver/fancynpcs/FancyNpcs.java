@@ -319,6 +319,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             fancyAnalytics.registerMinecraftPluginMetrics(instance);
             fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
             fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());
+            fancyAnalytics.getExceptionHandler().registerLogger(fancyLogger);
 
             fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
 

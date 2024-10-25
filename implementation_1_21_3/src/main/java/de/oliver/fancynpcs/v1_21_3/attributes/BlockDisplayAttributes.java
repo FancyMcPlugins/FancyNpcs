@@ -34,7 +34,7 @@ public class BlockDisplayAttributes {
     private static void setBlock(Npc npc, String value) {
         Display.BlockDisplay display = ReflectionHelper.getEntity(npc);
 
-        Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(value.toLowerCase()));
+        Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(value.toLowerCase()));
 
         display.setBlockState(block.defaultBlockState());
     }

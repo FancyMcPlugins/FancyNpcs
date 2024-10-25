@@ -63,8 +63,8 @@ public class WolfAttributes {
     private static void setVariant(Npc npc, String value) {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
-        Registry<WolfVariant> registry = wolf.level().registryAccess().registry(Registries.WOLF_VARIANT).get();
-        WolfVariant variant = registry.get(ResourceLocation.parse(value.toLowerCase()));
+        Registry<WolfVariant> registry = wolf.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+        WolfVariant variant = registry.getValue(ResourceLocation.parse(value.toLowerCase()));
 
         if (variant != null) {
             wolf.setVariant(Holder.direct(variant));

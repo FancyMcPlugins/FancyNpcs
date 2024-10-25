@@ -38,7 +38,7 @@ public class VillagerAttributes {
     private static void setProfession(Npc npc, String value) {
         Villager villager = ReflectionHelper.getEntity(npc);
 
-        VillagerProfession profession = BuiltInRegistries.VILLAGER_PROFESSION.get(ResourceLocation.tryParse(value));
+        VillagerProfession profession = BuiltInRegistries.VILLAGER_PROFESSION.getValue(ResourceLocation.tryParse(value));
 
         villager.setVillagerData(villager.getVillagerData().setProfession(profession));
     }
@@ -46,7 +46,7 @@ public class VillagerAttributes {
     private static void setType(Npc npc, String value) {
         Villager villager = ReflectionHelper.getEntity(npc);
 
-        VillagerType type = BuiltInRegistries.VILLAGER_TYPE.get(ResourceLocation.tryParse(value));
+        VillagerType type = BuiltInRegistries.VILLAGER_TYPE.getValue(ResourceLocation.tryParse(value));
 
         villager.setVillagerData(villager.getVillagerData().setType(type));
     }

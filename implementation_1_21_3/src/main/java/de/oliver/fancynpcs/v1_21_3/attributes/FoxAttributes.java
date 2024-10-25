@@ -17,7 +17,7 @@ public class FoxAttributes {
 
         attributes.add(new NpcAttribute(
                 "type",
-                Arrays.stream(Fox.Type.values())
+                Arrays.stream(Fox.Variant.values())
                         .map(Enum::name)
                         .toList(),
                 List.of(EntityType.FOX),
@@ -37,7 +37,7 @@ public class FoxAttributes {
     private static void setType(Npc npc, String value) {
         Fox fox = ReflectionHelper.getEntity(npc);
 
-        Fox.Type type = Fox.Type.valueOf(value.toUpperCase());
+        Fox.Variant type = Fox.Variant.valueOf(value.toUpperCase());
         fox.setVariant(type);
     }
 

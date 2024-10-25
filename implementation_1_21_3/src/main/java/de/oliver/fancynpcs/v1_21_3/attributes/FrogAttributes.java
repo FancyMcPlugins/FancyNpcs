@@ -28,7 +28,7 @@ public class FrogAttributes {
 
     private static void setVariant(Npc npc, String value) {
         final Frog frog = ReflectionHelper.getEntity(npc);
-        BuiltInRegistries.FROG_VARIANT.getHolder(ResourceLocation.parse(value.toLowerCase()))
+        BuiltInRegistries.FROG_VARIANT.get(ResourceLocation.parse(value.toLowerCase()))
                 .ifPresent(frog::setVariant);
     }
 

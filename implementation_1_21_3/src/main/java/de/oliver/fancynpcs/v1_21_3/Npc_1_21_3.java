@@ -70,7 +70,8 @@ public class Npc_1_21_3 extends Npc {
             npc = new ServerPlayer(minecraftServer, serverLevel, new GameProfile(uuid, ""), ClientInformation.createDefault());
             ((ServerPlayer) npc).gameProfile = gameProfile;
         } else {
-            EntityType<?> nmsType = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
+            Optional<Holder.Reference<EntityType<?>>> entityTypeReference = BuiltInRegistries.ENTITY_TYPE.get(CraftNamespacedKey.toMinecraft(data.getType().getKey()));
+            EntityType<?> nmsType = entityTypeReference.get().value(); // TODO handle empty
             EntityType.EntityFactory factory = (EntityType.EntityFactory) ReflectionUtils.getValue(nmsType, "factory"); // EntityType.factory
             npc = factory.create(nmsType, serverLevel);
             isTeamCreated.clear();
@@ -189,7 +190,12 @@ public class Npc_1_21_3 extends Npc {
         npc.setXRot(location.getPitch());
         npc.setYRot(location.getYaw());
 
-        ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
+        ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(
+                npc.getId(),
+                new PositionMoveRotation(new Vec3(data.getLocation().getX(), data.getLocation().getY(), data.getLocation().getZ()), new Vec3(0, 0, 0), location.getYaw(), location.getPitch()),
+                Set.of(Relative.X, Relative.Y, Relative.Z, Relative.Y_ROT, Relative.X_ROT),
+                false
+        );
         serverPlayer.connection.send(teleportEntityPacket);
 
         float angelMultiplier = 256f / 360f;
@@ -292,7 +298,7 @@ public class Npc_1_21_3 extends Npc {
         }
 
         if (npc instanceof LivingEntity) {
-            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse("generic.scale")).get();
+            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse("generic.scale")).get();
             AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
             });
             attributeInstance.setBaseValue(data.getScale());
@@ -333,10 +339,12 @@ public class Npc_1_21_3 extends Npc {
         npc.setXRot(data.getLocation().getPitch());
         npc.setYRot(data.getLocation().getYaw());
 
-        ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(npc);
-        ReflectionUtils.setValue(teleportEntityPacket, "x", data.getLocation().x()); // 'x'
-        ReflectionUtils.setValue(teleportEntityPacket, "y", data.getLocation().y()); // 'y'
-        ReflectionUtils.setValue(teleportEntityPacket, "z", data.getLocation().z()); // 'z'
+        ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(
+                npc.getId(),
+                new PositionMoveRotation(new Vec3(data.getLocation().getX(), data.getLocation().getY(), data.getLocation().getZ()), new Vec3(0, 0, 0), data.getLocation().getYaw(), data.getLocation().getPitch()),
+                Set.of(Relative.X, Relative.Y, Relative.Z, Relative.Y_ROT, Relative.X_ROT),
+                false
+        );
         serverPlayer.connection.send(teleportEntityPacket);
 
         float angelMultiplier = 256f / 360f;
@@ -364,6 +372,7 @@ public class Npc_1_21_3 extends Npc {
                 69,
                 npcPlayer.gameMode.getGameModeForPlayer(),
                 npcPlayer.getTabListDisplayName(),
+                -1,
                 Optionull.map(npcPlayer.getChatSession(), RemoteChatSession::asData)
         );
     }

@@ -298,7 +298,7 @@ public class Npc_1_21_3 extends Npc {
         }
 
         if (npc instanceof LivingEntity) {
-            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse("generic.scale")).get();
+            Holder.Reference<Attribute> scaleAttribute = BuiltInRegistries.ATTRIBUTE.get(ResourceLocation.parse("minecraft:scale")).get();
             AttributeInstance attributeInstance = new AttributeInstance(scaleAttribute, (a) -> {
             });
             attributeInstance.setBaseValue(data.getScale());
@@ -341,8 +341,13 @@ public class Npc_1_21_3 extends Npc {
 
         ClientboundTeleportEntityPacket teleportEntityPacket = new ClientboundTeleportEntityPacket(
                 npc.getId(),
-                new PositionMoveRotation(new Vec3(data.getLocation().getX(), data.getLocation().getY(), data.getLocation().getZ()), new Vec3(0, 0, 0), data.getLocation().getYaw(), data.getLocation().getPitch()),
-                Set.of(Relative.X, Relative.Y, Relative.Z, Relative.Y_ROT, Relative.X_ROT),
+                new PositionMoveRotation(
+                        new Vec3(data.getLocation().getX(), data.getLocation().getY(), data.getLocation().getZ()),
+                        new Vec3(0, 0, 0),
+                        data.getLocation().getYaw(),
+                        data.getLocation().getPitch()
+                ),
+                Set.of(),
                 false
         );
         serverPlayer.connection.send(teleportEntityPacket);

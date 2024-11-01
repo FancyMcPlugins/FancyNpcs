@@ -16,7 +16,20 @@ plugins {
 runPaper.folia.registerTask()
 
 val supportedVersions =
-    listOf("1.19.4", "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4", "1.20.5", "1.20.6", "1.21", "1.21.1")
+    listOf(
+        "1.19.4",
+        "1.20",
+        "1.20.1",
+        "1.20.2",
+        "1.20.3",
+        "1.20.4",
+        "1.20.5",
+        "1.20.6",
+        "1.21",
+        "1.21.1",
+        "1.21.2",
+        "1.21.3"
+    )
 
 allprojects {
     group = "de.oliver"
@@ -37,6 +50,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_21_3"))
     implementation(project(":implementation_1_21_1"))
     implementation(project(":implementation_1_20_6"))
     implementation(project(":implementation_1_20_4", configuration = "reobf"))

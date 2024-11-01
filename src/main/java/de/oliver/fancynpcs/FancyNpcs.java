@@ -43,6 +43,7 @@ import de.oliver.fancynpcs.v1_20_2.Npc_1_20_2;
 import de.oliver.fancynpcs.v1_20_4.Npc_1_20_4;
 import de.oliver.fancynpcs.v1_20_6.Npc_1_20_6;
 import de.oliver.fancynpcs.v1_21_1.Npc_1_21_1;
+import de.oliver.fancynpcs.v1_21_3.Npc_1_21_3;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -133,6 +134,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         String mcVersion = Bukkit.getMinecraftVersion();
 
         switch (mcVersion) {
+            case "1.21.2", "1.21.3" -> npcAdapter = Npc_1_21_3::new;
             case "1.21", "1.21.1" -> npcAdapter = Npc_1_21_1::new;
             case "1.20.5", "1.20.6" -> npcAdapter = Npc_1_20_6::new;
             case "1.20.3", "1.20.4" -> npcAdapter = Npc_1_20_4::new;
@@ -155,7 +157,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             fancyLogger.error("Unsupported minecraft server version.");
             getLogger().warning("--------------------------------------------------");
             getLogger().warning("Unsupported minecraft server version.");
-            getLogger().warning("This plugin only supports 1.19.4 - 1.21.1");
+            getLogger().warning("This plugin only supports 1.19.4 - 1.21.3");
             getLogger().warning("Disabling the FancyNpcs plugin.");
             getLogger().warning("--------------------------------------------------");
             pluginManager.disablePlugin(this);
@@ -315,7 +317,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (isDevelopmentBuild || randomRes < 30) {
+        if (isDevelopmentBuild || randomRes < 50) {
             fancyAnalytics.registerMinecraftPluginMetrics(instance);
             fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
             fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());

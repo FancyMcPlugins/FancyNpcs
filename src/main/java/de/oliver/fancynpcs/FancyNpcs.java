@@ -317,7 +317,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         metrics.addCustomChart(new Metrics.SimplePie("using_development_build", () -> isDevelopmentBuild ? "Yes" : "No"));
 
         int randomRes = new Random(System.currentTimeMillis()).nextInt(100);
-        if (isDevelopmentBuild || randomRes < 75) {
+        if (isDevelopmentBuild || randomRes < 75 || Bukkit.getMinecraftVersion().equals("1.21.3")) {
             fancyAnalytics.registerMinecraftPluginMetrics(instance);
             fancyAnalytics.getExceptionHandler().registerLogger(getLogger());
             fancyAnalytics.getExceptionHandler().registerLogger(Bukkit.getLogger());

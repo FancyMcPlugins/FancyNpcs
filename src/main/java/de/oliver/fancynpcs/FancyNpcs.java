@@ -49,6 +49,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.lushplugins.pluginupdater.api.platform.modrinth.ModrinthData;
 import org.lushplugins.pluginupdater.api.updater.Updater;
 
 import java.io.File;
@@ -238,7 +239,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         if (ENABLE_PLUGIN_UPDATER_FEATURE_FLAG.isEnabled()) {
             updater = new Updater.Builder(instance)
-                    .modrinth("fancynpcs", true)
+//                    .modrinth("fancynpcs", true)
+                    .platform(new ModrinthData("fancynpcs", EnumSet.of(ModrinthData.VersionType.RELEASE), false))
                     .hangar("FancyNpcs")
                     .github("FancyMcPlugins/FancyNpcs")
                     .checkSchedule(config.isMuteVersionNotification() ? -1 : 5)

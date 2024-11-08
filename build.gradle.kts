@@ -61,14 +61,14 @@ dependencies {
 
     implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
     compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
-    implementation("de.oliver.FancyAnalytics:api:${findProperty("fancyAnalyticsVersion")}")
+    implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
-    implementation("org.incendo:cloud-core:${findProperty("cloudCoreVersion")}")
-    implementation("org.incendo:cloud-paper:${findProperty("cloudPaperVersion")}")
-    implementation("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
-    annotationProcessor("org.incendo:cloud-annotations:${findProperty("cloudAnnotationsVersion")}")
+    implementation("org.incendo:cloud-core:2.0.0-rc.2")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
+    implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
+    annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
 
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:${findProperty("plotsquaredVersion")}")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.2.0")
 }
 
 paper {

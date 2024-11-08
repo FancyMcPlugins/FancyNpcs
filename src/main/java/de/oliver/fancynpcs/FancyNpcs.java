@@ -326,6 +326,29 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("commit_hash", () -> versionConfig.getHash().substring(0, 7)));
 
+
+        fancyAnalytics.registerStringMetric(new MetricSupplier<>("server_size", () -> {
+            long onlinePlayers = Bukkit.getOnlinePlayers().size();
+
+            if (onlinePlayers == 0) {
+                return "empty";
+            }
+
+            if (onlinePlayers <= 25) {
+                return "small";
+            }
+
+            if (onlinePlayers <= 100) {
+                return "medium";
+            }
+
+            if (onlinePlayers <= 500) {
+                return "large";
+            }
+
+            return "very_large";
+        }));
+
         fancyAnalytics.registerNumberMetric(new MetricSupplier<>("amount_npcs", () -> (double) npcManager.getAllNpcs().size()));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_update_notifications", () -> config.isMuteVersionNotification() ? "false" : "true"));
         fancyAnalytics.registerStringMetric(new MetricSupplier<>("enabled_player_npcs_fflag", () -> PLAYER_NPCS_FEATURE_FLAG.isEnabled() ? "true" : "false"));

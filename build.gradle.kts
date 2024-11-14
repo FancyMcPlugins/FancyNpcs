@@ -68,7 +68,7 @@ dependencies {
     implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
     annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
 
-    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.2.0")
+    compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.3.12")
 }
 
 paper {

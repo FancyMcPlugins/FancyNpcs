@@ -228,6 +228,8 @@ public class Npc_1_21_1 extends Npc {
 
         if (data.getDisplayName().equalsIgnoreCase("<empty>")) {
             team.setNameTagVisibility(Team.Visibility.NEVER);
+            npc.setCustomName(null);
+            npc.setCustomNameVisible(false);
         } else {
             team.setNameTagVisibility(Team.Visibility.ALWAYS);
         }

@@ -64,7 +64,7 @@ dependencies {
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
     implementation("org.incendo:cloud-core:2.0.0-rc.2")
-    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
+    implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.0.0-rc.2")
     annotationProcessor("org.incendo:cloud-annotations:2.0.0-rc.2")
 

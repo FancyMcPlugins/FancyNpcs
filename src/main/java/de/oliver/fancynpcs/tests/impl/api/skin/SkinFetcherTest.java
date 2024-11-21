@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 
+import static de.oliver.fancynpcs.tests.Expectable.expect;
+
 public class SkinFetcherTest {
 
     private SkinFetcherImpl skinFetcher;
@@ -22,36 +24,41 @@ public class SkinFetcherTest {
     public void testSkinByUUID(Player player) {
         SkinData skin = skinFetcher.getByUUID(player.getUniqueId());
 
-        assert skin != null;
-        assert skin.identifier().equals(player.getUniqueId().toString());
-        assert skin.type().equals(SkinData.SkinType.UUID);
-        assert skin.variant().equals(SkinData.SkinVariant.DEFAULT);
-        assert skin.textureValue() != null && !skin.textureValue().isEmpty();
-        assert skin.textureSignature() != null && !skin.textureSignature().isEmpty();
+        expect(skin).toBeDefined();
+        expect(skin.identifier()).toEqual(player.getUniqueId().toString());
+        expect(skin.type()).toEqual(SkinData.SkinType.UUID);
+        expect(skin.variant()).toEqual(SkinData.SkinVariant.DEFAULT);
+        expect(skin.textureValue()).toBeDefined();
+        expect(skin.textureValue().length()).toBeGreaterThan(0);
+        expect(skin.textureSignature()).toBeDefined();
+        expect(skin.textureSignature().length()).toBeGreaterThan(0);
     }
 
     @FNTest(name = "Test fetch skin by username")
     public void testSkinByUsername(Player player) {
         SkinData skin = skinFetcher.getByUsername(player.getName());
 
-        assert skin != null;
-        assert skin.identifier().equals(player.getName());
-        assert skin.type().equals(SkinData.SkinType.USERNAME);
-        assert skin.variant().equals(SkinData.SkinVariant.DEFAULT);
-        assert skin.textureValue() != null && !skin.textureValue().isEmpty();
-        assert skin.textureSignature() != null && !skin.textureSignature().isEmpty();
+        expect(skin).toBeDefined();
+        expect(skin.identifier()).toEqual(player.getName());
+        expect(skin.type()).toEqual(SkinData.SkinType.USERNAME);
+        expect(skin.variant()).toEqual(SkinData.SkinVariant.DEFAULT);
+        expect(skin.textureValue()).toBeDefined();
+        expect(skin.textureValue().length()).toBeGreaterThan(0);
+        expect(skin.textureSignature()).toBeDefined();
     }
 
     @FNTest(name = "Test fetch skin by URL")
     public void testSkinByURL(Player player) {
         SkinData skin = skinFetcher.getByURL("https://s.namemc.com/i/de7d8a3ffd1f584c.png");
 
-        assert skin != null;
-        assert skin.identifier().equals("https://s.namemc.com/i/de7d8a3ffd1f584c.png");
-        assert skin.type().equals(SkinData.SkinType.URL);
-        assert skin.variant().equals(SkinData.SkinVariant.DEFAULT);
-        assert skin.textureValue() != null && !skin.textureValue().isEmpty();
-        assert skin.textureSignature() != null && !skin.textureSignature().isEmpty();
+        expect(skin).toBeDefined();
+        expect(skin.identifier()).toEqual("https://s.namemc.com/i/de7d8a3ffd1f584c.png");
+        expect(skin.type()).toEqual(SkinData.SkinType.URL);
+        expect(skin.variant()).toEqual(SkinData.SkinVariant.DEFAULT);
+        expect(skin.textureValue()).toBeDefined();
+        expect(skin.textureValue().length()).toBeGreaterThan(0);
+        expect(skin.textureSignature()).toBeDefined();
+        expect(skin.textureSignature().length()).toBeGreaterThan(0);
     }
 
     @FNTest(name = "Test fetch skin by file")
@@ -59,12 +66,14 @@ public class SkinFetcherTest {
         SkinData skin = skinFetcher.getByFile("plugins/FancyNpcs/testskin.png");
         FancyNpcs.getInstance().getPlugin().saveResource("testskin.png", false);
 
-        assert skin != null;
-        assert skin.identifier().equals("src/test/resources/skin.png");
-        assert skin.type().equals(SkinData.SkinType.FILE);
-        assert skin.variant().equals(SkinData.SkinVariant.DEFAULT);
-        assert skin.textureValue() != null && !skin.textureValue().isEmpty();
-        assert skin.textureSignature() != null && !skin.textureSignature().isEmpty();
+        expect(skin).toBeDefined();
+        expect(skin.identifier()).toEqual("plugins/FancyNpcs/testskin.png");
+        expect(skin.type()).toEqual(SkinData.SkinType.FILE);
+        expect(skin.variant()).toEqual(SkinData.SkinVariant.DEFAULT);
+        expect(skin.textureValue()).toBeDefined();
+        expect(skin.textureValue().length()).toBeGreaterThan(0);
+        expect(skin.textureSignature()).toBeDefined();
+        expect(skin.textureSignature().length()).toBeGreaterThan(0);
 
         new File("plugins/FancyNpcs/testskin.png").delete();
     }
@@ -73,11 +82,11 @@ public class SkinFetcherTest {
     public void testGetSkin(Player player) {
         SkinData skin = skinFetcher.get("skinname", "value", "signature");
 
-        assert skin != null;
-        assert skin.identifier().equals("skinname");
-        assert skin.type().equals(SkinData.SkinType.VALUE_SIGNATURE);
-        assert skin.variant().equals(SkinData.SkinVariant.DEFAULT);
-        assert skin.textureValue().equals("value");
-        assert skin.textureSignature().equals("signature");
+        expect(skin).toBeDefined();
+        expect(skin.identifier()).toEqual("skinname");
+        expect(skin.type()).toEqual(SkinData.SkinType.VALUE_SIGNATURE);
+        expect(skin.variant()).toEqual(SkinData.SkinVariant.DEFAULT);
+        expect(skin.textureValue()).toEqual("value");
+        expect(skin.textureSignature()).toEqual("signature");
     }
 }

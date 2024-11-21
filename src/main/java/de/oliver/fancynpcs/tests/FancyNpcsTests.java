@@ -1,9 +1,9 @@
 package de.oliver.fancynpcs.tests;
 
 import de.oliver.fancylib.tests.FPTestClass;
-import de.oliver.fancynpcs.tests.api.ChatColorHandlerTest;
 import de.oliver.fancynpcs.tests.api.CreateNpcTest;
 import de.oliver.fancynpcs.tests.commands.*;
+import de.oliver.fancynpcs.tests.impl.api.skin.SkinFetcherTest;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -20,7 +20,8 @@ public class FancyNpcsTests {
     public FancyNpcsTests() {
         // api tests
         addTest(CreateNpcTest.class);
-        addTest(ChatColorHandlerTest.class);
+        // addTest(ChatColorHandlerTest.class);
+        addTest(SkinFetcherTest.class);
 
         // command tests
         addTest(CreateCMDTest.class);

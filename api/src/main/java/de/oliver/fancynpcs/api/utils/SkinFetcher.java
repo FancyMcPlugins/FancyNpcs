@@ -264,7 +264,7 @@ public final class SkinFetcher {
     @ApiStatus.Internal
     public record SkinCacheData(@NotNull SkinData skinData, long lastUpdated, long timeToLive) {
         public boolean isExpired() {
-            return System.currentTimeMillis() - lastUpdated > timeToLive;
+            return timeToLive > 0 && System.currentTimeMillis() - lastUpdated > timeToLive;
         }
     }
 }

@@ -67,7 +67,7 @@ Official documentation is hosted **[here](https://fancyplugins.de/docs/fancynpcs
 
 ## Developer API
 
-More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and **[Javadocs](https://fancyplugins.de/javadocs/fancynpcs/)**.
+More information can be found in **[Documentation](https://fancyplugins.de/docs/fn-api.html)** and **[Javadocs](https://repo.fancyplugins.de/javadoc/releases/de/oliver/FancyNpcs/latest)**.
 
 ### Maven
 

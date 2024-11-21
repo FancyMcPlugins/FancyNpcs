@@ -4,6 +4,8 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinFetcher;
+import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.mineskin.JsoupRequestHandler;
 import org.mineskin.MineSkinClient;
 import org.mineskin.data.CodeAndMessage;
@@ -35,6 +37,7 @@ public class SkinFetcherImpl implements SkinFetcher {
 
         this.client = MineSkinClient.builder()
                 .requestHandler(JsoupRequestHandler::new)
+                .userAgent("FancyNpcs")
                 .getExecutor(executor)
                 .generateExecutor(executor)
                 .generateRequestScheduler(executor)
@@ -63,7 +66,9 @@ public class SkinFetcherImpl implements SkinFetcher {
 
     @Override
     public SkinData getByUsername(String username) {
-        GenerateRequest genReq = GenerateRequest.user(username);
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username); // TODO: implement a better way to get the UUID
+
+        GenerateRequest genReq = GenerateRequest.user(offlinePlayer.getUniqueId());
         SkinInfo skinInfo = executeRequest(genReq);
 
         if (skinInfo == null) {

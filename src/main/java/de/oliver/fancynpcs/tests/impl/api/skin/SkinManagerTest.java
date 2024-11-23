@@ -24,7 +24,7 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test fetch skin by UUID")
     public void testSkinByUUID(Player player) {
-        SkinData skin = skinFetcher.getByUUID(player.getUniqueId());
+        SkinData skin = skinFetcher.getByUUID(player.getUniqueId(), SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
         expect(skin.getIdentifier()).toEqual(player.getUniqueId().toString());
@@ -37,7 +37,7 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test fetch skin by username")
     public void testSkinByUsername(Player player) {
-        SkinData skin = skinFetcher.getByUsername(player.getName());
+        SkinData skin = skinFetcher.getByUsername(player.getName(), SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
         expect(skin.getIdentifier()).toEqual(player.getName());
@@ -49,7 +49,7 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test fetch skin by URL")
     public void testSkinByURL(Player player) {
-        SkinData skin = skinFetcher.getByURL("https://s.namemc.com/i/de7d8a3ffd1f584c.png");
+        SkinData skin = skinFetcher.getByURL("https://s.namemc.com/i/de7d8a3ffd1f584c.png", SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
         expect(skin.getIdentifier()).toEqual("https://s.namemc.com/i/de7d8a3ffd1f584c.png");
@@ -62,7 +62,7 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test fetch skin by file")
     public void testSkinByFile(Player player) {
-        SkinData skin = skinFetcher.getByFile("plugins/FancyNpcs/testskin.png");
+        SkinData skin = skinFetcher.getByFile("plugins/FancyNpcs/testskin.png", SkinData.SkinVariant.AUTO);
         FancyNpcs.getInstance().getPlugin().saveResource("testskin.png", false);
 
         expect(skin).toBeDefined();
@@ -78,7 +78,7 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test get skin")
     public void testGetSkin(Player player) {
-        SkinData skin = skinFetcher.get("skinname", "value", "signature");
+        SkinData skin = skinFetcher.get("skinname", "value", "signature", SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
         expect(skin.getIdentifier()).toEqual("skinname");

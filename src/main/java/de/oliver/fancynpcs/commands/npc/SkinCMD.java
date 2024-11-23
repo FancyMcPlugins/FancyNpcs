@@ -63,13 +63,7 @@ public enum SkinCMD {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
         } else {
-            SkinData skinData;
-            try {
-                skinData = new SkinData("", SkinData.SkinVariant.DEFAULT, "", ""); // TODO
-            } catch (Exception e) {
-                translator.translate("npc_skin_failure_invalid").replaceStripped("input", skin).send(sender);
-                return;
-            }
+            SkinData skinData = FancyNpcs.getInstance().getSkinManager().getByIdentifier(skin, SkinData.SkinVariant.AUTO); //TODO add variant option
 
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinData, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);

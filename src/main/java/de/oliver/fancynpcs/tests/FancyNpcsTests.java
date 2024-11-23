@@ -1,8 +1,14 @@
 package de.oliver.fancynpcs.tests;
 
+<<<<<<< HEAD:src/main/java/de/oliver/fancynpcs/tests/FancyNpcsTests.java
 import de.oliver.fancylib.tests.FPTestClass;
 import de.oliver.fancynpcs.tests.api.CreateNpcTest;
 import de.oliver.fancynpcs.tests.commands.*;
+=======
+import de.oliver.fancynpcs.tests.FNTestClass;
+import de.oliver.fancynpcs.tests.impl.api.ChatColorHandlerTest;
+import de.oliver.fancynpcs.tests.impl.api.CreateNpcTest;
+>>>>>>> 74b9813 (add back chatcolor tests):src/main/java/de/oliver/fancynpcs/tests/impl/FancyNpcsTests.java
 import de.oliver.fancynpcs.tests.impl.api.skin.SkinManagerTest;
 import org.bukkit.entity.Player;
 
@@ -20,7 +26,7 @@ public class FancyNpcsTests {
     public FancyNpcsTests() {
         // api tests
         addTest(CreateNpcTest.class);
-        // addTest(ChatColorHandlerTest.class);
+        addTest(ChatColorHandlerTest.class);
         addTest(SkinManagerTest.class);
 
         // command tests

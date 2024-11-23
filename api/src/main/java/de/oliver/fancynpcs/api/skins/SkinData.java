@@ -54,6 +54,6 @@ public class SkinData {
     public enum SkinVariant {
         AUTO,
         SLIM,
-        DEFAULT
+        CLASSIC
     }
 }

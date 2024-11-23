@@ -237,8 +237,6 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         });
 
-        System.out.println("Fetching skin from MineSkin...");
-
         return skinResp.join();
     }
 

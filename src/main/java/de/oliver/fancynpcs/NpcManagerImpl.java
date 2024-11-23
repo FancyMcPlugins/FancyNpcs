@@ -181,7 +181,7 @@ public class NpcManagerImpl implements NpcManager {
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.skinVariant", data.getSkin().getVariant());
+                npcConfig.set("npcs." + data.getId() + ".skin.variant", data.getSkin().getVariant().name());
             } else {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
@@ -271,10 +271,10 @@ public class NpcManagerImpl implements NpcManager {
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
 
-            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.DEFAULT.name());
+            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
             SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
 
-            SkinData skin = new SkinData(skinIdentifier, skinVariant, "", "");
+            SkinData skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
 
 
             if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {

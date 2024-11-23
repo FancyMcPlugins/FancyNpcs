@@ -21,7 +21,6 @@ import org.mineskin.response.QueueResponse;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
@@ -229,10 +228,15 @@ public class SkinManagerImpl implements SkinManager {
 
             if (throwable instanceof MineSkinRequestException requestException) {
                 MineSkinResponse<?> response = requestException.getResponse();
-                Optional<CodeAndMessage> detailsOptional = response.getErrorOrMessage();
-                detailsOptional.ifPresent(details -> {
-                    FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + details.code() + ": " + details.message());
-                });
+
+                for (CodeAndMessage error : response.getErrors()) {
+                    FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + error.code() + ": " + error.message());
+                }
+
+//                Optional<CodeAndMessage> detailsOptional = response.getErrorOrMessage();
+//                detailsOptional.ifPresent(details -> {
+//                    FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + details.code() + ": " + details.message());
+//                });
             }
             return null;
         });

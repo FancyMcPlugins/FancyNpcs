@@ -86,7 +86,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
-    private SkinManager skinManager;
+    private SkinManagerImpl skinManager;
     private ActionManagerImpl actionManager;
     private VisibilityTracker visibilityTracker;
     private boolean usingPlotSquared;
@@ -499,6 +499,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public SkinManager getSkinManager() {
+        return skinManager;
+    }
+
+    public SkinManagerImpl getSkinManagerImpl() {
         return skinManager;
     }
 

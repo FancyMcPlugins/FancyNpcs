@@ -269,12 +269,17 @@ public class NpcManagerImpl implements NpcManager {
                 location = new Location(world, x, y, z, yaw, pitch);
             }
 
+            SkinData skin = null;
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
+            if (!skinIdentifier.isEmpty()) {
+                String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
+                SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
 
-            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
-            SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
-
-            SkinData skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
+                skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
+                if (skin == null) {
+                    logger.warn("Could not load skin for npc '" + id + "'");
+                }
+            }
 
 
             if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {

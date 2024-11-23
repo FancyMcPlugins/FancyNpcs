@@ -26,7 +26,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * The skin system is deprecated and will be replaced with a slightly different system in the near future.
+ */
+@Deprecated
 public final class SkinFetcher {
+    @Deprecated
     public static final Map<String, SkinData> skinCache = new ConcurrentHashMap<>(); // identifier -> skinData
 
     private SkinFetcher() {
@@ -38,6 +43,7 @@ public final class SkinFetcher {
      * @param identifier The identifier of the skin. This can be a UUID, username, URL or a placeholder by PAPI.
      * @return A CompletableFuture that will contain the SkinData.
      */
+    @Deprecated
     public static CompletableFuture<SkinData> fetchSkin(String identifier) {
         return CompletableFuture.supplyAsync(() -> {
             String parsedIdentifier = ChatColorHandler.translate(identifier, ParserTypes.placeholder());
@@ -104,6 +110,7 @@ public final class SkinFetcher {
      * @param player The player.
      * @return The SkinData or {@code null} if the skin data could not be fetched.
      */
+    @Deprecated
     public static SkinData getSkinByOnlinePlayer(Player player) {
         if (player == null) {
             return null;
@@ -124,6 +131,7 @@ public final class SkinFetcher {
      * @param uuid The UUID of the player.
      * @return A CompletableFuture that will contain the SkinData.
      */
+    @Deprecated
     public static CompletableFuture<SkinData> fetchSkinByUUID(String uuid) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -157,6 +165,7 @@ public final class SkinFetcher {
      * @param skinURL The URL of the skin.
      * @return A CompletableFuture that will contain the SkinData.
      */
+    @Deprecated
     public static CompletableFuture<SkinData> fetchSkinByURL(String skinURL) {
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -211,6 +220,7 @@ public final class SkinFetcher {
      * @param value      The value of the skin. If {@code null}, the skin will be fetched from the Mojang API.
      * @param signature  The signature of the skin. If {@code null}, the skin will be fetched from the Mojang API.
      */
+    @Deprecated
     public record SkinData(@NotNull String identifier, @Nullable String value, @Nullable String signature) {
 
         /**
@@ -261,6 +271,7 @@ public final class SkinFetcher {
      * @param lastUpdated The timestamp when the skin data was last updated.
      * @param timeToLive  The time to live of the skin data in milliseconds.
      */
+    @Deprecated
     @ApiStatus.Internal
     public record SkinCacheData(@NotNull SkinData skinData, long lastUpdated, long timeToLive) {
         public boolean isExpired() {

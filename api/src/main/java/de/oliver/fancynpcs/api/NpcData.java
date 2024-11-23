@@ -23,7 +23,7 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-    private SkinFetcher.SkinData skin;
+    @Deprecated private SkinFetcher.SkinData skin;
     private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;
@@ -46,7 +46,7 @@ public class NpcData {
             String name,
             UUID creator,
             String displayName,
-            SkinFetcher.SkinData skin,
+            @Deprecated SkinFetcher.SkinData skin,
             Location location,
             boolean showInTab,
             boolean spawnEntity,
@@ -135,10 +135,18 @@ public class NpcData {
         return this;
     }
 
+    /**
+     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
+     */
+    @Deprecated
     public SkinFetcher.SkinData getSkin() {
         return skin;
     }
 
+    /**
+     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
+     */
+    @Deprecated
     public NpcData setSkin(SkinFetcher.SkinData skin) {
         this.skin = skin;
         isDirty = true;

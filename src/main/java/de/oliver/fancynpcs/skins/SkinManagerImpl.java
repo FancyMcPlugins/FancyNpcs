@@ -30,9 +30,11 @@ public class SkinManagerImpl implements SkinManager {
 
     private final ScheduledExecutorService executor;
     private final MineSkinClient client;
-    private final SkinCache cache;
 
-    public SkinManagerImpl(SkinCache cache) {
+    private final SkinCache fileCache;
+    private final SkinCache memCache;
+
+    public SkinManagerImpl(SkinCache fileCache, SkinCache memCache) {
         this.executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                 .setNameFormat("FancyNpcs-Skins")
                 .build());
@@ -47,7 +49,8 @@ public class SkinManagerImpl implements SkinManager {
                 .jobCheckScheduler(executor)
                 .build();
 
-        this.cache = cache;
+        this.fileCache = fileCache;
+        this.memCache = memCache;
     }
 
     @Override
@@ -179,5 +182,13 @@ public class SkinManagerImpl implements SkinManager {
         });
 
         return skinResp.join();
+    }
+
+    public SkinCache getFileCache() {
+        return fileCache;
+    }
+
+    public SkinCache getMemCache() {
+        return memCache;
     }
 }

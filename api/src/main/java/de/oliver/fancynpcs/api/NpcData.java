@@ -23,11 +23,7 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-<<<<<<< HEAD
-    @Deprecated private SkinFetcher.SkinData skin;
-=======
     private SkinData skin;
->>>>>>> 915c114 (Refactor skin management and remove outdated skin fetching logic)
     private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;

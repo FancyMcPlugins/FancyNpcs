@@ -45,7 +45,6 @@ public class PlayerJoinListener implements Listener {
 
             SkinData skinData = new SkinData(
                     event.getPlayer().getUniqueId().toString(),
-                    SkinData.SkinType.UUID,
                     SkinData.SkinVariant.DEFAULT,
                     property.getValue(),
                     property.getSignature()

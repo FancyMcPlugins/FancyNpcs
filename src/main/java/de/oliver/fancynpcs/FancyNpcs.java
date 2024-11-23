@@ -190,6 +190,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         actionManager.registerAction(new WaitAction());
         actionManager.registerAction(new ExecuteRandomActionAction());
         actionManager.registerAction(new BlockUntilDoneAction());
+        actionManager.registerAction(new NeedPermissionAction());
 
         skinCache = new SkinCacheYaml();
         skinCache.loadAndInsertToSkinFetcher();

@@ -207,16 +207,6 @@ public class SkinManagerImpl implements SkinManager {
         return skinData;
     }
 
-    @Override
-    public SkinData get(String name, String value, String signature, SkinData.SkinVariant variant) {
-        return new SkinData(
-                name,
-                variant,
-                value,
-                signature
-        );
-    }
-
     private SkinInfo executeRequest(GenerateRequest req) {
         // submit job to the queue
         CompletableFuture<QueueResponse> queueResp = client.queue().submit(req);

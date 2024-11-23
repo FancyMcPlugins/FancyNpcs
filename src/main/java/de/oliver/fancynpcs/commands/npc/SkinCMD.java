@@ -11,6 +11,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Flag;
 import org.incendo.cloud.annotations.Permission;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
@@ -32,7 +33,8 @@ public enum SkinCMD {
     public void onSkin(
             final @NotNull CommandSender sender,
             final @NotNull Npc npc,
-            final @NotNull @Argument(suggestions = "SkinCMD/skin") String skin
+            final @NotNull @Argument(suggestions = "SkinCMD/skin") String skin,
+            final @Flag("slim") boolean slim
     ) {
         if (npc.getData().getType() != EntityType.PLAYER) {
             translator.translate("command_unsupported_npc_type").send(sender);
@@ -63,7 +65,7 @@ public enum SkinCMD {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
         } else {
-            SkinData skinData = FancyNpcs.getInstance().getSkinManager().getByIdentifier(skin, SkinData.SkinVariant.AUTO); //TODO add variant option
+            SkinData skinData = FancyNpcs.getInstance().getSkinManager().getByIdentifier(skin, (slim) ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO);
 
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinData, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);

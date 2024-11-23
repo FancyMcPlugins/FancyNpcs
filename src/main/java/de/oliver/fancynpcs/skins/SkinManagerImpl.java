@@ -90,7 +90,7 @@ public class SkinManagerImpl implements SkinManager {
 
     @Override
     public SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant) {
-        SkinData cached = tryToGetFromCache(uuid.toString());
+        SkinData cached = tryToGetFromCache(uuid.toString(), variant);
         if (cached != null) {
             return cached;
         }
@@ -118,7 +118,7 @@ public class SkinManagerImpl implements SkinManager {
     public SkinData getByUsername(String username, SkinData.SkinVariant variant) {
         UUID uuid = UUIDFetcher.getUUID(username);
 
-        SkinData cached = tryToGetFromCache(uuid.toString());
+        SkinData cached = tryToGetFromCache(uuid.toString(), variant);
         if (cached != null) {
             return cached;
         }
@@ -144,7 +144,7 @@ public class SkinManagerImpl implements SkinManager {
 
     @Override
     public SkinData getByURL(String url, SkinData.SkinVariant variant) {
-        SkinData cached = tryToGetFromCache(url);
+        SkinData cached = tryToGetFromCache(url, variant);
         if (cached != null) {
             return cached;
         }
@@ -177,7 +177,7 @@ public class SkinManagerImpl implements SkinManager {
 
     @Override
     public SkinData getByFile(String filePath, SkinData.SkinVariant variant) {
-        SkinData cached = tryToGetFromCache(filePath);
+        SkinData cached = tryToGetFromCache(filePath, variant);
         if (cached != null) {
             return cached;
         }
@@ -242,14 +242,22 @@ public class SkinManagerImpl implements SkinManager {
         return skinResp.join();
     }
 
-    private SkinData tryToGetFromCache(String id) {
+    private SkinData tryToGetFromCache(String id, SkinData.SkinVariant variant) {
         SkinCacheData data = memCache.getSkin(id);
         if (data != null) {
+            if (data.skinData().getVariant() != variant) {
+                return null;
+            }
+
             return data.skinData();
         }
 
         data = fileCache.getSkin(id);
         if (data != null) {
+            if (data.skinData().getVariant() != variant) {
+                return null;
+            }
+
             memCache.addSkin(data.skinData());
             return data.skinData();
         }

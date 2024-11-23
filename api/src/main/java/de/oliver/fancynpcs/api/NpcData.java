@@ -2,8 +2,8 @@ package de.oliver.fancynpcs.api;
 
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -23,7 +23,7 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-    @Deprecated private SkinFetcher.SkinData skin;
+    private SkinData skin;
     private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;
@@ -47,7 +47,7 @@ public class NpcData {
             String name,
             UUID creator,
             String displayName,
-            @Deprecated SkinFetcher.SkinData skin,
+            SkinData skin,
             Location location,
             boolean showInTab,
             boolean spawnEntity,
@@ -139,19 +139,11 @@ public class NpcData {
         return this;
     }
 
-    /**
-     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
-     */
-    @Deprecated
-    public SkinFetcher.SkinData getSkin() {
+    public SkinData getSkin() {
         return skin;
     }
 
-    /**
-     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
-     */
-    @Deprecated
-    public NpcData setSkin(SkinFetcher.SkinData skin) {
+    public NpcData setSkin(SkinData skin) {
         this.skin = skin;
         isDirty = true;
         return this;

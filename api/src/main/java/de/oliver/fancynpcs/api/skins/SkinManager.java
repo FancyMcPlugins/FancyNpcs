@@ -2,7 +2,7 @@ package de.oliver.fancynpcs.api.skins;
 
 import java.util.UUID;
 
-public interface SkinFetcher {
+public interface SkinManager {
     
     SkinData getByUUID(UUID uuid);
 

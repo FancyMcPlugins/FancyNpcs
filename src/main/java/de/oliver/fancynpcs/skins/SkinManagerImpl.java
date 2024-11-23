@@ -3,7 +3,8 @@ package de.oliver.fancynpcs.skins;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
-import de.oliver.fancynpcs.api.skins.SkinFetcher;
+import de.oliver.fancynpcs.api.skins.SkinManager;
+import de.oliver.fancynpcs.skins.cache.SkinCache;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.mineskin.JsoupRequestHandler;
@@ -25,12 +26,13 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-public class SkinFetcherImpl implements SkinFetcher {
+public class SkinManagerImpl implements SkinManager {
 
     private final ScheduledExecutorService executor;
     private final MineSkinClient client;
+    private final SkinCache cache;
 
-    public SkinFetcherImpl() {
+    public SkinManagerImpl(SkinCache cache) {
         this.executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
                 .setNameFormat("FancyNpcs-Skins")
                 .build());
@@ -44,6 +46,8 @@ public class SkinFetcherImpl implements SkinFetcher {
                 .generateRequestScheduler(executor)
                 .jobCheckScheduler(executor)
                 .build();
+
+        this.cache = cache;
     }
 
     @Override

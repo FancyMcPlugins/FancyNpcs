@@ -4,7 +4,7 @@ import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -17,8 +17,6 @@ import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,18 +24,6 @@ public enum SkinCMD {
     INSTANCE; // SINGLETON
 
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
-
-    /**
-     * Returns {@code true} if provided string can be parsed to an {@link URL} object.
-     */
-    private static boolean isURL(final @NotNull String url) {
-        try {
-            new URL(url);
-            return true;
-        } catch (final MalformedURLException e) {
-            return false;
-        }
-    }
 
     /* PARSERS AND SUGGESTIONS */
 
@@ -77,9 +63,9 @@ public enum SkinCMD {
                 translator.translate("command_npc_modification_cancelled").send(sender);
             }
         } else {
-            SkinFetcher.SkinData skinData;
+            SkinData skinData;
             try {
-                skinData = new SkinFetcher.SkinData(skin, null, null);
+                skinData = new SkinData("", SkinData.SkinType.FILE, SkinData.SkinVariant.DEFAULT, "", ""); // TODO
             } catch (Exception e) {
                 translator.translate("npc_skin_failure_invalid").replaceStripped("input", skin).send(sender);
                 return;

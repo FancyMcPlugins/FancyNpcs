@@ -2,7 +2,8 @@ package de.oliver.fancynpcs.tests.impl.api.skin;
 
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
-import de.oliver.fancynpcs.skins.SkinFetcherImpl;
+import de.oliver.fancynpcs.skins.SkinManagerImpl;
+import de.oliver.fancynpcs.skins.cache.SkinCacheFake;
 import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
 import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.entity.Player;
@@ -11,13 +12,14 @@ import java.io.File;
 
 import static de.oliver.fancynpcs.tests.Expectable.expect;
 
-public class SkinFetcherTest {
+public class SkinManagerTest {
 
-    private SkinFetcherImpl skinFetcher;
+    private SkinManagerImpl skinFetcher;
 
     @FNBeforeEach
     public void setUp(Player player) {
-        skinFetcher = new SkinFetcherImpl();
+
+        skinFetcher = new SkinManagerImpl(new SkinCacheFake());
     }
 
     @FNTest(name = "Test fetch skin by UUID")

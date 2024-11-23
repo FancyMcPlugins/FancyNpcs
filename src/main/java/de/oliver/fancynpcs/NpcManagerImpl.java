@@ -2,12 +2,15 @@ package de.oliver.fancynpcs;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
-import de.oliver.fancynpcs.api.*;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcAttribute;
+import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcsLoadedEvent;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -266,25 +269,26 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
-            SkinFetcher.SkinData skin = null;
-            if (!skinIdentifier.isEmpty()) {
-                skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
-            }
-
-            if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
-                // using old skin system --> take backup
-                takeBackup(npcConfig);
-
-                String value = npcConfig.getString("npcs." + id + ".skin.value");
-                String signature = npcConfig.getString("npcs." + id + ".skin.signature");
-
-                if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
-                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
-                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
-                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
-                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
-                }
-            }
+            SkinData skin = null;
+            //TODO
+//            if (!skinIdentifier.isEmpty()) {
+//                skin = new SkinData(skinIdentifier, "", "");
+//            }
+//
+//            if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
+//                // using old skin system --> take backup
+//                takeBackup(npcConfig);
+//
+//                String value = npcConfig.getString("npcs." + id + ".skin.value");
+//                String signature = npcConfig.getString("npcs." + id + ".skin.signature");
+//
+//                if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
+//                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+//                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
+//                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
+//                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
+//                }
+//            }
 
             boolean oldMirrorSkin = npcConfig.getBoolean("npcs." + id + ".mirrorSkin"); //TODO: remove in next version
             boolean mirrorSkin = oldMirrorSkin || npcConfig.getBoolean("npcs." + id + ".skin.mirrorSkin");

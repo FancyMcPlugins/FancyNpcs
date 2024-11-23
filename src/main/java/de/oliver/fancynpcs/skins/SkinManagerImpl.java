@@ -64,7 +64,6 @@ public class SkinManagerImpl implements SkinManager {
 
         return new SkinData(
                 uuid.toString(),
-                SkinData.SkinType.UUID,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
@@ -84,7 +83,6 @@ public class SkinManagerImpl implements SkinManager {
 
         return new SkinData(
                 username,
-                SkinData.SkinType.USERNAME,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
@@ -109,7 +107,6 @@ public class SkinManagerImpl implements SkinManager {
 
         return new SkinData(
                 url,
-                SkinData.SkinType.URL,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
@@ -133,7 +130,6 @@ public class SkinManagerImpl implements SkinManager {
 
         return new SkinData(
                 filePath,
-                SkinData.SkinType.FILE,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
@@ -144,7 +140,6 @@ public class SkinManagerImpl implements SkinManager {
     public SkinData get(String name, String value, String signature) {
         return new SkinData(
                 name,
-                SkinData.SkinType.VALUE_SIGNATURE,
                 SkinData.SkinVariant.DEFAULT,
                 value,
                 signature

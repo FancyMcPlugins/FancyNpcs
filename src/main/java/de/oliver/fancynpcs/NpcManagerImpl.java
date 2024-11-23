@@ -11,7 +11,6 @@ import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcsLoadedEvent;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.skins.SkinUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -181,9 +180,8 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".visibility_distance", data.getVisibilityDistance());
 
             if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.skinType", data.getSkin().type());
-                npcConfig.set("npcs." + data.getId() + ".skin.skinVariant", data.getSkin().variant());
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
+                npcConfig.set("npcs." + data.getId() + ".skin.skinVariant", data.getSkin().getVariant());
             } else {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
@@ -273,19 +271,10 @@ public class NpcManagerImpl implements NpcManager {
 
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
 
-            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", "DEFAULT");
+            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.DEFAULT.name());
             SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
 
-            String skinTypeStr = npcConfig.getString("npcs." + id + ".skin.type", "N/A");
-            SkinData.SkinType skinType = null;
-
-            if (skinTypeStr.equals("N/A")) {
-                skinType = SkinUtils.getSkinType(skinIdentifier);
-            } else {
-                skinType = SkinData.SkinType.valueOf(skinTypeStr);
-            }
-
-            SkinData skin = new SkinData(skinIdentifier, skinType, skinVariant, "", "");
+            SkinData skin = new SkinData(skinIdentifier, skinVariant, "", "");
 
 
             if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
@@ -296,7 +285,7 @@ public class NpcManagerImpl implements NpcManager {
                 String signature = npcConfig.getString("npcs." + id + ".skin.signature");
 
                 if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
-                    SkinData oldSkin = new SkinData(skinIdentifier, SkinData.SkinType.UUID, SkinData.SkinVariant.DEFAULT, value, signature);
+                    SkinData oldSkin = new SkinData(skinIdentifier, SkinData.SkinVariant.DEFAULT, value, signature);
                     FancyNpcs.getInstance().getSkinManagerImpl().getFileCache().addSkin(oldSkin);
                     FancyNpcs.getInstance().getSkinManagerImpl().getMemCache().addSkin(oldSkin);
                 }

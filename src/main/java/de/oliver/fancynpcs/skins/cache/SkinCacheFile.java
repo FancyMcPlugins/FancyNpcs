@@ -41,7 +41,7 @@ public class SkinCacheFile implements SkinCache {
         SkinCacheData skinCacheData = new SkinCacheData(skin, System.currentTimeMillis(), CACHE_TIME);
 
         try {
-            this.storage.set("skins/" + skin.identifier(), skinCacheData);
+            this.storage.set("skins/" + skin.getIdentifier(), skinCacheData);
         } catch (IOException e) {
             FancyNpcs.getInstance().getFancyLogger().error("Failed to save skin cache");
             FancyNpcs.getInstance().getFancyLogger().error(e);

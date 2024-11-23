@@ -281,8 +281,8 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             List<Npc> npcs = new ArrayList<>(npcManager.getAllNpcs());
             for (Npc npc : npcs) {
                 boolean skinUpdated = npc.getData().getSkin() != null &&
-                        !npc.getData().getSkin().identifier().isEmpty() &&
-                        SkinUtils.isPlaceholder(npc.getData().getSkin().identifier());
+                        !npc.getData().getSkin().getIdentifier().isEmpty() &&
+                        SkinUtils.isPlaceholder(npc.getData().getSkin().getIdentifier());
 
                 boolean displayNameUpdated = npc.getData().getDisplayName() != null &&
                         !npc.getData().getDisplayName().isEmpty() &&

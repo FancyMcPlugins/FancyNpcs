@@ -15,6 +15,7 @@ public record SkinData(
     }
 
     public enum SkinType {
+        PLACEHOLDER,
         USERNAME,
         UUID,
         URL,

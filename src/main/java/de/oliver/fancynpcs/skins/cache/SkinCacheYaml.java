@@ -1,8 +1,7 @@
-package de.oliver.fancynpcs.utils;
+package de.oliver.fancynpcs.skins.cache;
 
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.api.utils.SkinCache;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -24,7 +23,7 @@ public class SkinCacheYaml implements SkinCache {
     }
 
     @Override
-    public List<SkinFetcher.SkinCacheData> load() {
+    public List<SkinCacheData> load() {
         YamlConfiguration yaml = loadYaml();
         if (yaml == null) {
             return new ArrayList<>(0);
@@ -36,7 +35,7 @@ public class SkinCacheYaml implements SkinCache {
             return new ArrayList<>(0);
         }
 
-        List<SkinFetcher.SkinCacheData> cache = new ArrayList<>();
+        List<SkinCacheData> cache = new ArrayList<>();
 
         for (String identifierBase64 : skinsSection.getKeys(false)) {
             ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifierBase64);
@@ -52,12 +51,12 @@ public class SkinCacheYaml implements SkinCache {
                 continue;
             }
 
-            SkinFetcher.SkinData skinData = new SkinFetcher.SkinData(identifier, value, signature);
+            SkinData skinData = new SkinData(identifier, SkinData.SkinType.USERNAME, SkinData.SkinVariant.DEFAULT, value, signature); // TODO
 
             long lastUpdated = skinSection.getLong("lastUpdated");
             long timeToLive = skinSection.getLong("timeToLive");
 
-            SkinFetcher.SkinCacheData skinCacheData = new SkinFetcher.SkinCacheData(skinData, lastUpdated, timeToLive);
+            SkinCacheData skinCacheData = new SkinCacheData(skinData, lastUpdated, timeToLive);
             if (skinCacheData.isExpired()) {
                 delete(identifier);
                 continue;
@@ -71,7 +70,7 @@ public class SkinCacheYaml implements SkinCache {
     }
 
     @Override
-    public void upsert(SkinFetcher.SkinCacheData skinCacheData, boolean onlyIfExists) {
+    public void upsert(SkinCacheData skinData, boolean onlyIfExists) {
         YamlConfiguration yaml = loadYaml();
         if (yaml == null) {
             yaml = new YamlConfiguration();
@@ -82,7 +81,7 @@ public class SkinCacheYaml implements SkinCache {
             skinsSection = yaml.createSection("skins");
         }
 
-        String identifier = Base64.getEncoder().encodeToString(skinCacheData.skinData().identifier().getBytes());
+        String identifier = Base64.getEncoder().encodeToString(skinData.skinData().identifier().getBytes());
 
         ConfigurationSection skinSection = skinsSection.getConfigurationSection(identifier);
         if (skinSection == null) {
@@ -93,11 +92,11 @@ public class SkinCacheYaml implements SkinCache {
             skinSection = skinsSection.createSection(identifier);
         }
 
-        skinSection.set("identifier", skinCacheData.skinData().identifier());
-        skinSection.set("value", skinCacheData.skinData().value());
-        skinSection.set("signature", skinCacheData.skinData().signature());
+        skinSection.set("identifier", skinData.skinData().identifier());
+        skinSection.set("value", skinData.skinData().textureValue());
+        skinSection.set("signature", skinData.skinData().textureSignature());
         skinSection.set("lastUpdated", System.currentTimeMillis());
-        skinSection.set("timeToLive", skinCacheData.timeToLive());
+        skinSection.set("timeToLive", skinData.timeToLive());
 
         try {
             yaml.save(file);
@@ -119,12 +118,5 @@ public class SkinCacheYaml implements SkinCache {
         }
 
         skinsSection.set(identifier, null);
-    }
-
-    public void loadAndInsertToSkinFetcher() {
-        List<SkinFetcher.SkinCacheData> cache = load();
-        for (SkinFetcher.SkinCacheData skinCacheData : cache) {
-            SkinFetcher.skinCache.put(skinCacheData.skinData().identifier(), skinCacheData.skinData());
-        }
     }
 }

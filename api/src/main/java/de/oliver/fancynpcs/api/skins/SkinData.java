@@ -1,25 +1,58 @@
 package de.oliver.fancynpcs.api.skins;
 
-public record SkinData(
-        String identifier,
-        SkinType type,
-        SkinVariant variant,
+public class SkinData {
 
-        String textureValue,
-        String textureSignature
-) {
+    private String identifier;
+    private SkinVariant variant;
+
+    private String textureValue;
+    private String textureSignature;
+
+    public SkinData(String identifier, SkinVariant variant, String textureValue, String textureSignature) {
+        this.identifier = identifier;
+        this.variant = variant;
+        this.textureValue = textureValue;
+        this.textureSignature = textureSignature;
+    }
+
+    public SkinData(String identifier, SkinVariant variant) {
+        this(identifier, variant, null, null);
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public SkinVariant getVariant() {
+        return variant;
+    }
+
+    public void setVariant(SkinVariant variant) {
+        this.variant = variant;
+    }
+
+    public String getTextureValue() {
+        return textureValue;
+    }
+
+    public void setTextureValue(String textureValue) {
+        this.textureValue = textureValue;
+    }
+
+    public String getTextureSignature() {
+        return textureSignature;
+    }
+
+    public void setTextureSignature(String textureSignature) {
+        this.textureSignature = textureSignature;
+    }
 
     public enum SkinVariant {
         SLIM,
         DEFAULT
-    }
-
-    public enum SkinType {
-        PLACEHOLDER,
-        USERNAME,
-        UUID,
-        URL,
-        FILE,
-        VALUE_SIGNATURE
     }
 }

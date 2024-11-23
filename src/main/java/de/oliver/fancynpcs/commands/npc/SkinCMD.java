@@ -65,7 +65,7 @@ public enum SkinCMD {
         } else {
             SkinData skinData;
             try {
-                skinData = new SkinData("", SkinData.SkinType.FILE, SkinData.SkinVariant.DEFAULT, "", ""); // TODO
+                skinData = new SkinData("", SkinData.SkinVariant.DEFAULT, "", ""); // TODO
             } catch (Exception e) {
                 translator.translate("npc_skin_failure_invalid").replaceStripped("input", skin).send(sender);
                 return;
@@ -79,7 +79,7 @@ public enum SkinCMD {
                 npc.spawnForAll();
                 translator.translate("npc_skin_set")
                         .replace("npc", npc.getData().getName())
-                        .replace("name", skinData.identifier())
+                        .replace("name", skinData.getIdentifier())
                         .send(sender);
             } else {
                 translator.translate("command_npc_modification_cancelled").send(sender);

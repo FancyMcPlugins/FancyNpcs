@@ -105,7 +105,7 @@ public class SkinManagerImpl implements SkinManager {
 
         SkinData skinData = new SkinData(
                 uuid.toString(),
-                SkinData.SkinVariant.DEFAULT,
+                SkinData.SkinVariant.CLASSIC,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
@@ -133,7 +133,7 @@ public class SkinManagerImpl implements SkinManager {
 
         SkinData skinData = new SkinData(
                 uuid.toString(),
-                SkinData.SkinVariant.DEFAULT,
+                SkinData.SkinVariant.CLASSIC,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
@@ -166,7 +166,7 @@ public class SkinManagerImpl implements SkinManager {
 
         SkinData skinData = new SkinData(
                 url,
-                SkinData.SkinVariant.DEFAULT,
+                SkinData.SkinVariant.CLASSIC,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
@@ -198,7 +198,7 @@ public class SkinManagerImpl implements SkinManager {
 
         SkinData skinData = new SkinData(
                 filePath,
-                SkinData.SkinVariant.DEFAULT,
+                SkinData.SkinVariant.CLASSIC,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );

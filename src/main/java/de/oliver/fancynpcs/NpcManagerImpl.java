@@ -285,7 +285,7 @@ public class NpcManagerImpl implements NpcManager {
                 String signature = npcConfig.getString("npcs." + id + ".skin.signature");
 
                 if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
-                    SkinData oldSkin = new SkinData(skinIdentifier, SkinData.SkinVariant.DEFAULT, value, signature);
+                    SkinData oldSkin = new SkinData(skinIdentifier, SkinData.SkinVariant.CLASSIC, value, signature);
                     FancyNpcs.getInstance().getSkinManagerImpl().getFileCache().addSkin(oldSkin);
                     FancyNpcs.getInstance().getSkinManagerImpl().getMemCache().addSkin(oldSkin);
                 }

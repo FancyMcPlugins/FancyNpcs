@@ -14,6 +14,4 @@ public interface SkinManager {
 
     SkinData getByFile(String filePath, SkinData.SkinVariant variant);
 
-    SkinData get(String name, String value, String signature, SkinData.SkinVariant variant);
-
 }

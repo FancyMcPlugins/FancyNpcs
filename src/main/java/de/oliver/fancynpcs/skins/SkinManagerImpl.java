@@ -11,11 +11,11 @@ import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.mineskin.JsoupRequestHandler;
 import org.mineskin.MineSkinClient;
 import org.mineskin.data.CodeAndMessage;
+import org.mineskin.data.JobReference;
 import org.mineskin.data.SkinInfo;
 import org.mineskin.data.Variant;
 import org.mineskin.exception.MineSkinRequestException;
 import org.mineskin.request.GenerateRequest;
-import org.mineskin.response.JobResponse;
 import org.mineskin.response.MineSkinResponse;
 import org.mineskin.response.QueueResponse;
 
@@ -219,7 +219,7 @@ public class SkinManagerImpl implements SkinManager {
         CompletableFuture<QueueResponse> queueResp = client.queue().submit(req);
 
         // wait for job completion
-        CompletableFuture<JobResponse> jobResp = queueResp.thenCompose(
+        CompletableFuture<JobReference> jobResp = queueResp.thenCompose(
                 queueResponse -> queueResponse.getJob().waitForCompletion(client)
         );
 

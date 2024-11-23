@@ -44,7 +44,7 @@ allprojects {
         maven(url = "https://repo.papermc.io/repository/maven-public/")
         maven(url = "https://repo.fancyplugins.de/releases")
         maven(url = "https://repo.lushplugins.org/releases")
-        maven(url = "https://repo.inventivetalent.org/repository/public/")
+        maven(url = "https://repo.inventivetalent.org/repository/maven-snapshots/")
     }
 }
 
@@ -70,7 +70,7 @@ dependencies {
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.1.0-SNAPSHOT")
     annotationProcessor("org.incendo:cloud-annotations:2.1.0-SNAPSHOT")
-    implementation("org.mineskin:java-client-jsoup:3.0.0-SNAPSHOT")
+    implementation("org.mineskin:java-client-jsoup:3.0.1-SNAPSHOT")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.4.2")
 }

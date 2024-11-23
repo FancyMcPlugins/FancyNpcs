@@ -28,13 +28,14 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.api.actions.types.*;
-import de.oliver.fancynpcs.api.utils.SkinCache;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.commands.CloudCommandManager;
 import de.oliver.fancynpcs.listeners.*;
+import de.oliver.fancynpcs.skins.SkinManagerImpl;
+import de.oliver.fancynpcs.skins.SkinUtils;
+import de.oliver.fancynpcs.skins.cache.SkinCacheYaml;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
-import de.oliver.fancynpcs.utils.SkinCacheYaml;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
@@ -85,6 +86,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     private Function<NpcData, Npc> npcAdapter;
     private NpcManagerImpl npcManager;
     private AttributeManagerImpl attributeManager;
+    private SkinManager skinManager;
     private SkinCacheYaml skinCache;
     private ActionManagerImpl actionManager;
     private VisibilityTracker visibilityTracker;
@@ -195,7 +197,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         actionManager.registerAction(new NeedPermissionAction());
 
         skinCache = new SkinCacheYaml();
-        skinCache.loadAndInsertToSkinFetcher();
+        skinManager = new SkinManagerImpl(skinCache);
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
@@ -280,11 +282,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             for (Npc npc : npcs) {
                 boolean skinUpdated = npc.getData().getSkin() != null &&
                         !npc.getData().getSkin().identifier().isEmpty() &&
-                        SkinFetcher.isPlaceholder(npc.getData().getSkin().identifier());
+                        SkinUtils.isPlaceholder(npc.getData().getSkin().identifier());
 
                 boolean displayNameUpdated = npc.getData().getDisplayName() != null &&
                         !npc.getData().getDisplayName().isEmpty() &&
-                        SkinFetcher.isPlaceholder(npc.getData().getDisplayName());
+                        SkinUtils.isPlaceholder(npc.getData().getDisplayName());
 
                 if (skinUpdated || displayNameUpdated) {
                     npc.removeForAll();
@@ -503,13 +505,9 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         return attributeManager;
     }
 
-    public SkinCacheYaml getSkinCacheYaml() {
-        return skinCache;
-    }
-
     @Override
-    public SkinCache getSkinCache() {
-        return skinCache;
+    public SkinManager getSkinManager() {
+        return skinManager;
     }
 
     @Override

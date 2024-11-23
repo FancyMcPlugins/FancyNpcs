@@ -44,6 +44,7 @@ public class SkinManagerImpl implements SkinManager {
 
         this.client = MineSkinClient.builder()
                 .requestHandler(JsoupRequestHandler::new)
+                .apiKey(FancyNpcs.getInstance().getFancyNpcConfig().getMineSkinApiKey())
                 .userAgent("FancyNpcs")
                 .getExecutor(executor)
                 .generateExecutor(executor)

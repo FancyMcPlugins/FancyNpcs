@@ -23,6 +23,22 @@ public class SkinCacheYaml implements SkinCache {
     }
 
     @Override
+    public SkinCacheData getSkin(String identifier) {
+
+        return null;
+    }
+
+    @Override
+    public void addSkin(SkinCacheData skin) {
+
+    }
+
+    @Override
+    public void removeSkin(String identifier) {
+
+    }
+
+
     public List<SkinCacheData> load() {
         YamlConfiguration yaml = loadYaml();
         if (yaml == null) {
@@ -69,7 +85,6 @@ public class SkinCacheYaml implements SkinCache {
         return cache;
     }
 
-    @Override
     public void upsert(SkinCacheData skinData, boolean onlyIfExists) {
         YamlConfiguration yaml = loadYaml();
         if (yaml == null) {

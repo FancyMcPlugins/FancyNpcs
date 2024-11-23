@@ -1,11 +1,11 @@
 package de.oliver.fancynpcs.skins.cache;
 
-import java.util.List;
-
 public interface SkinCache {
 
-    List<SkinCacheData> load();
+    SkinCacheData getSkin(String identifier);
 
-    void upsert(SkinCacheData skinData, boolean onlyIfExists);
+    void addSkin(SkinCacheData skin);
+
+    void removeSkin(String identifier);
 
 }

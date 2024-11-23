@@ -3,15 +3,17 @@ package de.oliver.fancynpcs.api.skins;
 import java.util.UUID;
 
 public interface SkinManager {
-    
-    SkinData getByUUID(UUID uuid);
 
-    SkinData getByUsername(String username);
+    SkinData getByIdentifier(String identifier, SkinData.SkinVariant variant);
 
-    SkinData getByURL(String url);
+    SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant);
 
-    SkinData getByFile(String filePath);
+    SkinData getByUsername(String username, SkinData.SkinVariant variant);
 
-    SkinData get(String name, String value, String signature);
+    SkinData getByURL(String url, SkinData.SkinVariant variant);
+
+    SkinData getByFile(String filePath, SkinData.SkinVariant variant);
+
+    SkinData get(String name, String value, String signature, SkinData.SkinVariant variant);
 
 }

@@ -1,16 +1,19 @@
 package de.oliver.fancynpcs.skins;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.skins.cache.SkinCache;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.mineskin.JsoupRequestHandler;
 import org.mineskin.MineSkinClient;
 import org.mineskin.data.CodeAndMessage;
 import org.mineskin.data.SkinInfo;
+import org.mineskin.data.Variant;
 import org.mineskin.exception.MineSkinRequestException;
 import org.mineskin.request.GenerateRequest;
 import org.mineskin.response.JobResponse;
@@ -54,8 +57,42 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     @Override
-    public SkinData getByUUID(UUID uuid) {
+    public SkinData getByIdentifier(String identifier, SkinData.SkinVariant variant) {
+        if (SkinUtils.isUUID(identifier)) {
+            return getByUUID(UUID.fromString(identifier), variant);
+        }
+
+        if (SkinUtils.isURL(identifier)) {
+            return getByURL(identifier, variant);
+        }
+
+        if (SkinUtils.isFile(identifier)) {
+            return getByFile(identifier, variant);
+        }
+
+        if (SkinUtils.isPlaceholder(identifier)) {
+            String parsed = ChatColorHandler.translate(identifier);
+
+            if (SkinUtils.isPlaceholder(parsed)) {
+                return null;
+            }
+
+            return getByIdentifier(parsed, variant);
+        }
+
+        // is username
+        UUID uuid = UUIDFetcher.getUUID(identifier);
+        if (uuid == null) {
+            return null;
+        }
+
+        return getByUUID(uuid, variant);
+    }
+
+    @Override
+    public SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant) {
         GenerateRequest genReq = GenerateRequest.user(uuid);
+        genReq.variant(Variant.valueOf(variant.name()));
         SkinInfo skinInfo = executeRequest(genReq);
 
         if (skinInfo == null) {
@@ -71,10 +108,11 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     @Override
-    public SkinData getByUsername(String username) {
+    public SkinData getByUsername(String username, SkinData.SkinVariant variant) {
         OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username); // TODO: implement a better way to get the UUID
 
         GenerateRequest genReq = GenerateRequest.user(offlinePlayer.getUniqueId());
+        genReq.variant(Variant.valueOf(variant.name()));
         SkinInfo skinInfo = executeRequest(genReq);
 
         if (skinInfo == null) {
@@ -90,7 +128,7 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     @Override
-    public SkinData getByURL(String url) {
+    public SkinData getByURL(String url, SkinData.SkinVariant variant) {
         GenerateRequest genReq;
         try {
             genReq = GenerateRequest.url(url);
@@ -98,6 +136,7 @@ public class SkinManagerImpl implements SkinManager {
             FancyNpcs.getInstance().getFancyLogger().error("Invalid URL: " + url);
             return null;
         }
+        genReq.variant(Variant.valueOf(variant.name()));
 
         SkinInfo skinInfo = executeRequest(genReq);
 
@@ -114,7 +153,7 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     @Override
-    public SkinData getByFile(String filePath) {
+    public SkinData getByFile(String filePath, SkinData.SkinVariant variant) {
         File file = new File(filePath);
         if (!file.exists()) {
             FancyNpcs.getInstance().getFancyLogger().error("File does not exist: " + filePath);
@@ -122,6 +161,7 @@ public class SkinManagerImpl implements SkinManager {
         }
 
         GenerateRequest genReq = GenerateRequest.upload(file);
+        genReq.variant(Variant.valueOf(variant.name()));
         SkinInfo skinInfo = executeRequest(genReq);
 
         if (skinInfo == null) {
@@ -137,10 +177,10 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     @Override
-    public SkinData get(String name, String value, String signature) {
+    public SkinData get(String name, String value, String signature, SkinData.SkinVariant variant) {
         return new SkinData(
                 name,
-                SkinData.SkinVariant.DEFAULT,
+                variant,
                 value,
                 signature
         );

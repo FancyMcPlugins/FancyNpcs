@@ -6,8 +6,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.skins.cache.SkinCache;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import de.oliver.fancynpcs.skins.cache.SkinCacheData;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.mineskin.JsoupRequestHandler;
 import org.mineskin.MineSkinClient;
@@ -91,6 +90,11 @@ public class SkinManagerImpl implements SkinManager {
 
     @Override
     public SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant) {
+        SkinData cached = tryToGetFromCache(uuid.toString());
+        if (cached != null) {
+            return cached;
+        }
+
         GenerateRequest genReq = GenerateRequest.user(uuid);
         genReq.variant(Variant.valueOf(variant.name()));
         SkinInfo skinInfo = executeRequest(genReq);
@@ -99,19 +103,27 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         }
 
-        return new SkinData(
+        SkinData skinData = new SkinData(
                 uuid.toString(),
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
+
+        cacheSkin(skinData);
+        return skinData;
     }
 
     @Override
     public SkinData getByUsername(String username, SkinData.SkinVariant variant) {
-        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(username); // TODO: implement a better way to get the UUID
+        UUID uuid = UUIDFetcher.getUUID(username);
 
-        GenerateRequest genReq = GenerateRequest.user(offlinePlayer.getUniqueId());
+        SkinData cached = tryToGetFromCache(uuid.toString());
+        if (cached != null) {
+            return cached;
+        }
+
+        GenerateRequest genReq = GenerateRequest.user(uuid);
         genReq.variant(Variant.valueOf(variant.name()));
         SkinInfo skinInfo = executeRequest(genReq);
 
@@ -119,16 +131,24 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         }
 
-        return new SkinData(
-                username,
+        SkinData skinData = new SkinData(
+                uuid.toString(),
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
+
+        cacheSkin(skinData);
+        return skinData;
     }
 
     @Override
     public SkinData getByURL(String url, SkinData.SkinVariant variant) {
+        SkinData cached = tryToGetFromCache(url);
+        if (cached != null) {
+            return cached;
+        }
+
         GenerateRequest genReq;
         try {
             genReq = GenerateRequest.url(url);
@@ -144,16 +164,24 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         }
 
-        return new SkinData(
+        SkinData skinData = new SkinData(
                 url,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
+
+        cacheSkin(skinData);
+        return skinData;
     }
 
     @Override
     public SkinData getByFile(String filePath, SkinData.SkinVariant variant) {
+        SkinData cached = tryToGetFromCache(filePath);
+        if (cached != null) {
+            return cached;
+        }
+
         File file = new File(filePath);
         if (!file.exists()) {
             FancyNpcs.getInstance().getFancyLogger().error("File does not exist: " + filePath);
@@ -168,12 +196,15 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         }
 
-        return new SkinData(
+        SkinData skinData = new SkinData(
                 filePath,
                 SkinData.SkinVariant.DEFAULT,
                 skinInfo.texture().data().value(),
                 skinInfo.texture().data().signature()
         );
+
+        cacheSkin(skinData);
+        return skinData;
     }
 
     @Override
@@ -216,7 +247,28 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         });
 
+        System.out.println("Fetching skin from MineSkin...");
+
         return skinResp.join();
+    }
+
+    private SkinData tryToGetFromCache(String id) {
+        SkinCacheData data = memCache.getSkin(id);
+        if (data != null) {
+            return data.skinData();
+        }
+
+        data = fileCache.getSkin(id);
+        if (data != null) {
+            return data.skinData();
+        }
+
+        return null;
+    }
+
+    private void cacheSkin(SkinData skinData) {
+        memCache.addSkin(skinData);
+        fileCache.addSkin(skinData);
     }
 
     public SkinCache getFileCache() {

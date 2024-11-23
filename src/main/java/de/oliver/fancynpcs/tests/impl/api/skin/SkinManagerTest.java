@@ -40,7 +40,7 @@ public class SkinManagerTest {
         SkinData skin = skinFetcher.getByUsername(player.getName(), SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
-        expect(skin.getIdentifier()).toEqual(player.getName());
+        expect(skin.getIdentifier()).toEqual(player.getUniqueId().toString());
         expect(skin.getVariant()).toEqual(SkinData.SkinVariant.AUTO);
         expect(skin.getTextureValue()).toBeDefined();
         expect(skin.getTextureValue().length()).toBeGreaterThan(0);
@@ -62,17 +62,17 @@ public class SkinManagerTest {
 
     @FNTest(name = "Test fetch skin by file")
     public void testSkinByFile(Player player) {
-        SkinData skin = skinFetcher.getByFile("plugins/FancyNpcs/testskin.png", SkinData.SkinVariant.AUTO);
-        FancyNpcs.getInstance().getPlugin().saveResource("testskin.png", false);
+        FancyNpcs.getInstance().getPlugin().saveResource("skins/testskin.png", true);
+        SkinData skin = skinFetcher.getByFile("testskin.png", SkinData.SkinVariant.AUTO);
 
         expect(skin).toBeDefined();
-        expect(skin.getIdentifier()).toEqual("plugins/FancyNpcs/testskin.png");
+        expect(skin.getIdentifier()).toEqual("testskin.png");
         expect(skin.getVariant()).toEqual(SkinData.SkinVariant.AUTO);
         expect(skin.getTextureValue()).toBeDefined();
         expect(skin.getTextureValue().length()).toBeGreaterThan(0);
         expect(skin.getTextureSignature()).toBeDefined();
         expect(skin.getTextureSignature().length()).toBeGreaterThan(0);
 
-        new File("plugins/FancyNpcs/testskin.png").delete();
+        new File("plugins/FancyNpcs/skins/testskin.png").delete();
     }
 }

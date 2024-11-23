@@ -23,6 +23,8 @@ public interface FancyNpcsConfig {
 
     int getRemoveNpcsFromPlayerlistDelay();
 
+    String getMineSkinApiKey();
+
     List<String> getBlockedCommands();
 
     Map<String, Integer> getMaxNpcsPerPermission();

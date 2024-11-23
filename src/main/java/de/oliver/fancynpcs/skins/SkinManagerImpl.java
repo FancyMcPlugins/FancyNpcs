@@ -29,6 +29,8 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class SkinManagerImpl implements SkinManager {
 
+    private final String SKINS_DIRECTORY = "plugins/FancyNpcs/skins/";
+
     private final ScheduledExecutorService executor;
     private final MineSkinClient client;
 
@@ -52,6 +54,11 @@ public class SkinManagerImpl implements SkinManager {
 
         this.fileCache = fileCache;
         this.memCache = memCache;
+
+        File skinsDir = new File(SKINS_DIRECTORY);
+        if (!skinsDir.exists()) {
+            skinsDir.mkdirs();
+        }
     }
 
     @Override
@@ -181,7 +188,7 @@ public class SkinManagerImpl implements SkinManager {
             return cached;
         }
 
-        File file = new File(filePath);
+        File file = new File(SKINS_DIRECTORY + filePath);
         if (!file.exists()) {
             FancyNpcs.getInstance().getFancyLogger().error("File does not exist: " + filePath);
             return null;

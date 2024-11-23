@@ -260,6 +260,7 @@ public class SkinManagerImpl implements SkinManager {
 
         data = fileCache.getSkin(id);
         if (data != null) {
+            memCache.addSkin(data.skinData());
             return data.skinData();
         }
 

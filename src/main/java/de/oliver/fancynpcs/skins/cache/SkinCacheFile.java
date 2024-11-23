@@ -11,7 +11,7 @@ public class SkinCacheFile implements SkinCache {
     private final JDB storage;
 
     public SkinCacheFile() {
-        this.storage = new JDB("plugins/FancyNpcs/.skinCache");
+        this.storage = new JDB("plugins/FancyNpcs/.cache");
     }
 
     @Override

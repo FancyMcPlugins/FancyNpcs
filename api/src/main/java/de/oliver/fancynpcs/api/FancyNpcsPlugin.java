@@ -8,6 +8,7 @@ import de.oliver.fancynpcs.api.utils.SkinCache;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Function;
@@ -29,6 +30,13 @@ public interface FancyNpcsPlugin {
     ExtendedFancyLogger getFancyLogger();
 
     ScheduledExecutorService getNpcThread();
+
+    /**
+     *  Creates a new thread with the given name and runnable.
+     *  Warning: Do not use this method, it is for internal use only.
+     */
+    @ApiStatus.Internal
+    Thread newThread(String name, Runnable runnable);
 
     FancyScheduler getScheduler();
 

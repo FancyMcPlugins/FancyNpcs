@@ -98,11 +98,11 @@ paper {
 tasks {
     runServer {
         minecraftVersion(findProperty("minecraftVersion").toString())
-//        minecraftVersion("1.20.6")
+//        minecraftVersion("1.19.4")
 
         downloadPlugins {
-            hangar("ViaVersion", "5.0.3")
-            hangar("ViaBackwards", "5.0.3")
+            hangar("ViaVersion", "5.1.1")
+            hangar("ViaBackwards", "5.1.1")
             hangar("PlaceholderAPI", "2.11.6")
 //            modrinth("multiverse-core", "4.3.11")
         }

@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.api.actions.executor;
 
+import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import org.bukkit.entity.Player;
@@ -22,12 +23,13 @@ public class ActionExecutor {
 
         ActionExecutionContext context = new ActionExecutionContext(trigger, npc, player);
         runningContexts.put(key, context);
-        new Thread(() -> {
+
+        FancyNpcsPlugin.get().newThread("FancyNpcs-ActionExecutor", () -> {
             while (context.hasNext()) {
                 context.runNext();
             }
             context.terminate();
-        }, "NpcActionExecutor").start();
+        }).start();
     }
 
     private static String getKey(ActionTrigger trigger, Npc npc, Player player) {

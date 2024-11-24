@@ -11,8 +11,8 @@ dependencies {
     paperweight.paperDevBundle("$minecraftVersion-R0.1-SNAPSHOT")
 
     compileOnly(project(":api"))
-    compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    compileOnly("de.oliver:FancyLib:33")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
 }
 
 

@@ -4,13 +4,15 @@ plugins {
     id("com.gradleup.shadow") version "8.3.5"
 }
 
+val minecraftVersion = "1.19.4"
+
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
 
-    compileOnly("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
+    compileOnly("de.oliver:FancyLib:33")
+    compileOnly("de.oliver.FancyAnalytics:logger:0.0.6")
 
-    implementation("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("org.lushplugins:ChatColorHandler:5.1.0")
 }
 
 tasks {

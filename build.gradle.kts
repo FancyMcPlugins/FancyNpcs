@@ -47,7 +47,7 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:${findProperty("minecraftVersion")}-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
     implementation(project(":implementation_1_21_3"))
@@ -59,10 +59,10 @@ dependencies {
     implementation(project(":implementation_1_20", configuration = "reobf"))
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
-    implementation("de.oliver:FancyLib:${findProperty("fancyLibVersion")}")
-    compileOnly("org.lushplugins:ChatColorHandler:${findProperty("chatcolorhandlerVersion")}")
+    implementation("de.oliver:FancyLib:33")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
-    implementation("de.oliver.FancyAnalytics:logger:${findProperty("fancyLoggerVersion")}")
+    implementation("de.oliver.FancyAnalytics:logger:0.0.6")
     implementation("org.incendo:cloud-core:2.1.0-SNAPSHOT")
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.1.0-SNAPSHOT")
@@ -97,8 +97,7 @@ paper {
 
 tasks {
     runServer {
-        minecraftVersion(findProperty("minecraftVersion").toString())
-//        minecraftVersion("1.19.4")
+        minecraftVersion("1.21.3")
 
         downloadPlugins {
             hangar("ViaVersion", "5.1.1")

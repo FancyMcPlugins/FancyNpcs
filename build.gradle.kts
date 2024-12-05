@@ -47,9 +47,10 @@ allprojects {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.3-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_21_4"))
     implementation(project(":implementation_1_21_3"))
     implementation(project(":implementation_1_21_1"))
     implementation(project(":implementation_1_20_6"))
@@ -97,7 +98,7 @@ paper {
 
 tasks {
     runServer {
-        minecraftVersion("1.21.3")
+        minecraftVersion("1.21.4")
 
         downloadPlugins {
             hangar("ViaVersion", "5.1.1")

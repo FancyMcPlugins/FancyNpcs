@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("io.papermc.paperweight.userdev") version "1.7.5"
+    id("io.papermc.paperweight.userdev") version "1.7.6"
 }
 
 val minecraftVersion = "1.21.3"

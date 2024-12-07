@@ -3,7 +3,7 @@ package de.oliver.fancynpcs.listeners;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
 import org.bukkit.Bukkit;
@@ -39,25 +39,18 @@ public class PlayerJoinListener implements Listener {
         }
 
         for (ProfileProperty property : event.getPlayer().getPlayerProfile().getProperties()) {
-            if (property.getName().equals("textures")) {
-                SkinFetcher.SkinData skinData = new SkinFetcher.SkinData(
-                        event.getPlayer().getUniqueId().toString(),
-                        property.getValue(),
-                        property.getSignature()
-                );
-
-                // update the skin cache if the skin is already cached
-                if (SkinFetcher.skinCache.containsKey(skinData.identifier())) {
-                    SkinFetcher.skinCache.put(skinData.identifier(), skinData);
-                }
-
-                // update the skin cache if the skin is already cached
-                FancyNpcs.getInstance().getSkinCache().upsert(new SkinFetcher.SkinCacheData(
-                        skinData,
-                        System.currentTimeMillis(),
-                        1000 * 60 * 60 * 24 * 12
-                ), true);
+            if (!property.getName().equals("textures")) {
+                continue;
             }
+
+            SkinData skinData = new SkinData(
+                    event.getPlayer().getUniqueId().toString(),
+                    SkinData.SkinVariant.AUTO,
+                    property.getValue(),
+                    property.getSignature()
+            );
+
+            FancyNpcs.getInstance().getSkinManagerImpl().getMemCache().addSkin(skinData);
         }
     }
 }

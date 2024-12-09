@@ -22,24 +22,22 @@ import org.incendo.cloud.annotations.parser.Parser;
 import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
 public enum EquipmentCMD {
     INSTANCE; // SINGLETON
-
-    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     // Storing in a static variable to avoid re-creating the array each time suggestion is requested.
     private static final List<String> SLOT_SUGGESTIONS = Arrays.stream(NpcEquipmentSlot.values()).map(slot -> slot.name().toLowerCase()).toList();
     // Replace with Registry#stream after dropping 1.19.4 support.
     private static final List<String> MATERIAL_SUGGESTIONS = StreamSupport.stream(Registry.MATERIAL.spliterator(), false).filter(Material::isItem).map(material -> material.key().asString()).toList();
+    private final Translator translator = FancyNpcs.getInstance().getTranslator();
 
     @Command("npc equipment <npc> set <slot> <item>")
     @Permission("fancynpcs.command.npc.equipment.set")
@@ -73,7 +71,7 @@ public enum EquipmentCMD {
         if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.EQUIPMENT, null, sender).callEvent()) {
             // Entries must be set to null manually because clearing the map would prevent equipment from being updated. (Npc#update checks if map is empty)
             for (final NpcEquipmentSlot slot : NpcEquipmentSlot.values())
-                npc.getData().getEquipment().put(slot, null);
+                npc.getData().getEquipment().put(slot, new ItemStack(Material.AIR));
             npc.updateForAll();
             translator.translate("npc_equipment_clear_success").replace("npc", npc.getData().getName()).send(sender);
         } else {

@@ -193,6 +193,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         actionManager.registerAction(new ExecuteRandomActionAction());
         actionManager.registerAction(new BlockUntilDoneAction());
         actionManager.registerAction(new NeedPermissionAction());
+        actionManager.registerAction(new PlaySoundAction());
 
         skinCache = new SkinCacheYaml();
         skinCache.loadAndInsertToSkinFetcher();

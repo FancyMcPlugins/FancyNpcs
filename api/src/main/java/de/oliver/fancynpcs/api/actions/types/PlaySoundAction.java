@@ -3,7 +3,6 @@ package de.oliver.fancynpcs.api.actions.types;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.executor.ActionExecutionContext;
-import org.bukkit.Sound;
 import org.jetbrains.annotations.NotNull;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
@@ -30,7 +29,7 @@ public class PlaySoundAction extends NpcAction {
                 context.getPlayer().getLocation(),
                 () -> {
                     try {
-                        context.getPlayer().playSound(context.getPlayer().getLocation(), Sound.valueOf(sound), 1.0F, 1.0F);
+                        context.getPlayer().playSound(context.getPlayer().getLocation(), value, 1.0F, 1.0F);
                     } catch (Exception e) {
                         FancyNpcsPlugin.get().getFancyLogger().warn("Failed to play sound: " + sound);
                     }

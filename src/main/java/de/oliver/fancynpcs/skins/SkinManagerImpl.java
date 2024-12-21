@@ -95,6 +95,30 @@ public class SkinManagerImpl implements SkinManager {
         return getByUUID(uuid, variant);
     }
 
+    public SkinData getByIdentifierCached(String identifier, SkinData.SkinVariant variant) {
+        if (SkinUtils.isUUID(identifier) || SkinUtils.isURL(identifier) || SkinUtils.isFile(identifier)) {
+            return tryToGetFromCache(identifier, variant);
+        }
+
+        if (SkinUtils.isPlaceholder(identifier)) {
+            String parsed = ChatColorHandler.translate(identifier);
+
+            if (SkinUtils.isPlaceholder(parsed)) {
+                return null;
+            }
+
+            return tryToGetFromCache(parsed, variant);
+        }
+
+        // is username
+        UUID uuid = UUIDFetcher.getUUID(identifier);
+        if (uuid == null) {
+            return null;
+        }
+
+        return tryToGetFromCache(uuid.toString(), variant);
+    }
+
     @Override
     public SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant) {
         SkinData cached = tryToGetFromCache(uuid.toString(), variant);
@@ -254,7 +278,9 @@ public class SkinManagerImpl implements SkinManager {
         return skinResp.join();
     }
 
-    public SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
+    private SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
+        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from mem cache: " + identifier);
+
         SkinCacheData data = memCache.getSkin(identifier);
         if (data != null) {
             if (data.skinData().getVariant() != variant) {
@@ -263,6 +289,8 @@ public class SkinManagerImpl implements SkinManager {
 
             return data.skinData();
         }
+
+        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from file cache: " + identifier);
 
         data = fileCache.getSkin(identifier);
         if (data != null) {
@@ -273,6 +301,8 @@ public class SkinManagerImpl implements SkinManager {
             memCache.addSkin(data.skinData());
             return data.skinData();
         }
+
+        FancyNpcs.getInstance().getFancyLogger().debug("Skin not found in cache: " + identifier);
 
         return null;
     }

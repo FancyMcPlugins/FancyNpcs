@@ -275,7 +275,7 @@ public class NpcManagerImpl implements NpcManager {
             String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
             SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
             if (!skinIdentifier.isEmpty()) {
-                skin = FancyNpcs.getInstance().getSkinManagerImpl().tryToGetFromCache(skinIdentifier, skinVariant);
+                skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifierCached(skinIdentifier, skinVariant);
                 if (skin == null) {
                     applySkinLater = true;
                 }
@@ -430,7 +430,7 @@ public class NpcManagerImpl implements NpcManager {
             npc.create();
             registerNpc(npc);
 
-            if(applySkinLater) {
+            if (applySkinLater) {
                 SkinUtils.applySkinLater(id, skinIdentifier, skinVariant);
             }
         }

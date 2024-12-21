@@ -215,6 +215,8 @@ public class SkinManagerImpl implements SkinManager {
     }
 
     private SkinInfo executeRequest(GenerateRequest req) {
+        FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.getClass().getSimpleName());
+
         // submit job to the queue
         CompletableFuture<QueueResponse> queueResp = client.queue().submit(req);
 

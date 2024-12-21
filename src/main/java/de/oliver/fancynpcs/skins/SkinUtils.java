@@ -24,6 +24,8 @@ public class SkinUtils {
 
     public static void applySkinLater(String npcID, String skinID, SkinData.SkinVariant variant, Runnable successCallback, Runnable errorCallback) {
         FancyNpcs.getInstance().getSkinManagerImpl().getExecutor().submit(() -> {
+            FancyNpcs.getInstance().getFancyLogger().debug("Loading skin for npc '" + npcID + "'. Skin: " + skinID + ", Variant: " + variant);
+
             SkinData skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinID, variant);
             if (skin == null) {
                 FancyNpcs.getInstance().getFancyLogger().error("Could not fetch skin for npc '" + npcID + "'");
@@ -44,6 +46,7 @@ public class SkinUtils {
             npc.create();
             npc.spawnForAll();
 
+            FancyNpcs.getInstance().getFancyLogger().debug("Successfully applied skin for npc '" + npcID + "'");
             successCallback.run();
         });
     }

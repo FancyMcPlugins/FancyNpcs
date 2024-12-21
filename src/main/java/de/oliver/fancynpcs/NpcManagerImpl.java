@@ -11,6 +11,7 @@ import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcsLoadedEvent;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
+import de.oliver.fancynpcs.skins.SkinUtils;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -270,14 +271,14 @@ public class NpcManagerImpl implements NpcManager {
             }
 
             SkinData skin = null;
+            boolean applySkinLater = false;
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
+            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
+            SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
             if (!skinIdentifier.isEmpty()) {
-                String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
-                SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
-
-                skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
+                skin = FancyNpcs.getInstance().getSkinManagerImpl().tryToGetFromCache(skinIdentifier, skinVariant);
                 if (skin == null) {
-                    logger.warn("Could not load skin for npc '" + id + "'");
+                    applySkinLater = true;
                 }
             }
 
@@ -431,6 +432,10 @@ public class NpcManagerImpl implements NpcManager {
 
             npc.create();
             registerNpc(npc);
+
+            if(applySkinLater) {
+                SkinUtils.applySkinLater(id, skinIdentifier, skinVariant);
+            }
         }
 
         isLoaded = true;

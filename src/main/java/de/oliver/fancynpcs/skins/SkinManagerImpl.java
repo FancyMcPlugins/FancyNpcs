@@ -38,7 +38,7 @@ public class SkinManagerImpl implements SkinManager {
     private final SkinCache memCache;
 
     public SkinManagerImpl(SkinCache fileCache, SkinCache memCache) {
-        this.executor = Executors.newSingleThreadScheduledExecutor(new ThreadFactoryBuilder()
+        this.executor = Executors.newScheduledThreadPool(2, new ThreadFactoryBuilder()
                 .setNameFormat("FancyNpcs-Skins")
                 .build());
 
@@ -252,8 +252,8 @@ public class SkinManagerImpl implements SkinManager {
         return skinResp.join();
     }
 
-    private SkinData tryToGetFromCache(String id, SkinData.SkinVariant variant) {
-        SkinCacheData data = memCache.getSkin(id);
+    public SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
+        SkinCacheData data = memCache.getSkin(identifier);
         if (data != null) {
             if (data.skinData().getVariant() != variant) {
                 return null;
@@ -262,7 +262,7 @@ public class SkinManagerImpl implements SkinManager {
             return data.skinData();
         }
 
-        data = fileCache.getSkin(id);
+        data = fileCache.getSkin(identifier);
         if (data != null) {
             if (data.skinData().getVariant() != variant) {
                 return null;
@@ -286,5 +286,9 @@ public class SkinManagerImpl implements SkinManager {
 
     public SkinCache getMemCache() {
         return memCache;
+    }
+
+    public ScheduledExecutorService getExecutor() {
+        return executor;
     }
 }

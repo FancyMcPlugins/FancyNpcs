@@ -1,5 +1,9 @@
 package de.oliver.fancynpcs.skins;
 
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.skins.SkinData;
+
 public class SkinUtils {
 
     public static boolean isPlaceholder(String identifier) {
@@ -18,4 +22,35 @@ public class SkinUtils {
         return identifier.endsWith(".png") || identifier.endsWith(".jpg") || identifier.endsWith(".jpeg");
     }
 
+    public static void applySkinLater(String npcID, String skinID, SkinData.SkinVariant variant, Runnable successCallback, Runnable errorCallback) {
+        FancyNpcs.getInstance().getSkinManagerImpl().getExecutor().submit(() -> {
+            SkinData skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinID, variant);
+            if (skin == null) {
+                FancyNpcs.getInstance().getFancyLogger().error("Could not fetch skin for npc '" + npcID + "'");
+                errorCallback.run();
+                return;
+            }
+
+            Npc npc = FancyNpcs.getInstance().getNpcManager().getNpcById(npcID);
+            if (npc == null) {
+                FancyNpcs.getInstance().getFancyLogger().error("Could not find npc '" + npcID + "'");
+                errorCallback.run();
+                return;
+            }
+
+            npc.getData().setMirrorSkin(false);
+            npc.getData().setSkin(skin);
+            npc.removeForAll();
+            npc.create();
+            npc.spawnForAll();
+
+            successCallback.run();
+        });
+    }
+
+    public static void applySkinLater(String npcID, String skinID, SkinData.SkinVariant variant) {
+        applySkinLater(npcID, skinID, variant, () -> {
+        }, () -> {
+        });
+    }
 }

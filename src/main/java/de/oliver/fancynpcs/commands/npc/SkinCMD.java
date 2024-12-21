@@ -67,7 +67,7 @@ public enum SkinCMD {
             }
         } else {
             SkinData.SkinVariant variant = slim ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO;
-            SkinData skinData = FancyNpcs.getInstance().getSkinManagerImpl().tryToGetFromCache(skin, variant);
+            SkinData skinData = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifierCached(skin, variant);
             if (skinData == null) {
                 SkinUtils.applySkinLater(
                         npc.getData().getId(),

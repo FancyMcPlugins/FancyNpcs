@@ -4,6 +4,7 @@ import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.events.NpcsLoadedEvent;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
 import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -420,6 +421,7 @@ public class NpcManagerImpl implements NpcManager {
         }
 
         isLoaded = true;
+        new NpcsLoadedEvent().callEvent();
     }
 
     public void reloadNpcs() {

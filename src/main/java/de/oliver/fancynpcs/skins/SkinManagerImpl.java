@@ -38,7 +38,7 @@ public class SkinManagerImpl implements SkinManager {
     private final SkinCache memCache;
 
     public SkinManagerImpl(SkinCache fileCache, SkinCache memCache) {
-        this.executor = Executors.newScheduledThreadPool(2, new ThreadFactoryBuilder()
+        this.executor = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
                 .setNameFormat("FancyNpcs-Skins")
                 .build());
 
@@ -244,10 +244,20 @@ public class SkinManagerImpl implements SkinManager {
         // submit job to the queue
         CompletableFuture<QueueResponse> queueResp = client.queue().submit(req);
 
+        queueResp.exceptionally(throwable -> {
+            FancyNpcs.getInstance().getFancyLogger().error("Could not submit job to MineSkin queue: " + throwable.getMessage());
+            return null;
+        });
+
         // wait for job completion
         CompletableFuture<JobReference> jobResp = queueResp.thenCompose(
                 queueResponse -> queueResponse.getJob().waitForCompletion(client)
         );
+
+        jobResp.exceptionally(throwable -> {
+            FancyNpcs.getInstance().getFancyLogger().error("Could not wait for job completion: " + throwable.getMessage());
+            return null;
+        });
 
         // get skin from job or load it from the API
         CompletableFuture<SkinInfo> skinResp = jobResp.thenCompose(
@@ -275,11 +285,17 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         });
 
-        return skinResp.join();
+        try {
+            SkinInfo skinInfo = skinResp.join();
+            return skinInfo;
+        } catch (Exception e) {
+            System.out.println("Error in mineskin req: " + e.getMessage());
+            return null;
+        }
     }
 
     private SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
-        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from mem cache: " + identifier);
+//        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from mem cache: " + identifier);
 
         SkinCacheData data = memCache.getSkin(identifier);
         if (data != null) {
@@ -290,7 +306,7 @@ public class SkinManagerImpl implements SkinManager {
             return data.skinData();
         }
 
-        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from file cache: " + identifier);
+//        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from file cache: " + identifier);
 
         data = fileCache.getSkin(identifier);
         if (data != null) {

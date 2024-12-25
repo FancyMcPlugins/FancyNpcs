@@ -23,7 +23,7 @@ public class SkinUtils {
     }
 
     public static void applySkinLater(String npcID, String skinID, SkinData.SkinVariant variant, Runnable successCallback, Runnable errorCallback) {
-        FancyNpcs.getInstance().getSkinManagerImpl().getExecutor().submit(() -> {
+        MineSkinQueue.get().add(() -> {
             FancyNpcs.getInstance().getFancyLogger().debug("Loading skin for npc '" + npcID + "'. Skin: " + skinID + ", Variant: " + variant);
 
             SkinData skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinID, variant);
@@ -49,6 +49,7 @@ public class SkinUtils {
             FancyNpcs.getInstance().getFancyLogger().debug("Successfully applied skin for npc '" + npcID + "'");
             successCallback.run();
         });
+        System.out.println("Added skin to queue");
     }
 
     public static void applySkinLater(String npcID, String skinID, SkinData.SkinVariant variant) {

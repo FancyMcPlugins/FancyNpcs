@@ -107,7 +107,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
             }
         }
         JsonAppender jsonAppender = new JsonAppender(false, false, true, logsFile.getPath());
-        this.fancyLogger = new ExtendedFancyLogger("FancyNpcs", LogLevel.INFO, List.of(consoleAppender, jsonAppender), new ArrayList<>());
+        this.fancyLogger = new ExtendedFancyLogger("FancyNpcs", LogLevel.DEBUG, List.of(consoleAppender, jsonAppender), new ArrayList<>());
 
         this.npcThread = Executors.newSingleThreadScheduledExecutor(
                 new ThreadFactoryBuilder()

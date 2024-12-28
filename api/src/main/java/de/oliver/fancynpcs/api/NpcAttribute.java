@@ -12,9 +12,9 @@ public class NpcAttribute {
     private final List<EntityType> types;
     private final BiConsumer<Npc, String> applyFunc; // npc, value
 
-    public NpcAttribute(String name, List<String> possbileValues, List<EntityType> types, BiConsumer<Npc, String> applyFunc) {
+    public NpcAttribute(String name, List<String> possibleValues, List<EntityType> types, BiConsumer<Npc, String> applyFunc) {
         this.name = name;
-        this.possibleValues = possbileValues;
+        this.possibleValues = possibleValues;
         this.types = types;
         this.applyFunc = applyFunc;
     }

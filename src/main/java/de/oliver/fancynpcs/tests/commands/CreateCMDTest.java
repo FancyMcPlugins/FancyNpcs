@@ -1,18 +1,18 @@
-package de.oliver.fancynpcs.tests.impl.commands;
+package de.oliver.fancynpcs.tests.commands;
 
+import de.oliver.fancylib.tests.annotations.FPAfterEach;
+import de.oliver.fancylib.tests.annotations.FPBeforeEach;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcManager;
-import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
-import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
-import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class CreateCMDTest {
 
@@ -21,13 +21,13 @@ public class CreateCMDTest {
     private String npcName;
     private Npc createdNpc;
 
-    @FNBeforeEach
+    @FPBeforeEach
     public void setUp(Player player) {
         npcName = "test-" + UUID.randomUUID().toString().substring(0, 8);
         createdNpc = null;
     }
 
-    @FNAfterEach
+    @FPAfterEach
     public void tearDown(Player player) {
         if (createdNpc != null) {
             NPC_MANAGER.removeNpc(createdNpc);
@@ -39,7 +39,7 @@ public class CreateCMDTest {
         npcName = null;
     }
 
-    @FNTest(name = "Create npc")
+    @FPTest(name = "Create npc")
     public void createNpc(Player player) {
         expect(player.performCommand("npc create " + npcName)).toBe(true);
 
@@ -55,7 +55,7 @@ public class CreateCMDTest {
         expect(createdNpc.getData().getCreator()).toEqual(player.getUniqueId());
     }
 
-    @FNTest(name = "Create npc with type")
+    @FPTest(name = "Create npc with type")
     public void createNpcWithType(Player player) {
         expect(player.performCommand("npc create " + npcName + " --type PIG")).toBe(true);
 
@@ -67,7 +67,7 @@ public class CreateCMDTest {
         expect(createdNpc.getData().getType()).toEqual(EntityType.PIG);
     }
 
-    @FNTest(name = "Create npc with location")
+    @FPTest(name = "Create npc with location")
     public void createNpcWithLocation(Player player) {
         expect(player.performCommand("npc create " + npcName + " --location 12 154 842")).toBe(true);
 
@@ -81,7 +81,7 @@ public class CreateCMDTest {
         expect(createdNpc.getData().getLocation().z()).toEqual(842d);
     }
 
-    @FNTest(name = "Create npc with world")
+    @FPTest(name = "Create npc with world")
     public void createNpcWithWorld(Player player) {
         String worldName = "world_the_nether";
         if (Bukkit.getWorld(worldName) == null) {
@@ -98,7 +98,7 @@ public class CreateCMDTest {
         expect(createdNpc.getData().getLocation().getWorld().getName()).toEqual(worldName);
     }
 
-    @FNTest(name = "Create npc with invalid name")
+    @FPTest(name = "Create npc with invalid name")
     public void createNpcWithInvalidName(Player player) {
         expect(player.performCommand("npc create " + "invalid.name")).toBe(true);
 
@@ -106,7 +106,7 @@ public class CreateCMDTest {
         expect(createdNpc).toBeNull();
     }
 
-    @FNTest(name = "Create npc with existing name")
+    @FPTest(name = "Create npc with existing name")
     public void createNpcWithExistingName(Player player) {
         expect(player.performCommand("npc create " + npcName)).toBe(true);
 
@@ -122,7 +122,7 @@ public class CreateCMDTest {
         expect(existingNpc).toEqual(createdNpc);
     }
 
-    @FNTest(name = "Create npc with all flags")
+    @FPTest(name = "Create npc with all flags")
     public void createNpcWithAllFlags(Player player) {
         String worldName = "world_the_nether";
         if (Bukkit.getWorld(worldName) == null) {

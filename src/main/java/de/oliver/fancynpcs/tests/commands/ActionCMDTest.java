@@ -1,20 +1,20 @@
-package de.oliver.fancynpcs.tests.impl.commands;
+package de.oliver.fancynpcs.tests.commands;
 
+import de.oliver.fancylib.tests.annotations.FPAfterEach;
+import de.oliver.fancylib.tests.annotations.FPBeforeEach;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionManager;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
-import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
-import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
-import de.oliver.fancynpcs.tests.annotations.FNTest;
-import de.oliver.fancynpcs.tests.impl.api.NpcTestEnv;
+import de.oliver.fancynpcs.tests.api.NpcTestEnv;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class ActionCMDTest {
 
@@ -23,7 +23,7 @@ public class ActionCMDTest {
     private Npc npc;
     private String npcName;
 
-    @FNBeforeEach
+    @FPBeforeEach
     public void setUp(Player player) {
         npc = NpcTestEnv.givenDefaultNpcIsCreated();
         npcName = npc.getData().getName();
@@ -31,7 +31,7 @@ public class ActionCMDTest {
         NpcTestEnv.givenNpcIsRegistered(npc);
     }
 
-    @FNAfterEach
+    @FPAfterEach
     public void tearDown(Player player) {
         NpcTestEnv.givenNpcIsUnregistered(npc);
 
@@ -39,7 +39,7 @@ public class ActionCMDTest {
         npcName = null;
     }
 
-    @FNTest(name = "Add action")
+    @FPTest(name = "Add action")
     public void addAction(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         String actionType = "player_command";
@@ -52,7 +52,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getFirst().value()).toEqual(actionValue);
     }
 
-    @FNTest(name = "Add action before")
+    @FPTest(name = "Add action before")
     public void addActionBefore(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -70,7 +70,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getLast().value()).toEqual(existingAction.value());
     }
 
-    @FNTest(name = "Add action after")
+    @FPTest(name = "Add action after")
     public void addActionAfter(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -88,7 +88,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getLast().value()).toEqual(actionValue);
     }
 
-    @FNTest(name = "Set action")
+    @FPTest(name = "Set action")
     public void setAction(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -104,7 +104,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getFirst().value()).toEqual(actionValue);
     }
 
-    @FNTest(name = "Remove action")
+    @FPTest(name = "Remove action")
     public void removeAction(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -115,7 +115,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).size()).toEqual(0);
     }
 
-    @FNTest(name = "Move action up")
+    @FPTest(name = "Move action up")
     public void moveActionUp(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction1 = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -131,7 +131,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getLast().value()).toEqual(existingAction1.value());
     }
 
-    @FNTest(name = "Move action down")
+    @FPTest(name = "Move action down")
     public void moveActionDown(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction1 = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");
@@ -147,7 +147,7 @@ public class ActionCMDTest {
         expect(npc.getData().getActions(actionTrigger).getLast().value()).toEqual(existingAction1.value());
     }
 
-    @FNTest(name = "Clear actions")
+    @FPTest(name = "Clear actions")
     public void clearActions(Player player) {
         ActionTrigger actionTrigger = ActionTrigger.RIGHT_CLICK;
         NpcAction.NpcActionData existingAction = new NpcAction.NpcActionData(1, actionManager.getActionByName("player_command"), "say Hello World!");

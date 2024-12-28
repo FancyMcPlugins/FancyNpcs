@@ -1,17 +1,17 @@
-package de.oliver.fancynpcs.tests.impl.api;
+package de.oliver.fancynpcs.tests.api;
 
-import de.oliver.fancynpcs.tests.annotations.FNTest;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class ChatColorHandlerTest {
 
-    @FNTest(name = "Test Placeholders")
+    @FPTest(name = "Test Placeholders")
     public void testPlaceholders(Player player) {
         if (!isPlaceholderAPIEnabled()) {
             return;

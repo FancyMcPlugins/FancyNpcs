@@ -4,7 +4,7 @@ import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.tests.impl.FancyNpcsTests;
+import de.oliver.fancynpcs.tests.FancyNpcsTests;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;

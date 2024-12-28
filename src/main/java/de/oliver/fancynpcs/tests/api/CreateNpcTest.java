@@ -1,19 +1,19 @@
-package de.oliver.fancynpcs.tests.impl.api;
+package de.oliver.fancynpcs.tests.api;
 
+import de.oliver.fancylib.tests.annotations.FPAfterEach;
+import de.oliver.fancylib.tests.annotations.FPBeforeEach;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
-import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
-import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
-import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class CreateNpcTest {
 
@@ -25,7 +25,7 @@ public class CreateNpcTest {
 
     private Npc createdNpc;
 
-    @FNBeforeEach
+    @FPBeforeEach
     public void setUp(Player player) {
         npcName = "test-" + UUID.randomUUID().toString().substring(0, 8);
         creatorUUID = player.getUniqueId();
@@ -33,7 +33,7 @@ public class CreateNpcTest {
         createdNpc = null;
     }
 
-    @FNAfterEach
+    @FPAfterEach
     public void tearDown(Player player) {
         if (createdNpc != null) {
             NPC_MANAGER.removeNpc(createdNpc);
@@ -47,7 +47,7 @@ public class CreateNpcTest {
         location = null;
     }
 
-    @FNTest(name = "Create and register npc")
+    @FPTest(name = "Create and register npc")
     public void createAndRegisterNpc(Player player) {
         NpcData data = new NpcData(npcName, creatorUUID, location);
         createdNpc = FancyNpcsPlugin.get().getNpcAdapter().apply(data);

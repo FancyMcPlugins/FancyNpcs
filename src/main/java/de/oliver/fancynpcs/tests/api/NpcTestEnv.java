@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.tests.impl.api;
+package de.oliver.fancynpcs.tests.api;
 
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
@@ -8,7 +8,7 @@ import org.bukkit.Location;
 
 import java.util.UUID;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class NpcTestEnv {
 

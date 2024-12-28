@@ -1,9 +1,9 @@
-package de.oliver.fancynpcs.tests.impl;
+package de.oliver.fancynpcs.tests;
 
-import de.oliver.fancynpcs.tests.FNTestClass;
-import de.oliver.fancynpcs.tests.impl.api.ChatColorHandlerTest;
-import de.oliver.fancynpcs.tests.impl.api.CreateNpcTest;
-import de.oliver.fancynpcs.tests.impl.commands.*;
+import de.oliver.fancylib.tests.FPTestClass;
+import de.oliver.fancynpcs.tests.api.ChatColorHandlerTest;
+import de.oliver.fancynpcs.tests.api.CreateNpcTest;
+import de.oliver.fancynpcs.tests.commands.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class FancyNpcsTests {
 
-    private final List<FNTestClass> tests = new ArrayList<>();
+    private final List<FPTestClass> tests = new ArrayList<>();
 
     public FancyNpcsTests() {
         // api tests
@@ -37,7 +37,7 @@ public class FancyNpcsTests {
      * @return this instance, allowing for method chaining
      */
     public FancyNpcsTests addTest(Class<?> testClass) {
-        tests.add(FNTestClass.fromClass(testClass));
+        tests.add(FPTestClass.fromClass(testClass));
         return this;
     }
 
@@ -48,7 +48,7 @@ public class FancyNpcsTests {
      * @return true if all tests completed successfully, false if any test failed or an unexpected exception occurred.
      */
     public boolean runAllTests(Player player) {
-        for (FNTestClass test : tests) {
+        for (FPTestClass test : tests) {
             try {
                 if (!test.runTests(player)) {
                     return false;
@@ -68,7 +68,7 @@ public class FancyNpcsTests {
     public int getTestCount() {
         int count = 0;
 
-        for (FNTestClass test : tests) {
+        for (FPTestClass test : tests) {
             count += test.testMethods().size();
         }
 

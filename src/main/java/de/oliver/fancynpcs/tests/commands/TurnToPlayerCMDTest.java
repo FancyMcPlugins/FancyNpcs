@@ -1,20 +1,20 @@
-package de.oliver.fancynpcs.tests.impl.commands;
+package de.oliver.fancynpcs.tests.commands;
 
+import de.oliver.fancylib.tests.annotations.FPAfterEach;
+import de.oliver.fancylib.tests.annotations.FPBeforeEach;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.api.Npc;
-import de.oliver.fancynpcs.tests.annotations.FNAfterEach;
-import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
-import de.oliver.fancynpcs.tests.annotations.FNTest;
-import de.oliver.fancynpcs.tests.impl.api.NpcTestEnv;
+import de.oliver.fancynpcs.tests.api.NpcTestEnv;
 import org.bukkit.entity.Player;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class TurnToPlayerCMDTest {
 
     private Npc npc;
     private String npcName;
 
-    @FNBeforeEach
+    @FPBeforeEach
     public void setUp(Player player) {
         npc = NpcTestEnv.givenDefaultNpcIsCreated();
         npcName = npc.getData().getName();
@@ -22,7 +22,7 @@ public class TurnToPlayerCMDTest {
         NpcTestEnv.givenNpcIsRegistered(npc);
     }
 
-    @FNAfterEach
+    @FPAfterEach
     public void tearDown(Player player) {
         NpcTestEnv.givenNpcIsUnregistered(npc);
 
@@ -30,13 +30,13 @@ public class TurnToPlayerCMDTest {
         npcName = null;
     }
 
-    @FNTest(name = "Set turnToPlayer to true")
+    @FPTest(name = "Set turnToPlayer to true")
     public void setTurnToPlayerToTrue(Player player) {
         expect(player.performCommand("npc turn_to_player " + npcName + " true")).toBe(true);
         expect(npc.getData().isTurnToPlayer()).toBe(true);
     }
 
-    @FNTest(name = "Set turnToPlayer to false")
+    @FPTest(name = "Set turnToPlayer to false")
     public void setTurnToPlayerToFalse(Player player) {
         npc.getData().setTurnToPlayer(true);
 

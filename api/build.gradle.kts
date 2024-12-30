@@ -9,7 +9,7 @@ val minecraftVersion = "1.19.4"
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$minecraftVersion-R0.1-SNAPSHOT")
 
-    compileOnly("de.oliver:FancyLib:33")
+    compileOnly("de.oliver:FancyLib:35")
     compileOnly("de.oliver.FancyAnalytics:logger:0.0.6")
 
     implementation("org.lushplugins:ChatColorHandler:5.1.0")

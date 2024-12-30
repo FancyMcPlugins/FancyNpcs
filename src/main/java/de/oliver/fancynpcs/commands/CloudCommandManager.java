@@ -189,6 +189,7 @@ public final class CloudCommandManager {
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
         annotationParser.parse(ActionCMD.INSTANCE);
+        annotationParser.parse(VisibilityDistanceCMD.INSTANCE);
 
 
         String mcVersion = Bukkit.getMinecraftVersion();

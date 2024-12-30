@@ -74,7 +74,11 @@ public abstract class Npc {
      * @return True if the NPC should be visible for the player, otherwise false.
      */
     protected boolean shouldBeVisible(Player player) {
-        int visibilityDistance = FancyNpcsPlugin.get().getFancyNpcConfig().getVisibilityDistance();
+        int visibilityDistance = (data.getVisibilityDistance() > -1) ? data.getVisibilityDistance() : FancyNpcsPlugin.get().getFancyNpcConfig().getVisibilityDistance();
+
+        if (visibilityDistance == 0) {
+            return false;
+        }
 
         if (!data.isSpawnEntity()) {
             return false;
@@ -88,8 +92,7 @@ public abstract class Npc {
             return false;
         }
 
-        double distanceSquared = data.getLocation().distanceSquared(player.getLocation());
-        if (distanceSquared > visibilityDistance * visibilityDistance) {
+        if (visibilityDistance != Integer.MAX_VALUE && data.getLocation().distanceSquared(player.getLocation()) > visibilityDistance * visibilityDistance) {
             return false;
         }
 

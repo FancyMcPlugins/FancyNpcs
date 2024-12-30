@@ -364,6 +364,7 @@ public class NpcManagerImpl implements NpcManager {
 
             float interactionCooldown = (float) npcConfig.getDouble("npcs." + id + ".interactionCooldown", 0);
             float scale = (float) npcConfig.getDouble("npcs." + id + ".scale", 1);
+            int visibilityDistance = npcConfig.getInt("npcs." + id + ".visibility_distance", -1);
 
             Map<NpcAttribute, String> attributes = new HashMap<>();
             if (npcConfig.isConfigurationSection("npcs." + id + ".attributes")) {
@@ -403,6 +404,7 @@ public class NpcManagerImpl implements NpcManager {
                     actions,
                     interactionCooldown,
                     scale,
+                    visibilityDistance,
                     attributes,
                     mirrorSkin
             );

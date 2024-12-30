@@ -38,6 +38,7 @@ public class NpcData {
     private boolean turnToPlayer;
     private float interactionCooldown;
     private float scale;
+    private int visibilityDistance;
     private Map<NpcAttribute, String> attributes;
     private boolean isDirty;
 
@@ -60,6 +61,7 @@ public class NpcData {
             Map<ActionTrigger, List<NpcAction.NpcActionData>> actions,
             float interactionCooldown,
             float scale,
+            int visibilityDistance,
             Map<NpcAttribute, String> attributes,
             boolean mirrorSkin
     ) {
@@ -81,6 +83,7 @@ public class NpcData {
         this.turnToPlayer = turnToPlayer;
         this.interactionCooldown = interactionCooldown;
         this.scale = scale;
+        this.visibilityDistance = visibilityDistance;
         this.attributes = attributes;
         this.mirrorSkin = mirrorSkin;
         this.isDirty = true;
@@ -107,6 +110,7 @@ public class NpcData {
         this.turnToPlayer = false;
         this.interactionCooldown = 0;
         this.scale = 1;
+        this.visibilityDistance = -1;
         this.equipment = new ConcurrentHashMap<>();
         this.attributes = new ConcurrentHashMap<>();
         this.mirrorSkin = false;
@@ -313,6 +317,16 @@ public class NpcData {
 
     public NpcData setScale(float scale) {
         this.scale = scale;
+        isDirty = true;
+        return this;
+    }
+
+    public int getVisibilityDistance() {
+        return visibilityDistance;
+    }
+
+    public NpcData setVisibilityDistance(int visibilityDistance) {
+        this.visibilityDistance = visibilityDistance;
         isDirty = true;
         return this;
     }

@@ -55,6 +55,7 @@ public enum CopyCMD {
                         new ConcurrentHashMap<>(npc.getData().getActions()),
                         npc.getData().getInteractionCooldown(),
                         npc.getData().getScale(),
+                        npc.getData().getVisibilityDistance(),
                         new ConcurrentHashMap<>(npc.getData().getAttributes()),
                         npc.getData().isMirrorSkin()
                 ));

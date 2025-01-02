@@ -31,6 +31,13 @@ messages:
   unknown: "Unknown"
   not_available: "N/A"
 
+  # Common (Visibility)
+  always_visible: "Always Visible"
+  not_visible: "Not Visible"
+
+  # Common (Default Values)
+  default: "Default ({value})"
+
   # Common (Colors)
   color_black: "<dark_gray>Black"
   color_dark_blue: "<dark_blue>Dark Blue"
@@ -119,6 +126,7 @@ messages:
     npc_teleport: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc)"
     npc_turn_to_player: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
     npc_type: "<dark_gray>› <gray>Syntax: {primaryColor}/npc type {secondaryColor}(npc) (type)"
+    npc_visibility_distance: "<dark_gray>› <gray>Syntax: {primaryColor}/npc visibility_distance {secondaryColor}(npc) (always_visible | default | not_visible | distance)"
 
   # Commands (fancynpcs)
   fancynpcs_reload_success: "<dark_gray>› {successColor}Plugin has been reloaded."
@@ -165,6 +173,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Teleports you to the specified NPC.'>{primaryColor}/npc teleport {secondaryColor}(npc)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC should turn to the player when in range.'>{primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes the type of the NPC.'>{primaryColor}/npc type {secondaryColor}(npc) (type)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes the visibility distance of the NPC.'>{primaryColor}/npc visibility_distance {secondaryColor}(npc) (default | distance | ...)"
 
   # Commands (npc action)
   npc_action_add_success: "<dark_gray>› <gray>Action has been added. There are {warningColor}{total}<gray> actions in total."
@@ -245,6 +254,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Skin mirroring state of the NPC. Can be {successColor}true<gray> or {errorColor}false<gray>.'><#848484>Skin Mirroring</hover><dark_gray>: {warningColor}{is_skin_mirror}"
     - "<dark_gray>› <hover:show_text:'<gray>Cooldown between interactions.'><gray>Interaction Cooldown</hover><dark_gray>: {warningColor}{interaction_cooldown}"
     - "<dark_gray>› <hover:show_text:'<gray>Scale factor for the NPC size.'><#848484>Scale</hover><dark_gray>: {warningColor}x{scale}"
+    - "<dark_gray>› <hover:show_text:'<gray>Visibility distance of the NPC.'><gray>Visibility Distance</hover><dark_gray>: {warningColor}{visibility_distance}"
     - ""
     - "<dark_gray>› <hover:show_text:'<gray>Equipment of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><gray>Equipment</hover><dark_gray>: <click:RUN_COMMAND:'/npc equipment {name} list'>{warningColor}[Click Here]</click>"
     - "<dark_gray>› <hover:show_text:'<gray>Modified attributes of the NPC.<newline>Click the {warningColor}[Click Here]<gray> button to browse.'><#848484>Attributes</hover><dark_gray>: <click:RUN_COMMAND:'/npc attribute {name} list'>{warningColor}[Click Here]</click>"
@@ -283,6 +293,12 @@ messages:
 
   # Commands (scale)
   npc_scale_set_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been scaled to {warningColor}{scale}<gray>."
+
+  # Commands (npc visibility_distance)
+  npc_visibility_distance_set_value: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now visible from {warningColor}{distance}<gray> blocks."
+  npc_visibility_distance_set_default: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using default visibility distance of {warningColor}{distance}<gray>."
+  npc_visibility_distance_set_not_visible: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer visible."
+  npc_visibility_distance_set_always_visible: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now always visible."
 
   # Commands (npc show_in_tab)
   npc_show_in_tab_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now shown in player-list."

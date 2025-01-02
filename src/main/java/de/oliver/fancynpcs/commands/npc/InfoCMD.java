@@ -38,6 +38,13 @@ public enum InfoCMD {
         final String glowingStateTranslated = (npc.getData().isGlowing() && npc.getData().getGlowingColor() != null)
                 ? ((SimpleMessage) translator.translate(GlowingColor.fromAdventure(npc.getData().getGlowingColor()).getTranslationKey())).getMessage()
                 : ((SimpleMessage) translator.translate("disabled")).getMessage();
+        final String visibilityDistanceTranslated  = (npc.getData().getVisibilityDistance() == -1)
+                ? ((SimpleMessage) translator.translate("default").replace("value", String.valueOf(FancyNpcs.getInstance().getFancyNpcConfig().getVisibilityDistance()))).getMessage()
+                : (npc.getData().getVisibilityDistance() == 0)
+                        ? ((SimpleMessage) translator.translate("not_visible")).getMessage()
+                        : (npc.getData().getVisibilityDistance() == Integer.MAX_VALUE)
+                                ? ((SimpleMessage) translator.translate("always_visible")).getMessage()
+                                : String.valueOf(npc.getData().getVisibilityDistance());
         // Getting the creator player profile, this will be completed from cache in order to get name of the player.
         final PlayerProfile creatorProfile = Bukkit.createProfile(npc.getData().getCreator());
         translator.translate("npc_info_general")
@@ -60,6 +67,7 @@ public enum InfoCMD {
                 .replace("is_skin_mirror", getTranslatedBoolean(npc.getData().isMirrorSkin()))
                 .replace("interaction_cooldown", npc.getData().getInteractionCooldown() <= 0 ? getTranslatedState(false) : interactionCooldown.toString())
                 .replace("scale", String.valueOf(npc.getData().getScale()))
+                .replace("visibility_distance", visibilityDistanceTranslated)
                 .replace("actions_total", String.valueOf(actionsTotal))
                 .send(sender);
     }

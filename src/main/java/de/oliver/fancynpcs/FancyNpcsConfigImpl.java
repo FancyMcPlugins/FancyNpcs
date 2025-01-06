@@ -74,6 +74,11 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private List<String> blockedCommands;
 
     /**
+     * Indicates whether Virtual Threads are enabled.
+     */
+    private boolean enableVirtualThread;
+
+    /**
      * The maximum number of NPCs per permission. (for the 'player-npcs' feature flag only)
      */
     private Map<String, Integer> maxNpcsPerPermission;
@@ -118,6 +123,8 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
         config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));
 
+        enableVirtualThread = (boolean) ConfigHelper.getOrDefault(config, "virtual_thread", false);
+        config.setInlineComments("virtual_thread", List.of("Whether the plugin should use Virtual Threads."));
 
         if (!config.isSet("max-npcs")) {
             List<Map<String, Integer>> entries = new ArrayList<>();
@@ -187,5 +194,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public Map<String, Integer> getMaxNpcsPerPermission() {
         return maxNpcsPerPermission;
+    }
+
+    public boolean isEnableVirtualThread() {
+        return enableVirtualThread;
     }
 }

@@ -468,7 +468,11 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public Thread newThread(String name, Runnable runnable) {
-        return Thread.ofVirtual().name(name).unstarted(runnable);
+        if (config.isEnableVirtualThread()) {
+            return Thread.ofVirtual().name(name).unstarted(runnable);
+        } else {
+            return new Thread(runnable, name);
+        }
     }
 
     public ExtendedFancyLogger getFancyLogger() {

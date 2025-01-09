@@ -173,6 +173,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", null);
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
+            npcConfig.set("npcs." + data.getId() + ".visibility_distance", data.getVisibilityDistance());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());

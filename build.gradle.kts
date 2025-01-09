@@ -62,7 +62,7 @@ dependencies {
     implementation(project(":implementation_1_19_4", configuration = "reobf"))
 
     implementation("de.oliver:FancyLib:35")
-    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:0.0.6")
     implementation("org.incendo:cloud-core:2.1.0-SNAPSHOT")

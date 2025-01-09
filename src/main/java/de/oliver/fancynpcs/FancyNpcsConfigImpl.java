@@ -46,6 +46,11 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int npcUpdateInterval;
 
     /**
+     * The interval at which NPC visibility is updated. In ticks.
+     */
+    private int npcUpdateVisibilityInterval;
+
+    /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
@@ -102,6 +107,9 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
         npcUpdateInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_interval", 30);
         config.setInlineComments("npc_update_skin_interval", List.of("The interval at which the NPC is updated (in minutes). Only if the skin or displayName is a placeholder."));
+
+        npcUpdateVisibilityInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_visibility_interval", 20);
+        config.setInlineComments("npc_update_visibility_interval", List.of("The interval at which the NPC visibility is updated (in ticks)."));
 
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
@@ -163,6 +171,10 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     public int getNpcUpdateInterval() {
         return npcUpdateInterval;
+    }
+
+    public int getNpcUpdateVisibilityInterval() {
+        return npcUpdateVisibilityInterval;
     }
 
     public boolean isRegisterCommands() {

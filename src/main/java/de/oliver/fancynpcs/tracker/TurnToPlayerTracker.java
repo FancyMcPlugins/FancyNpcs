@@ -50,6 +50,10 @@ public class TurnToPlayerTracker implements Runnable {
                     // Updating state if changed.
                 } else if (npcData.isTurnToPlayer() && npc.getIsLookingAtPlayer().getOrDefault(player.getUniqueId(), false)) {
                     npc.getIsLookingAtPlayer().put(player.getUniqueId(), false);
+                    // Resetting to initial direction, if configured.
+                    if (FancyNpcs.getInstance().getFancyNpcConfig().isTurnToPlayerResetToInitialDirection()) {
+                        npc.move(player, false);
+                    }
                     // Calling NpcStopLookingEvent from the main thread.
                     FancyNpcs.getInstance().getScheduler().runTask(null, () -> {
                         Bukkit.getPluginManager().callEvent(new NpcStopLookingEvent(npc, player));

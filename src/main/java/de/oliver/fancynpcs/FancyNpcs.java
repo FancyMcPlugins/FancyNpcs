@@ -268,7 +268,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         visibilityTracker = new VisibilityTracker();
 
         npcThread.scheduleAtFixedRate(new TurnToPlayerTracker(), 0, 50, TimeUnit.MILLISECONDS);
-        npcThread.scheduleAtFixedRate(visibilityTracker, 0, 1, TimeUnit.SECONDS);
+        npcThread.scheduleAtFixedRate(visibilityTracker, 0, (config.getNpcUpdateVisibilityInterval() * 50L), TimeUnit.MILLISECONDS);
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {

@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
+import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
@@ -246,8 +247,7 @@ public class NpcManagerImpl implements NpcManager {
                 World world = Bukkit.getWorld(worldName);
 
                 if (world == null) {
-                    logger.info("Trying to load the world: '" + worldName + "'");
-                    world = new WorldCreator(worldName).createWorld();
+                    world = (!ServerSoftware.isFolia()) ? new WorldCreator(worldName).createWorld() : null;
                 }
 
                 if (world == null) {

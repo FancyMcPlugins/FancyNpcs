@@ -12,7 +12,7 @@ dependencies {
 
     compileOnly(project(":api"))
     compileOnly("de.oliver:FancyLib:35")
-    compileOnly("org.lushplugins:ChatColorHandler:5.1.0")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.2")
 }
 
 

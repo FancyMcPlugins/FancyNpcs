@@ -19,6 +19,8 @@ public interface FancyNpcsConfig {
 
     int getTurnToPlayerDistance();
 
+    boolean isTurnToPlayerResetToInitialDirection();
+
     int getVisibilityDistance();
 
     int getRemoveNpcsFromPlayerlistDelay();

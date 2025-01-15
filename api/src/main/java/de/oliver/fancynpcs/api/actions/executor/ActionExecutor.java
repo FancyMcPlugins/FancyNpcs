@@ -21,7 +21,7 @@ public class ActionExecutor {
             }
         }
 
-        ActionExecutionContext context = new ActionExecutionContext(trigger, npc, player);
+        ActionExecutionContext context = new ActionExecutionContext(trigger, npc, player.getUniqueId());
         runningContexts.put(key, context);
 
         FancyNpcsPlugin.get().newThread("FancyNpcs-ActionExecutor", () -> {
@@ -29,7 +29,10 @@ public class ActionExecutor {
                 context.runNext();
             }
             context.terminate();
+
+            runningContexts.remove(key);
         }).start();
+
     }
 
     private static String getKey(ActionTrigger trigger, Npc npc, Player player) {

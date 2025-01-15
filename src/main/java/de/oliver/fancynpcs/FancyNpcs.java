@@ -268,7 +268,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         visibilityTracker = new VisibilityTracker();
 
         npcThread.scheduleAtFixedRate(new TurnToPlayerTracker(), 0, 50, TimeUnit.MILLISECONDS);
-        npcThread.scheduleAtFixedRate(visibilityTracker, 0, 1, TimeUnit.SECONDS);
+        npcThread.scheduleAtFixedRate(visibilityTracker, 0, (config.getNpcUpdateVisibilityInterval() * 50L), TimeUnit.MILLISECONDS);
 
         int autosaveInterval = config.getAutoSaveInterval();
         if (config.isEnableAutoSave() && config.getAutoSaveInterval() > 0) {
@@ -297,10 +297,14 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
         // Creating new instance of CloudCommandManager and registering all needed components.
         // NOTE: Brigadier is disabled by default. More detailed information about that can be found in CloudCommandManager class.
-        commandManager = new CloudCommandManager(this, false)
-                .registerArguments()
-                .registerExceptionHandlers()
-                .registerCommands();
+        if (config.isRegisterCommands()) {
+            commandManager = new CloudCommandManager(this, false)
+                    .registerArguments()
+                    .registerExceptionHandlers()
+                    .registerCommands();
+        } else {
+            getLogger().warning("Commands and related components have not been registered. This can be changed by setting 'register_commands' to true, and restarting the server.");
+        }
 
         fancyLogger.info("FancyNpcs (" + versionConfig.getVersion() + ") has been enabled.");
     }

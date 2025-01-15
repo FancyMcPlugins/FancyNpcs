@@ -17,7 +17,11 @@ public interface FancyNpcsConfig {
 
     int getNpcUpdateInterval();
 
+    int getNpcUpdateVisibilityInterval();
+
     int getTurnToPlayerDistance();
+
+    boolean isTurnToPlayerResetToInitialDirection();
 
     int getVisibilityDistance();
 

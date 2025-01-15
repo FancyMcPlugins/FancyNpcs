@@ -46,6 +46,11 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
     private int npcUpdateInterval;
 
     /**
+     * The interval at which NPC visibility is updated. In ticks.
+     */
+    private int npcUpdateVisibilityInterval;
+
+    /**
      * Indicates whether commands should be registered.
      * <p>
      * This is useful for users who want to use the plugin's API only.
@@ -56,6 +61,11 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
      * The distance at which NPCs turn to the player.
      */
     private int turnToPlayerDistance;
+
+    /**
+     * Indicates whether direction of NPC should be reset when leaving their range.
+     */
+    private boolean turnToPlayerResetToInitialDirection;
 
     /**
      * The distance at which NPCs are visible.
@@ -108,11 +118,17 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         npcUpdateInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_interval", 30);
         config.setInlineComments("npc_update_skin_interval", List.of("The interval at which the NPC is updated (in minutes). Only if the skin or displayName is a placeholder."));
 
+        npcUpdateVisibilityInterval = (int) ConfigHelper.getOrDefault(config, "npc_update_visibility_interval", 20);
+        config.setInlineComments("npc_update_visibility_interval", List.of("The interval at which the NPC visibility is updated (in ticks)."));
+
         registerCommands = (boolean) ConfigHelper.getOrDefault(config, "register_commands", true);
         config.setInlineComments("register_commands", List.of("Whether the plugin should register its commands."));
 
         turnToPlayerDistance = (int) ConfigHelper.getOrDefault(config, "turn_to_player_distance", 5);
         config.setInlineComments("turn_to_player_distance", List.of("The distance at which NPCs turn to the player."));
+
+        turnToPlayerResetToInitialDirection = (boolean) ConfigHelper.getOrDefault(config, "turn_to_player_reset_to_initial_direction", false);
+        config.setInlineComments("turn_to_player_reset_to_initial_direction", List.of("Whether direction of NPC should be reset when leaving their turning range."));
 
         visibilityDistance = (int) ConfigHelper.getOrDefault(config, "visibility_distance", 20);
         config.setInlineComments("visibility_distance", List.of("The distance at which NPCs are visible."));
@@ -172,8 +188,16 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         return npcUpdateInterval;
     }
 
+    public int getNpcUpdateVisibilityInterval() {
+        return npcUpdateVisibilityInterval;
+    }
+
     public boolean isRegisterCommands() {
         return registerCommands;
+    }
+
+    public boolean isTurnToPlayerResetToInitialDirection() {
+        return turnToPlayerResetToInitialDirection;
     }
 
     public int getTurnToPlayerDistance() {

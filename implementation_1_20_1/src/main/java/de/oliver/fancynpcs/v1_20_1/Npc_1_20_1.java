@@ -213,6 +213,7 @@ public class Npc_1_20_1 extends Npc {
         Component vanillaComponent = PaperAdventure.asVanilla(displayName);
         if (!(npc instanceof ServerPlayer)) {
             npc.setCustomName(vanillaComponent);
+            npc.setCustomNameVisible(true);
         } else {
             npc.setCustomName(null);
             npc.setCustomNameVisible(false);

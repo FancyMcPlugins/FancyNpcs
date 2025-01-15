@@ -4,11 +4,13 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.actions.types.BlockUntilDoneAction;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Context for executing a sequence of NPC actions initiated by different triggers.
@@ -30,7 +32,7 @@ public class ActionExecutionContext {
     /**
      * The player involved in the action, may be null if no player is involved.
      */
-    private final @Nullable Player player;
+    private final @Nullable UUID player;
 
     /**
      * A list of NpcActionData instances representing the sequence of actions
@@ -60,7 +62,7 @@ public class ActionExecutionContext {
      * @param npc     the NPC that the action is being executed on
      * @param player  the player involved in the action, may be null if no player is involved
      */
-    public ActionExecutionContext(ActionTrigger trigger, Npc npc, @Nullable Player player) {
+    public ActionExecutionContext(ActionTrigger trigger, Npc npc, @Nullable UUID player) {
         this.trigger = trigger;
         this.npc = npc;
         this.player = player;
@@ -164,8 +166,16 @@ public class ActionExecutionContext {
         return actions;
     }
 
-    public @Nullable Player getPlayer() {
+    public UUID getPlayerUUID() {
         return player;
+    }
+
+    public @Nullable Player getPlayer() {
+        if (player == null) {
+            return null;
+        }
+
+        return Bukkit.getPlayer(player);
     }
 
     public int getActionIndex() {

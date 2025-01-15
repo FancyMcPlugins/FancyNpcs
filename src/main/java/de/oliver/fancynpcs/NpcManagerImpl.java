@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
+import de.oliver.fancylib.serverSoftware.ServerSoftware;
 import de.oliver.fancynpcs.api.*;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
@@ -173,6 +174,7 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".sendMessagesRandomly", null);
             npcConfig.set("npcs." + data.getId() + ".interactionCooldown", data.getInteractionCooldown());
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
+            npcConfig.set("npcs." + data.getId() + ".visibility_distance", data.getVisibilityDistance());
 
             if (data.getSkin() != null) {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
@@ -246,8 +248,7 @@ public class NpcManagerImpl implements NpcManager {
                 World world = Bukkit.getWorld(worldName);
 
                 if (world == null) {
-                    logger.info("Trying to load the world: '" + worldName + "'");
-                    world = new WorldCreator(worldName).createWorld();
+                    world = (!ServerSoftware.isFolia()) ? new WorldCreator(worldName).createWorld() : null;
                 }
 
                 if (world == null) {

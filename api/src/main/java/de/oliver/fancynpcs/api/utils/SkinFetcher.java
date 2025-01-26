@@ -1,6 +1,7 @@
 package de.oliver.fancynpcs.api.utils;
 
 import com.destroystokyo.paper.profile.ProfileProperty;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import de.oliver.fancylib.UUIDFetcher;
@@ -15,9 +16,9 @@ import org.lushplugins.chatcolorhandler.parsers.ParserTypes;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
@@ -31,8 +32,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Deprecated
 public final class SkinFetcher {
+
     @Deprecated
     public static final Map<String, SkinData> skinCache = new ConcurrentHashMap<>(); // identifier -> skinData
+    private final static Gson GSON = new Gson();
 
     private SkinFetcher() {
     }
@@ -171,13 +174,37 @@ public final class SkinFetcher {
             try {
                 URL url = new URL("https://api.mineskin.org/generate/url");
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", "application/json");
                 conn.setRequestMethod("POST");
                 conn.setDoOutput(true);
+
+                // Send POST data
                 DataOutputStream outputStream = new DataOutputStream(conn.getOutputStream());
-                outputStream.writeBytes("url=" + URLEncoder.encode(skinURL, StandardCharsets.UTF_8));
+                outputStream.writeBytes(GSON.toJson(new MineSkinRequest(skinURL, 0, "", "auto")));
                 outputStream.close();
 
-                String json = new Scanner(conn.getInputStream(), StandardCharsets.UTF_8).useDelimiter("\\A").next();
+                // Handle response
+                int responseCode = conn.getResponseCode();
+                InputStream inputStream = null;
+
+                if (responseCode >= 200 && responseCode < 300) {
+                    inputStream = conn.getInputStream();
+                } else if (responseCode >= 400) {
+                    inputStream = conn.getErrorStream();
+                    String errorBody = new Scanner(inputStream, StandardCharsets.UTF_8).useDelimiter("\\A").next();
+                    FancyNpcsPlugin.get().getFancyLogger().warn("4xx Error Response Body: " + errorBody);
+                    inputStream.close();
+                    return null;
+                }
+
+                if (inputStream == null) {
+                    FancyNpcsPlugin.get().getFancyLogger().warn("Failed to fetch skin data for URL " + skinURL);
+                    return null;
+                }
+
+                String json = new Scanner(inputStream, StandardCharsets.UTF_8).useDelimiter("\\A").next();
+                inputStream.close();
+
                 JsonParser parser = new JsonParser();
                 JsonObject obj = parser.parse(json).getAsJsonObject();
 
@@ -277,5 +304,8 @@ public final class SkinFetcher {
         public boolean isExpired() {
             return timeToLive > 0 && System.currentTimeMillis() - lastUpdated > timeToLive;
         }
+    }
+
+    private record MineSkinRequest(String url, int visibility, String name, String variant) {
     }
 }

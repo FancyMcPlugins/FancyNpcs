@@ -58,6 +58,7 @@ messages:
 
   # Common (Other)
   interaction_on_cooldown: "<dark_gray>› {errorColor}You're currently on cooldown. {warningColor}{time}{errorColor} remaining."
+  action_missing_permissions: "<dark_gray>› {errorColor}Insufficient permissions. You cannot perform this action."
   player_npcs_cannot_modify_npc: "<dark_gray>› {errorColor}You can only modify NPCs you own."
   player_npcs_cannot_move_npc: "<dark_gray>› {errorColor}You are only allowed to teleport NPCs to your plot."
   player_npcs_create_failure_limit_reached: "<dark_gray>› {errorColor}You have reached maximum number of NPCs."

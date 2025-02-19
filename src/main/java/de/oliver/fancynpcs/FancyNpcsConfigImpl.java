@@ -139,7 +139,7 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         blockedCommands = (List<String>) ConfigHelper.getOrDefault(config, "blocked_commands", Arrays.asList("op", "ban"));
         config.setInlineComments("blocked_commands", List.of("The commands that are blocked for NPCs in the message."));
 
-        enableVirtualThread = (boolean) ConfigHelper.getOrDefault(config, "virtual_thread", false);
+        enableVirtualThread = (boolean) ConfigHelper.getOrDefault(config, "virtual_thread", true);
         config.setInlineComments("virtual_thread", List.of("Whether the plugin should use Virtual Threads."));
 
         if (!config.isSet("max-npcs")) {

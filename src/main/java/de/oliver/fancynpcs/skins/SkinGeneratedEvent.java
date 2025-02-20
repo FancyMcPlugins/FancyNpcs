@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.skins;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ public class SkinGeneratedEvent extends Event {
     private final SkinInfo skin;
 
     public SkinGeneratedEvent(@NotNull String id, @Nullable SkinInfo skin) {
+        super(!Bukkit.isPrimaryThread());
         this.id = id;
         this.skin = skin;
     }

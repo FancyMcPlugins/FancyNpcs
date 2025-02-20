@@ -45,11 +45,13 @@ public class MineSkinQueue {
     }
 
     private void poll() {
+        System.out.println("trying to poll");
         if (this.queue.isEmpty()) {
             return;
         }
 
         if (System.currentTimeMillis() < this.nextRequestTime) {
+            System.out.println("still ratelimited by MineSkin. next request in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
             return;
         }
 
@@ -68,10 +70,12 @@ public class MineSkinQueue {
         } finally {
             this.nextRequestTime = System.currentTimeMillis();
         }
+        System.out.println("generated skin: ");
     }
 
     public void add(SkinRequest req) {
         this.queue.add(req);
+        System.out.println("added skin request to queue: " + req);
     }
 
 

@@ -5,7 +5,6 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import de.oliver.fancynpcs.api.skins.SkinData;
-import de.oliver.fancynpcs.skins.SkinUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
@@ -67,21 +66,8 @@ public enum SkinCMD {
             }
         } else {
             SkinData.SkinVariant variant = slim ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO;
-            SkinData skinData = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifierCached(skin, variant);
+            SkinData skinData = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skin, variant);
             if (skinData == null) {
-                SkinUtils.applySkinLater(
-                        npc.getData().getId(),
-                        skin,
-                        variant,
-                        () -> {
-                            translator.translate("npc_skin_set")
-                                    .replace("npc", npc.getData().getName())
-                                    .replace("name", skin)
-                                    .send(sender);
-                        },
-                        () -> {
-                            translator.translate("npc_skin_set_error").replace("npc", npc.getData().getName()).send(sender);
-                        });
                 translator.translate("npc_skin_set_later").replace("npc", npc.getData().getName()).send(sender);
                 return;
             }

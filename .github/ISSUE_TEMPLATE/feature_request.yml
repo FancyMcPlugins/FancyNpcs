@@ -1,0 +1,13 @@
+name: Feature Request
+description: Suggest a new Feature.
+title: "Feature: "
+labels: ["feature"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe your idea
+      description: Please provide a raw or complete concent of the feature
+      placeholder: A detailed description, possibly with examples or concept arts.
+    validations:
+      required: true

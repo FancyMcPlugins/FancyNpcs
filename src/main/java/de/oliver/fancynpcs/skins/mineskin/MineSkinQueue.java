@@ -1,24 +1,18 @@
 package de.oliver.fancynpcs.skins.mineskin;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinGeneratedEvent;
+import de.oliver.fancynpcs.skins.SkinManagerImpl;
 import org.mineskin.data.SkinInfo;
 import org.mineskin.data.Variant;
 import org.mineskin.request.GenerateRequest;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class MineSkinQueue {
-
-    private final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
-            .setNameFormat("FancyNpcs-Skins")
-            .build());
     private static MineSkinQueue INSTANCE;
 
     private final MineSkinAPI api;
@@ -28,7 +22,7 @@ public class MineSkinQueue {
 
     private MineSkinQueue() {
         this.queue = new LinkedList<>();
-        this.api = new MineSkinAPI(EXECUTOR);
+        this.api = new MineSkinAPI(SkinManagerImpl.EXECUTOR);
 
         run();
     }
@@ -42,7 +36,7 @@ public class MineSkinQueue {
     }
 
     private void run() {
-        EXECUTOR.scheduleWithFixedDelay(this::poll, 5, 1, TimeUnit.SECONDS);
+        SkinManagerImpl.EXECUTOR.scheduleWithFixedDelay(this::poll, 5, 1, TimeUnit.SECONDS);
     }
 
     private void poll() {

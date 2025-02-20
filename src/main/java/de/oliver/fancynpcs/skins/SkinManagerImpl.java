@@ -1,5 +1,6 @@
 package de.oliver.fancynpcs.skins;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
@@ -9,6 +10,7 @@ import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.skins.cache.SkinCache;
 import de.oliver.fancynpcs.skins.cache.SkinCacheData;
 import de.oliver.fancynpcs.skins.mineskin.MineSkinQueue;
+import de.oliver.fancynpcs.skins.mojang.MojangQueue;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
@@ -18,8 +20,14 @@ import org.mineskin.request.GenerateRequest;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 public class SkinManagerImpl implements SkinManager, Listener {
+
+    public final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
+            .setNameFormat("FancyNpcs-Skins")
+            .build());
 
     private final String SKINS_DIRECTORY = "plugins/FancyNpcs/skins/";
 
@@ -76,9 +84,11 @@ public class SkinManagerImpl implements SkinManager, Listener {
             return cached;
         }
 
-        GenerateRequest genReq = GenerateRequest.user(uuid);
-        genReq.variant(Variant.valueOf(variant.name()));
-        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
+        MojangQueue.get().add(new MojangQueue.SkinRequest(uuid.toString(), variant));
+
+//        GenerateRequest genReq = GenerateRequest.user(uuid);
+//        genReq.variant(Variant.valueOf(variant.name()));
+//        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
         return new SkinData(uuid.toString(), variant);
     }
 

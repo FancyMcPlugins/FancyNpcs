@@ -108,16 +108,11 @@ public class SkinManagerImpl implements SkinManager, Listener {
     @Override
     public SkinData getByUsername(String username, SkinData.SkinVariant variant) {
         UUID uuid = UUIDFetcher.getUUID(username);
-
-        SkinData cached = tryToGetFromCache(uuid.toString(), variant);
-        if (cached != null) {
-            return cached;
+        if (uuid == null) {
+            return null;
         }
 
-        GenerateRequest genReq = GenerateRequest.user(uuid);
-        genReq.variant(Variant.valueOf(variant.name()));
-        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
-        return null;
+        return getByUUID(uuid, variant);
     }
 
     @Override

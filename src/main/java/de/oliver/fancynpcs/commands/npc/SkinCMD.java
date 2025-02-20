@@ -56,7 +56,7 @@ public enum SkinCMD {
         } else if (isNone) {
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, null, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
-                npc.getData().setSkin(null);
+                npc.getData().setSkinData(null);
                 npc.removeForAll();
                 npc.create();
                 npc.spawnForAll();
@@ -73,7 +73,7 @@ public enum SkinCMD {
 
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinData, sender).callEvent()) {
                 npc.getData().setMirrorSkin(false);
-                npc.getData().setSkin(skinData);
+                npc.getData().setSkinData(skinData);
                 npc.removeForAll();
                 npc.create();
                 npc.spawnForAll();

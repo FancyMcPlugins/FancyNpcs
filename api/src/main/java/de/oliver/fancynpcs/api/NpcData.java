@@ -139,14 +139,31 @@ public class NpcData {
         return this;
     }
 
-    public SkinData getSkin() {
+    public SkinData getSkinData() {
         return skin;
     }
 
-    public NpcData setSkin(SkinData skin) {
-        this.skin = skin;
+    /**
+     * Sets the skin data of the npc
+     * Use this method, if you have a loaded skin data object (with texture and signature), otherwise use {@link #setSkin(String, SkinData.SkinVariant)}
+     *
+     * @param skinData the skin data
+     */
+    public NpcData setSkinData(SkinData skinData) {
+        this.skin = skinData;
         isDirty = true;
         return this;
+    }
+
+    /**
+     * Loads the skin data and sets it as the skin of the npc
+     *
+     * @param skin    a valid UUID, username, URL or file path
+     * @param variant the skin variant
+     */
+    public NpcData setSkin(String skin, SkinData.SkinVariant variant) {
+        SkinData data = FancyNpcsPlugin.get().getSkinManager().getByIdentifier(skin, variant);
+        return setSkinData(data);
     }
 
     public Location getLocation() {

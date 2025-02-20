@@ -31,7 +31,7 @@ public enum TypeCMD {
 
             if (type != EntityType.PLAYER) {
                 npc.getData().setShowInTab(false);
-                npc.getData().setSkin(null);
+                npc.getData().setSkinData(null);
                 npc.getData().setMirrorSkin(false);
             }
 

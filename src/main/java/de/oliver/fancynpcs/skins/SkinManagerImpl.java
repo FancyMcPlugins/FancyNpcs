@@ -149,12 +149,12 @@ public class SkinManagerImpl implements SkinManager, Listener {
         cacheSkin(event.getSkin());
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
-            SkinData skin = npc.getData().getSkin();
+            SkinData skin = npc.getData().getSkinData();
             if (skin == null)
                 continue;
 
             if (skin.getIdentifier().equals(event.getId())) {
-                npc.getData().setSkin(event.getSkin());
+                npc.getData().setSkinData(event.getSkin());
                 npc.removeForAll();
                 npc.spawnForAll();
                 FancyNpcs.getInstance().getFancyLogger().info("Updated skin for NPC: " + npc.getData().getName());

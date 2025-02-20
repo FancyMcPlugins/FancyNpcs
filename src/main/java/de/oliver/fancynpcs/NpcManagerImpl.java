@@ -179,9 +179,9 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
             npcConfig.set("npcs." + data.getId() + ".visibility_distance", data.getVisibilityDistance());
 
-            if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().getIdentifier());
-                npcConfig.set("npcs." + data.getId() + ".skin.variant", data.getSkin().getVariant().name());
+            if (data.getSkinData() != null) {
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkinData().getIdentifier());
+                npcConfig.set("npcs." + data.getId() + ".skin.variant", data.getSkinData().getVariant().name());
             } else {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }

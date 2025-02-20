@@ -83,6 +83,13 @@ public class MineSkinQueue {
     }
 
     public void add(SkinRequest req) {
+        // check if request is already in queue
+        for (SkinRequest r : this.queue) {
+            if (r.id().equals(req.id())) {
+                return;
+            }
+        }
+        
         this.queue.add(req);
     }
 

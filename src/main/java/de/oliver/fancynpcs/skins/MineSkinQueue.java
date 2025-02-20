@@ -1,6 +1,9 @@
 package de.oliver.fancynpcs.skins;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.skins.api.MineSkinAPI;
+import de.oliver.fancynpcs.skins.api.RatelimitException;
 import org.mineskin.data.SkinInfo;
 import org.mineskin.request.GenerateRequest;
 
@@ -9,20 +12,22 @@ import java.util.Queue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 public class MineSkinQueue {
 
-    private final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(1, new ThreadFactoryBuilder()
+    private final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(10, new ThreadFactoryBuilder()
             .setNameFormat("MineSkinQueue")
             .build());
     private static MineSkinQueue INSTANCE;
+
+    private final MineSkinAPI api;
     private final Queue<SkinRequest> queue;
 
     private long nextRequestTime = System.currentTimeMillis();
 
     private MineSkinQueue() {
         this.queue = new LinkedList<>();
+        this.api = new MineSkinAPI(EXECUTOR);
 
         run();
     }
@@ -36,7 +41,7 @@ public class MineSkinQueue {
     }
 
     private void run() {
-        EXECUTOR.scheduleAtFixedRate(this::poll, 5, 60, TimeUnit.SECONDS);
+        EXECUTOR.scheduleAtFixedRate(this::poll, 5, 1, TimeUnit.SECONDS);
     }
 
     private void poll() {
@@ -49,8 +54,20 @@ public class MineSkinQueue {
         }
 
         SkinRequest req = this.queue.poll();
+        if (req == null) {
+            return;
+        }
 
-
+        try {
+            SkinInfo skin = this.api.generateSkin(req.request());
+            new SkinGeneratedEvent(req.id(), skin).callEvent();
+        } catch (RatelimitException e) {
+            nextRequestTime = e.getNextRequestTime() + 100;
+            this.queue.add(req);
+            FancyNpcs.getInstance().getFancyLogger().debug("Ratelimited by MineSkin, retrying in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
+        } finally {
+            this.nextRequestTime = System.currentTimeMillis();
+        }
     }
 
     public void add(SkinRequest req) {
@@ -58,6 +75,6 @@ public class MineSkinQueue {
     }
 
 
-    public record SkinRequest(GenerateRequest request, Consumer<SkinInfo> finish) {
+    public record SkinRequest(String id, GenerateRequest request) {
     }
 }

@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.skins.api;
+package de.oliver.fancynpcs.skins.mineskin;
 
 public class RatelimitException extends RuntimeException {
 

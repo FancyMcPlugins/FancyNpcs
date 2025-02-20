@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.skins.api;
+package de.oliver.fancynpcs.skins.mineskin;
 
 import de.oliver.fancynpcs.FancyNpcs;
 import org.mineskin.JsoupRequestHandler;

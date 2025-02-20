@@ -1,11 +1,9 @@
-package de.oliver.fancynpcs.skins;
+package de.oliver.fancynpcs.skins.mineskin;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinGeneratedEvent;
-import de.oliver.fancynpcs.skins.api.MineSkinAPI;
-import de.oliver.fancynpcs.skins.api.RatelimitException;
 import org.mineskin.data.SkinInfo;
 import org.mineskin.data.Variant;
 import org.mineskin.request.GenerateRequest;
@@ -89,7 +87,7 @@ public class MineSkinQueue {
                 return;
             }
         }
-        
+
         this.queue.add(req);
     }
 

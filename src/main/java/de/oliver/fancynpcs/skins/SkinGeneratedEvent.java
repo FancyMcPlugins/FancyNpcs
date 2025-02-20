@@ -7,6 +7,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mineskin.data.SkinInfo;
 
+/**
+ * Event that is called when a skin is generated
+ */
 public class SkinGeneratedEvent extends Event {
 
     private static final HandlerList handlerList = new HandlerList();
@@ -31,6 +34,11 @@ public class SkinGeneratedEvent extends Event {
         return id;
     }
 
+    /**
+     * Get the skin that was generated
+     *
+     * @return the skin that was generated or null if the skin could not be generated
+     */
     public @Nullable SkinInfo getSkin() {
         return skin;
     }

@@ -1,28 +1,28 @@
-package de.oliver.fancynpcs.tests.impl.api.skin;
+package de.oliver.fancynpcs.tests.api;
 
+import de.oliver.fancylib.tests.annotations.FPBeforeEach;
+import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.skins.SkinManagerImpl;
 import de.oliver.fancynpcs.skins.cache.SkinCacheMemory;
-import de.oliver.fancynpcs.tests.annotations.FNBeforeEach;
-import de.oliver.fancynpcs.tests.annotations.FNTest;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 
-import static de.oliver.fancynpcs.tests.Expectable.expect;
+import static de.oliver.fancylib.tests.Expectable.expect;
 
 public class SkinManagerTest {
 
     private SkinManagerImpl skinFetcher;
 
-    @FNBeforeEach
+    @FPBeforeEach
     public void setUp(Player player) {
 
         skinFetcher = new SkinManagerImpl(new SkinCacheMemory(), new SkinCacheMemory());
     }
 
-    @FNTest(name = "Test fetch skin by UUID")
+    @FPTest(name = "Test fetch skin by UUID")
     public void testSkinByUUID(Player player) {
         SkinData skin = skinFetcher.getByUUID(player.getUniqueId(), SkinData.SkinVariant.AUTO);
 
@@ -35,7 +35,7 @@ public class SkinManagerTest {
         expect(skin.getTextureSignature().length()).toBeGreaterThan(0);
     }
 
-    @FNTest(name = "Test fetch skin by username")
+    @FPTest(name = "Test fetch skin by username")
     public void testSkinByUsername(Player player) {
         SkinData skin = skinFetcher.getByUsername(player.getName(), SkinData.SkinVariant.AUTO);
 
@@ -47,7 +47,7 @@ public class SkinManagerTest {
         expect(skin.getTextureSignature()).toBeDefined();
     }
 
-    @FNTest(name = "Test fetch skin by URL")
+    @FPTest(name = "Test fetch skin by URL")
     public void testSkinByURL(Player player) {
         SkinData skin = skinFetcher.getByURL("https://s.namemc.com/i/de7d8a3ffd1f584c.png", SkinData.SkinVariant.AUTO);
 
@@ -60,7 +60,7 @@ public class SkinManagerTest {
         expect(skin.getTextureSignature().length()).toBeGreaterThan(0);
     }
 
-    @FNTest(name = "Test fetch skin by file")
+    @FPTest(name = "Test fetch skin by file")
     public void testSkinByFile(Player player) {
         FancyNpcs.getInstance().getPlugin().saveResource("skins/testskin.png", true);
         SkinData skin = skinFetcher.getByFile("testskin.png", SkinData.SkinVariant.AUTO);

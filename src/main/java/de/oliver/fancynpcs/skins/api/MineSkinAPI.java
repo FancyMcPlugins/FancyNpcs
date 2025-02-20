@@ -32,21 +32,27 @@ public class MineSkinAPI {
     }
 
     public SkinInfo generateSkin(GenerateRequest req) throws RatelimitException {
-        FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.getClass().getSimpleName());
-
         try {
             QueueResponse queueResp = client.queue().submit(req).get();
-            System.out.println("queueResp = " + queueResp);
+            if (queueResp.getRateLimit().limit().remaining() == 0) {
+                // TODO use queueResp.getRateLimit().next() instead
+                throw new RatelimitException(System.currentTimeMillis() + 1000 * 10); // retry in next run
+            }
 
             JobReference jobResp = queueResp.getJob().waitForCompletion(client).get();
-            System.out.println("jobResp = " + jobResp);
 
             return jobResp.getOrLoadSkin(client).get();
+        } catch (RatelimitException e) {
+            throw e; // rethrow
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             if (cause instanceof MineSkinRequestException requestException) {
                 MineSkinResponse<?> response = requestException.getResponse();
                 for (CodeAndMessage error : response.getErrors()) {
+                    if (error.code().equals("rate_limit")) {
+                        // TODO use queueResp.getRateLimit().next() instead
+                        throw new RatelimitException(System.currentTimeMillis() + 1000 * 10); // retry in next run
+                    }
                     FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + error.code() + ": " + error.message());
                 }
             } else {

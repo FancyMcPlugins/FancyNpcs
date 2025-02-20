@@ -15,8 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MineSkinQueue {
 
-    private final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(10, new ThreadFactoryBuilder()
-            .setNameFormat("MineSkinQueue")
+    private final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
+            .setNameFormat("FancyNpcs-Skins")
             .build());
     private static MineSkinQueue INSTANCE;
 
@@ -41,17 +41,16 @@ public class MineSkinQueue {
     }
 
     private void run() {
-        EXECUTOR.scheduleAtFixedRate(this::poll, 5, 1, TimeUnit.SECONDS);
+        EXECUTOR.scheduleWithFixedDelay(this::poll, 5, 1, TimeUnit.SECONDS);
     }
 
     private void poll() {
-        System.out.println("trying to poll");
         if (this.queue.isEmpty()) {
             return;
         }
 
         if (System.currentTimeMillis() < this.nextRequestTime) {
-            System.out.println("still ratelimited by MineSkin. next request in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
+            FancyNpcs.getInstance().getFancyLogger().debug("Retrying to generate skin in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
             return;
         }
 
@@ -61,21 +60,21 @@ public class MineSkinQueue {
         }
 
         try {
+            FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.id());
             SkinInfo skin = this.api.generateSkin(req.request());
             new SkinGeneratedEvent(req.id(), skin).callEvent();
         } catch (RatelimitException e) {
-            nextRequestTime = e.getNextRequestTime() + 100;
+            this.nextRequestTime = e.getNextRequestTime();
             this.queue.add(req);
-            FancyNpcs.getInstance().getFancyLogger().debug("Ratelimited by MineSkin, retrying in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
-        } finally {
-            this.nextRequestTime = System.currentTimeMillis();
+            FancyNpcs.getInstance().getFancyLogger().debug("Failed to generate skin: ratelimited by MineSkin, retrying in " + (nextRequestTime - System.currentTimeMillis()) + "ms");
+            return;
         }
-        System.out.println("generated skin: ");
+
+        this.nextRequestTime = System.currentTimeMillis();
     }
 
     public void add(SkinRequest req) {
         this.queue.add(req);
-        System.out.println("added skin request to queue: " + req);
     }
 
 

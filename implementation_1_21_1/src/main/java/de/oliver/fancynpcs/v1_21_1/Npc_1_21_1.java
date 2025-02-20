@@ -89,13 +89,14 @@ public class Npc_1_21_1 extends Npc {
             return;
         }
 
-        if (data.getSkin() != null) {
-            String skinValue = data.getSkin().getTextureValue();
-            String skinSignature = data.getSkin().getTextureSignature();
+        if (data.getSkin() != null && data.getSkin().hasTexture()) {
+            String value = data.getSkin().getTextureValue();
+            String signature = data.getSkin().getTextureSignature();
 
-            if (skinValue != null && !skinValue.isEmpty() && skinSignature != null && !skinSignature.isEmpty()) {
-                ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues("textures", ImmutableList.of(new Property("textures", skinValue, skinSignature)));
-            }
+            ((ServerPlayer) npc).getGameProfile().getProperties().replaceValues(
+                    "textures",
+                    ImmutableList.of(new Property("textures", value, signature))
+            );
         }
 
         NpcSpawnEvent spawnEvent = new NpcSpawnEvent(this, player);

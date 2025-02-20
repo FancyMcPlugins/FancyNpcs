@@ -164,14 +164,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
             return;
         }
 
-        SkinData skinData = new SkinData(
-                event.getId(),
-                event.getSkin().variant() == Variant.SLIM ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO,
-                event.getSkin().texture().data().value(),
-                event.getSkin().texture().data().signature()
-        );
-
-        cacheSkin(skinData);
+        cacheSkin(event.getSkin());
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             SkinData skin = npc.getData().getSkin();
@@ -180,7 +173,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
                 continue;
 
             if (skin.getIdentifier().equals(event.getId())) {
-                npc.getData().setSkin(skinData);
+                npc.getData().setSkin(event.getSkin());
                 npc.removeForAll();
                 npc.spawnForAll();
                 FancyNpcs.getInstance().getFancyLogger().info("Updated skin for NPC: " + npc.getData().getName());

@@ -20,7 +20,10 @@ public class SkinData {
     }
 
     public boolean hasTexture() {
-        return textureValue != null && textureSignature != null;
+        return textureValue != null &&
+                textureSignature != null &&
+                !textureValue.isEmpty() &&
+                !textureSignature.isEmpty();
     }
 
     public String getIdentifier() {

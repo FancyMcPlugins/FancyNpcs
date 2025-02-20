@@ -5,7 +5,6 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.mineskin.data.SkinInfo;
 
 /**
  * Event that is called when a skin is generated
@@ -18,9 +17,9 @@ public class SkinGeneratedEvent extends Event {
     private final String id;
 
     @Nullable
-    private final SkinInfo skin;
+    private final SkinData skin;
 
-    public SkinGeneratedEvent(@NotNull String id, @Nullable SkinInfo skin) {
+    public SkinGeneratedEvent(@NotNull String id, @Nullable SkinData skin) {
         super(!Bukkit.isPrimaryThread());
         this.id = id;
         this.skin = skin;
@@ -39,7 +38,7 @@ public class SkinGeneratedEvent extends Event {
      *
      * @return the skin that was generated or null if the skin could not be generated
      */
-    public @Nullable SkinInfo getSkin() {
+    public @Nullable SkinData getSkin() {
         return skin;
     }
 

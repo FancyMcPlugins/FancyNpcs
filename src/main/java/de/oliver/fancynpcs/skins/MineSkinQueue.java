@@ -2,10 +2,12 @@ package de.oliver.fancynpcs.skins;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinGeneratedEvent;
 import de.oliver.fancynpcs.skins.api.MineSkinAPI;
 import de.oliver.fancynpcs.skins.api.RatelimitException;
 import org.mineskin.data.SkinInfo;
+import org.mineskin.data.Variant;
 import org.mineskin.request.GenerateRequest;
 
 import java.util.LinkedList;
@@ -63,7 +65,13 @@ public class MineSkinQueue {
         try {
             FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.id());
             SkinInfo skin = this.api.generateSkin(req.request());
-            new SkinGeneratedEvent(req.id(), skin).callEvent();
+            SkinData skinData = new SkinData(
+                    req.id(),
+                    skin.variant() == Variant.SLIM ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO,
+                    skin.texture().data().value(),
+                    skin.texture().data().signature()
+            );
+            new SkinGeneratedEvent(req.id(), skinData).callEvent();
         } catch (RatelimitException e) {
             this.nextRequestTime = e.getNextRequestTime();
             this.queue.add(req);

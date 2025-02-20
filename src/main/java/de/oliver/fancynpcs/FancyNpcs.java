@@ -37,6 +37,7 @@ import de.oliver.fancynpcs.skins.cache.SkinCacheFile;
 import de.oliver.fancynpcs.skins.cache.SkinCacheMemory;
 import de.oliver.fancynpcs.tracker.TurnToPlayerTracker;
 import de.oliver.fancynpcs.tracker.VisibilityTracker;
+import de.oliver.fancynpcs.utils.OldSkinCacheMigrator;
 import de.oliver.fancynpcs.v1_19_4.Npc_1_19_4;
 import de.oliver.fancynpcs.v1_19_4.PacketReader_1_19_4;
 import de.oliver.fancynpcs.v1_20.PacketReader_1_20;
@@ -198,6 +199,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         actionManager.registerAction(new PlaySoundAction());
 
         skinManager = new SkinManagerImpl(new SkinCacheFile(), new SkinCacheMemory());
+        OldSkinCacheMigrator.migrate();
 
         textConfig = new TextConfig("#E33239", "#AD1D23", "#81E366", "#E3CA66", "#E36666", "");
         translator = new Translator(textConfig);
@@ -552,6 +554,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public VersionFetcher getVersionFetcher() {
         return versionFetcher;
+    }
+
+    public FancyAnalyticsAPI getFancyAnalytics() {
+        return fancyAnalytics;
     }
 
     public VisibilityTracker getVisibilityTracker() {

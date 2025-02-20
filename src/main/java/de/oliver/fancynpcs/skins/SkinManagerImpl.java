@@ -191,7 +191,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         return null;
     }
 
-    private void cacheSkin(SkinData skinData) {
+    public void cacheSkin(SkinData skinData) {
         memCache.addSkin(skinData);
         fileCache.addSkin(skinData);
     }

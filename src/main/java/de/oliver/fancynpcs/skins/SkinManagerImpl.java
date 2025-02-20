@@ -68,30 +68,6 @@ public class SkinManagerImpl implements SkinManager, Listener {
         return getByUUID(uuid, variant);
     }
 
-    public SkinData getByIdentifierCached(String identifier, SkinData.SkinVariant variant) {
-        if (SkinUtils.isUUID(identifier) || SkinUtils.isURL(identifier) || SkinUtils.isFile(identifier)) {
-            return tryToGetFromCache(identifier, variant);
-        }
-
-        if (SkinUtils.isPlaceholder(identifier)) {
-            String parsed = ChatColorHandler.translate(identifier);
-
-            if (SkinUtils.isPlaceholder(parsed)) {
-                return null;
-            }
-
-            return tryToGetFromCache(parsed, variant);
-        }
-
-        // is username
-        UUID uuid = UUIDFetcher.getUUID(identifier);
-        if (uuid == null) {
-            return null;
-        }
-
-        return tryToGetFromCache(uuid.toString(), variant);
-    }
-
     @Override
     public SkinData getByUUID(UUID uuid, SkinData.SkinVariant variant) {
         SkinData cached = tryToGetFromCache(uuid.toString(), variant);
@@ -102,7 +78,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         GenerateRequest genReq = GenerateRequest.user(uuid);
         genReq.variant(Variant.valueOf(variant.name()));
         MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
-        return null;
+        return new SkinData(uuid.toString(), variant);
     }
 
     @Override
@@ -131,7 +107,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         }
         genReq.variant(Variant.valueOf(variant.name()));
         MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(url, genReq));
-        return null;
+        return new SkinData(url, variant);
     }
 
     @Override
@@ -144,7 +120,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         File file = new File(SKINS_DIRECTORY + filePath);
         if (!file.exists()) {
             FancyNpcs.getInstance().getFancyLogger().error("File does not exist: " + filePath);
-            return null;
+            return new SkinData(filePath, variant);
         }
 
         GenerateRequest genReq = GenerateRequest.upload(file);
@@ -155,7 +131,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
 
     @EventHandler
     public void onSkinGenerated(SkinGeneratedEvent event) {
-        if (event.getSkin() == null) {
+        if (event.getSkin() == null || !event.getSkin().hasTexture()) {
             return;
         }
 
@@ -163,7 +139,6 @@ public class SkinManagerImpl implements SkinManager, Listener {
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             SkinData skin = npc.getData().getSkin();
-
             if (skin == null)
                 continue;
 

@@ -275,9 +275,6 @@ public class NpcManagerImpl implements NpcManager {
             SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
             if (!skinIdentifier.isEmpty()) {
                 skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
-                if (skin == null) {
-                    skin = new SkinData(skinIdentifier, skinVariant);
-                }
             }
 
 

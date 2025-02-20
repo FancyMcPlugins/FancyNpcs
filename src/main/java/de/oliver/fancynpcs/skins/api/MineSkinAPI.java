@@ -23,6 +23,7 @@ public class MineSkinAPI {
                 .requestHandler(JsoupRequestHandler::new)
                 .apiKey(FancyNpcs.getInstance().getFancyNpcConfig().getMineSkinApiKey())
                 .userAgent("FancyNpcs")
+                .timeout(1000 * 3)
                 .getExecutor(executor)
                 .generateExecutor(executor)
                 .generateRequestScheduler(executor)

@@ -67,10 +67,8 @@ public enum SkinCMD {
         } else {
             SkinData.SkinVariant variant = slim ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO;
             SkinData skinData = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skin, variant);
-            if (skinData == null) {
-                npc.getData().setSkin(new SkinData(skin, variant));
+            if (!skinData.hasTexture()) {
                 translator.translate("npc_skin_set_later").replace("npc", npc.getData().getName()).send(sender);
-                return;
             }
 
             if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, false, sender).callEvent() && new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.SKIN, skinData, sender).callEvent()) {

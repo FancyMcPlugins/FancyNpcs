@@ -2,6 +2,7 @@ package de.oliver.fancynpcs.skins;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.skins.SkinGeneratedEvent;
 import de.oliver.fancynpcs.skins.api.MineSkinAPI;
 import de.oliver.fancynpcs.skins.api.RatelimitException;
 import org.mineskin.data.SkinInfo;

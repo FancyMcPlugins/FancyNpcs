@@ -4,6 +4,7 @@ import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.skins.SkinData;
+import de.oliver.fancynpcs.api.skins.SkinGeneratedEvent;
 import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.skins.cache.SkinCache;
 import de.oliver.fancynpcs.skins.cache.SkinCacheData;

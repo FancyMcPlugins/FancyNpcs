@@ -1,4 +1,4 @@
-package de.oliver.fancynpcs.skins;
+package de.oliver.fancynpcs.api.skins;
 
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;

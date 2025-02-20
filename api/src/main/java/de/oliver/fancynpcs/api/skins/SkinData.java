@@ -19,6 +19,10 @@ public class SkinData {
         this(identifier, variant, null, null);
     }
 
+    public boolean hasTexture() {
+        return textureValue != null && textureSignature != null;
+    }
+
     public String getIdentifier() {
         return identifier;
     }

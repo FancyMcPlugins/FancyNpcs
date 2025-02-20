@@ -1,58 +1,30 @@
 package de.oliver.fancynpcs.skins;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import de.oliver.fancylib.UUIDFetcher;
 import de.oliver.fancynpcs.FancyNpcs;
+import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.skins.SkinManager;
 import de.oliver.fancynpcs.skins.cache.SkinCache;
 import de.oliver.fancynpcs.skins.cache.SkinCacheData;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
-import org.mineskin.JsoupRequestHandler;
-import org.mineskin.MineSkinClient;
-import org.mineskin.data.CodeAndMessage;
-import org.mineskin.data.JobReference;
-import org.mineskin.data.SkinInfo;
 import org.mineskin.data.Variant;
-import org.mineskin.exception.MineSkinRequestException;
 import org.mineskin.request.GenerateRequest;
-import org.mineskin.response.MineSkinResponse;
-import org.mineskin.response.QueueResponse;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 
-public class SkinManagerImpl implements SkinManager {
+public class SkinManagerImpl implements SkinManager, Listener {
 
     private final String SKINS_DIRECTORY = "plugins/FancyNpcs/skins/";
-
-    private final ScheduledExecutorService executor;
-    private final MineSkinClient client;
 
     private final SkinCache fileCache;
     private final SkinCache memCache;
 
     public SkinManagerImpl(SkinCache fileCache, SkinCache memCache) {
-        this.executor = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
-                .setNameFormat("FancyNpcs-Skins")
-                .build());
-
-        this.client = MineSkinClient.builder()
-                .requestHandler(JsoupRequestHandler::new)
-                .apiKey(FancyNpcs.getInstance().getFancyNpcConfig().getMineSkinApiKey())
-                .userAgent("FancyNpcs")
-                .getExecutor(executor)
-                .generateExecutor(executor)
-                .generateRequestScheduler(executor)
-                .generateRequestScheduler(executor)
-                .jobCheckScheduler(executor)
-                .build();
-
         this.fileCache = fileCache;
         this.memCache = memCache;
 
@@ -128,21 +100,8 @@ public class SkinManagerImpl implements SkinManager {
 
         GenerateRequest genReq = GenerateRequest.user(uuid);
         genReq.variant(Variant.valueOf(variant.name()));
-        SkinInfo skinInfo = executeRequest(genReq);
-
-        if (skinInfo == null) {
-            return null;
-        }
-
-        SkinData skinData = new SkinData(
-                uuid.toString(),
-                variant,
-                skinInfo.texture().data().value(),
-                skinInfo.texture().data().signature()
-        );
-
-        cacheSkin(skinData);
-        return skinData;
+        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
+        return null;
     }
 
     @Override
@@ -156,21 +115,8 @@ public class SkinManagerImpl implements SkinManager {
 
         GenerateRequest genReq = GenerateRequest.user(uuid);
         genReq.variant(Variant.valueOf(variant.name()));
-        SkinInfo skinInfo = executeRequest(genReq);
-
-        if (skinInfo == null) {
-            return null;
-        }
-
-        SkinData skinData = new SkinData(
-                uuid.toString(),
-                variant,
-                skinInfo.texture().data().value(),
-                skinInfo.texture().data().signature()
-        );
-
-        cacheSkin(skinData);
-        return skinData;
+        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(uuid.toString(), genReq));
+        return null;
     }
 
     @Override
@@ -188,22 +134,8 @@ public class SkinManagerImpl implements SkinManager {
             return null;
         }
         genReq.variant(Variant.valueOf(variant.name()));
-
-        SkinInfo skinInfo = executeRequest(genReq);
-
-        if (skinInfo == null) {
-            return null;
-        }
-
-        SkinData skinData = new SkinData(
-                url,
-                variant,
-                skinInfo.texture().data().value(),
-                skinInfo.texture().data().signature()
-        );
-
-        cacheSkin(skinData);
-        return skinData;
+        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(url, genReq));
+        return null;
     }
 
     @Override
@@ -221,76 +153,37 @@ public class SkinManagerImpl implements SkinManager {
 
         GenerateRequest genReq = GenerateRequest.upload(file);
         genReq.variant(Variant.valueOf(variant.name()));
-        SkinInfo skinInfo = executeRequest(genReq);
+        MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(filePath, genReq));
+        return null;
+    }
 
-        if (skinInfo == null) {
-            return null;
+    @EventHandler
+    public void onSkinGenerated(SkinGeneratedEvent event) {
+        if (event.getSkin() == null) {
+            return;
         }
 
         SkinData skinData = new SkinData(
-                filePath,
-                variant,
-                skinInfo.texture().data().value(),
-                skinInfo.texture().data().signature()
+                event.getId(),
+                event.getSkin().variant() == Variant.SLIM ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO,
+                event.getSkin().texture().data().value(),
+                event.getSkin().texture().data().signature()
         );
 
         cacheSkin(skinData);
-        return skinData;
-    }
 
-    private SkinInfo executeRequest(GenerateRequest req) {
-        FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.getClass().getSimpleName());
+        for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
+            SkinData skin = npc.getData().getSkin();
 
-        // submit job to the queue
-        CompletableFuture<QueueResponse> queueResp = client.queue().submit(req);
+            if (skin == null)
+                continue;
 
-        queueResp.exceptionally(throwable -> {
-            FancyNpcs.getInstance().getFancyLogger().error("Could not submit job to MineSkin queue: " + throwable.getMessage());
-            return null;
-        });
-
-        // wait for job completion
-        CompletableFuture<JobReference> jobResp = queueResp.thenCompose(
-                queueResponse -> queueResponse.getJob().waitForCompletion(client)
-        );
-
-        jobResp.exceptionally(throwable -> {
-            FancyNpcs.getInstance().getFancyLogger().error("Could not wait for job completion: " + throwable.getMessage());
-            return null;
-        });
-
-        // get skin from job or load it from the API
-        CompletableFuture<SkinInfo> skinResp = jobResp.thenCompose(
-                jobResponse -> jobResponse.getOrLoadSkin(client)
-        );
-
-        // handle exceptions
-        skinResp.exceptionally(throwable -> {
-            if (throwable instanceof CompletionException completionException) {
-                throwable = completionException.getCause();
+            if (skin.getIdentifier().equals(event.getId())) {
+                npc.getData().setSkin(skinData);
+                npc.removeForAll();
+                npc.spawnForAll();
+                System.out.println("Skin updated for npc: " + npc.getData().getName());
             }
-
-            if (throwable instanceof MineSkinRequestException requestException) {
-                MineSkinResponse<?> response = requestException.getResponse();
-
-                for (CodeAndMessage error : response.getErrors()) {
-                    FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + error.code() + ": " + error.message());
-                }
-
-//                Optional<CodeAndMessage> detailsOptional = response.getErrorOrMessage();
-//                detailsOptional.ifPresent(details -> {
-//                    FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + details.code() + ": " + details.message());
-//                });
-            }
-            return null;
-        });
-
-        try {
-            SkinInfo skinInfo = skinResp.join();
-            return skinInfo;
-        } catch (Exception e) {
-            System.out.println("Error in mineskin req: " + e.getMessage());
-            return null;
         }
     }
 
@@ -334,9 +227,5 @@ public class SkinManagerImpl implements SkinManager {
 
     public SkinCache getMemCache() {
         return memCache;
-    }
-
-    public ScheduledExecutorService getExecutor() {
-        return executor;
     }
 }

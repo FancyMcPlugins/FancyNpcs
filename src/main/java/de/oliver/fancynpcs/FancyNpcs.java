@@ -248,6 +248,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         pluginManager.registerEvents(new PlayerQuitListener(), instance);
         pluginManager.registerEvents(new PlayerTeleportListener(), instance);
         pluginManager.registerEvents(new PlayerChangedWorldListener(), instance);
+        pluginManager.registerEvents(skinManager, instance);
 
         // use packet injection method
         switch (mcVersion) {

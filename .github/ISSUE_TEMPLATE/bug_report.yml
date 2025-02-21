@@ -11,14 +11,6 @@ body:
       placeholder: Tell us what you see!
     validations:
       required: true
-  - type: input
-    id: version
-    attributes:
-      label: Version
-      description: What version of our software are you running?
-      placeholder: "1.4.1-rc.2"
-    validations:
-      required: true
   - type: dropdown
     id: software
     attributes:
@@ -28,6 +20,22 @@ body:
         - Paper
         - Folia
         - Other
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin version
+      description: Which version of Fancy npcs are you using?
+      placeholder: "1.4.1-rc.2"
+    validations:
+      required: true
+  - type: input
+    id: server_version
+    attributes:
+      label: Server version
+      description: What version is your minecraft server running on?
+      placeholder: "1.21.4"
     validations:
       required: true
   - type: textarea

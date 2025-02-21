@@ -1,0 +1,46 @@
+name: Bug Report
+description: File a bug report.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+  - type: dropdown
+    id: software
+    attributes:
+      label: In which software has the error occurred?
+      multiple: false
+      options:
+        - Paper
+        - Folia
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: plugin_version
+    attributes:
+      label: Plugin version
+      description: Which version of FancyNpcs are you using?
+      placeholder: "1.4.1-rc.2"
+    validations:
+      required: true
+  - type: input
+    id: server_version
+    attributes:
+      label: Server version
+      description: What version is your minecraft server running on?
+      placeholder: "1.21.4"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell

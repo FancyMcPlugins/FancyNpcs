@@ -14,11 +14,9 @@ public class ActionExecutor {
 
     public static void execute(ActionTrigger trigger, Npc npc, Player player) {
         String key = getKey(trigger, npc, player);
-        if (runningContexts.containsKey(key)) {
-            ActionExecutionContext context = runningContexts.get(key);
-            if (context.shouldBlockUntilDone() && !context.isTerminated()) {
-                return;
-            }
+        ActionExecutionContext runningContext = runningContexts.get(key);
+        if (runningContext != null && runningContext.shouldBlockUntilDone() && !runningContext.isTerminated()) {
+            return;
         }
 
         ActionExecutionContext context = new ActionExecutionContext(trigger, npc, player.getUniqueId());

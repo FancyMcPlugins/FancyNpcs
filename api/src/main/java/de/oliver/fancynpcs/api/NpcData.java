@@ -166,6 +166,15 @@ public class NpcData {
         return setSkinData(data);
     }
 
+    /**
+     * Loads the skin data and sets it as the skin of the npc
+     *
+     * @param skin a valid UUID, username, URL or file path
+     */
+    public NpcData setSkin(String skin) {
+        return setSkin(skin, SkinData.SkinVariant.AUTO);
+    }
+
     public Location getLocation() {
         return location;
     }

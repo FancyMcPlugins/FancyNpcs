@@ -69,6 +69,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
+    public static final FeatureFlag USE_NATIVE_THREADS_FEATURE_FLAG = new FeatureFlag("use-native-threads", "Use native threads instead of virtual threads.", false);
 
     private static FancyNpcs instance;
     private final ExtendedFancyLogger fancyLogger;
@@ -133,6 +134,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
     public void onLoad() {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(USE_NATIVE_THREADS_FEATURE_FLAG);
         featureFlagConfig.load();
 
         String mcVersion = Bukkit.getMinecraftVersion();
@@ -472,6 +474,10 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     @Override
     public Thread newThread(String name, Runnable runnable) {
+        if (USE_NATIVE_THREADS_FEATURE_FLAG.isEnabled()) {
+            return new Thread(runnable, name);
+        }
+
         return Thread.ofVirtual().name(name).unstarted(runnable);
     }
 

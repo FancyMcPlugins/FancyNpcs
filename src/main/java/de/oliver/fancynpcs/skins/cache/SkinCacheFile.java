@@ -12,7 +12,7 @@ public class SkinCacheFile implements SkinCache {
     private final JDB storage;
 
     public SkinCacheFile() {
-        this.storage = new JDB("plugins/FancyNpcs/.cache");
+        this.storage = new JDB("plugins/FancyNpcs/.data");
     }
 
     @Override

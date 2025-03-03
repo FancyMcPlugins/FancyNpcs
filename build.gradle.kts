@@ -70,7 +70,7 @@ dependencies {
     implementation("org.incendo:cloud-paper:2.0.0-SNAPSHOT")
     implementation("org.incendo:cloud-annotations:2.1.0-SNAPSHOT")
     annotationProcessor("org.incendo:cloud-annotations:2.1.0-SNAPSHOT")
-    implementation("org.mineskin:java-client-jsoup:3.0.1-SNAPSHOT")
+    implementation("org.mineskin:java-client-jsoup:3.0.2.capes-SNAPSHOT")
 
     compileOnly("com.intellectualsites.plotsquared:plotsquared-core:7.5.1")
 }

@@ -2,8 +2,8 @@ package de.oliver.fancynpcs.api;
 
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
@@ -23,7 +23,7 @@ public class NpcData {
     private final String name;
     private final UUID creator;
     private String displayName;
-    @Deprecated private SkinFetcher.SkinData skin;
+    private SkinData skin;
     private boolean mirrorSkin;
     private Location location;
     private boolean showInTab;
@@ -47,7 +47,7 @@ public class NpcData {
             String name,
             UUID creator,
             String displayName,
-            @Deprecated SkinFetcher.SkinData skin,
+            SkinData skin,
             Location location,
             boolean showInTab,
             boolean spawnEntity,
@@ -139,22 +139,40 @@ public class NpcData {
         return this;
     }
 
-    /**
-     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
-     */
-    @Deprecated
-    public SkinFetcher.SkinData getSkin() {
+    public SkinData getSkinData() {
         return skin;
     }
 
     /**
-     * The skin system is deprecated and will be replaced with a slightly different system in the near future.
+     * Sets the skin data of the npc
+     * Use this method, if you have a loaded skin data object (with texture and signature), otherwise use {@link #setSkin(String, SkinData.SkinVariant)}
+     *
+     * @param skinData the skin data
      */
-    @Deprecated
-    public NpcData setSkin(SkinFetcher.SkinData skin) {
-        this.skin = skin;
+    public NpcData setSkinData(SkinData skinData) {
+        this.skin = skinData;
         isDirty = true;
         return this;
+    }
+
+    /**
+     * Loads the skin data and sets it as the skin of the npc
+     *
+     * @param skin    a valid UUID, username, URL or file path
+     * @param variant the skin variant
+     */
+    public NpcData setSkin(String skin, SkinData.SkinVariant variant) {
+        SkinData data = FancyNpcsPlugin.get().getSkinManager().getByIdentifier(skin, variant);
+        return setSkinData(data);
+    }
+
+    /**
+     * Loads the skin data and sets it as the skin of the npc
+     *
+     * @param skin a valid UUID, username, URL or file path
+     */
+    public NpcData setSkin(String skin) {
+        return setSkin(skin, SkinData.SkinVariant.AUTO);
     }
 
     public Location getLocation() {

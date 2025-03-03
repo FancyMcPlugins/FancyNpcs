@@ -2,12 +2,15 @@ package de.oliver.fancynpcs;
 
 import de.oliver.fancyanalytics.logger.ExtendedFancyLogger;
 import de.oliver.fancylib.serverSoftware.ServerSoftware;
-import de.oliver.fancynpcs.api.*;
+import de.oliver.fancynpcs.api.Npc;
+import de.oliver.fancynpcs.api.NpcAttribute;
+import de.oliver.fancynpcs.api.NpcData;
+import de.oliver.fancynpcs.api.NpcManager;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
 import de.oliver.fancynpcs.api.events.NpcsLoadedEvent;
+import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.api.utils.NpcEquipmentSlot;
-import de.oliver.fancynpcs.api.utils.SkinFetcher;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -176,8 +179,9 @@ public class NpcManagerImpl implements NpcManager {
             npcConfig.set("npcs." + data.getId() + ".scale", data.getScale());
             npcConfig.set("npcs." + data.getId() + ".visibility_distance", data.getVisibilityDistance());
 
-            if (data.getSkin() != null) {
-                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkin().identifier());
+            if (data.getSkinData() != null) {
+                npcConfig.set("npcs." + data.getId() + ".skin.identifier", data.getSkinData().getIdentifier());
+                npcConfig.set("npcs." + data.getId() + ".skin.variant", data.getSkinData().getVariant().name());
             } else {
                 npcConfig.set("npcs." + data.getId() + ".skin.identifier", null);
             }
@@ -265,11 +269,14 @@ public class NpcManagerImpl implements NpcManager {
                 location = new Location(world, x, y, z, yaw, pitch);
             }
 
+            SkinData skin = null;
             String skinIdentifier = npcConfig.getString("npcs." + id + ".skin.identifier", npcConfig.getString("npcs." + id + ".skin.uuid", ""));
-            SkinFetcher.SkinData skin = null;
+            String skinVariantStr = npcConfig.getString("npcs." + id + ".skin.variant", SkinData.SkinVariant.AUTO.name());
+            SkinData.SkinVariant skinVariant = SkinData.SkinVariant.valueOf(skinVariantStr);
             if (!skinIdentifier.isEmpty()) {
-                skin = new SkinFetcher.SkinData(skinIdentifier, "", "");
+                skin = FancyNpcs.getInstance().getSkinManagerImpl().getByIdentifier(skinIdentifier, skinVariant);
             }
+
 
             if (npcConfig.isSet("npcs." + id + ".skin.value") && npcConfig.isSet("npcs." + id + ".skin.signature")) {
                 // using old skin system --> take backup
@@ -279,10 +286,9 @@ public class NpcManagerImpl implements NpcManager {
                 String signature = npcConfig.getString("npcs." + id + ".skin.signature");
 
                 if (value != null && !value.isEmpty() && signature != null && !signature.isEmpty()) {
-                    skin = new SkinFetcher.SkinData(skinIdentifier, value, signature);
-                    SkinFetcher.SkinData oldSkinData = new SkinFetcher.SkinData(skinIdentifier, value, signature);
-                    SkinFetcher.skinCache.put(skinIdentifier, oldSkinData);
-                    FancyNpcsPlugin.get().getSkinCache().upsert(new SkinFetcher.SkinCacheData(oldSkinData, System.currentTimeMillis(), 1000 * 60 * 60 * 24));
+                    SkinData oldSkin = new SkinData(skinIdentifier, SkinData.SkinVariant.AUTO, value, signature);
+                    FancyNpcs.getInstance().getSkinManagerImpl().getFileCache().addSkin(oldSkin);
+                    FancyNpcs.getInstance().getSkinManagerImpl().getMemCache().addSkin(oldSkin);
                 }
             }
 

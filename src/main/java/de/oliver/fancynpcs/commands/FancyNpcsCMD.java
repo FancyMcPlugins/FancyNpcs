@@ -4,53 +4,25 @@ import de.oliver.fancylib.translations.Language;
 import de.oliver.fancylib.translations.Translator;
 import de.oliver.fancylib.translations.message.SimpleMessage;
 import de.oliver.fancynpcs.FancyNpcs;
-import de.oliver.fancynpcs.tests.FancyNpcsTests;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
+public final class FancyNpcsCMD {
 
-public enum FancyNpcsCMD {
-    INSTANCE; // SINGLETON
+    public static final FancyNpcsCMD INSTANCE = new FancyNpcsCMD();
 
     private final FancyNpcs plugin = FancyNpcs.getInstance();
     private final Translator translator = FancyNpcs.getInstance().getTranslator();
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    private FancyNpcsCMD() {
+    }
 
     @Command("fancynpcs version")
     @Permission("fancynpcs.command.fancynpcs.version")
     public void onVersion(final CommandSender sender) {
         plugin.getVersionConfig().checkVersionAndDisplay(sender, false);
-    }
-
-    @Command("fancynpcs test")
-    @Permission("fancynpcs.command.fancynpcs.test")
-    public void onTest(final Player player) {
-        if (!FancyNpcs.ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()) {
-            translator.translate("debug_mode_required").send(player);
-            return;
-        }
-
-        FancyNpcsTests tests = new FancyNpcsTests();
-        boolean tested = tests.runAllTests(player);
-
-        if (tested) {
-            translator.translate("fancynpcs_test_success")
-                    .replace("player", player.getName())
-                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
-                    .replace("count", String.valueOf(tests.getTestCount()))
-                    .send(player);
-        } else {
-            translator.translate("fancynpcs_test_failure")
-                    .replace("player", player.getName())
-                    .replace("time", dateTimeFormatter.format(new Date().toInstant().atZone(ZoneId.of("Europe/Berlin"))))
-                    .send(player);
-        }
     }
 
     @Command("fancynpcs reload")
@@ -114,5 +86,4 @@ public enum FancyNpcsCMD {
     private @NotNull String getTranslatedState(final boolean bool) {
         return (bool) ? ((SimpleMessage) translator.translate("enabled")).getMessage() : ((SimpleMessage) translator.translate("disabled")).getMessage();
     }
-
 }

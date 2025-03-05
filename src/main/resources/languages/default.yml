@@ -30,7 +30,6 @@ messages:
   # Common (Availability)
   unknown: "Unknown"
   not_available: "N/A"
-  debug_mode_required: "<red>Please activate the debug mode to use this feature."
 
   # Common (Visibility)
   always_visible: "Always Visible"
@@ -138,6 +137,8 @@ messages:
   fancynpcs_feature_flags_footer: "<newline><dark_gray><st>-------------</st>  <gray>Showing total of {warningColor}{total_formatted}<gray> entries  <dark_gray><st>-------------</st>"
   fancynpcs_test_success: "<dark_gray>› {successColor}All {count} tests have passed successfully (ran by {player} at {time})."
   fancynpcs_test_failure: "<dark_gray>› {errorColor}Some tests have failed (ran by {player} at {time})."
+  fancynpcs_skin_system_restart_schedulers_success: "<dark_gray>› {successColor}Skin schedulers have been restarted."
+  fancynpcs_skin_system_clear_queues_success: "<dark_gray>› {successColor}Skin generation queues have been cleared."
 
   # Commands (npc help)
   npc_help_page_header: "<dark_gray><st>-------------</st>  {primaryColor}FancyNpcs<gray> Commands ({primaryColor}{page}<gray>/{primaryColor}{max_page}<gray>)  <dark_gray><st>--------------</st><newline>"

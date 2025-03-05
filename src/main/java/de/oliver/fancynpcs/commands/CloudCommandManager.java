@@ -191,6 +191,9 @@ public final class CloudCommandManager {
         annotationParser.parse(ActionCMD.INSTANCE);
         annotationParser.parse(VisibilityDistanceCMD.INSTANCE);
 
+        if (FancyNpcs.ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()) {
+            annotationParser.parse(FancyNpcsDebugCMD.INSTANCE);
+        }
 
         String mcVersion = Bukkit.getMinecraftVersion();
         if (mcVersion.equals("1.20.5") || mcVersion.equals("1.20.6") || mcVersion.equals("1.21") || mcVersion.equals("1.21.1") || mcVersion.equals("1.21.2") || mcVersion.equals("1.21.3") || mcVersion.equals("1.21.4")) {

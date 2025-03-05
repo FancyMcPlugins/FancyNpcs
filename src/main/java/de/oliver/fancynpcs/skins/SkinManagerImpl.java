@@ -25,9 +25,12 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class SkinManagerImpl implements SkinManager, Listener {
 
-    public final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(5, new ThreadFactoryBuilder()
-            .setNameFormat("FancyNpcs-Skins")
-            .build());
+    public final static ScheduledExecutorService EXECUTOR = Executors.newScheduledThreadPool(
+            5,
+            new ThreadFactoryBuilder()
+                    .setNameFormat("FancyNpcs-Skins-%d")
+                    .build()
+    );
 
     private final String SKINS_DIRECTORY = "plugins/FancyNpcs/skins/";
 

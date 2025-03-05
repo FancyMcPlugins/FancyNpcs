@@ -10,6 +10,7 @@ import org.mineskin.request.GenerateRequest;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MineSkinQueue {
@@ -17,6 +18,7 @@ public class MineSkinQueue {
 
     private final MineSkinAPI api;
     private final Queue<SkinRequest> queue;
+    private ScheduledFuture<?> scheduler;
 
     private long nextRequestTime = System.currentTimeMillis();
 
@@ -35,8 +37,8 @@ public class MineSkinQueue {
         return INSTANCE;
     }
 
-    private void run() {
-        SkinManagerImpl.EXECUTOR.scheduleWithFixedDelay(this::poll, 5, 1, TimeUnit.SECONDS);
+    public void run() {
+        scheduler = SkinManagerImpl.EXECUTOR.scheduleWithFixedDelay(this::poll, 5, 1, TimeUnit.SECONDS);
     }
 
     private void poll() {
@@ -85,6 +87,13 @@ public class MineSkinQueue {
         this.queue.add(req);
     }
 
+    public void clear() {
+        this.queue.clear();
+    }
+
+    public ScheduledFuture<?> getScheduler() {
+        return scheduler;
+    }
 
     public record SkinRequest(String id, GenerateRequest request) {
     }

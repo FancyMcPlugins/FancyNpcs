@@ -8,6 +8,7 @@ import de.oliver.fancynpcs.skins.mineskin.RatelimitException;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 public class MojangQueue {
@@ -16,6 +17,7 @@ public class MojangQueue {
 
     private final Queue<SkinRequest> queue;
     private final MojangAPI api;
+    private ScheduledFuture<?> scheduler;
     private long nextRequestTime = System.currentTimeMillis();
 
     private MojangQueue() {
@@ -33,12 +35,12 @@ public class MojangQueue {
         return INSTANCE;
     }
 
-    private void run() {
-        SkinManagerImpl.EXECUTOR.scheduleWithFixedDelay(this::pollMany, 5, 1, TimeUnit.SECONDS);
+    public void run() {
+        scheduler = SkinManagerImpl.EXECUTOR.scheduleWithFixedDelay(this::pollMany, 5, 1, TimeUnit.SECONDS);
     }
 
     private void pollMany() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             poll();
         }
     }
@@ -83,6 +85,13 @@ public class MojangQueue {
         this.queue.add(req);
     }
 
+    public void clear() {
+        this.queue.clear();
+    }
+
+    public ScheduledFuture<?> getScheduler() {
+        return scheduler;
+    }
 
     public record SkinRequest(String uuid, SkinData.SkinVariant variant) {
     }

@@ -30,6 +30,7 @@ messages:
   # Common (Availability)
   unknown: "Unknown"
   not_available: "N/A"
+  debug_mode_required: "<red>Please activate the debug mode to use this feature."
 
   # Common (Visibility)
   always_visible: "Always Visible"

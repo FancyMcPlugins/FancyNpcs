@@ -73,6 +73,7 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
 
     public static final FeatureFlag PLAYER_NPCS_FEATURE_FLAG = new FeatureFlag("player-npcs", "Every player can only manage the npcs they have created", false);
     public static final FeatureFlag USE_NATIVE_THREADS_FEATURE_FLAG = new FeatureFlag("use-native-threads", "Use native threads instead of virtual threads.", false);
+    public static final FeatureFlag ENABLE_DEBUG_MODE_FEATURE_FLAG = new FeatureFlag("enable-debug-mode", "Enable debug mode", false);
 
     private static FancyNpcs instance;
     private final ExtendedFancyLogger fancyLogger;
@@ -138,7 +139,12 @@ public class FancyNpcs extends JavaPlugin implements FancyNpcsPlugin {
         // Load feature flags
         featureFlagConfig.addFeatureFlag(PLAYER_NPCS_FEATURE_FLAG);
         featureFlagConfig.addFeatureFlag(USE_NATIVE_THREADS_FEATURE_FLAG);
+        featureFlagConfig.addFeatureFlag(ENABLE_DEBUG_MODE_FEATURE_FLAG);
         featureFlagConfig.load();
+
+        if (ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()) {
+            fancyLogger.setCurrentLevel(LogLevel.DEBUG);
+        }
 
         String mcVersion = Bukkit.getMinecraftVersion();
 

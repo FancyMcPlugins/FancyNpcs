@@ -31,6 +31,11 @@ public enum FancyNpcsCMD {
     @Command("fancynpcs test")
     @Permission("fancynpcs.command.fancynpcs.test")
     public void onTest(final Player player) {
+        if (!FancyNpcs.ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()) {
+            translator.translate("debug_mode_required").send(player);
+            return;
+        }
+
         FancyNpcsTests tests = new FancyNpcsTests();
         boolean tested = tests.runAllTests(player);
 
@@ -85,11 +90,23 @@ public enum FancyNpcsCMD {
                 .replace("id", FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.getName())
                 .replace("state", getTranslatedState(FancyNpcs.PLAYER_NPCS_FEATURE_FLAG.isEnabled()))
                 .send(sender);
+        translator.translate("fancynpcs_feature_flags_entry")
+                .replace("number", "2")
+                .replace("name", "Native threads")
+                .replace("id", FancyNpcs.USE_NATIVE_THREADS_FEATURE_FLAG.getName())
+                .replace("state", getTranslatedState(FancyNpcs.USE_NATIVE_THREADS_FEATURE_FLAG.isEnabled()))
+                .send(sender);
+        translator.translate("fancynpcs_feature_flags_entry")
+                .replace("number", "3")
+                .replace("name", "Debug mode")
+                .replace("id", FancyNpcs.ENABLE_DEBUG_MODE_FEATURE_FLAG.getName())
+                .replace("state", getTranslatedState(FancyNpcs.ENABLE_DEBUG_MODE_FEATURE_FLAG.isEnabled()))
+                .send(sender);
         translator.translate("fancynpcs_feature_flags_footer")
                 .replace("count", "2")
-                .replace("count_formatted", "· · 2")
+                .replace("count_formatted", "· · 3")
                 .replace("total", String.valueOf(FancyNpcs.getInstance().getNpcManager().getAllNpcs().size()))
-                .replace("total_formatted", "· · 2")
+                .replace("total_formatted", "· · 3")
                 .send(sender);
     }
 

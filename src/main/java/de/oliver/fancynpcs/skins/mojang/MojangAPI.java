@@ -24,6 +24,8 @@ public class MojangAPI {
     }
 
     public SkinData fetchSkin(String uuid, SkinData.SkinVariant variant) throws RatelimitException {
+        FancyNpcsPlugin.get().getFancyLogger().debug("Fetching skin from MojangAPI for " + uuid);
+
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(new URI("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid + "?unsigned=false"))
@@ -41,8 +43,9 @@ public class MojangAPI {
 
             RequestResponse response = gson.fromJson(resp.body(), RequestResponse.class);
             RequestResponseProperty textures = response.getProperty("textures");
-            return new SkinData(uuid, variant, textures.value(), textures.signature());
 
+            FancyNpcsPlugin.get().getFancyLogger().debug("Skin fetched from MojangAPI for " + uuid);
+            return new SkinData(uuid, variant, textures.value(), textures.signature());
         } catch (RatelimitException e) {
             throw e; // rethrow
         } catch (Exception e) {

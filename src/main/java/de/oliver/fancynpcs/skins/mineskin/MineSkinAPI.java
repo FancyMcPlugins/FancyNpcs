@@ -33,6 +33,8 @@ public class MineSkinAPI {
     }
 
     public SkinInfo generateSkin(GenerateRequest req) throws RatelimitException {
+        FancyNpcs.getInstance().getFancyLogger().debug("Generating a skin with MineSkinAPI...");
+
         QueueResponse queueResp = null;
         JobReference jobResp = null;
 
@@ -45,7 +47,10 @@ public class MineSkinAPI {
 
             jobResp = queueResp.getJob().waitForCompletion(client).get();
 
-            return jobResp.getOrLoadSkin(client).get();
+            SkinInfo skinInfo = jobResp.getOrLoadSkin(client).get();
+
+            FancyNpcs.getInstance().getFancyLogger().debug("Skin generated with MineSkinApi: " + skinInfo.toString());
+            return skinInfo;
         } catch (RatelimitException e) {
             throw e; // rethrow
         } catch (ExecutionException e) {

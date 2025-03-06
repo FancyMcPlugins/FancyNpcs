@@ -33,8 +33,7 @@ public class OldSkinCacheMigrator {
             amount++;
         }
 
-        //TODO delete old cache file in the future
-        //OLD_SKIN_CACHE.delete();
+        OLD_SKIN_CACHE.delete();
 
         FancyNpcs.getInstance().getLogger().info("Migrated " + amount + " skins from old cache.");
         FancyNpcs.getInstance().getFancyAnalytics().sendEvent(new Event("SkinCacheMigrated").withProperty("amount", String.valueOf(amount)));

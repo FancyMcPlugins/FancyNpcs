@@ -16,12 +16,12 @@ public class SkinCacheMemory implements SkinCache {
 
     @Override
     public SkinCacheData getSkin(String identifier) {
-        if(!cache.containsKey(identifier)) {
+        if (!cache.containsKey(identifier)) {
             return null;
         }
 
         SkinCacheData skinCacheData = cache.get(identifier);
-        if(skinCacheData.isExpired()) {
+        if (skinCacheData.isExpired()) {
             cache.remove(identifier);
             return null;
         }
@@ -38,5 +38,10 @@ public class SkinCacheMemory implements SkinCache {
     @Override
     public void removeSkin(String identifier) {
         cache.remove(identifier);
+    }
+
+    @Override
+    public void clear() {
+        cache.clear();
     }
 }

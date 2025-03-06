@@ -12,4 +12,6 @@ public interface SkinCache {
 
     void removeSkin(String identifier);
 
+    void clear();
+
 }

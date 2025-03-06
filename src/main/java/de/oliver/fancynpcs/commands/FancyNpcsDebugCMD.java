@@ -63,4 +63,13 @@ public final class FancyNpcsDebugCMD {
         translator.translate("fancynpcs_skin_system_clear_queues_success").send(player);
     }
 
+    @Command("fancynpcs skin_system clear_cache")
+    @Permission("fancynpcs.command.fancynpcs.skin_system.clear_cache")
+    public void onInvalidateCache(final Player player) {
+        FancyNpcs.getInstance().getSkinManagerImpl().getMemCache().clear();
+        FancyNpcs.getInstance().getSkinManagerImpl().getFileCache().clear();
+
+        translator.translate("fancynpcs_skin_system_clear_cache_success").send(player);
+    }
+
 }

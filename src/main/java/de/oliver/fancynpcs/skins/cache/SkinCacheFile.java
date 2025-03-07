@@ -4,7 +4,6 @@ import de.oliver.fancylib.jdb.JDB;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -61,15 +60,6 @@ public class SkinCacheFile implements SkinCache {
 
     @Override
     public void clear() {
-        File skinsDirectory = new File("plugins/FancyNpcs/.data/skins");
-        if (!skinsDirectory.exists()) {
-            return;
-        }
-
-        for (File file : skinsDirectory.listFiles()) {
-            if (file.isFile()) {
-                file.delete();
-            }
-        }
+        storage.delete("skins");
     }
 }

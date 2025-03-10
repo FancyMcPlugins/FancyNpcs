@@ -11,6 +11,7 @@ import org.mineskin.request.GenerateRequest;
 import org.mineskin.response.MineSkinResponse;
 import org.mineskin.response.QueueResponse;
 
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -67,6 +68,11 @@ public class MineSkinAPI {
                     FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
                     Thread.currentThread().interrupt();
                 }
+            } else if (cause instanceof SocketTimeoutException timeoutException) {
+                FancyNpcs.getInstance().getFancyLogger().warn("Timeout while fetching skin: " + timeoutException.getMessage());
+                FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());
+                FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
+                throw new RatelimitException(System.currentTimeMillis() + 1000 * 10); // retry in next run
             } else {
                 FancyNpcs.getInstance().getFancyLogger().error("Error in mineskin request: " + cause.getMessage());
                 FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());

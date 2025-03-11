@@ -134,13 +134,13 @@ public class SkinManagerImpl implements SkinManager, Listener {
         File file = new File(SKINS_DIRECTORY + filePath);
         if (!file.exists()) {
             FancyNpcs.getInstance().getFancyLogger().error("File does not exist: " + filePath);
-            return new SkinData(filePath, variant);
+            return null;
         }
 
         GenerateRequest genReq = GenerateRequest.upload(file);
         genReq.variant(Variant.valueOf(variant.name()));
         MineSkinQueue.get().add(new MineSkinQueue.SkinRequest(filePath, genReq));
-        return null;
+        return new SkinData(filePath, variant);
     }
 
     @EventHandler

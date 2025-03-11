@@ -66,7 +66,6 @@ public class MineSkinAPI {
                     FancyNpcs.getInstance().getFancyLogger().warn("Could not fetch skin: " + error.code() + ": " + error.message());
                     FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());
                     FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
-                    Thread.currentThread().interrupt();
                 }
             } else if (cause instanceof SocketTimeoutException timeoutException) {
                 FancyNpcs.getInstance().getFancyLogger().warn("Timeout while fetching skin: " + timeoutException.getMessage());
@@ -77,18 +76,15 @@ public class MineSkinAPI {
                 FancyNpcs.getInstance().getFancyLogger().error("Error in mineskin request: " + cause.getMessage());
                 FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());
                 FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
-                Thread.currentThread().interrupt();
             }
         } catch (InterruptedException e) {
             FancyNpcs.getInstance().getFancyLogger().error("Thread was interrupted while waiting for skin generation.");
             FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());
             FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
-            Thread.currentThread().interrupt();
         } catch (Exception e) {
             FancyNpcs.getInstance().getFancyLogger().error("Unexpected error in skin generation: " + e.getMessage());
             FancyNpcs.getInstance().getFancyLogger().debug("QueueResp: " + queueResp.toString());
             FancyNpcs.getInstance().getFancyLogger().debug("JobResp: " + jobResp.toString());
-            Thread.currentThread().interrupt();
         }
 
         return null;

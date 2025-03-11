@@ -59,6 +59,11 @@ public class MineSkinQueue {
         try {
             FancyNpcs.getInstance().getFancyLogger().debug("Fetching skin from MineSkin: " + req.id());
             SkinInfo skin = this.api.generateSkin(req.request());
+            if (skin == null) {
+                this.nextRequestTime = System.currentTimeMillis();
+                return;
+            }
+
             SkinData skinData = new SkinData(
                     req.id(),
                     skin.variant() == Variant.SLIM ? SkinData.SkinVariant.SLIM : SkinData.SkinVariant.AUTO,

@@ -312,6 +312,7 @@ messages:
   npc_skin_set: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now using the {warningColor}{name}<gray> skin."
   npc_skin_set_mirror: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now mirroring player skin."
   npc_skin_set_none: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer using any skin."
+  npc_skin_set_later: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> will be updated with the new skin shortly."
 
   # Commands (npc teleport)
   npc_teleport_success: "<dark_gray>› <gray>You have been teleported to NPC {warningColor}{npc}<gray>."

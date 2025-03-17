@@ -156,7 +156,12 @@ public class SkinManagerImpl implements SkinManager, Listener {
             if (skin == null)
                 continue;
 
-            if (skin.getIdentifier().equals(event.getId())) {
+            String id = skin.getIdentifier();
+            if (SkinUtils.isPlaceholder(id)) {
+                id = ChatColorHandler.translate(id);
+            }
+
+            if (id.equals(event.getId())) {
                 npc.getData().setSkinData(event.getSkin());
                 npc.removeForAll();
                 npc.spawnForAll();

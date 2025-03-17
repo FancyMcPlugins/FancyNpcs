@@ -171,7 +171,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
     }
 
     private SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
-//        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from mem cache: " + identifier);
+        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from mem cache: " + identifier);
 
         SkinCacheData data = memCache.getSkin(identifier);
         if (data != null) {
@@ -179,10 +179,11 @@ public class SkinManagerImpl implements SkinManager, Listener {
                 return null;
             }
 
+            FancyNpcs.getInstance().getFancyLogger().debug("Found skin from mem cache: " + identifier);
             return data.skinData();
         }
 
-//        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from file cache: " + identifier);
+        FancyNpcs.getInstance().getFancyLogger().debug("Trying to get skin from file cache: " + identifier);
 
         data = fileCache.getSkin(identifier);
         if (data != null) {
@@ -190,12 +191,12 @@ public class SkinManagerImpl implements SkinManager, Listener {
                 return null;
             }
 
+            FancyNpcs.getInstance().getFancyLogger().debug("Found skin from file cache: " + identifier);
             memCache.addSkin(data.skinData());
             return data.skinData();
         }
 
         FancyNpcs.getInstance().getFancyLogger().debug("Skin not found in cache: " + identifier);
-
         return null;
     }
 

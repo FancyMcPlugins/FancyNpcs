@@ -146,10 +146,9 @@ public class SkinManagerImpl implements SkinManager, Listener {
     @EventHandler
     public void onSkinGenerated(SkinGeneratedEvent event) {
         if (event.getSkin() == null || !event.getSkin().hasTexture()) {
+            FancyNpcs.getInstance().getFancyLogger().error("Generated skin has no texture!");
             return;
         }
-
-        cacheSkin(event.getSkin());
 
         for (Npc npc : FancyNpcs.getInstance().getNpcManager().getAllNpcs()) {
             SkinData skin = npc.getData().getSkinData();
@@ -168,6 +167,8 @@ public class SkinManagerImpl implements SkinManager, Listener {
                 FancyNpcs.getInstance().getFancyLogger().info("Updated skin for NPC: " + npc.getData().getName());
             }
         }
+
+        cacheSkin(event.getSkin());
     }
 
     private SkinData tryToGetFromCache(String identifier, SkinData.SkinVariant variant) {
@@ -176,6 +177,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         SkinCacheData data = memCache.getSkin(identifier);
         if (data != null) {
             if (data.skinData().getVariant() != variant) {
+                FancyNpcs.getInstance().getFancyLogger().debug("Skin variant does not match: " + identifier);
                 return null;
             }
 
@@ -188,6 +190,7 @@ public class SkinManagerImpl implements SkinManager, Listener {
         data = fileCache.getSkin(identifier);
         if (data != null) {
             if (data.skinData().getVariant() != variant) {
+                FancyNpcs.getInstance().getFancyLogger().debug("Skin variant does not match: " + identifier);
                 return null;
             }
 

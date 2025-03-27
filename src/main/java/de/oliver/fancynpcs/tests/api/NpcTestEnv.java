@@ -8,7 +8,7 @@ import org.bukkit.Location;
 
 import java.util.UUID;
 
-import static de.oliver.fancylib.tests.Expectable.expect;
+import static de.oliver.plugintests.Expectable.expect;
 
 public class NpcTestEnv {
 

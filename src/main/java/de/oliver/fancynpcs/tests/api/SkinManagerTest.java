@@ -1,16 +1,16 @@
 package de.oliver.fancynpcs.tests.api;
 
-import de.oliver.fancylib.tests.annotations.FPBeforeEach;
-import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
 import de.oliver.fancynpcs.skins.SkinManagerImpl;
 import de.oliver.fancynpcs.skins.cache.SkinCacheMemory;
+import de.oliver.plugintests.annotations.FPBeforeEach;
+import de.oliver.plugintests.annotations.FPTest;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 
-import static de.oliver.fancylib.tests.Expectable.expect;
+import static de.oliver.plugintests.Expectable.expect;
 
 public class SkinManagerTest {
 

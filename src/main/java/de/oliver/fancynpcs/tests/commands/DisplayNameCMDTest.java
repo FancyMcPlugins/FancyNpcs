@@ -1,16 +1,16 @@
 package de.oliver.fancynpcs.tests.commands;
 
-import de.oliver.fancylib.tests.annotations.FPAfterEach;
-import de.oliver.fancylib.tests.annotations.FPBeforeEach;
-import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.tests.api.NpcTestEnv;
+import de.oliver.plugintests.annotations.FPAfterEach;
+import de.oliver.plugintests.annotations.FPBeforeEach;
+import de.oliver.plugintests.annotations.FPTest;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-import static de.oliver.fancylib.tests.Expectable.expect;
+import static de.oliver.plugintests.Expectable.expect;
 
 public class DisplayNameCMDTest {
 

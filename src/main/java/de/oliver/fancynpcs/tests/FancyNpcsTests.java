@@ -1,10 +1,10 @@
 package de.oliver.fancynpcs.tests;
 
-import de.oliver.fancylib.tests.FPTestClass;
 import de.oliver.fancynpcs.tests.api.ChatColorHandlerTest;
 import de.oliver.fancynpcs.tests.api.CreateNpcTest;
 import de.oliver.fancynpcs.tests.api.SkinManagerTest;
 import de.oliver.fancynpcs.tests.commands.*;
+import de.oliver.plugintests.FPTestClass;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

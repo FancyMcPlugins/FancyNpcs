@@ -1,8 +1,8 @@
 package de.oliver.fancynpcs.skins.cache;
 
-import de.oliver.fancylib.jdb.JDB;
 import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.skins.SkinData;
+import de.oliver.jdb.JDB;
 
 import java.io.IOException;
 import java.util.Base64;

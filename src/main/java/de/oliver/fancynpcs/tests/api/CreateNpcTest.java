@@ -1,19 +1,19 @@
 package de.oliver.fancynpcs.tests.api;
 
-import de.oliver.fancylib.tests.annotations.FPAfterEach;
-import de.oliver.fancylib.tests.annotations.FPBeforeEach;
-import de.oliver.fancylib.tests.annotations.FPTest;
 import de.oliver.fancynpcs.api.FancyNpcsPlugin;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcData;
 import de.oliver.fancynpcs.api.NpcManager;
+import de.oliver.plugintests.annotations.FPAfterEach;
+import de.oliver.plugintests.annotations.FPBeforeEach;
+import de.oliver.plugintests.annotations.FPTest;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import java.util.UUID;
 
-import static de.oliver.fancylib.tests.Expectable.expect;
+import static de.oliver.plugintests.Expectable.expect;
 
 public class CreateNpcTest {
 

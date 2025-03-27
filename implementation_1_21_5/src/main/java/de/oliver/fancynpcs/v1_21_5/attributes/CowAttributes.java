@@ -9,67 +9,48 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.animal.Pig;
-import net.minecraft.world.entity.animal.PigVariant;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.CowVariant;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PigAttributes {
+public class CowAttributes {
 
     public static List<NpcAttribute> getAllAttributes() {
         List<NpcAttribute> attributes = new ArrayList<>();
 
         attributes.add(new NpcAttribute(
                 "variant",
-                getPigVariantRegistry()
+                getCowVariantRegistry()
                         .listElementIds()
                         .map(id -> id.location().getPath())
                         .toList(),
-                List.of(EntityType.PIG),
-                PigAttributes::setVariant
-        ));
-
-        attributes.add(new NpcAttribute(
-                "has_saddle",
-                List.of("true", "false"),
-                List.of(EntityType.PIG),
-                PigAttributes::setHasSaddle
+                List.of(EntityType.COW),
+                CowAttributes::setVariant
         ));
 
         return attributes;
     }
 
     private static void setVariant(Npc npc, String value) {
-        final Pig pig = ReflectionHelper.getEntity(npc);
+        final Cow cow = ReflectionHelper.getEntity(npc);
 
-        Holder<PigVariant> variant = getPigVariantRegistry()
+        Holder<CowVariant> variant = getCowVariantRegistry()
                 .get(ResourceKey.create(
-                        Registries.PIG_VARIANT,
+                        Registries.COW_VARIANT,
                         ResourceLocation.withDefaultNamespace(value.toLowerCase())
                 ))
                 .orElseThrow();
 
-        pig.setVariant(variant);
+        cow.setVariant(variant);
     }
 
-    private static void setHasSaddle(Npc npc, String value) {
-        Pig pig = ReflectionHelper.getEntity(npc);
-
-        boolean hasSaddle = Boolean.parseBoolean(value.toLowerCase());
-
-        if (hasSaddle) {
-            pig.setItemSlot(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
-        }
-    }
-
-    private static HolderLookup.RegistryLookup<PigVariant> getPigVariantRegistry() {
+    private static HolderLookup.RegistryLookup<CowVariant> getCowVariantRegistry() {
         return VanillaRegistries
                 .createLookup()
-                .lookup(Registries.PIG_VARIANT)
+                .lookup(Registries.COW_VARIANT)
                 .orElseThrow();
     }
 

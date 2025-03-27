@@ -52,6 +52,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     implementation(project(":api"))
+    implementation(project(":implementation_1_21_5"))
     implementation(project(":implementation_1_21_4"))
     implementation(project(":implementation_1_21_3"))
     implementation(project(":implementation_1_21_1"))

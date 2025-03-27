@@ -1,6 +1,7 @@
 rootProject.name = "FancyNpcs"
 
 include("api")
+include("implementation_1_21_5")
 include("implementation_1_21_4")
 include("implementation_1_21_3")
 include("implementation_1_21_1")

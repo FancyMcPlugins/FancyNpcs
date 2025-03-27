@@ -52,7 +52,7 @@ public class HorseAttributes {
         Horse horse = ReflectionHelper.getEntity(npc);
 
         Variant variant = Variant.valueOf(value.toUpperCase());
-        horse.setVariant(variant);
+        horse.setVariantAndMarkings(variant, horse.getMarkings());
     }
 
     private static void setMarkings(Npc npc, String value) {

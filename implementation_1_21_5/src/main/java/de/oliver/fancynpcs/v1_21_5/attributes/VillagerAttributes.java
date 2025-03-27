@@ -3,6 +3,7 @@ package de.oliver.fancynpcs.v1_21_5.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_5.ReflectionHelper;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.npc.Villager;
@@ -38,17 +39,17 @@ public class VillagerAttributes {
     private static void setProfession(Npc npc, String value) {
         Villager villager = ReflectionHelper.getEntity(npc);
 
-        VillagerProfession profession = BuiltInRegistries.VILLAGER_PROFESSION.getValue(ResourceLocation.tryParse(value));
+        Holder<VillagerProfession> profession = BuiltInRegistries.VILLAGER_PROFESSION.get(ResourceLocation.tryParse(value)).orElseThrow();
 
-        villager.setVillagerData(villager.getVillagerData().setProfession(profession));
+        villager.setVillagerData(villager.getVillagerData().withProfession(profession));
     }
 
     private static void setType(Npc npc, String value) {
         Villager villager = ReflectionHelper.getEntity(npc);
 
-        VillagerType type = BuiltInRegistries.VILLAGER_TYPE.getValue(ResourceLocation.tryParse(value));
+        Holder<VillagerType> type = BuiltInRegistries.VILLAGER_TYPE.get(ResourceLocation.tryParse(value)).orElseThrow();
 
-        villager.setVillagerData(villager.getVillagerData().setType(type));
+        villager.setVillagerData(villager.getVillagerData().withType(type));
     }
 
 }

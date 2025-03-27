@@ -3,7 +3,7 @@ package de.oliver.fancynpcs.v1_21_5.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_5.ReflectionHelper;
-import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.item.DyeColor;
 import org.bukkit.entity.EntityType;
 

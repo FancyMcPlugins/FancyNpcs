@@ -403,8 +403,17 @@ public class Npc_1_21_5 extends Npc {
 
         sittingVehicle.setPos(data.getLocation().x(), data.getLocation().y(), data.getLocation().z());
 
-        ServerEntity serverEntity = new ServerEntity(serverPlayer.serverLevel(), sittingVehicle, 0, false, packet -> {
-        }, Set.of());
+        ServerEntity serverEntity = new ServerEntity(
+                serverPlayer.serverLevel(),
+                sittingVehicle,
+                0,
+                false,
+                packet -> {
+                },
+                (p, l) -> {
+                },
+                Set.of()
+        );
         ClientboundAddEntityPacket addEntityPacket = new ClientboundAddEntityPacket(sittingVehicle, serverEntity);
         serverPlayer.connection.send(addEntityPacket);
 

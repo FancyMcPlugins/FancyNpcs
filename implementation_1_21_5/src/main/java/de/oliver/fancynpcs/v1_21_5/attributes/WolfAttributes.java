@@ -4,11 +4,13 @@ import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_5.ReflectionHelper;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.animal.WolfVariant;
+import net.minecraft.world.entity.animal.wolf.Wolf;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -35,7 +37,10 @@ public class WolfAttributes {
 
         attributes.add(new NpcAttribute(
                 "variant",
-                List.of("PALE", "SPOTTED", "SNOWY", "BLACK", "ASHEN", "RUSTY", "WOODS", "CHESTNUT", "STRIPED"),
+                getWolfVariantRegistry()
+                        .listElementIds()
+                        .map(id -> id.location().getPath())
+                        .toList(),
                 List.of(EntityType.WOLF),
                 WolfAttributes::setVariant
         ));
@@ -63,11 +68,20 @@ public class WolfAttributes {
     private static void setVariant(Npc npc, String value) {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
-        Registry<WolfVariant> registry = wolf.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
-        WolfVariant variant = registry.getValue(ResourceLocation.parse(value.toLowerCase()));
+        Holder<WolfVariant> variant = getWolfVariantRegistry()
+                .get(ResourceKey.create(
+                        Registries.WOLF_VARIANT,
+                        ResourceLocation.withDefaultNamespace(value.toLowerCase())
+                ))
+                .orElseThrow();
 
-        if (variant != null) {
-            wolf.setVariant(Holder.direct(variant));
-        }
+        wolf.setVariant(variant);
+    }
+
+    private static HolderLookup.RegistryLookup<WolfVariant> getWolfVariantRegistry() {
+        return VanillaRegistries
+                .createLookup()
+                .lookup(Registries.WOLF_VARIANT)
+                .orElseThrow();
     }
 }

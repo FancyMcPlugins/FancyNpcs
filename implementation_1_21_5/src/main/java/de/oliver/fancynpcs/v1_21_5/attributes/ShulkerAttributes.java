@@ -10,7 +10,6 @@ import org.bukkit.entity.EntityType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class ShulkerAttributes {
 
@@ -40,7 +39,7 @@ public class ShulkerAttributes {
         Shulker shulker = ReflectionHelper.getEntity(npc);
 
         DyeColor color = DyeColor.byName(value.toLowerCase(), DyeColor.PURPLE);
-        shulker.setVariant(Optional.of(color));
+        shulker.getEntityData().set(Shulker.DATA_COLOR_ID, (byte) color.getId());
     }
 
     private static void setShield(Npc npc, String value) {

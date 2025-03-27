@@ -3,9 +3,14 @@ package de.oliver.fancynpcs.v1_21_5.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_5.ReflectionHelper;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.CatVariant;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -18,7 +23,10 @@ public class CatAttributes {
 
         attributes.add(new NpcAttribute(
                 "variant",
-                BuiltInRegistries.CAT_VARIANT.keySet().stream().map(ResourceLocation::getPath).toList(),
+                getCatVariantRegistry()
+                        .listElementIds()
+                        .map(id -> id.location().getPath())
+                        .toList(),
                 List.of(EntityType.CAT),
                 CatAttributes::setVariant
         ));
@@ -35,8 +43,15 @@ public class CatAttributes {
 
     private static void setVariant(Npc npc, String value) {
         final Cat cat = ReflectionHelper.getEntity(npc);
-        BuiltInRegistries.CAT_VARIANT.get(ResourceLocation.parse(value.toLowerCase()))
-                .ifPresent(cat::setVariant);
+
+        Holder<CatVariant> variant = getCatVariantRegistry()
+                .get(ResourceKey.create(
+                        Registries.CAT_VARIANT,
+                        ResourceLocation.withDefaultNamespace(value.toLowerCase())
+                ))
+                .orElseThrow();
+
+        cat.setVariant(variant);
     }
 
     private static void setPose(Npc npc, String value) {
@@ -58,4 +73,10 @@ public class CatAttributes {
         }
     }
 
+    private static HolderLookup.RegistryLookup<CatVariant> getCatVariantRegistry() {
+        return VanillaRegistries
+                .createLookup()
+                .lookup(Registries.CAT_VARIANT)
+                .orElseThrow();
+    }
 }

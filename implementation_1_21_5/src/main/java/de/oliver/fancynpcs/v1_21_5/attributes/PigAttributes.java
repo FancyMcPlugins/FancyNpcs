@@ -3,7 +3,9 @@ package de.oliver.fancynpcs.v1_21_5.attributes;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_5.ReflectionHelper;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.item.Items;
 import org.bukkit.entity.EntityType;
 
 import java.util.ArrayList;
@@ -29,7 +31,9 @@ public class PigAttributes {
 
         boolean hasSaddle = Boolean.parseBoolean(value.toLowerCase());
 
-        pig.steering.setSaddle(hasSaddle);
+        if (hasSaddle) {
+            pig.setItemSlot(EquipmentSlot.SADDLE, Items.SADDLE.getDefaultInstance());
+        }
     }
 
 }

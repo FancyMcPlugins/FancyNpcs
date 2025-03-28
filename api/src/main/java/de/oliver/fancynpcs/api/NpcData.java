@@ -36,6 +36,7 @@ public class NpcData {
     private Consumer<Player> onClick;
     private Map<ActionTrigger, List<NpcAction.NpcActionData>> actions;
     private boolean turnToPlayer;
+    private int turnToPlayerDistance = -1; // -1 means use the default from config
     private float interactionCooldown;
     private float scale;
     private int visibilityDistance;
@@ -57,6 +58,7 @@ public class NpcData {
             EntityType type,
             Map<NpcEquipmentSlot, ItemStack> equipment,
             boolean turnToPlayer,
+            int turnToPlayerDistance,
             Consumer<Player> onClick,
             Map<ActionTrigger, List<NpcAction.NpcActionData>> actions,
             float interactionCooldown,
@@ -81,6 +83,7 @@ public class NpcData {
         this.onClick = onClick;
         this.actions = actions;
         this.turnToPlayer = turnToPlayer;
+        this.turnToPlayerDistance = turnToPlayerDistance;
         this.interactionCooldown = interactionCooldown;
         this.scale = scale;
         this.visibilityDistance = visibilityDistance;
@@ -108,6 +111,7 @@ public class NpcData {
         };
         this.actions = new ConcurrentHashMap<>();
         this.turnToPlayer = false;
+        this.turnToPlayerDistance = -1; // Use default from config
         this.interactionCooldown = 0;
         this.scale = 1;
         this.visibilityDistance = -1;
@@ -316,6 +320,27 @@ public class NpcData {
 
     public NpcData setTurnToPlayer(boolean turnToPlayer) {
         this.turnToPlayer = turnToPlayer;
+        isDirty = true;
+        return this;
+    }
+
+    /**
+     * Gets the turn-to-player distance for this NPC.
+     * 
+     * @return the custom distance value, or -1 if using the default from config
+     */
+    public int getTurnToPlayerDistance() {
+        return turnToPlayerDistance;
+    }
+    
+    /**
+     * Sets the turn-to-player distance for this NPC.
+     * 
+     * @param distance the custom distance value, or -1 to use the default from config
+     * @return this NpcData instance for method chaining
+     */
+    public NpcData setTurnToPlayerDistance(int distance) {
+        this.turnToPlayerDistance = distance;
         isDirty = true;
         return this;
     }

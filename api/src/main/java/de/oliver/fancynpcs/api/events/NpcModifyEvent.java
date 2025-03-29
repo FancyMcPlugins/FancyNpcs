@@ -94,6 +94,7 @@ public class NpcModifyEvent extends Event implements Cancellable {
         SHOW_IN_TAB,
         SKIN,
         TURN_TO_PLAYER,
+        TURN_TO_PLAYER_DISTANCE,
         TYPE,
         // Messages.
         MESSAGE_ADD,

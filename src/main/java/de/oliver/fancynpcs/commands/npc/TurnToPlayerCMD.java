@@ -7,7 +7,6 @@ import de.oliver.fancynpcs.api.events.NpcModifyEvent;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,14 +22,21 @@ public enum TurnToPlayerCMD {
             final @NotNull Npc npc,
             final @Nullable Boolean state
     ) {
-        final boolean finalState = (state == null) ? !npc.getData().isTurnToPlayer() : state;
-        // Calling the event and updating the state if not cancelled.
-        if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, finalState, sender).callEvent()) {
-            npc.getData().setTurnToPlayer(finalState);
-            translator.translate(finalState ? "npc_turn_to_player_set_true" : "npc_turn_to_player_set_false").replace("npc", npc.getData().getName()).send(sender);
-            return;
+        if (state != null && npc.getData().isTurnToPlayer() != state) {
+            if (new NpcModifyEvent(npc, NpcModifyEvent.NpcModification.TURN_TO_PLAYER, state, sender).callEvent()) {
+                npc.getData().setTurnToPlayer(state);
+                translator.translate(state ? "npc_turn_to_player_set_true" : "npc_turn_to_player_set_false")
+                        .replace("npc", npc.getData().getName())
+                        .send(sender);
+            } else {
+                translator.translate("command_npc_modification_cancelled").send(sender);
+            }
+        } else if (state == null) {
+            // If no state provided, just display current state
+            boolean currentState = npc.getData().isTurnToPlayer();
+            translator.translate(currentState ? "npc_turn_to_player_status_true" : "npc_turn_to_player_status_false")
+                    .replace("npc", npc.getData().getName())
+                    .send(sender);
         }
-        translator.translate("command_npc_modification_cancelled").send(sender);
     }
-
 }

@@ -167,6 +167,7 @@ public final class CloudCommandManager {
      */
     public @NotNull CloudCommandManager registerCommands() {
         annotationParser.parse(AttributeCMD.INSTANCE);
+        annotationParser.parse(CenterCMD.INSTANCE);
         annotationParser.parse(CollidableCMD.INSTANCE);
         annotationParser.parse(CopyCMD.INSTANCE);
         annotationParser.parse(CreateCMD.INSTANCE);
@@ -187,6 +188,7 @@ public final class CloudCommandManager {
         annotationParser.parse(SkinCMD.INSTANCE);
         annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
+        annotationParser.parse(TurnToPlayerDistanceCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
         annotationParser.parse(ActionCMD.INSTANCE);
         annotationParser.parse(VisibilityDistanceCMD.INSTANCE);

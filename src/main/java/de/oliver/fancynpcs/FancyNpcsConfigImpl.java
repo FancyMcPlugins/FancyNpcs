@@ -205,6 +205,24 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
         return turnToPlayerDistance;
     }
 
+    @Override
+    public boolean setTurnToPlayerDistance(int distance) {
+        // Validate the input - ensure the distance is positive or -1 for default
+        if (distance <= 0 && distance != -1) {
+            return false;
+        }
+        
+        // Update the config value in memory
+        this.turnToPlayerDistance = distance;
+        
+        // Persist to config file
+        FileConfiguration config = FancyNpcs.getInstance().getConfig();
+        config.set("turn_to_player_distance", distance);
+        FancyNpcs.getInstance().saveConfig();
+        
+        return true;
+    }
+
     public int getVisibilityDistance() {
         return visibilityDistance;
     }

@@ -56,18 +56,26 @@ public class WolfAttributes {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
         boolean angry = Boolean.parseBoolean(value.toLowerCase());
-
         wolf.setRemainingPersistentAngerTime(angry ? 100 : 0);
     }
 
     private static void setVariant(Npc npc, String value) {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
-        Registry<WolfVariant> registry = wolf.level().registryAccess().registry(Registries.WOLF_VARIANT).get();
-        WolfVariant variant = registry.get(ResourceLocation.of(value.toLowerCase(), ':'));
+        Registry<WolfVariant> registry = (Registry<WolfVariant>) wolf.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT);
 
+        ResourceLocation variantLocation = ResourceLocation.tryParse("minecraft:" + value.toLowerCase());
+        if (variantLocation == null) {
+            System.out.println("Invalid variant name: " + value);
+            return;
+        }
+
+        WolfVariant variant = registry.get(variantLocation);
         if (variant != null) {
             wolf.setVariant(Holder.direct(variant));
+        } else {
+            System.out.println("Wolf variant not found: " + variantLocation);
         }
     }
+
 }

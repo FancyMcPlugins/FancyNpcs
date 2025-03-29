@@ -50,6 +50,7 @@ public enum CopyCMD {
                         npc.getData().getType(),
                         new ConcurrentHashMap<>(npc.getData().getEquipment()),
                         npc.getData().isTurnToPlayer(),
+                        npc.getData().getTurnToPlayerDistance(),
                         npc.getData().getOnClick(),
                         new ConcurrentHashMap<>(npc.getData().getActions()),
                         npc.getData().getInteractionCooldown(),

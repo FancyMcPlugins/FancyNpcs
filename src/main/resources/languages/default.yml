@@ -107,6 +107,7 @@ messages:
     npc_action_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc action {secondaryColor}(npc) (trigger) {primaryColor}set {secondaryColor}(index) (type) [value]"
     npc_attribute: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}(set | list)"
     npc_attribute_set: "<dark_gray>› <gray>Syntax: {primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}set {secondaryColor}(attribute) (value)"
+    npc_center: "<dark_gray>› <gray>Syntax: {primaryColor}/npc center {secondaryColor}(npc)"
     npc_collidable: "<dark_gray>› <gray>Syntax: {primaryColor}/npc collidable {secondaryColor}(npc) (state)"
     npc_copy: "<dark_gray>› <gray>Syntax: {primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
     npc_create: "<dark_gray>› <gray>Syntax: {primaryColor}/npc create {secondaryColor}(npc) [--type] [--position] [--world]"
@@ -125,7 +126,7 @@ messages:
     npc_show_in_tab: "<dark_gray>› <gray>Syntax: {primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
     npc_skin: "<dark_gray>› <gray>Syntax: {primaryColor}/npc skin {secondaryColor}(npc) (@none | @mirror | name | uuid | placeholder | url | file name) [--slim]"
     npc_teleport: "<dark_gray>› <gray>Syntax: {primaryColor}/npc teleport {secondaryColor}(npc)"
-    npc_turn_to_player: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
+    npc_turn_to_player: "<dark_gray>› <gray>Syntax: {primaryColor}/npc turn_to_player {secondaryColor}(npc) (state) [distance]"
     npc_type: "<dark_gray>› <gray>Syntax: {primaryColor}/npc type {secondaryColor}(npc) (type)"
     npc_visibility_distance: "<dark_gray>› <gray>Syntax: {primaryColor}/npc visibility_distance {secondaryColor}(npc) (always_visible | default | not_visible | distance)"
 
@@ -158,6 +159,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Lists all modified attributes of the NPC.'>{primaryColor}/npc attribute {secondaryColor}(npc) {primaryColor}list"
     - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC can collide with other entities.'>{primaryColor}/npc collidable {secondaryColor}(npc) [state]"
     - "<dark_gray>› <hover:show_text:'<gray>Copies (duplicates) specified NPC.'>{primaryColor}/npc copy {secondaryColor}(npc) (new_name)"
+    - "<dark_gray>› <hover:show_text:'<gray>Centers the NPC on its current block location.'>{primaryColor}/npc center {secondaryColor}(npc)"
     - "<dark_gray>› <hover:show_text:'<gray>Creates a new NPC. Can be customized with flags.'>{primaryColor}/npc create {secondaryColor}(npc) [--type] [--location] [--world]"
     - "<dark_gray>› <hover:show_text:'<gray>Changes displayname of the NPC. Supports MiniMessage, PlaceholderAPI and MiniPlaceholders.'>{primaryColor}/npc displayname {secondaryColor}(npc) (name)"
     - "<dark_gray>› <hover:show_text:'<gray>Sets equipment slot of the NPC to item currently held in main hand, none or a specific item type.'>{primaryColor}/npc equipment {secondaryColor}(npc) {primaryColor}set {secondaryColor}(slot) (@hand | @none | item)"
@@ -175,7 +177,7 @@ messages:
     - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC is shown in the player-list. This works only on NPCs of PLAYER type.<newline><newline>{errorColor}Re-connecting to the server might be required for changes to take effect.'>{primaryColor}/npc show_in_tab {secondaryColor}(npc) (state)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes skin of the NPC.<newline><gray>Supports PlaceholderAPI and MiniPlaceholders.<newline><newline>{warningColor}@none <dark_gray>- <gray>removes the skin<newline>{warningColor}@mirror <dark_gray>- <gray>mirrors player skin<newline>{warningColor}(name) <dark_gray>- <gray>name of any player<newline>{warningColor}(url) <dark_gray>- <gray>url of the skin texture'>{primaryColor}/npc skin {secondaryColor}(npc) (@none | @mirror | name | url) [--slim]"
     - "<dark_gray>› <hover:show_text:'<gray>Teleports you to the specified NPC.'>{primaryColor}/npc teleport {secondaryColor}(npc)"
-    - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC should turn to the player when in range.'>{primaryColor}/npc turn_to_player {secondaryColor}(npc) (state)"
+    - "<dark_gray>› <hover:show_text:'<gray>Changes whether the NPC should turn to the player when in range. Optionally specify a custom turn distance.'>{primaryColor}/npc turn_to_player {secondaryColor}(npc) (state) [distance]"
     - "<dark_gray>› <hover:show_text:'<gray>Changes the type of the NPC.'>{primaryColor}/npc type {secondaryColor}(npc) (type)"
     - "<dark_gray>› <hover:show_text:'<gray>Changes the visibility distance of the NPC.'>{primaryColor}/npc visibility_distance {secondaryColor}(npc) (default | distance | ...)"
 
@@ -322,6 +324,18 @@ messages:
   # Commands (npc turn_to_player)
   npc_turn_to_player_set_true: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is now turning to player."
   npc_turn_to_player_set_false: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> is no longer turning to player."
+  npc_turn_to_player_distance_set: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> will now turn to players within {warningColor}{distance}<gray> blocks."
+  npc_turn_to_player_distance_default: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> will now use the default distance of {warningColor}{distance}<gray> blocks."
+  npc_turn_to_player_distance_invalid: "<dark_gray>› {errorColor}Invalid distance value. Distance must be -1 (for default) or a positive number."
 
   # Commands (npc type)
   npc_type_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> type has been changed to {warningColor}{type}<gray>."
+
+  # Commands (npc turn_to_player_distance)
+  turn_to_player_distance_current: "<dark_gray>› <gray>Current turn-to-player distance is: {warningColor}{distance} blocks"
+  turn_to_player_distance_updated: "<dark_gray>› {successColor}Turn-to-player distance has been updated to {warningColor}{distance} blocks"
+  turn_to_player_distance_failed: "<dark_gray>› {errorColor}Failed to update turn-to-player distance."
+  
+  # Commands (npc center)
+  npc_center_success: "<dark_gray>› <gray>NPC {warningColor}{npc}<gray> has been centered to {warningColor}{x}<gray>, {warningColor}{y}<gray>, {warningColor}{z}<gray>."
+  npc_center_failure_no_location: "<dark_gray>› {errorColor}NPC {warningColor}{npc}{errorColor} has no valid location."

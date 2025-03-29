@@ -16,7 +16,7 @@ public class TurnToPlayerTracker implements Runnable {
     @Override
     public void run() {
         Collection<Npc> npcs = FancyNpcs.getInstance().getNpcManagerImpl().getAllNpcs();
-        int turnToPlayerDistance = FancyNpcs.getInstance().getFancyNpcConfig().getTurnToPlayerDistance();
+        int defaultTurnToPlayerDistance = FancyNpcs.getInstance().getFancyNpcConfig().getTurnToPlayerDistance();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             Location playerLocation = player.getLocation();
@@ -33,8 +33,12 @@ public class TurnToPlayerTracker implements Runnable {
                 if (Double.isNaN(distance)) {
                     continue;
                 }
+                
+                // Get NPC-specific turn distance or fall back to default
+                int npcTurnDistance = npcData.getTurnToPlayerDistance();
+                int effectiveTurnDistance = (npcTurnDistance == -1) ? defaultTurnToPlayerDistance : npcTurnDistance;
 
-                if (npcData.isTurnToPlayer() && distance < turnToPlayerDistance) {
+                if (npcData.isTurnToPlayer() && distance < effectiveTurnDistance) {
                     Location newLoc = playerLocation.clone();
                     newLoc.setDirection(newLoc.subtract(npcLocation).toVector());
                     npc.lookAt(player, newLoc);

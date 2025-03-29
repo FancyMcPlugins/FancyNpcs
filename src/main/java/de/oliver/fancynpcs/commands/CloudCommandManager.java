@@ -167,6 +167,7 @@ public final class CloudCommandManager {
      */
     public @NotNull CloudCommandManager registerCommands() {
         annotationParser.parse(AttributeCMD.INSTANCE);
+        annotationParser.parse(CenterCMD.INSTANCE);
         annotationParser.parse(CollidableCMD.INSTANCE);
         annotationParser.parse(CopyCMD.INSTANCE);
         annotationParser.parse(CreateCMD.INSTANCE);

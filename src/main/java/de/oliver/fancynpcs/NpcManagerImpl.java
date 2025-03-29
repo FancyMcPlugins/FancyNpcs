@@ -392,6 +392,8 @@ public class NpcManagerImpl implements NpcManager {
                 }
             }
 
+            int turnToPlayerDistance = (int) npcConfig.getDouble("npcs." + id + ".turnToPlayerDistance", 0);
+
             NpcData data = new NpcData(
                     id,
                     name,
@@ -407,6 +409,7 @@ public class NpcManagerImpl implements NpcManager {
                     type,
                     new HashMap<>(),
                     turnToPlayer,
+                    turnToPlayerDistance,
                     null,
                     actions,
                     interactionCooldown,

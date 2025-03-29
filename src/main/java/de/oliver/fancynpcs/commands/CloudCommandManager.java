@@ -188,6 +188,7 @@ public final class CloudCommandManager {
         annotationParser.parse(SkinCMD.INSTANCE);
         annotationParser.parse(TeleportCMD.INSTANCE);
         annotationParser.parse(TurnToPlayerCMD.INSTANCE);
+        annotationParser.parse(TurnToPlayerDistanceCMD.INSTANCE);
         annotationParser.parse(TypeCMD.INSTANCE);
         annotationParser.parse(ActionCMD.INSTANCE);
         annotationParser.parse(VisibilityDistanceCMD.INSTANCE);

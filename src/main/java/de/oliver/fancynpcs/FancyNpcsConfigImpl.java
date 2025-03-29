@@ -207,8 +207,8 @@ public class FancyNpcsConfigImpl implements FancyNpcsConfig {
 
     @Override
     public boolean setTurnToPlayerDistance(int distance) {
-        // Validate the input - ensure the distance is positive and reasonable
-        if (distance <= 0) {
+        // Validate the input - ensure the distance is positive or -1 for default
+        if (distance <= 0 && distance != -1) {
             return false;
         }
         

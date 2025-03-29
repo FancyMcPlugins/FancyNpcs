@@ -16,16 +16,16 @@
 
 Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io/software/paper)** (and **[Folia](https://papermc.io/software/folia)**) servers using packets.
 
+</div>
+
 > [!CAUTION]
 > This repository is no longer maintained and has been merged into our new monorepo: [https://github.com/FancyMcPlugins/fancyplugins](https://github.com/FancyMcPlugins/fancyplugins).
 >
 > For the latest updates, issues, and contributions, please visit the monorepo. This repo remains available for historical reference but will no longer receive updates.
-> 
+>
 > Please do not create issues or pull requests here, as they will not be addressed. (The currently open issues will be migrated to the new repository.)
 >
 > Read [this blog article](https://docs.fancyplugins.de/blog/why-monorepo/) to learn more about the reasons, why we switched to a monorepo.
-
-</div>
 
 ## Features
 

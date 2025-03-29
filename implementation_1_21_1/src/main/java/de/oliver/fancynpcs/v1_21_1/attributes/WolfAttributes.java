@@ -5,6 +5,7 @@ import de.oliver.fancynpcs.api.NpcAttribute;
 import de.oliver.fancynpcs.v1_21_1.ReflectionHelper;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Wolf;
@@ -56,18 +57,38 @@ public class WolfAttributes {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
         boolean angry = Boolean.parseBoolean(value.toLowerCase());
-
         wolf.setRemainingPersistentAngerTime(angry ? 100 : 0);
     }
 
     private static void setVariant(Npc npc, String value) {
         Wolf wolf = ReflectionHelper.getEntity(npc);
 
-        Registry<WolfVariant> registry = wolf.level().registryAccess().registry(Registries.WOLF_VARIANT).get();
-        WolfVariant variant = registry.get(ResourceLocation.parse(value.toLowerCase()));
+        Registry<?> anyRegistry = wolf.level().registryAccess().registryOrThrow(Registries.WOLF_VARIANT);
+        Registry<WolfVariant> registry = (Registry<WolfVariant>) anyRegistry;
 
-        if (variant != null) {
-            wolf.setVariant(Holder.direct(variant));
+        ResourceLocation variantLocation = ResourceLocation.tryParse("minecraft:" + value.toLowerCase());
+        if (variantLocation == null) {
+            System.out.println("Invalid variant name: " + value);
+            return;
         }
+
+        WolfVariant variant = registry.get(variantLocation);
+        if (variant == null) {
+            System.out.println("Wolf variant not found: " + variantLocation);
+            return;
+        }
+
+        // Try to get the registered key and use it to build a proper reference
+        registry.getResourceKey(variant).ifPresentOrElse(
+                key -> {
+                    // Create a bound reference using the registry + key (safe holder)
+                    Holder<WolfVariant> holder = registry.getHolderOrThrow(ResourceKey.create(Registries.WOLF_VARIANT, variantLocation));
+                    wolf.setVariant(holder);
+                },
+                () -> {
+                    System.out.println("Wolf variant key not found in registry, using direct holder (may be unsafe)");
+                    wolf.setVariant(Holder.direct(variant));
+                }
+        );
     }
 }

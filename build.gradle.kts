@@ -66,7 +66,7 @@ dependencies {
     implementation("de.oliver:FancyLib:37")
     implementation("de.oliver:plugin-tests:1.0.0")
     implementation("de.oliver:JDB:1.0.0")
-    compileOnly("org.lushplugins:ChatColorHandler:5.1.3")
+    compileOnly("org.lushplugins:ChatColorHandler:5.1.5")
     implementation("de.oliver.FancyAnalytics:api:0.1.6")
     implementation("de.oliver.FancyAnalytics:logger:0.0.6")
     implementation("org.incendo:cloud-core:2.1.0-SNAPSHOT")

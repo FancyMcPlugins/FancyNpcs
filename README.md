@@ -19,7 +19,7 @@ Simple, lightweight and feature-rich NPC plugin for **[Paper](https://papermc.io
 </div>
 
 > [!CAUTION]
-> This repository is no longer maintained and has been merged into our new monorepo: [https://github.com/FancyMcPlugins/fancyplugins](https://github.com/FancyMcPlugins/fancyplugins).
+> This repository is no longer maintained and has been merged into our new monorepo: [https://github.com/FancyInnovations/fancyplugins](https://github.com/FancyInnovations/fancyplugins).
 >
 > For the latest updates, issues, and contributions, please visit the monorepo. This repo remains available for historical reference but will no longer receive updates.
 >

@@ -22,16 +22,16 @@ public class WaitAction extends NpcAction {
             return;
         }
 
-        int time;
+        long time;
         try {
-            time = Integer.parseInt(value);
+            time = Long.parseLong(value);
         } catch (NumberFormatException e) {
             FancyNpcsPlugin.get().getFancyLogger().warn("Invalid time value for wait action: " + value);
             return;
         }
 
         try {
-            Thread.sleep(time * 1000L);
+            Thread.sleep(time);
         } catch (InterruptedException e) {
             FancyNpcsPlugin.get().getFancyLogger().warn("Thread was interrupted while waiting");
         }

@@ -5,6 +5,7 @@ import de.oliver.fancynpcs.FancyNpcs;
 import de.oliver.fancynpcs.api.Npc;
 import de.oliver.fancynpcs.api.actions.ActionTrigger;
 import de.oliver.fancynpcs.api.actions.NpcAction;
+import de.oliver.fancynpcs.api.actions.types.WaitAction;
 import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotation.specifier.Greedy;
 import org.incendo.cloud.annotations.Argument;
@@ -14,6 +15,7 @@ import org.incendo.cloud.annotations.suggestion.Suggestions;
 import org.incendo.cloud.context.CommandContext;
 import org.incendo.cloud.context.CommandInput;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,6 +53,23 @@ public enum ActionCMD {
                 .send(sender);
     }
 
+    @Command("npc action <npc> <trigger> add wait <duration>")
+    @Permission("fancynpcs.command.npc.action.add")
+    public void onActionAddWait(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @NotNull Duration duration
+    ) {
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions().getOrDefault(trigger, new ArrayList<>());
+
+        npc.getData().addAction(trigger, currentActions.size() + 1, new WaitAction(), String.valueOf(duration.toMillis()));
+        translator
+                .translate("npc_action_add_success")
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
     @Command("npc action <npc> <trigger> add_before <index> <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.addBefore")
     public void onActionAddBefore(
@@ -70,6 +89,27 @@ public enum ActionCMD {
 
         List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
         currentActions.add(Math.clamp(index - 1, 0, currentActions.size()), new NpcAction.NpcActionData(index, actionType, value));
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_add_before_success")
+                .replaceStripped("number", String.valueOf(index))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
+    @Command("npc action <npc> <trigger> add_before <index> wait <duration>")
+    @Permission("fancynpcs.command.npc.action.addBefore")
+    public void onActionAddBeforeWait(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int index,
+            final @NotNull Duration duration
+    ) {
+
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        currentActions.add(Math.clamp(index - 1, 0, currentActions.size()), new NpcAction.NpcActionData(index, new WaitAction(), String.valueOf(duration.toMillis())));
 
         npc.getData().setActions(trigger, reorderActions(currentActions));
         translator
@@ -107,6 +147,26 @@ public enum ActionCMD {
                 .send(sender);
     }
 
+    @Command("npc action <npc> <trigger> add_after <index> wait <duration>")
+    @Permission("fancynpcs.command.npc.action.addAfter")
+    public void onActionAddAfterWait(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @Argument(suggestions = "ActionCMD/number_range") int index,
+            final @NotNull Duration duration
+    ) {
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        currentActions.add(Math.clamp(index, 0, currentActions.size() + 1), new NpcAction.NpcActionData(index, new WaitAction(), String.valueOf(duration.toMillis())));
+
+        npc.getData().setActions(trigger, reorderActions(currentActions));
+        translator
+                .translate("npc_action_add_after_success")
+                .replaceStripped("number", String.valueOf(index))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
     @Command("npc action <npc> <trigger> set <number> <actionType> [value]")
     @Permission("fancynpcs.command.npc.action.set")
     public void onActionSet(
@@ -134,6 +194,33 @@ public enum ActionCMD {
         }
 
         currentActions.set(number - 1, new NpcAction.NpcActionData(number, actionType, value));
+        npc.getData().setActions(trigger, currentActions);
+        translator
+                .translate("npc_action_set_success")
+                .replaceStripped("number", String.valueOf(number))
+                .replaceStripped("total", String.valueOf(npc.getData().getActions(trigger).size()))
+                .send(sender);
+    }
+
+    @Command("npc action <npc> <trigger> set <number> wait <duration>")
+    @Permission("fancynpcs.command.npc.action.set")
+    public void onActionSetWait(
+            final @NotNull CommandSender sender,
+            final @NotNull Npc npc,
+            final @NotNull ActionTrigger trigger,
+            final @NotNull @Argument(suggestions = "ActionCMD/number_range") Integer number,
+            final @NotNull Duration duration
+    ) {
+        List<NpcAction.NpcActionData> currentActions = npc.getData().getActions(trigger);
+        if (number < 1 || number > currentActions.size()) {
+            translator
+                    .translate("npc_action_set_failure")
+                    .replaceStripped("number", String.valueOf(number))
+                    .send(sender);
+            return;
+        }
+
+        currentActions.set(number - 1, new NpcAction.NpcActionData(number, new WaitAction(), String.valueOf(duration.toMillis())));
         npc.getData().setActions(trigger, currentActions);
         translator
                 .translate("npc_action_set_success")
